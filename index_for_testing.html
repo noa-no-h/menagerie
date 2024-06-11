@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jsPsych Experiment</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspsych/7.2.1/jspsych.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspsych/7.2.1/plugins/jspsych-html-keyboard-response.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jspsych/7.2.1/css/jspsych.css">
+    <script src="intro_and_attention_checks.js" defer></script>
+</head>
+<body>
+    <script>
+        window.addEventListener('load', function() {
+            jsPsych.init({
+                timeline: [{
+                    type: 'intro_and_attention_checks',
+                    on_finish: function() {
+                        jsPsych.data.displayData();
+                    }
+                }],
+                on_finish: function() {
+                    jsPsych.data.displayData();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
