@@ -305,5 +305,5 @@ var jsPsychMultipleSlider = (function(jsPsych) {
   
     return plugin;
     })();
-  })(jsPsychModule);
+  })(jsPsych);
   

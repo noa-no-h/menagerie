@@ -7,17 +7,13 @@
     <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-preload.js"></script>
     <script
         src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-html-keyboard-response.js"></script>
-    <script
-        src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-html-button-response.js"></script>
-    <script
-        src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-html-slider-response.js"></script>
+    <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-html-button-response.js"></script>
+    <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-html-slider-response.js"></script>
     <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-instructions.js"></script>
     <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-survey.js"></script>
     <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-survey-text.js"></script>
-    <script
-        src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-survey-multi-choice.js"></script>
-        <script
-            src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-survey-multi-select.js"></script>
+    <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-survey-multi-choice.js"></script>
+    <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-survey-multi-select.js"></script>
     <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-call-function.js"></script>
     <script src="https://crockettlaboratory.opalstacked.com/php/jspsych-7.2.3/plugin-external-html.js"></script>
     <script src="utilities.js"></script>
@@ -88,7 +84,7 @@
         var introspection_q_min = 0;
         var introspection_q_max = 100;
         var introspection_q_require = false;
-        
+
         var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the factor described)?</p>';
         var confidence_q_labels = [`Not at all confident`, "", "", "Moderately confident", "", "", `Very confident`];
         var confidence_q_slider_width = 750;
@@ -108,7 +104,7 @@
         //#endregion
 
         //#region INTRODUCTION
-        var check_consent = function(elem) {
+        var check_consent = function (elem) {
             if (document.getElementById('consent_checkbox').checked && document.getElementById('age_checkbox').checked) {
                 return true;
             }
@@ -139,7 +135,7 @@
                 `<p>On the next page, you'll find a consent form. Please read it and select "Yes" if you wish to participate in the study.`,
             ],
             show_clickable_nav: true,
-            on_finish: function() {
+            on_finish: function () {
                 start_time = Date.now();
             }
         }
@@ -163,12 +159,12 @@
         };
 
         //var id = null;
-        var id = getRandomInt(1,9999999);
+        var id = getRandomInt(1, 9999999);
         jsPsych.data.addProperties({
-                        subject: id,
-                        version: version,
-                        condition: condition[0]
-                    });
+            subject: id,
+            version: version,
+            condition: condition[0]
+        });
         var MTurk_id_loop = {
             timeline: [MTurk_id],
             loop_function: function (data) {
@@ -1050,7 +1046,7 @@
         };
 
         var introspection_q_labels_contact1 = [`<strong>It made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`];
-        var introspection_q_labels_contact2 = [`<strong>It would have made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`,"", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`];
+        var introspection_q_labels_contact2 = [`<strong>It would have made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`];
 
         var contact_intro_response1 = null;
         var contact_introspect1 = {
@@ -1240,7 +1236,7 @@
             on_finish: function (data) {
                 double_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var double_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -1406,7 +1402,7 @@
             on_finish: function (data) {
                 decoy_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var decoy_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -1749,7 +1745,7 @@
             on_finish: function (data) {
                 assoc_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var assoc_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -2021,8 +2017,8 @@
             }
         };
 
-        var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect my response</strong>",  "", `<strong>When the conclusion was believable, that made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
-        var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected my response</strong>",  "", `<strong>If the conclusion had been believable, that would have made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
+        var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect my response</strong>", "", `<strong>When the conclusion was believable, that made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
+        var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected my response</strong>", "", `<strong>If the conclusion had been believable, that would have made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
 
         var belief_intro_response1 = null;
         var belief_introspect1 = {
@@ -2074,7 +2070,7 @@
             on_finish: function (data) {
                 belief_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var belief_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -2317,7 +2313,7 @@
             on_finish: function (data) {
                 mee_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var mee_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -2549,7 +2545,7 @@
             on_finish: function (data) {
                 number_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var number_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -2822,7 +2818,7 @@
             on_finish: function (data) {
                 simon_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var simon_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -2851,7 +2847,7 @@
         //#endregion
         //timeline.push(simon)
 
-        //#region Endowment effect
+        /*//#region Endowment effect
 
         var endowment_instructions = {
             type: jsPsychInstructions,
@@ -2865,9 +2861,9 @@
         var juice = null
         var endowment_instructions2 = {
             type: jsPsychInstructions,
-            pages: function() {
+            pages: function () {
                 var instructions = [];
-                
+
                 if (condition[0] == 'Factor-Included') {
                     instructions.push(`Imagine you possess <b>one year's worth of a rare and safe pill that enables a person to maintain ideal weight</b>.<br><br>
                     You have the option to <b>sell this year's supply of pills</b> in exchange for a certain amount of money. You get to decide how much money this set of pills is worth to you.`)
@@ -2878,8 +2874,8 @@
             show_clickable_nav: true
         }
         var endowment_present_trials = [];
-        
-        for (var i = 0; i , {
+
+        for (var i = 0; i, {
             type: jsPsychSurveyMultiChoice,
             questions: [
                 {
@@ -2904,25 +2900,25 @@
         };
 
         var decoy_absent = {
-            type: jsPsychSurveyMultiChoice,
-            questions: [
-                {
-                    prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
-                    options: [
-                        '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
-                        '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
-                    ],
-                    required: required_general,
+                type: jsPsychSurveyMultiChoice,
+                questions: [
+                    {
+                        prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
+                        options: [
+                            '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
+                            '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
+                        ],
+                        required: required_general,
+                    }
+                ],
+                on_finish: function (data) {
+                    if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
+                        juice = 'Brand N (Target)'
+                    } else {
+                        juice = 'Brand J (Competitor)'
+                    }
                 }
-            ],
-            on_finish: function (data) {
-                if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
-                    juice = 'Brand N (Target)'
-                } else {
-                    juice = 'Brand J (Competitor)'
-                }
-            }
-        };
+            };
 
         var decoy_question = null;
         if (condition[0] == "Factor-Included") {
@@ -3002,7 +2998,7 @@
             on_finish: function (data) {
                 decoy_intro_confidence_response = data.response
             }
-        };        
+        };
 
         var decoy_familiar = {
             type: jsPsychHtmlButtonResponse,
@@ -3031,6 +3027,8 @@
         }
 
         //#endregion
+
+        */
 
         //#region Make task list
         var task_list = [anchor, avail, cause, contact, double, decoy, belief, mee, assoc]; //numb, simon];
@@ -3684,7 +3682,7 @@
                 { prompt: "<hr>I find examination of my feelings useful in solving personal problems.", options: tas_options, required: false },
                 { prompt: "<hr>Looking for hidden meanings in movies or plays distracts from their enjoyment.", options: tas_options, required: false }
             ],
-            on_finish: function(data) {
+            on_finish: function (data) {
                 var response = Object.values(data.response);
                 tas_responses = new Array(response.length);
                 for (var i = 0; i < response.length; i++) {
@@ -3708,41 +3706,41 @@
 
         //#region ICAR-16
         var items = [
-            {prompt: "<hr>What number is one fifth of one fourth of one ninth of 900?", name: 'VR.4', options: [2,3,4,5,6,7], horizontal:true, required: false},
-            {prompt: "<hr>Zach is taller than Matt and Richard is shorter than Zach. Which of the following statements would be most accurate?", name: "VR.16", options: ["Richard is taller than Matt","Richard is shorter than Matt","Richard is as tall as Matt","It is impossible to tell"], horizontal:true, required:debug ? false : true},
-            {prompt: "<hr>Joshua is 12 years old and his sister is three times as old as he. When Joshua is 23 years old, how old will his sister be?", name: "VR.17", options: [35,39,44,47,53,57], horizontal:true, required:debug ? false : true},
-            {prompt: "<hr>If the day after tomorrow is two days before Thursday then what day is it today?", name: "VR.19", options: ["Friday","Monday","Wednesday","Saturday","Tuesday","Sunday"], horizontal:true, required:debug ? false : true},
-            {prompt: "<hr>In the following alphabetic series, what letter comes next? \n K N P S U", name:"LN.7", options: ["S","T","U","V","W","X"], horizontal:true, required: false},
-            {prompt: "<hr>In the following alphabetic series, what letter comes next? \n V Q M J H", name:"LN.33", options: ["E","F","G","H","I","J"], horizontal:true, required: false},
-            {prompt: "<hr>In the following alphabetic series, what letter comes next? \n I J L O S", name:"LN.34", options: ["T","U","V","X","Y","Z"], horizontal:true, required: false},
-            {prompt: "<hr>In the following alphabetic series, what letter comes next? \n Q S N P L", name:"LN.58", options: ["J","H","I","N","M","L"], horizontal:true, required: false},
-            {prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.45.PNG' width='50%''></img>", name: "MX.45", options: ["A","B","C","D","E","F"],horizontal:true, required: false},
-            {prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.46.PNG' width='50%''></img>", name: "MX.46", options: ["A","B","C","D","E","F"],horizontal:true, required: false},
-            {prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.47.PNG' width='50%''></img>", name: "MX.47", options: ["A","B","C","D","E","F"],horizontal:true, required: false},
-            {prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.55.PNG' width='50%''></img>", name: "MX.55", options: ["A","B","C","D","E","F"],horizontal:true, required: false},
-            {prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.3.PNG' width='50%''></img>", name: "R3D.3", options: ["A","B","C","D","E","F","G","H"], horizontal:true, required: false},
-            {prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.4.PNG' width='50%''></img>", name: "R3D.4", options: ["A","B","C","D","E","F","G","H"], horizontal:true, required: false},
-            {prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.5.PNG' width='50%''></img>", name: "R3D.6", options: ["A","B","C","D","E","F","G","H"], horizontal:true, required: false},
-            {prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.8.PNG' width='50%''></img>", name: "R3D.8", options: ["A","B","C","D","E","F","G","H"], horizontal:true, required: false},
-            ];
+            { prompt: "<hr>What number is one fifth of one fourth of one ninth of 900?", name: 'VR.4', options: [2, 3, 4, 5, 6, 7], horizontal: true, required: false },
+            { prompt: "<hr>Zach is taller than Matt and Richard is shorter than Zach. Which of the following statements would be most accurate?", name: "VR.16", options: ["Richard is taller than Matt", "Richard is shorter than Matt", "Richard is as tall as Matt", "It is impossible to tell"], horizontal: true, required: debug ? false : true },
+            { prompt: "<hr>Joshua is 12 years old and his sister is three times as old as he. When Joshua is 23 years old, how old will his sister be?", name: "VR.17", options: [35, 39, 44, 47, 53, 57], horizontal: true, required: debug ? false : true },
+            { prompt: "<hr>If the day after tomorrow is two days before Thursday then what day is it today?", name: "VR.19", options: ["Friday", "Monday", "Wednesday", "Saturday", "Tuesday", "Sunday"], horizontal: true, required: debug ? false : true },
+            { prompt: "<hr>In the following alphabetic series, what letter comes next? \n K N P S U", name: "LN.7", options: ["S", "T", "U", "V", "W", "X"], horizontal: true, required: false },
+            { prompt: "<hr>In the following alphabetic series, what letter comes next? \n V Q M J H", name: "LN.33", options: ["E", "F", "G", "H", "I", "J"], horizontal: true, required: false },
+            { prompt: "<hr>In the following alphabetic series, what letter comes next? \n I J L O S", name: "LN.34", options: ["T", "U", "V", "X", "Y", "Z"], horizontal: true, required: false },
+            { prompt: "<hr>In the following alphabetic series, what letter comes next? \n Q S N P L", name: "LN.58", options: ["J", "H", "I", "N", "M", "L"], horizontal: true, required: false },
+            { prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.45.PNG' width='50%''></img>", name: "MX.45", options: ["A", "B", "C", "D", "E", "F"], horizontal: true, required: false },
+            { prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.46.PNG' width='50%''></img>", name: "MX.46", options: ["A", "B", "C", "D", "E", "F"], horizontal: true, required: false },
+            { prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.47.PNG' width='50%''></img>", name: "MX.47", options: ["A", "B", "C", "D", "E", "F"], horizontal: true, required: false },
+            { prompt: "<hr>Please indicate which is the best answer to complete the figure below.<br><br><img src='img/MX.55.PNG' width='50%''></img>", name: "MX.55", options: ["A", "B", "C", "D", "E", "F"], horizontal: true, required: false },
+            { prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.3.PNG' width='50%''></img>", name: "R3D.3", options: ["A", "B", "C", "D", "E", "F", "G", "H"], horizontal: true, required: false },
+            { prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.4.PNG' width='50%''></img>", name: "R3D.4", options: ["A", "B", "C", "D", "E", "F", "G", "H"], horizontal: true, required: false },
+            { prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.5.PNG' width='50%''></img>", name: "R3D.6", options: ["A", "B", "C", "D", "E", "F", "G", "H"], horizontal: true, required: false },
+            { prompt: "<hr>All the cubes below have different image on each side.<br> Select the choice that represents a rotation of the cube labeled X.<br><br><img src='img/R3D.8.PNG' width='50%''></img>", name: "R3D.8", options: ["A", "B", "C", "D", "E", "F", "G", "H"], horizontal: true, required: false },
+        ];
 
         correct_response = {
-            "LN.7" : "X",
-            "LN.33" : "G",
-            "LN.34" : "X",
-            "LN.58" : "N",
-            "MX.45" : "E",
-            "MX.46" : "B",
-            "MX.47" : "B",
-            "MX.55" : "D",
-            "R3D.3" : "C",
-            "R3D.4" : "B",
-            "R3D.6" : "F",
-            "R3D.8" : "G",
-            "VR.4" : "5",
-            "VR.16" : "It is impossible to tell",
-            "VR.17" : "47",
-            "VR.19" : "Sunday"
+            "LN.7": "X",
+            "LN.33": "G",
+            "LN.34": "X",
+            "LN.58": "N",
+            "MX.45": "E",
+            "MX.46": "B",
+            "MX.47": "B",
+            "MX.55": "D",
+            "R3D.3": "C",
+            "R3D.4": "B",
+            "R3D.6": "F",
+            "R3D.8": "G",
+            "VR.4": "5",
+            "VR.16": "It is impossible to tell",
+            "VR.17": "47",
+            "VR.19": "Sunday"
         }
 
         var correct_ans = [];
@@ -3750,20 +3748,20 @@
         var icar = {
             type: jsPsychSurveyMultiChoice,
             questions: items,
-            preamble:"This final task will take about 10-15 minutes. <b>Please answer each question below to the best of your ability.</b> The questions range in difficulty; some may be quite difficult.<br><br><b><u>Do not</u> write anything down during this task; you should try to solve each problem <u>in your head</u>.</b>",
+            preamble: "This final task will take about 10-15 minutes. <b>Please answer each question below to the best of your ability.</b> The questions range in difficulty; some may be quite difficult.<br><br><b><u>Do not</u> write anything down during this task; you should try to solve each problem <u>in your head</u>.</b>",
             button_label: "Submit",
             randomize_question_order: true,
-            on_finish: function(data) {
+            on_finish: function (data) {
                 icar_responses = JSON.stringify(data.response);
 
                 correct_resp_keys = Object.keys(correct_response);
                 correct_resp_values = Object.values(correct_response);
                 participant_resp_keys = Object.keys(data.response);
                 participant_resp_values = Object.values(data.response);
-                for(var i=0; i<correct_resp_keys.length; i++){
-                    for(var j=0; j<correct_resp_keys.length; j++){
-                        if(correct_resp_keys[i]==participant_resp_keys[j]){
-                            if(correct_resp_values[i]==participant_resp_values[j]){
+                for (var i = 0; i < correct_resp_keys.length; i++) {
+                    for (var j = 0; j < correct_resp_keys.length; j++) {
+                        if (correct_resp_keys[i] == participant_resp_keys[j]) {
+                            if (correct_resp_values[i] == participant_resp_values[j]) {
                                 correct_ans.push(participant_resp_keys[j]);
                             }
                         }
@@ -3786,12 +3784,12 @@
             }
         };
 
-                
+
 
         var age = null;
         var demographics_age = {
             type: jsPsychSurveyText,
-            questions: [{ prompt: "How old are you? (Enter a number below. For instance, if you are 40 years old, just enter 40.)", name: "age", required: false}],
+            questions: [{ prompt: "How old are you? (Enter a number below. For instance, if you are 40 years old, just enter 40.)", name: "age", required: false }],
             button_label: "Submit Answer",
             on_finish: function (data) {
                 age = data.response.age;
