@@ -1,27 +1,37 @@
-var intro_and_attention_checks = (function(jsPsych) {
-    console.log(jsPsych.ParameterType);
+var _minimalPlugin_ = (function (jspsych) {
+    "use strict";
   
     const info = {
-      name: "intro_and_attention_checks",
-      description:"",
+      name: "{_minimalPlugin_}",
       parameters: {
-        version: {
-          type: jsPsych.ParameterType.STRING,
-          pretty_name: "Version",
-          default: "v4_sona",
-        }
+        parameter_name: {
+          type: jspsych.ParameterType.INT,
+          default: undefined,
+        },
+        parameter_name2: {
+          type: jspsych.ParameterType.IMAGE,
+          default: undefined,
+        },
       },
     };
-    
-    jsPsych.plugins["intro_and_attention_checks"] = (function () {
-      const plugin = {};
-    
-      plugin.info = info;
-    
-      plugin.trial = function (display_element, trial) {};
-    
   
-    return plugin;
-    })();
-  })(jsPsych);
+    class MinimalPlugin {
+      constructor(jsPsych) {
+        this.jsPsych = jsPsych;
+      }
+      trial(display_element, trial) {
+        // data saving
+        var trial_data = {
+          parameter_name: "parameter value",
+        };
+        console.log(parameter_name);
+
+        
+        // end trial
+        this.jsPsych.finishTrial(trial_data);
+      }
+    }
+    MinimalPlugin.info = info;
   
+    return MinimalPlugin;
+  })(jsPsychModule);
