@@ -10,11 +10,11 @@ var hindsight_instructions = {
 };
 
 var Peru_answer = "34,668,340 people live in Peru."
-var Peru_control = "Did you know the Transsiberian railroad is the longest railroad track in the world?"
+var Peru_control = "The movie, Back to the Future, cost $19,000,000 to make."
 var Cameroon_answer = "29,354,570 people live in Cameroon."
-var Cameroon_control = "Did you know France has the most timezones of any country in the world: 11?"
+var Cameroon_control = "The movie, Star Wars: Return of the Jedi, cost $32,500,000 to make."
 var Italy_answer = " 58,704,136 people live in Italy."
-var Italy_control ="Did you know Alaska is both the Eastern and Westernmost state in the United States?"
+var Italy_control ="The movie, Miss Congeniality, cost $45,000,000 to make."
 
 
 var Peru_estimate_first_response = null;
@@ -36,7 +36,7 @@ var Peru_estimate = {
 var intro_slides_with_answers = {
     type: jsPsychInstructions,
     pages: [
-        `<p>You will now be shown some geography facts for seven seconds each.</p>
+        `<p>You will now be shown some trivia facts for seven seconds each.</p>
         <p><i>Please click the "Next" button when you are ready to see the first fact.</i></p>`
     ],
     show_clickable_nav: true
