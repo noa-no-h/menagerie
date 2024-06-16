@@ -128,14 +128,6 @@ slider_start: 50,
 require_movement: require_movement_general,
 on_finish: function (data) {
     status_quo_intro_confidence_response = data.response;
-}
-};
-
-var status_quo_familiar = {
-type: jsPsychHtmlButtonResponse,
-stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
-choices: ["Yes", "No"],
-on_finish: function (data) {
     s1_data = {
         subject: data.subject,
         version: data.version,
@@ -143,10 +135,10 @@ on_finish: function (data) {
         condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
         task_name: "status_quo",
         choice: choice,
+        familiarity: familiarity,
         openq_response: status_quo_openQ_response,
         introspect_rating: status_quo_intro_response1,
         introspect_open: status_quo_intro_confidence_response,
-        familiarity: data.response == 0 ? "Yes" : "No",
         rt: data.rt
     };
     console.log(s1_data);
@@ -154,6 +146,18 @@ on_finish: function (data) {
 }
 };
 
+var familiarity = null;
+var status_quo_familiar = {
+type: jsPsychHtmlButtonResponse,
+stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+choices: ["Yes", "No"],
+on_finish: function (data) {
+    familiarity= data.response == 0 ? "Yes" : "No"
+    
+}
+};
+
+
 var status_quo = {
-timeline: [status_quo_instructions, status_quo_trial, status_quo_openQ, status_quo_introspect1, status_quo_intro_confidence, status_quo_familiar]
+timeline: [status_quo_instructions, status_quo_trial, status_quo_familiar, status_quo_openQ, status_quo_introspect1, status_quo_intro_confidence]
 };
