@@ -7,7 +7,7 @@ var ref_price_motel_stimulus = `Scenario: You are lying on the beach on a hot da
 var ref_price_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will be given a hypothetical scenario and asked whatyou would do in that scenario.</p>
+        `<p>In this exercise, you will be given a hypothetical scenario and asked what you would do in that scenario.</p>
         <p><i>Please click the "Next" button when you are ready to see the scenario and your options.</i></p>`
     ],
     show_clickable_nav: true
