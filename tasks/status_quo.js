@@ -10,7 +10,7 @@ speed limits). Currently the commission allocates
 approximately 70% of its funds to auto safety and 
 30% of its funds to highway safety. 
 Since there is a ceiling on its total spending, these are
-the commission's two options. Please select the option you would recommend.`;
+the commission's two options. Please select the option you would recommend.<br><br>`;
 
 var status_quo_stimulus_factor_excluded =
 `The National Highway Safety Commission is deciding
@@ -22,7 +22,7 @@ ii) improving the safety of interstate highways
 and implementing selective reduced
 speed limits).  
 Since there is a ceiling on its total spending, these are
-the commission's two options. Please select the option you would recommend.`;
+the commission's two options. Please select the option you would recommend.<br><br>`;
 
 var status_quo_instructions = {
 type: jsPsychInstructions,
