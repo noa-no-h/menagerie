@@ -324,6 +324,7 @@ var anchor_intro_confidence = {
             subject: data.subject,
             version: data.version,
             task_name: "anchoring",
+            familiarity: familiarity,
             condition: anchor_condition,
             factor: data.condition,
             openq_response: anchor_openQ_response,

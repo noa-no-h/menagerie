@@ -216,6 +216,7 @@
                     subject: data.subject,
                     version: data.version,
                     task_name: "mere exposure",
+                    familiarity: familiarity,
                     factor: data.condition,
                     openq_response: mere_exposure_openQ_response,
                     introspect_rating: mere_exposure_intro_response1,

@@ -107,6 +107,7 @@ var contact_intro_confidence = {
             choice: push == 0 ? "Permissible" : "Impermissible",
             condition: condition[0] == "Factor-Included" ? "Contact" : "No Contact",
             factor: data.condition,
+            familiarity: familiarity,
             openq_response: contact_openQ_response,
             introspect_rating: contact_intro_response1,
             introspect_open: contact_intro_confidence_response,

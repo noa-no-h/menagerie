@@ -139,6 +139,7 @@ var decoy_intro_confidence = {
             choice: juice,
             condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
             factor: data.condition,
+            familiarity: familiarity,
             openq_response: decoy_openQ_response,
             introspect_rating: decoy_intro_response1,
             introspect_open: decoy_intro_confidence_response,

@@ -250,6 +250,7 @@ var simon_intro_confidence = {
             openq_response: simon_openQ_response,
             introspect_rating: simon_intro_response1,
             introspect_open: simon_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection')

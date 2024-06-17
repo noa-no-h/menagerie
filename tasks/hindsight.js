@@ -240,14 +240,6 @@ var Italy_estimate_two = {
         require_movement: require_movement_general,
         on_finish: function (data) {
             hindsight_intro_confidence_response = data.response;
-        }
-    };
-
-    var hindsight_familiar = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
-        choices: ["Yes", "No"],
-        on_finish: function (data) {
             s1_data = {
                 subject: data.subject,
                 version: data.version,
@@ -266,11 +258,23 @@ var Italy_estimate_two = {
                 openq_response: hindsight_openQ_response,
                 introspect_rating: hindsight_intro_response1,
                 introspect_open: hindsight_intro_confidence_response,
-                familiarity: data.response == 0 ? "Yes" : "No",
+                familiarity: familiarity,
                 rt: data.rt
             };
             console.log(s1_data);
             save_data(s1_data, 'introspection');
+        }
+    };
+
+    var familiarity = null;
+    var hindsight_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function (data) {
+            familiarity= data.response == 0 ? "Yes" : "No"
+
+            
         }
     };
 
@@ -279,8 +283,8 @@ var Italy_estimate_two = {
             Italy_estimate, intro_slides_with_answers, Peru_answer_or_control, 
             Cameroon_answer_or_control, 
             Italy_answer_or_control, Peru_estimate_two, Cameroon_estimate_two, 
-            Italy_estimate_two, hindsight_openQ, hindsight_introspect1, 
-            hindsight_intro_confidence, hindsight_familiar]
+            Italy_estimate_two, hindsight_familiar, hindsight_openQ, hindsight_introspect1, 
+            hindsight_intro_confidence]
     };
 
 //#endregion hindsight

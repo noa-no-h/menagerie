@@ -127,6 +127,7 @@ var cause_intro_confidence = {
             choice: cause,
             condition: condition[0] == "Factor-Included" ? "One" : "Nine",
             factor: data.condition,
+            familiarity: familiarity,
             openq_response: cause_openQ_response,
             introspect_rating: cause_intro_response1,
             introspect_open: cause_intro_confidence_response,

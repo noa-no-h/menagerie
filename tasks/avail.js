@@ -238,6 +238,7 @@ var avail_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "Famous" : "Unfamous",
             task_name: "availability",
             choice: more_men == 0 ? "List 1" : "List 2",
+            familiarity: familiarity,
             openq_response: avail_openQ_response,
             introspect_rating: avail_intro_response1,
             introspect_open: avail_intro_confidence_response,

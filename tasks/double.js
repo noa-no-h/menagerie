@@ -110,6 +110,7 @@ var double_intro_confidence = {
             choice: moral == 0 ? "Permissible" : "Impermissible",
             condition: condition[0] == "Factor-Included" ? "Means" : "Side Effect",
             factor: data.condition,
+            familiarity: familiarity,
             openq_response: double_openQ_response,
             introspect_rating: double_intro_response1,
             introspect_open: double_intro_confidence_response,

@@ -205,6 +205,7 @@ var number_intro_confidence = {
             version: data.version,
             task_name: "numerical distance effect",
             factor: data.condition,
+            familiarity: familiarity,
             openq_response: number_openQ_response,
             introspect_rating: number_intro_response1,
             introspect_open: number_intro_confidence_response,

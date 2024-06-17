@@ -315,6 +315,7 @@ var assoc_intro_confidence = {
             version: data.version,
             task_name: "associative memory",
             factor: data.condition,
+            familiarity: familiarity,
             openq_response: assoc_openQ_response,
             introspect_rating: assoc_intro_response1,
             introspect_open: assoc_intro_confidence_response,

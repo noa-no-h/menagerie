@@ -144,25 +144,17 @@ slider_start: 50,
 require_movement: require_movement_general,
 on_finish: function (data) {
     rep_intro_confidence_response = data.response;
-}
-};
-
-var rep_familiar = {
-type: jsPsychHtmlButtonResponse,
-stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
-choices: ["Yes", "No"],
-on_finish: function (data) {
     s1_data = {
         subject: data.subject,
         version: data.version,
         factor: data.condition,
         condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
         task_name: "rep",
+        familiarity: familiarity,
         choice: choice,
         openq_response: rep_openQ_response,
         introspect_rating: rep_intro_response1,
         introspect_open: rep_intro_confidence_response,
-        familiarity: data.response == 0 ? "Yes" : "No",
         rt: data.rt
     };
     console.log(s1_data);
@@ -170,8 +162,20 @@ on_finish: function (data) {
 }
 };
 
-var rep = {
-timeline: [rep_instructions, rep_trial, rep_openQ, rep_introspect1, rep_intro_confidence, rep_familiar]
+var familiarity = null;
+var rep_familiar = {
+type: jsPsychHtmlButtonResponse,
+stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+choices: ["Yes", "No"],
+on_finish: function (data) {
+    familiarity= data.response == 0 ? "Yes" : "No"
+
+    
+}
+};
+
+var representativeness = {
+timeline: [rep_instructions, rep_trial, rep_familiar, rep_openQ, rep_introspect1, rep_intro_confidence]
 };
 
 //#endregion representativeness

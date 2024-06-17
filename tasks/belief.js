@@ -298,6 +298,7 @@ var belief_intro_confidence = {
             subject: data.subject,
             version: data.version,
             task_name: "belief",
+            familiarity: familiarity,
             factor: data.condition,
             openq_response: belief_openQ_response,
             introspect_rating: belief_intro_response1,
