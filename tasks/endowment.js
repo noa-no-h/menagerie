@@ -1,4 +1,3 @@
-
 /* Endowment */
 var endowment_instructions = {
     type: jsPsychInstructions,
@@ -7,51 +6,33 @@ var endowment_instructions = {
          <p><i>Please click the button below when you are ready to begin the exercise.</i></p>`
     ],
     show_clickable_nav: true
-}
+};
 
 var juice = null;
 
-var endowment_instructions2 = {
-    type: jsPsychInstructions,
-    pages: function () {
-        var instructions = [];
-
-        if (condition[0] == 'Factor-Included') {
-            instructions.push(`Imagine you possess <b>one year's worth of a rare and safe pill that enables a person to maintain ideal weight</b>.<br><br>
-            You have the option to <b>sell this year's supply of pills</b> in exchange for a certain amount of money. You get to decide how much money this set of pills is worth to you.`);
-        } else {
-            instructions.push(`You have the option to sell an item you possess in exchange for a certain amount of money. You get to decide how much money this item is worth to you.`);
+var decoy_present = {
+    type: jsPsychSurveyMultiChoice,
+    questions: [
+        {
+            prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
+            options: [
+                '<b>Brand W:</b> Price per can = $1.20; Quality rating = 30',
+                '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
+                '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
+            ],
+            required: required_general,
         }
-        return instructions;
-    },
-    show_clickable_nav: true
-}
-
-var task_list = [
-    {
-        type: jsPsychSurveyMultiChoice,
-        questions: [
-            {
-                prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
-                options: [
-                    '<b>Brand W:</b> Price per can = $1.20; Quality rating = 30',
-                    '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
-                    '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
-                ],
-                required: required_general,
-            }
-        ],
-        on_finish: function (data) {
-            if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
-                juice = 'Brand N (Target)';
-            } else if (data.response.Q0 == '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70') {
-                juice = 'Brand J (Competitor)';
-            } else {
-                juice = 'Brand W (Decoy)';
-            }
+    ],
+    on_finish: function (data) {
+        if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
+            juice = 'Brand N (Target)';
+        } else if (data.response.Q0 == '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70') {
+            juice = 'Brand J (Competitor)';
+        } else {
+            juice = 'Brand W (Decoy)';
         }
     }
-];
+};
 
 var decoy_absent = {
     type: jsPsychSurveyMultiChoice,
@@ -74,7 +55,7 @@ var decoy_absent = {
     }
 };
 
-var decoy_question = (condition[0] == "Factor-Included") ? task_list[0] : decoy_absent;
+var decoy_question = (condition[0] == "Factor-Included") ? decoy_present : decoy_absent;
 
 var decoy_openQ_response = null;
 var decoy_openQ = {
@@ -137,8 +118,8 @@ var decoy_introspect2 = {
 var decoy_intro_confidence_response = null;
 var decoy_intro_confidence = {
     type: jsPsychHtmlSliderResponse,
-    stimulus: `<p>How confident are you in the choices you made during this task?</p>`,
-    labels: ["Not at all confident", "Extremely confident"],
+    stimulus: confidence_q,
+    labels: confidence_q_labels,
     slider_width: 600,  
     min: 0,
     max: 100,
@@ -170,13 +151,12 @@ var decoy_familiar = {
     stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
     choices: ["Yes", "No"],
     on_finish: function (data) {
-        familiarity= data.response == 0 ? "Yes" : "No";
-
+        familiarity = data.response == 0 ? "Yes" : "No";
         
     }
 };
 
 var endowment = {
-    timeline: [endowment_instructions, endowment_instructions2, decoy_question, decoy_familiar, decoy_openQ, decoy_introspect1, decoy_introspect2, decoy_intro_confidence]
+    timeline: [endowment_instructions, decoy_question, decoy_familiar, decoy_openQ, decoy_introspect1, decoy_introspect2, decoy_intro_confidence]
 };
 
