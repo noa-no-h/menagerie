@@ -258,7 +258,7 @@ var avail_familiar = {
 }
 
 var avail = {
-    timeline: [avail_instructions, avail_trials,avail_familiar, avail_question, avail_openQ, avail_introspect1, avail_intro_confidence]
+    timeline: [avail_instructions, avail_trials, avail_question, avail_familiar, avail_openQ, avail_introspect1, avail_intro_confidence]
 }
 
 /*var avail_excluded = {
