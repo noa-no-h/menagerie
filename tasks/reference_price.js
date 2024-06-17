@@ -94,14 +94,6 @@ var ref_price_intro_confidence = {
     require_movement: require_movement_general,
     on_finish: function (data) {
         ref_price_intro_confidence_response = data.response;
-    }
-};
-
-var ref_price_familiar = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
-    choices: ["Yes", "No"],
-    on_finish: function (data) {
         var s1_data = {
             subject: data.subject,
             version: data.version,
@@ -109,18 +101,30 @@ var ref_price_familiar = {
             condition: condition[0] == "Factor-Included" ? "hotel" : "motel",
             task_name: "reference price",
             choice: choice,
+            familiarity: familiarity,
             openq_response: ref_price_openQ_response,
             introspect_rating: ref_price_intro_response1,
             introspect_open: ref_price_intro_confidence_response,
-            familiarity: data.response == 0 ? "Yes" : "No",
             rt: data.rt
         };
         save_data(s1_data, 'introspection');
     }
 };
 
-var ref_price = {
-    timeline: [ref_price_instructions, ref_price_trial, ref_price_openQ, ref_price_introspect1, ref_price_intro_confidence, ref_price_familiar]
+var familiarity = null;
+var ref_price_familiar = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+    choices: ["Yes", "No"],
+    on_finish: function (data) {
+        familiarity= data.response == 0 ? "Yes" : "No";
+
+        
+    }
+};
+
+var reference_price = {
+    timeline: [ref_price_instructions, ref_price_trial, ref_price_familiar, ref_price_openQ, ref_price_introspect1, ref_price_intro_confidence]
 };
 
 // end region reference price 
