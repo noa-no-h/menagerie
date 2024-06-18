@@ -83,27 +83,22 @@ for (var i = 0; i < country_list_shuffled.length; i++) {
 
 var current_country = country_list_shuffled[0];
 
-
 var first_estimate = {
     timeline: [{
-        type: jsPsychHtmlSliderResponse,
-        stimulus: function() {
-            return "How many people live in " + current_country.replace(/_/g, ' ') + "?";
+        type: jsPsychSurveyText,
+        questions: function() {
+            var country_display = current_country.replace(/_/g, ' ');
+            return [{
+                prompt: "How many people live in " + country_display + "?",
+                required: required_general,
+                rows: 2,
+                columns: 10
+            }];
         },
-        labels: function() {
-            var labels = [];
-            for (var i = 0; i <= 500; i++) {
-                labels.push((i * 100000).toLocaleString()); // Add labels every 100,000
-            }
-            return labels;
-        },
-        slider_width: confidence_q_slider_width,
-
-        min: 0,
-        max: 500000000,
-        step: 100000, // Increment by 100,000
+        placeholder: "Enter your estimate here",
+        rows: 1,
+        columns: 20,
         require_movement: true,
-        slider_start: 100000,
         on_finish: function (data) {
             responses[current_country + "_estimate_first_response"] = data.response;
             console.log(responses);
@@ -111,6 +106,8 @@ var first_estimate = {
     }],
     randomize_order: false
 };
+
+
 
 
 var loop_estimates = {
