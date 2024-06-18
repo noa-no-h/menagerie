@@ -1,4 +1,7 @@
 //#region 7. Associative Memory (Roediger & McDermott, 1995) - WITHIN
+var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether the word was related to the topic of sleep)?</p>';
+
+
 var assoc_instructions = {
     type: jsPsychInstructions,
     pages: [
@@ -328,7 +331,7 @@ var assoc_intro_confidence = {
 var familiarity = null;
 var assoc_familiar = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+    stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         familiarity= data.response == 0 ? "Yes" : "No";

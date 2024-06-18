@@ -1,4 +1,7 @@
 //#region representativeness
+
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the information you were told about Jack)?</p>";
+
 var rep_stimulus_factor_included =
 `Imagine that a panel of psychologists have interviewed and administered 
 personality tests to 30 engineers and 70 lawyers, all successful in 
@@ -40,29 +43,33 @@ show_clickable_nav: true
 var choice = null;
 var rep_trial = {
 timeline: [{
-    type: jsPsychSurveyText,
-    questions: [{
-        prompt: condition[0] == 'Factor-Included' ? rep_stimulus_factor_included : rep_stimulus_factor_excluded,
-        required: required_general, rows: 2, columns: 1
-    }],
-    on_finish: function (data) {
+    type: jsPsychHtmlSliderResponse,
+    stimulus: function() {
+        return condition[0] == 'Factor-Included' ? rep_stimulus_factor_included : rep_stimulus_factor_excluded;
+    },
+    labels: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'],
+    min: 0,
+    max: 100,
+    start: 50,
+    step: 10,
+    require_movement: true,
+    prompt: "<br><br><br><br><br><br>",
+    on_finish: function(data) {
         console.log(data.response);
-        choice = data.response.Q0;
+        choice = data.response;
     }
 }],
 randomize_order: false
 };
 
-
 var rep_openQ_response = null;
 var rep_openQ = {
 type: jsPsychSurveyText,
 questions: [{
-    prompt: `<p>In this exercise, you were given information about an 
-    individual within a group of people and asked to give the probability 
-    that he has a particular profession. 
+    prompt: `<p>In this exercise, you were given information about Jack and 
+    asked to rate how likely it is that he is an engineer.
     </p><p>Describe your thought 
-    process behind your decision about probability to give?</p>`,
+    process behind your decision about probability to give.</p>`,
     required: required_general, rows: 5, columns: 80
 }],
 on_finish: function (data) {
@@ -71,28 +78,27 @@ on_finish: function (data) {
 };
 
 var introspection_q_labels_rep1 = [
-`<strong>It made me say he was less likely to be an engineer.</strong>`,
-"",
-"<strong>It did not affect my response</strong>",
-"",
-`<strongIt made me say he was more likely to be an engineer.></strong>`
+    `<strong>It made me say he was less likely to be an engineer.</strong>`,
+    "",
+    "<strong>It did not affect my response</strong>",
+    "",
+    `<strong>It made me say he was more likely to be an engineer.</strong>`  // Corrected closing tag
 ];
 
 var introspection_q_labels_rep2 = [
-`<strong>It would have made me say he was less likely to be an engineer.</strong>`,
-"",
-"<strong>It would not have affected my response</strong>",
-"",
-`<strong>It would have made me say he was more likely to be an engineer.</strong>`
+    `<strong>It would have made me say he was less likely to be an engineer.</strong>`,
+    "",
+    "<strong>It would not have affected my response</strong>",
+    "",
+    `<strong>It would have made me say he was more likely to be an engineer.</strong>`
 ];
-
 var rep_intro_response1 = null;
 var rep_introspect1 = {
 type: jsPsychHtmlSliderResponse,
 stimulus: function () {
     if (condition[0] == "Factor-Included") {
         return `<p>In this exercise, you were told about the group of people given personality tests.</p>
-                    <p>Then we gave you a thumnail description of one of them — Jack. Specificaly, we told you, “Jack is a 45-year-old man. He is married and has four children. He 
+                    <p>Then we gave you a thumbnail description of one of them — Jack. Specifically, we told you, “Jack is a 45-year-old man. He is married and has four children. He 
                     is generally conservative, careful, and 
                     ambitious. He shows no interest in political and social issues and 
                     spends most of his free time on his many hobbies which include home 
@@ -165,7 +171,7 @@ on_finish: function (data) {
 var familiarity = null;
 var rep_familiar = {
 type: jsPsychHtmlButtonResponse,
-stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+stimulus: familiarity_prompt,
 choices: ["Yes", "No"],
 on_finish: function (data) {
     familiarity= data.response == 0 ? "Yes" : "No"

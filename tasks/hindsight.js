@@ -1,4 +1,6 @@
 //#region hindsight
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by being told the true population for each country)?</p>";
+
     
 var hindsight_instructions = {
     type: jsPsychInstructions,
@@ -9,29 +11,128 @@ var hindsight_instructions = {
     show_clickable_nav: true
 };
 
-var Peru_answer = "34,668,340 people live in Peru."
-var Peru_control = "The movie, Back to the Future, cost $19,000,000 to make."
-var Cameroon_answer = "29,354,570 people live in Cameroon."
-var Cameroon_control = "The movie, Star Wars: Return of the Jedi, cost $32,500,000 to make."
-var Italy_answer = " 58,704,136 people live in Italy."
-var Italy_control ="The movie, Miss Congeniality, cost $45,000,000 to make."
+var country_list=["Pakistan", "Nigeria", "Mexico", 
+                "Vietnam", "The_Democratic_Republic_of_the_Congo", "Thailand", "Tanzania", 
+                "South_Korea", "Colombia", "Uganda", "Ukraine", "Malaysia", 
+                "North_Korea", "Niger", "Burkina_Faso", "Romania", "Zimbabwe", 
+                "The_Netherlands", "Somalia", "Guinea", "Benin", "Haiti", "Greece",
+                "The_Czech_Republic", "Azerbaijan"];
+
+var country_list_shuffled = jsPsych.randomization.shuffle(country_list);
+
+var answer = {Pakistan:"203, 177,034 people live in Pakistan.",
+            Nigeria: "199,045,324 people live in Nigeria.",
+            Mexico: "131,738,729 people live in Mexico.",
+            Vietnam: "97,074,662 people live in Vietnam.",
+            The_Democratic_Republic_of_the_Congo: "85,705,256 people live in Democratic Republic of the Congo.",
+            Thailand: "69,256,846 people live in Thailand.",
+            Tanzania: "60,229,204 people live in Tanzania.",
+            South_Korea: "51,273,440 people live in South Korea.",
+            Colombia: "49,705,306 people live in Colombia.",
+            Uganda: "45,169,147 people live in Uganda.",
+            Ukraine: "43,877,093 people live in Ukraine.",
+            Malaysia: "32,294,009 people live in Malaysia.",
+            North_Korea: "25,683,863 people live in North Korea.",
+            Niger: "22,850,032 people live in Niger.",
+            Burkina_Faso: "20,106,983 people live in Burkina Faso.",
+            Romania: "19,519,762 people live in Romania.",
+            Zimbabwe: "17,154,637 people live in Zimbabwe.",
+            The_Netherlands: "17,114,912 people live in the Netherlands.",
+            Somalia: "14,600,000 people live in Somalia.",
+            Guinea: "13,270,289 people live in Guinea.",
+            Benin: "11,683,042 people live in Benin.",
+            Haiti: "11,193,952 people live in Haiti.",
+            Greece: "11,133,944 people live in Greece.",
+            The_Czech_Republic: "10,629,078 people live in the Czech Republic.",
+            Azerbaijan: "9,980,369 people live in Azerbaijan.",
+        };
+
+var control = {Pakistan:"The movie, Avatar, cost $237,000,000 to make.",
+            Nigeria: "The movie, Interstellar, cost $165,000,000 to make.",
+            Mexico: "The movie, Harry Potter and the Sorcerer's Stone, cost $125,000,000 to make.",
+            Vietnam: "The movie, Gladiator, cost $103,000,000 to make.",
+            The_Democratic_Republic_of_the_Congo: "The movie, Bruce Almighty, cost $81,000,000 to make.",
+            Thailand: "The movie, Les Misérables, cost $65,000,000 to make.",
+            Tanzania: "The movie, Gone Girl, cost $61,000,000 to make.",
+            South_Korea: "The movie, Moulin Rouge, cost $53,000,000 to make.",
+            Colombia: "The movie, Miss Congeniality, cost $45,000,000 to make.",
+            Uganda: "The movie, Little Women, cost $42,000,000 to make.",
+            Ukraine: "The movie, Fifty Shades of Grey, cost $40,000,000 to make.",
+            Malaysia: "The movie, Hangover, cost $33,000,000 to make.",
+            North_Korea: "The movie, Star Wars: Return of the Jedi, cost $32,500,000 to make.",
+            Niger: "The movie, La La Land, cost $30,000,000 to make.",
+            Burkina_Faso: "The movie, James Bond -- Octopussy, cost $27,500,000 to make.",
+            Romania: "The movie, Bodyguard, cost $25,000,000 to make.",
+            Zimbabwe: "The movie, 12 Years a Slave, cost $22,000,000 to make.",
+            The_Netherlands: "The movie, Back to the Future, cost $19,000,000 to make.",
+            Somalia: "The movie, Borat, cost $18,000,000 to make.",
+            Guinea: "The movie, Legally Blonde, cost $18,000,000 to make.",
+            Benin: "The movie, Pitch Perfect, cost $17,000,000 to make.",
+            Haiti: "The movie, Black Swan, cost $13,000,000 to make.",
+            Greece: "The movie, The Intouchables, cost $12,800,000 to make.",
+            The_Czech_Republic: "The movie, Brokeback Mountain, cost $14,000,000 to make.",
+            Azerbaijan: "The movie, Scream, cost $15,000,000 to make.",
+        };
+
+var responses = {};
+for (var i = 0; i < country_list_shuffled.length; i++) {
+    var country = country_list_shuffled[i];
+    responses[country + "_estimate_first_response"] = null;
+    responses[country + "_recall_original_response"] = null;
+}
+
+var current_country = country_list_shuffled[0];
 
 
-var Peru_estimate_first_response = null;
-var Peru_estimate = {
+var first_estimate = {
     timeline: [{
-        type: jsPsychSurveyText,
-        questions: [{
-            prompt:  "How many people live in Peru?",
-            required: required_general, rows: 2, columns: 10
-        }],
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            return "How many people live in " + current_country.replace(/_/g, ' ') + "?";
+        },
+        labels: function() {
+            var labels = [];
+            for (var i = 0; i <= 500; i++) {
+                labels.push((i * 100000).toLocaleString()); // Add labels every 100,000
+            }
+            return labels;
+        },
+        slider_width: confidence_q_slider_width,
+
+        min: 0,
+        max: 500000000,
+        step: 100000, // Increment by 100,000
+        require_movement: true,
+        slider_start: 100000,
         on_finish: function (data) {
-            console.log(data.response);
-            Peru_estimate_first_response = data.response.Q0;
+            responses[current_country + "_estimate_first_response"] = data.response;
+            console.log(responses);
         }
     }],
     randomize_order: false
 };
+
+
+var loop_estimates = {
+    timeline: [first_estimate],
+    loop_function: function(data){
+        if (current_country != country_list_shuffled[country_list_shuffled.length - 1]) {
+            var currentIndex = country_list_shuffled.indexOf(current_country);
+            if (currentIndex >= 0 && currentIndex < country_list_shuffled.length - 1) {
+                // Increment the index to get the next country
+                current_country = country_list_shuffled[currentIndex + 1];
+                console.log(current_country);
+            } else {
+                // Handle the case where the current country is the last in the list
+                console.log("Current country is the last in the list or not found.");
+            }
+            return true; //loop
+        } else {
+            current_country=country_list_shuffled[0];
+            return false; // don't loop
+        }
+    }
+}
 
 var intro_slides_with_answers = {
     type: jsPsychInstructions,
@@ -41,122 +142,75 @@ var intro_slides_with_answers = {
     ],
     show_clickable_nav: true
 };
-
-var Peru_answer_or_control = {
+var country_answer_or_control = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: condition[0] == 'Factor-Included' ? Peru_answer : Peru_control,
+    stimulus: function() {
+        return condition[0] == 'Factor-Included' ? answer[current_country] : control[current_country];
+    },
     choices: "NO_KEYS",
     trial_duration: 7000,
-};      
+};    
 
-var Peru_estimate_second_response = null;
-var Peru_recall_original_response = null;
-var Peru_estimate_two = {
+var loop_answer_or_control = {
+    timeline: [country_answer_or_control],
+    loop_function: function(data){
+        if (current_country != country_list_shuffled[country_list_shuffled.length - 1]) {
+            var currentIndex = country_list_shuffled.indexOf(current_country);
+            if (currentIndex >= 0 && currentIndex < country_list_shuffled.length - 1) {
+                // Increment the index to get the next country
+                current_country = country_list_shuffled[currentIndex + 1];
+            } else {
+                // Handle the case where the current country is the last in the list
+                console.log("Current country is the last in the list or not found.");
+            }
+            
+            return true; //loop
+        } else {
+            current_country=country_list_shuffled[0];
+            return false; // don't loop
+        }
+    }
+}
+
+var country_memory = {
     timeline: [{
         type: jsPsychSurveyText,
-        questions: [{
-            prompt:  "How many people live in Peru?",
-            required: required_general, rows: 2, columns: 10
+        questions: function() {
+            var country_display = current_country.replace(/_/g, ' ');
+            return [{
+                prompt: "What was your ORIGINAL ANSWER when we asked you to estimate how many people lived in " + country_display + "?",
+                required: required_general,
+                rows: 2,
+                columns: 10
+            }];
         },
-            {prompt: "What was your ORIGINAL ANSWER?",
-                required: required_general, rows: 2, columns: 10
-            }],
         on_finish: function (data) {
             console.log(data.response);
-            Peru_estimate_second_response = data.response.Q0;
-            Peru_recall_original_response = data.response.Q1;
+            responses[current_country + "_recall_original_response"] = data.response.Q0;
         }
     }],
     randomize_order: false
 };
-
-var Cameroon_estimate_first_response = null;
-var Cameroon_estimate = {
-    timeline: [{
-        type: jsPsychSurveyText,
-        questions: [{
-            prompt:  "How many people live in Cameroon?",
-            required: required_general, rows: 2, columns: 10
-        }],
-        on_finish: function (data) {
-            console.log(data.response);
-            Cameroon_estimate_first_response = data.response.Q0;
+var loop_country_memory = {
+    timeline: [country_memory],
+    loop_function: function(data){
+        if (current_country != country_list_shuffled[country_list_shuffled.length - 1]) {
+            var currentIndex = country_list_shuffled.indexOf(current_country);
+            if (currentIndex >= 0 && currentIndex < country_list_shuffled.length - 1) {
+                // Increment the index to get the next country
+                current_country = country_list_shuffled[currentIndex + 1];
+            } else {
+                // Handle the case where the current country is the last in the list
+                console.log("Current country is the last in the list or not found.");
+            }
+            
+            return true; //loop
+        } else {
+            current_country=country_list_shuffled[0];
+            return false; // don't loop
         }
-    }],
-    randomize_order: false
-};
-
-var Cameroon_answer_or_control = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: condition[0] == 'Factor-Included' ? Cameroon_answer : Cameroon_control,
-    choices: "NO_KEYS",
-    trial_duration: 7000,
-};      
-
-var Cameroon_estimate_second_response = null;
-var Cameroon_recall_original_response = null;
-var Cameroon_estimate_two = {
-    timeline: [{
-        type: jsPsychSurveyText,
-        questions: [{
-            prompt:  "How many people live in Cameroon?",
-            required: required_general, rows: 2, columns: 10
-        },
-            {prompt: "What was your ORIGINAL ANSWER?",
-                required: required_general, rows: 2, columns: 10
-            }],
-        on_finish: function (data) {
-            console.log(data.response);
-            Cameroon_estimate_second_response = data.response.Q0;
-            Cameroon_recall_original_response = data.response.Q1;
-        }
-    }],
-    randomize_order: false
-};
-
-var Italy_estimate_first_response = null;
-var Italy_estimate = {
-    timeline: [{
-        type: jsPsychSurveyText,
-        questions: [{
-            prompt:  "How many people live in Italy?",
-            required: required_general, rows: 2, columns: 10
-        }],
-        on_finish: function (data) {
-            console.log(data.response);
-            Italy_estimate_first_response = data.response.Q0;
-        }
-    }],
-    randomize_order: false
-};
-
-var Italy_answer_or_control = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: condition[0] == 'Factor-Included' ? Italy_answer : Italy_control,
-    choices: "NO_KEYS",
-    trial_duration: 7000,
-};      
-
-var Italy_estimate_second_response = null;
-var Italy_recall_original_response = null;
-var Italy_estimate_two = {
-    timeline: [{
-        type: jsPsychSurveyText,
-        questions: [{
-            prompt:  "How many people live in Italy?",
-            required: required_general, rows: 2, columns: 10
-        },
-            {prompt: "What was your ORIGINAL ANSWER?",
-                required: required_general, rows: 2, columns: 10
-            }],
-        on_finish: function (data) {
-            console.log(data.response);
-            Italy_estimate_second_response = data.response.Q0;
-            Italy_recall_original_response = data.response.Q1;
-        }
-    }],
-    randomize_order: false
-};
+    }
+}
 
     var hindsight_openQ_response = null;
     var hindsight_openQ = {
@@ -175,19 +229,19 @@ var Italy_estimate_two = {
     };
 
     var introspection_q_labels_hindsight1 = [
-        `<strong>It made me more likely to misremember my intitial response as having been closer to the true value than it was.</strong>`,
+        `<strong>It pushed my memory towards the country's true population value.</strong>`,
         "",
         "<strong>It did not affect my response</strong>",
         "",
-        `<strong>It made me more likely to misremember my intitial response as having been farther from the true value than it was.</strong>`
+        `<strong>It pushed my memory away from the country's true population value.</strong>`
     ];
 
     var introspection_q_labels_hindsight2 = [
-        `<strong>It would have made me more likely to misremember my intitial response as having been closer to the true value than it was.</strong>`,
+        `<strong>It would have pushed my memory towards the country's true population value.</strong>`,
         "",
         "<strong>It would not have affected my response</strong>",
         "",
-        `<strong>It would have made me more likely to misremember my intitial response as having been farther from the true value than it was.</strong>`
+        `<strong>It would have pushed my memory away from the country's true population value.</strong>`
     ];
 
     var hindsight_intro_response1 = null;
@@ -196,11 +250,13 @@ var Italy_estimate_two = {
         stimulus: function () {
             if (condition[0] == "Factor-Included") {
                 return `<p>In this exercise, you were asked to estimate the population of a series of countries. And later on, you were asked to recall the population estimate you had made earlier.</p>
-                        <p>In between these two questions, we told you the true population for each country.</p>
+                        <p>In between these two sets of questions, <b>we told you the true population for each country.</b></p>
+                        <p>For example, early on, we asked you to estimate the population of Peru. Later on in the exercise, we told you the true population of Peru. Near the end of the exercise, we asked you to recall the population estimate you had made earlier for Peru. </p>
                         <p>Do you think <b>being told the true population for each country</b> affected your response? If so, how?</p>`;
             } else {
                 return `<p>In this exercise, you were asked to estimate the population of a series of countries. And later on, you were asked to recall the population estimate you had made earlier.</p>
-                        <p>Now, imagine if, between these two questions, we told you the true population for each country.</p>
+                        <p>Now, imagine if, in between these two sets of questions, <b>we told you the true population for each country.</b></p>
+                        <p>For example, imagine if, early on, we asked you to estimate the population of Peru. Later on in the exercise, we told you the true population of Peru. Near the end of the exercise, we asked you to recall the population estimate you had made earlier for Peru. </p>
                         <p>If this were the case, do you think <b>being told the true population for each country</b> would have affected your response? If so, how?</p>`;
             }
         },
@@ -246,15 +302,7 @@ var Italy_estimate_two = {
                 factor: data.condition,
                 condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
                 task_name: "hindsight",
-                Peru_estimate_first_response: Peru_estimate_first_response,
-                Peru_estimate_second_response: Peru_estimate_second_response,
-                Peru_recall_original_response: Peru_recall_original_response,
-                Cameroon_estimate_first_response: Cameroon_estimate_first_response,
-                Cameroon_estimate_second_response: Cameroon_estimate_second_response,
-                Cameroon_recall_original_response: Cameroon_recall_original_response,
-                Italy_estimate_first_response: Italy_estimate_first_response,
-                Italy_estimate_second_response: Italy_estimate_second_response,
-                Italy_recall_original_response: Italy_recall_original_response,
+                choice: responses,
                 openq_response: hindsight_openQ_response,
                 introspect_rating: hindsight_intro_response1,
                 introspect_open: hindsight_intro_confidence_response,
@@ -269,7 +317,7 @@ var Italy_estimate_two = {
     var familiarity = null;
     var hindsight_familiar = {
         type: jsPsychHtmlButtonResponse,
-        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        stimulus: familiarity_prompt,
         choices: ["Yes", "No"],
         on_finish: function (data) {
             familiarity= data.response == 0 ? "Yes" : "No"
@@ -279,12 +327,9 @@ var Italy_estimate_two = {
     };
 
     var hindsight = {
-        timeline: [hindsight_instructions, Peru_estimate, Cameroon_estimate, 
-            Italy_estimate, intro_slides_with_answers, Peru_answer_or_control, 
-            Cameroon_answer_or_control, 
-            Italy_answer_or_control, Peru_estimate_two, Cameroon_estimate_two, 
-            Italy_estimate_two, hindsight_familiar, hindsight_openQ, hindsight_introspect1, 
-            hindsight_intro_confidence]
+        timeline: [hindsight_instructions, loop_estimates, intro_slides_with_answers,
+            loop_answer_or_control, loop_country_memory, hindsight_familiar, 
+            hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
     };
 
 //#endregion hindsight

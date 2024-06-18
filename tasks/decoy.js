@@ -1,5 +1,8 @@
 //#region 6. Decoy Effect (Kaptein et al., 2016) - BETWEEN
 
+var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the presence of Brand W)?</p>';
+
+
 var decoy_instructions = {
     type: jsPsychInstructions,
     pages: [
@@ -152,7 +155,7 @@ var decoy_intro_confidence = {
 var familiarity = null;
 var decoy_familiar = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+    stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         familiarity= data.response == 0 ? "Yes" : "No";

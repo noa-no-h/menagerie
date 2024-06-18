@@ -1,4 +1,8 @@
 //#region 8. Belief Bias (Evans et al. 1983) - WITHIN
+
+var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the believability of each conclusion)?</p>';
+
+
 var belief_instructions1 = {
     type: jsPsychInstructions,
     pages: [
@@ -312,7 +316,7 @@ var belief_intro_confidence = {
 var familiarity = null;
 var belief_familiar = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before, where the conclusions differed on how believable they were?</p>`,
+    stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         familiarity=data.response == 0 ? "Yes" : "No";

@@ -1,4 +1,8 @@
 //#region 3. Causal Inference (Morris et al., 2019) - BETWEEN
+
+var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that there was only one green ball in the left box)?</p>';
+
+
 var cause_instructions = {
     type: jsPsychInstructions,
     pages: [
@@ -140,7 +144,7 @@ var cause_intro_confidence = {
 var familiarity = null;
 var cause_familiar = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+    stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         familiarity= data.response == 0 ? "Yes" : "No"

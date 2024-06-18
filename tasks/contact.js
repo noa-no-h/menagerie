@@ -1,5 +1,8 @@
 //#region 4. Contact Principle - BETWEEN
 
+var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that Frank needed to make physical contact with the man)?</p>';
+
+
 var contact_instructions = {
     type: jsPsychInstructions,
     pages: [
@@ -120,7 +123,7 @@ var contact_intro_confidence = {
 var familiarity = null;
 var contact_familiar = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+    stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         familiarity =data.response == 0 ? "Yes" : "No"

@@ -1,5 +1,5 @@
-///#region 1. Anchoring Trivia (Mussweiler & Strack, 1999) - BETWEEN
-var anchor_instructions = {
+ ///#region 1. Anchoring Trivia (Mussweiler & Strack, 1999) - BETWEEN
+ var anchor_instructions = {
     type: jsPsychInstructions,
     pages: [
         `<p>In this exercise, you will be asked to answer a series of trivia questions. Some of these questions may be difficult, but please try your best answer each one.</p>
@@ -324,7 +324,6 @@ var anchor_intro_confidence = {
             subject: data.subject,
             version: data.version,
             task_name: "anchoring",
-            familiarity: familiarity,
             condition: anchor_condition,
             factor: data.condition,
             openq_response: anchor_openQ_response,
@@ -357,9 +356,4 @@ var anchor_familiar = {
 }
 
 var anchor = {
-    timeline: [anchor_instructions, anchor_high]
-
-    //timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_intro_confidence]
-}
-
-//#endregion
+    timeline: [anchor_instructions, anchor_high]}

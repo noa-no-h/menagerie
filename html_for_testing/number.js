@@ -218,7 +218,7 @@ var number_intro_confidence = {
 var familiarity = null;
 var number_familiar = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+    stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         familiarity=data.response == 0 ? "Yes" : "No"

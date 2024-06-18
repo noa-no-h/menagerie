@@ -1,5 +1,8 @@
 //#region 5. Double Effect - BETWEEN
 
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that the man's death was <b>necessary</b> in order to achieve Peter's goal)?</p>";
+
+
 var double_instructions = {
     type: jsPsychInstructions,
     pages: [
@@ -123,7 +126,7 @@ var double_intro_confidence = {
 var familiarity = null;
 var double_familiar = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+    stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         familiarity=data.response == 0 ? "Yes" : "No"
