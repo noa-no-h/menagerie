@@ -23,7 +23,7 @@
     <script>
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
-        var version = "v4_sona";
+        var version = "v5_pilot1";
 
         // find the assignmentId & debugging status from the URL
         var urlParams = parseURLParams(window.location.href);
@@ -172,18 +172,17 @@
         var MTurk_id = {
             type: jsPsychSurveyText,
             questions: [{ prompt: "Your response", name: "worker_id" }],
-            preamble: [`Please enter your Amazon Mechanical Turk Worker ID below.<br>(When you're done, press 'Submit Answer'; don't hit Enter.)<br><br>If
-            you do not enter your ID accurately, we will not be able to pay you.`],
+            preamble: [`Please enter your Prolific ID below.<br>(When you're done, press 'Submit Answer'; don't hit Enter.)`],
             button_label: "Submit Answer"
         };
 
-        //var id = null;
-        var id = getRandomInt(1, 9999999);
+        var id = null;
+        /*var id = getRandomInt(1, 9999999);
         jsPsych.data.addProperties({
             subject: id,
             version: version,
             condition: condition[0]
-        });
+        });*/
         var MTurk_id_loop = {
             timeline: [MTurk_id],
             loop_function: function (data) {
@@ -1359,11 +1358,11 @@ var next_task = {
         var intro;
         if (!debug) {
             var intro = {
-                timeline: [welcome, consent_block, /*MTurk_id_loop,*/ attnCheck2, attnCheck3, begin]
+                timeline: [welcome, consent_block, MTurk_id_loop, attnCheck2, attnCheck3, begin]
             };
         } else {
             var intro = {
-                timeline: [welcome, /*MTurk_id_loop,*/ begin]
+                timeline: [welcome, MTurk_id_loop, begin]
             };
         }
 
