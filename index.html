@@ -38,6 +38,7 @@
                 debug = urlParams.debug[0];
             }
         }
+        var id = subject_id_url;
 
         /* create timeline */
         var jsPsych = initJsPsych({
@@ -57,6 +58,12 @@
         });
         var timeline = [];
         var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
+
+        jsPsych.data.addProperties({
+            subject: id,
+            version: version,
+            condition: condition[0]
+        });
 
         //#endregion
 
@@ -176,7 +183,6 @@
             button_label: "Submit Answer"
         };
 
-        var id = null;
         /*var id = getRandomInt(1, 9999999);
         jsPsych.data.addProperties({
             subject: id,
@@ -1355,11 +1361,11 @@ var next_task = {
         var intro;
         if (!debug) {
             var intro = {
-                timeline: [welcome, consent_block, MTurk_id_loop, attnCheck2, attnCheck3, begin]
+                timeline: [welcome, consent_block, /*MTurk_id_loop,*/ attnCheck2, attnCheck3, begin]
             };
         } else {
             var intro = {
-                timeline: [welcome, MTurk_id_loop, begin]
+                timeline: [welcome, /*MTurk_id_loop,*/ begin]
             };
         }
 
