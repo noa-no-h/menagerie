@@ -124,15 +124,15 @@
 
         //#region INTRODUCTION
         var check_consent = function (elem) {
-            if (document.getElementById('consent_checkbox').checked && document.getElementById('age_checkbox').checked) {
-                return true;
-            }
-            else {
-                alert("In order to participate, you must select 'Yes' for both checkboxes. Otherwise, please exit the study.");
-                return false;
-            }
-            return false;
-        };
+    var consentYes = document.querySelector('input[name="consent_checkbox"][value="yes"]');
+    if (consentYes && consentYes.checked) {
+        return true;
+    } else {
+        alert("In order to participate, you must select 'Yes'. Otherwise, please exit the study.");
+        return false;
+    }
+};
+
 
         var consent_block = {
             type: jsPsychExternalHtml,
@@ -1368,7 +1368,7 @@ var next_task = {
         }
 
         //timeline.push(next_task)
-        //timeline.push(hindsight)
+        timeline.push(anchor)
         timeline.push(preload)
         timeline.push(intro)
         timeline.push(tasks)

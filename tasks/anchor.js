@@ -19,11 +19,13 @@ const anchor_low = {
                 name: "page1",
                 elements: [
                     {
-                        type: "boolean",
+                        type: "radiogroup",
                         name: "AntarcticAnchor",
                         title: "Is the mean winter temperature in the Antarctic higher or lower than -45 degrees Fahrenheit?",
-                        valueTrue: "Higher",
-                        valueFalse: "Lower"
+                        choices: [
+                            { value: "Higher", text: "Higher" },
+                            { value: "Lower", text: "Lower" }
+                        ]
                     },
                     {
                         type: "text",
@@ -38,11 +40,13 @@ const anchor_low = {
                 name: "page2",
                 elements: [
                     {
-                        type: "boolean",
+                        type: "radiogroup",
                         name: "WhaleAnchor",
                         title: "Was the longest recorded blue whale shorter or longer than 68 feet?",
-                        valueTrue: "Shorter",
-                        valueFalse: "Longer"
+                        choices: [
+                            { value: "Shorter", text: "Shorter" },
+                            { value: "Longer", text: "Longer" }
+                        ]
                     },
                     {
                         type: "text",
@@ -60,8 +64,8 @@ const anchor_low = {
     },
     on_finish: function(data) {
         // Convert boolean responses to human-readable form
-        const antarcticAnchorResponse = data.response.AntarcticAnchor ? "Higher" : "Lower";
-        const whaleAnchorResponse = data.response.WhaleAnchor ? "Shorter" : "Longer";
+        const antarcticAnchorResponse = data.response.AntarcticAnchor;
+        const whaleAnchorResponse = data.response.WhaleAnchor;
 
         var s1_data = {
             subject: data.subject,
@@ -90,6 +94,7 @@ const anchor_low = {
         save_data(s2_data, 'introspection');
     }
 };
+
 
 
 
@@ -244,11 +249,11 @@ const anchor_none = {
 };
 
 
-anchor_sample = anchor_high;//jsPsych.randomization.sampleWithoutReplacement([anchor_high, anchor_low], 1);
+anchor_sample = anchor_low;//jsPsych.randomization.sampleWithoutReplacement([anchor_high, anchor_low], 1);
 
 var anchor_trials = null;
 if (condition[0] == "Factor-Included") {
-    anchor_trials = anchor_high
+    anchor_trials = anchor_low
 }
 else {
     anchor_trials = anchor_none
@@ -335,7 +340,7 @@ var anchor_intro_confidence = {
             rt: data.rt
         }
         save_data(s1_data, 'introspection');
-        console.log(s1_data);s
+        console.log(s1_data);
     }
 };
 
@@ -359,4 +364,4 @@ var anchor_familiar = {
 }
 
 var anchor = {
-    timeline: [anchor_instructions, anchor_high]}
+    timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_introspect2, anchor_intro_confidence]}

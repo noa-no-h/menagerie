@@ -11,9 +11,9 @@ var preload = {
 var halo_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will be presented with a series of pictures of anonymous strangers. Based on these pictures, you will then be asked to rate your impression of these strangers on four different dimensions.</p>
+        `<p>In this exercise, you will be presented with a series of pictures of anonymous strangers. Based on these pictures, you will then be asked to rate your impression of these strangers.</p>
         <p>There are no right or wrong answers in this task. We are simply interested in your honest impressions of these individuals.</p>
-        <p><i>Click the “Next” button below when you are ready to see the first stranger.</i></p>`
+        <p><i>Click the Next button below when you are ready to see the first stranger.</i></p>`
     ],
     show_clickable_nav: true
 };
@@ -83,7 +83,7 @@ var halo_openQ = {
     questions: [{
         prompt: `<p>In this exercise, you were presented with a series of pictures of 
         anonymous strangers. Based on these pictures, you were then asked to rate your 
-        impression how attractive the strangers were.. </p><p>Describe your thought process behind your decision about how attractive to rate each individual. How did you come to your eventual decision?</p>`,
+        impression how persuasive the strangers were. </p><p>Describe your thought process behind your decision about how persuasive to rate each individual. How did you come to your eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -91,8 +91,8 @@ var halo_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made the price I was willing to pay higher</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made the price I was willing to pay lower</strong>'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay higher</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay lower</strong>'];
+var introspection_q_labels_ref_price1 = ['<strong>It made me think they were less persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think they were more persuasive</strong>'];
+var introspection_q_labels_ref_price2 = ['<strong>It would have made me think they were less persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were more persuasive</strong>'];
 
 var halo_intro_response1 = null;
 var halo_introspect1 = {
@@ -101,16 +101,14 @@ var halo_introspect1 = {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, you were presented with a series of pictures of 
             anonymous strangers. Based on these pictures, you were then asked to rate your 
-            impression of these strangers on four different dimensions. For example, you 
-            were asked how persuasive you thought each person was.</p>
-            <p>How do you think the <b>attractiveness of the face</b> affected your response about each of the four dimensions?</p>`;
+            impression of how persuasive strangers were.</p>
+            <p>How do you think the <b>attractiveness of the face</b> affected your impression of their persuasiveness?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of pictures of 
             anonymous strangers. Based on these pictures, you were then asked to rate your 
-            impression of these strangers on four different dimensions. For example, you 
-            were asked how persuasive you thought each person was.</p>
+            impression of how persuasive strangers were.</p>
             <p>Now, imagine if you had been shown particularly <b>attractive<b/> faces.</p>
-            <p>If this were the case, do you think the <b>attractiveness of the faces</b> would have affected your response about each of the four dimensions? If so, how?</p>`;
+            <p>If this were the case, do you think the <b>attractiveness of the faces</b> would have affected your impression of their persuasiveness? If so, how?</p>`;
         }
     },
     labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,
@@ -154,7 +152,7 @@ var halo_intro_confidence = {
             version: data.version,
             factor: data.condition,
             task_name: "reference price",
-            condition: condition[0] == "Factor-Included" ? "hotel" : "motel",
+            condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
             stimulus: null,
             choice: choice,
             auxiliary_info1: null,
