@@ -292,7 +292,8 @@ var loop_country_memory = {
         slider_start: 50,
         require_movement: require_movement_general,
         on_finish: function (data) {
-            choice=serialize(responses);
+            choice=JSON.stringify(responses);
+            console.log(choice);
             hindsight_intro_confidence_response = data.response;
             s1_data = {
                 subject: data.subject,

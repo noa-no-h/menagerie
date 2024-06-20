@@ -114,7 +114,6 @@ var double_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "Means" : "Side Effect",
             choice: moral == 0 ? "Permissible" : "Impermissible",
             stimulus: null,
-            choice: moral,
             openq_response: double_openQ_response,
             introspect_rating: double_intro_response1,
             introspect_open: double_intro_confidence_response,
