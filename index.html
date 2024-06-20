@@ -148,7 +148,7 @@
             pages: [
                 `<p><b>Welcome to the experiment.</b></p> <p>Click next to begin.</p>`,
                 `<p>You must be 18 years or older to complete this study. If you under 18, please exit now.`,
-                `<p>This study will take around 60 minutes to complete. You must complete the experiment in one sitting.
+                `<p>This study will take around 45 minutes to complete. You must complete the experiment in one sitting.
                 <b>So, before you start, please make sure that you have one hour to devote entirely
                 to this study.</b> We appreciate your participation.</p>`,
                 `<p>On the next page, you'll find a consent form. Please read it and select "Yes" if you wish to participate in the study.`,
@@ -280,9 +280,9 @@
         var begin = {
             type: jsPsychInstructions,
             pages: [
-                `<p>Thank you for beginning the study! In the first phase of this study, you will be asked to complete a variety of short judgment/decision-making tasks. Then, in the second phase, you will be asked to answer a series of short questionnaires.</p>`,
+                `<p>Thank you for beginning the study! You will be asked to complete a variety of short judgment/decision-making tasks.</p>`,
                 `<p>While you're completing the decision-making tasks, please <b>pay attention to how you're making your judgments/decisions</b>.</p>`,
-                `<p>The first phase will take around 25-35 minutes to complete, while the second phase will take around 15-25 minutes to complete, for a total of 50-60 minutes.</p>
+                `<p>The study will take around 45 minutes to complete.</p>
                 <p>We will now begin with the first phase of the study. Please click the button below to continue!</p>
             `],
             show_clickable_nav: true
@@ -1299,7 +1299,7 @@ var next_task = {
         }
 
         //debrief
-        var debrief = {
+        /*var debrief = {
             type: jsPsychHtmlButtonResponse,
             stimulus: `
             <p><strong>	Here's more information about the study.</strong></p>
@@ -1312,21 +1312,19 @@ var next_task = {
             <p><b>Why is this study important?</b>
             These insights are important for understanding how people introspect on their decision-making processes, and chart a potential path towards better human introspection.</p>
             <p><b>How to contact the researcher:</b>
-            If you have questions or concerns about your participation or credit, or want to request a summary of research findings, please contact the research manager: Lauren Wilkins, lw5701@princeton.edu.</p>
+            If you have questions or concerns about your participation or credit, or want to request a summary of research findings, please contact the research manager: Hedy Kober, hedy.kober@yale.edu.</p>
             <p><b>Whom to contact about your rights as a participant in this research:</b>
-            For questions, concerns, suggestions, or complaints that have not been or cannot be addressed by the researcher, or to report research-related harm, please contact the Institutional Review Board by phone at (609) 258-8543 or by email at irb@princeton.edu.</p>
+            For questions, concerns, suggestions, or complaints that have not been or cannot be addressed by the researcher, or to report research-related harm, please contact the Institutional Review Board by phone at (203) 785-4688 or by email at hrpp@yale.edu.</p>
             <p><i>If you are finished reading, please click the button below to end the study.</i></p>
             `,
             choices: ["End"]
-        };
+        };*/
 
         var end = {
             type: jsPsychInstructions,
             pages: [`<strong> Thank you for your participation! The study is now over.</strong><p>
-                <p> Your confirmation code is <strong>` + id + `</strong>. </p>
-                <p> To receive credit for this study, you must <b>email this ID to lw5701@princeton.edu</b> with the subject line: "SONA Study: ` + id + `".</p>
-                <p> So please copy that code and email it to lw5701@princeton.edu now, and we will give you credit for completing the study.</p>
-                <p> If you want to learn more about the purpose of the study, proceed to the next page. But <b>make sure you copy the code and email it first!</b></p>`,
+                <p> Your confirmation code is <strong>C187ASH9</strong>. You can return to Prolific and submit the study with this URL: <a href='https://app.prolific.com/submissions/complete?cc=C187ASH9'>RETURN TO PROLIFIC</a>.</p>
+                <p> If you want to learn more about the purpose of the study, copy the code and proceed to the next page. Otherwise, just follow the above URL to end the study.</p>`,
                 `<p><strong>Here's more information about the study.</strong></p>
                 <p><b>What was this study about?</b>
                 In this study, we're looking at how people justify their choices in basic judgment/estimation exercises.</p>
@@ -1337,10 +1335,10 @@ var next_task = {
                 <p><b>Why is this study important?</b>
                 These insights are important for understanding how people introspect on their decision-making processes, and chart a potential path towards better human introspection.</p>
                 <p><b>How to contact the researcher:</b>
-                If you have questions or concerns about your participation or credit, or want to request a summary of research findings, please contact the research manager: Lauren Wilkins, lw5701@princeton.edu.</p>
+                If you have questions or concerns about your participation or credit, or want to request a summary of research findings, please contact the research manager: Hedy Kober, hedy.kober@yale.edu.</p>
                 <p><b>Whom to contact about your rights as a participant in this research:</b>
-                For questions, concerns, suggestions, or complaints that have not been or cannot be addressed by the researcher, or to report research-related harm, please contact the Institutional Review Board by phone at (609) 258-8543 or by email at irb@princeton.edu.</p>
-                <p><i>If you are finished reading, you may now exit the study. <b>But make sure you've emailed the code on the previous page before you exit!</b></i></p>
+                For questions, concerns, suggestions, or complaints that have not been or cannot be addressed by the researcher, or to report research-related harm, please contact the Institutional Review Board by phone at (203) 785-4688 or by email at hrpp@yale.edu.</p>
+                <p><i>If you are finished reading, you may now exit the study. <b>But make sure you've copied the code on the previous page before you exit!</b></i></p>
                 `
             ],
             show_clickable_nav: true
