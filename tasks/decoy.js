@@ -138,14 +138,16 @@ var decoy_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
-            task_name: "decoy effect",
-            choice: juice,
-            condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
             factor: data.condition,
-            familiarity: familiarity,
+            task_name: "decoy effect",
+            condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
+            stimulus: null,
+            choice: juice,
+            auxiliary_info1: null,
             openq_response: decoy_openQ_response,
             introspect_rating: decoy_intro_response1,
             introspect_open: decoy_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection');

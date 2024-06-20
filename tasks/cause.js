@@ -127,14 +127,16 @@ var cause_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
-            task_name: "causal inference",
-            choice: cause,
-            condition: condition[0] == "Factor-Included" ? "One" : "Nine",
             factor: data.condition,
-            familiarity: familiarity,
+            task_name: "causal inference",
+            condition: condition[0] == "Factor-Included" ? "One" : "Nine",
+            stimulus: null,
+            choice: cause,
+            auxiliary_info1: null,
             openq_response: cause_openQ_response,
             introspect_rating: cause_intro_response1,
             introspect_open: cause_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection');

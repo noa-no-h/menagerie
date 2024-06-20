@@ -218,12 +218,16 @@ var confidence_q = "<p>How confident are you that you gave the correct answer to
                 s1_data = {
                     subject: data.subject,
                     version: data.version,
-                    task_name: "mere exposure",
-                    familiarity: familiarity,
                     factor: data.condition,
+                    task_name: "mere exposure",
+                    condition: condition[0],
+                    stimulus: null,
+                    choice: null,
+                    auxiliary_info1: null,
                     openq_response: mere_exposure_openQ_response,
                     introspect_rating: mere_exposure_intro_response1,
                     introspect_open: mere_exposure_intro_confidence_response,
+                    familiarity: familiarity,
                     rt: data.rt
                 }
                 save_data(s1_data, 'introspection')

@@ -100,13 +100,15 @@ var ref_price_intro_confidence = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
-            condition: condition[0] == "Factor-Included" ? "hotel" : "motel",
             task_name: "reference price",
+            condition: condition[0] == "Factor-Included" ? "hotel" : "motel",
+            stimulus: null,
             choice: choice,
-            familiarity: familiarity,
+            auxiliary_info1: null,
             openq_response: ref_price_openQ_response,
             introspect_rating: ref_price_intro_response1,
             introspect_open: ref_price_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         };
         save_data(s1_data, 'introspection');

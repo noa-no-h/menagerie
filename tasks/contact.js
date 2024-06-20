@@ -106,14 +106,16 @@ var contact_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
-            task_name: "contact principle",
-            choice: push == 0 ? "Permissible" : "Impermissible",
-            condition: condition[0] == "Factor-Included" ? "Contact" : "No Contact",
             factor: data.condition,
-            familiarity: familiarity,
+            task_name: "contact principle",
+            condition: condition[0] == "Factor-Included" ? "Contact" : "No Contact",
+            stimulus: null,
+            choice: push == 0 ? "Permissible" : "Impermissible",
+            auxiliary_info1: null,
             openq_response: contact_openQ_response,
             introspect_rating: contact_intro_response1,
             introspect_open: contact_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection')

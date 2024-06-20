@@ -237,13 +237,15 @@ var avail_intro_confidence = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
-            condition: condition[0] == "Factor-Included" ? "Famous" : "Unfamous",
             task_name: "availability",
+            condition: condition[0] == "Factor-Included" ? "Famous" : "Unfamous",
+            stimulus: null,
             choice: more_men == 0 ? "List 1" : "List 2",
-            familiarity: familiarity,
+            auxiliary_info1: null,
             openq_response: avail_openQ_response,
             introspect_rating: avail_intro_response1,
             introspect_open: avail_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection');

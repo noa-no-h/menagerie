@@ -138,13 +138,15 @@ on_finish: function (data) {
         subject: data.subject,
         version: data.version,
         factor: data.condition,
-        condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
         task_name: "status_quo",
+        condition: condition[0],
+        stimulus: null,
         choice: choice,
-        familiarity: familiarity,
+        auxiliary_info1: null,
         openq_response: status_quo_openQ_response,
         introspect_rating: status_quo_intro_response1,
         introspect_open: status_quo_intro_confidence_response,
+        familiarity: familiarity,
         rt: data.rt
     };
     console.log(s1_data);

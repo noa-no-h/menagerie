@@ -323,12 +323,15 @@ var anchor_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            factor: data.condition,
             task_name: "anchoring",
             condition: anchor_condition,
-            factor: data.condition,
+            stimulus: null,
+            auxiliary_info1: null,
             openq_response: anchor_openQ_response,
             introspect_rating: anchor_intro_response1,
             introspect_open: anchor_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection');

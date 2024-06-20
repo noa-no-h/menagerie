@@ -316,12 +316,16 @@ var assoc_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
-            task_name: "associative memory",
             factor: data.condition,
-            familiarity: familiarity,
+            task_name: "associative memory",
+            condition: null,
+            stimulus: null,
+            choice: null,
+            auxiliary_info1: null,
             openq_response: assoc_openQ_response,
             introspect_rating: assoc_intro_response1,
             introspect_open: assoc_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection');

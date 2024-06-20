@@ -301,12 +301,16 @@ var belief_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
-            task_name: "belief",
-            familiarity: familiarity,
             factor: data.condition,
+            task_name: "belief",
+            condition: data.condition,
+            stimulus: null,
+            choice: null,
+            auxiliary_info1: null,
             openq_response: belief_openQ_response,
             introspect_rating: belief_intro_response1,
             introspect_open: belief_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection');

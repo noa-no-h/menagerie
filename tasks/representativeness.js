@@ -154,13 +154,15 @@ on_finish: function (data) {
         subject: data.subject,
         version: data.version,
         factor: data.condition,
-        condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
         task_name: "rep",
-        familiarity: familiarity,
+        condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
+        stimulus: null,
         choice: choice,
+        auxiliary_info1: null,
         openq_response: rep_openQ_response,
         introspect_rating: rep_intro_response1,
         introspect_open: rep_intro_confidence_response,
+        familiarity: familiarity,
         rt: data.rt
     };
     console.log(s1_data);

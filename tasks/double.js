@@ -109,14 +109,16 @@ var double_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
-            task_name: "double effect",
-            choice: moral == 0 ? "Permissible" : "Impermissible",
-            condition: condition[0] == "Factor-Included" ? "Means" : "Side Effect",
             factor: data.condition,
-            familiarity: familiarity,
+            task_name: "double effect",
+            condition: condition[0] == "Factor-Included" ? "Means" : "Side Effect",
+            choice: moral == 0 ? "Permissible" : "Impermissible",
+            stimulus: null,
+            choice: moral,
             openq_response: double_openQ_response,
             introspect_rating: double_intro_response1,
             introspect_open: double_intro_confidence_response,
+            familiarity: familiarity,
             rt: data.rt
         }
         save_data(s1_data, 'introspection')
