@@ -517,8 +517,7 @@ var next_task = {
         //#region Make task list
         var task_list = [status_quo, representativeness, hindsight, 
                         reference_price, anchor, avail, cause, contact, 
-                        double, decoy, belief, assoc,
-                        mere_exposure,halo]; 
+                        double, decoy, belief, assoc, mere_exposure,halo]; 
         //var task_list = [cause];
         var task_list_shuffled_no_in_between = _.shuffle(task_list);
         var task_list_shuffled = [];
@@ -1368,11 +1367,11 @@ var next_task = {
         }
 
         //timeline.push(next_task)
-        timeline.push(anchor)
+        //timeline.push(mere_exposure)
         timeline.push(preload)
         timeline.push(intro)
         timeline.push(tasks)
-        timeline.push(measures)
+        //timeline.push(measures)
         timeline.push(ending)
 
         /* initiate experiment */

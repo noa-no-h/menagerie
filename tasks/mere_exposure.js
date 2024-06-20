@@ -89,8 +89,9 @@ var confidence_q = "<p>How confident are you that you gave the correct answer to
                 `<p>For the first part of this exercise, you will see a series of Turkish words. It is not expected that you be able to speak Turkish. We are simply interested in your impression of the words.<p>Each word will appear once in the center of the screen, as follows:</p><br><br><br><br>
         <p style = "font-size:30px">kalem</p>
         <br><br><br>
-        <p>The words will appear relatively <b>quickly</b>, so please pay attention to the screen throughout the exercise. Note that some of the words may appear more than once.</p>`,
-                `<p>You will now begin the first part of the exercise. The words will appear as soon as you press the "Next" button below.</p>
+        <p>The words will appear relatively <b>quickly</b>, so please pay attention to the screen throughout the exercise. Note that some of the words may appear more than once.</p>
+                <p>This part of the exercise should take about five minutes.</p>
+                <p>You will now begin the first part of the exercise. The words will appear as soon as you press the "Next" button below.</p>
         <p><i>Please click the "Next" button when you are ready to see the words.</i></p>`,
             ],
             show_clickable_nav: true
