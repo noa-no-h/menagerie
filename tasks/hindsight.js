@@ -292,6 +292,7 @@ var loop_country_memory = {
         slider_start: 50,
         require_movement: require_movement_general,
         on_finish: function (data) {
+            choice=serialize(responses);
             hindsight_intro_confidence_response = data.response;
             s1_data = {
                 subject: data.subject,
@@ -300,7 +301,7 @@ var loop_country_memory = {
                 task_name: "hindsight",
                 condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
                 stimulus: null,
-                choice: responses,
+                choice: choice,
                 auxiliary_info1: null,
                 openq_response: hindsight_openQ_response,
                 introspect_rating: hindsight_intro_response1,
