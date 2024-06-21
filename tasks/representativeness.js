@@ -40,13 +40,14 @@ pages: [
 show_clickable_nav: true
 };
 
+var rep_stimulus = function() {
+    return condition[0] == 'Factor-Included' ? rep_stimulus_factor_included : rep_stimulus_factor_excluded;
+};
 var choice = null;
 var rep_trial = {
 timeline: [{
     type: jsPsychHtmlSliderResponse,
-    stimulus: function() {
-        return condition[0] == 'Factor-Included' ? rep_stimulus_factor_included : rep_stimulus_factor_excluded;
-    },
+    stimulus: rep_stimulus,
     labels: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'],
     min: 0,
     max: 100,
@@ -156,7 +157,7 @@ on_finish: function (data) {
         factor: data.condition,
         task_name: "rep",
         condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
-        stimulus: null,
+        stimulus: rep_stimulus,
         choice: choice,
         auxiliary_info1: null,
         openq_response: rep_openQ_response,

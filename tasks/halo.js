@@ -27,7 +27,7 @@ var attractive_list = ['img/A1 WF-233.jpg', 'img/A2 BF-240.jpg', 'img/A3 LF-249.
 
 var unattractive_list = ['img/U1 AM-224.jpg', 'img/U2 LM-240.jpg', 'img/U3 BF-200.jpg', 'img/U4 WF-002.jpg'];
 
-var neutral_list = ['img/M1 LF-240.jpg', 'img/M2 WM-230.jpg', 'img/M3 BM-034.jpg', 'img/M4 LF-252.jpg', 'img/U5 WF-250.jpg',
+var neutral_list = ['img/M1 LF-240.jpg', 'img/M2 WM-230.jpg', 'img/M3 BM-034.jpg', 'img/M4 LF-252.jpg',
                     'img/M5 WM-221.jpg', 'img/M6 WM-214.jpg', 'img/M7 WM-254.jpg', 'img/M8 BM-232.jpg'
 ];
 
@@ -72,7 +72,7 @@ var halo_trial = {
             task_name: "halo",
             condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
             stimulus: stimulus,
-            choice: data.response.Q0,
+            choice: data.response.Q0 + 1,
             auxiliary_info1: null,
             openq_response: null,
             introspect_rating: null,

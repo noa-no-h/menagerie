@@ -36,12 +36,13 @@ pages: [
 show_clickable_nav: true
 };
 
-choice = null;
+var stimulus = condition[0] == 'Factor-Included' ? status_quo_stimulus_factor_included : status_quo_stimulus_factor_excluded;
+var choice = null;
 var status_quo_trial = {
 timeline: [
     {
         type: jsPsychHtmlButtonResponse,
-        stimulus: condition[0] == 'Factor-Included' ? status_quo_stimulus_factor_included : status_quo_stimulus_factor_excluded,
+        stimulus: stimulus,
         choices: ['Allocate 70% to auto safety and 30% to highway safety', 'Allocate 50% to auto safety and 50% to highway safety'],
         prompt: '',
         on_finish: function (data) {
@@ -140,7 +141,7 @@ on_finish: function (data) {
         factor: data.condition,
         task_name: "status_quo",
         condition: condition[0],
-        stimulus: null,
+        stimulus: stimulus,
         choice: choice,
         auxiliary_info1: null,
         openq_response: status_quo_openQ_response,

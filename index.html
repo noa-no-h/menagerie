@@ -1283,14 +1283,7 @@ var next_task = {
             ],
             on_finish: function (data) {
                 s1_data = {
-                    subject: data.subject,
-                    version: data.version,
-                    gender: data.response.gender,
-                    age: age,
-                    education: data.response.education,
-                    income: data.response.income,
-                    race: race,
-                    phq91: phq91_responses,
+                    /*phq91: phq91_responses,
                     phq92: phq92_responses,
                     gad71: gad71_responses,
                     gad72: gad72_responses,
@@ -1300,11 +1293,23 @@ var next_task = {
                     tas: tas_responses,
                     icar_responses: icar_responses,
                     icar_correct: JSON.stringify(correct_ans),
-                    icar_num_correct: correct_ans.length,
+                    icar_num_correct: correct_ans.length,*/
                     feedback: feedback,
-                    total_time: Date.now() - start_time
+                    total_time: Date.now() - start_time,
+                    subject: data.subject,
+                    version: data.version,
+                    factor: "gender: " + data.response.gender,
+                    task_name: "demographics",
+                    condition: "age: " + age,
+                    stimulus: "education: "+ data.response.education,
+                    choice: "income: " + data.response.income,
+                    auxiliary_info1: "feedback: "+ feedback,
+                    openq_response: "race: " + race,
+                    introspect_rating: "total_time: " + (Date.now() - start_time),
+                    introspect_open: null,
+                    familiarity: null
                 }
-                save_data(s1_data, 'introspect_demo');
+                save_data(s1_data, 'introspection');
             }
         }
 
@@ -1373,7 +1378,7 @@ var next_task = {
             };
         }
 
-        timeline.push(halo)
+        //timeline.push(halo)
         //timeline.push(mere_exposure)
         timeline.push(preload)
         timeline.push(intro)
