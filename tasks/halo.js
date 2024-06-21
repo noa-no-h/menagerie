@@ -27,7 +27,7 @@ var attractive_list = ['img/A1 WF-233.jpg', 'img/A2 BF-240.jpg', 'img/A3 LF-249.
 
 var unattractive_list = ['img/U1 AM-224.jpg', 'img/U2 LM-240.jpg', 'img/U3 BF-200.jpg', 'img/U4 WF-002.jpg'];
 
-var neutral_list = ['img/M1 LF-240.jpg', 'img/M2 WM-230.jpg', 'img/M3 BM-034.jpg', 'img/M4 LF-252.jpg', 'img/U5 WF-250.jpg',
+var neutral_list = ['img/M1 LF-240.jpg', 'img/M2 WM-230.jpg', 'img/M3 BM-034.jpg', 'img/M4 LF-252.jpg',
                     'img/M5 WM-221.jpg', 'img/M6 WM-214.jpg', 'img/M7 WM-254.jpg', 'img/M8 BM-232.jpg'
 ];
 
@@ -48,18 +48,39 @@ for (i = 0; i < num_stimuli; i++) {
     choice[stimuli_list[i]]=null;
 }
 
+var stimulus = null;
 var halo_trial = {
     type: jsPsychSurveyLikert,
-    preamble: function(){return '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>'
+    preamble: function(){
+
+        stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>'
+        return stimulus;
 },
     questions: [
       {prompt: "On a scale of 1-5, how persuasive do you think this person is?", labels: ["1", "2", "3", "4", "5"], required: true},
     ],
     scale_width: 500,
     on_finish: function (data) {
-        console.log(data.response);
-        choice[stimuli_list[list_index]] = data.response.Q0;
-        console.log(choice)
+        //console.log(data.response);
+        //choice[stimuli_list[list_index]] = data.response.Q0;
+        console.log("data.response.Q0: " + data.response.Q0);
+
+        var s1_data = {
+            subject: data.subject,
+            version: data.version,
+            factor: data.condition,
+            task_name: "halo",
+            condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
+            stimulus: stimulus,
+            choice: data.response.Q0 + 1,
+            auxiliary_info1: null,
+            openq_response: null,
+            introspect_rating: null,
+            introspect_open: null,
+            familiarity: null,
+            rt: data.rt
+        };
+        save_data(s1_data, 'introspection');
     }
   };
 
@@ -151,7 +172,7 @@ var halo_intro_confidence = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
-            task_name: "reference price",
+            task_name: "halo",
             condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
             stimulus: null,
             choice: choice,

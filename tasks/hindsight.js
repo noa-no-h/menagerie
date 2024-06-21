@@ -11,6 +11,8 @@ var hindsight_instructions = {
     show_clickable_nav: true
 };
 
+//var country_list=["Pakistan", "Nigeria"]
+
 var country_list=["Pakistan", "Nigeria", "Mexico", 
                 "Vietnam", "The_Democratic_Republic_of_the_Congo", "Thailand", "Tanzania", 
                 "South_Korea", "Colombia", "Uganda", "Ukraine", "Malaysia", 
@@ -83,13 +85,16 @@ for (var i = 0; i < country_list_shuffled.length; i++) {
 
 var current_country = country_list_shuffled[0];
 
+var stim = null;
+var country_display = null;
 var first_estimate = {
     timeline: [{
         type: jsPsychSurveyText,
         questions: function() {
-            var country_display = current_country.replace(/_/g, ' ');
+            country_display = current_country.replace(/_/g, ' ');
+            stim = "How many people live in " + country_display + "?"
             return [{
-                prompt: "How many people live in " + country_display + "?",
+                prompt: stim,
                 required: required_general,
                 rows: 2,
                 columns: 10
@@ -100,8 +105,22 @@ var first_estimate = {
         columns: 20,
         require_movement: true,
         on_finish: function (data) {
-            responses[current_country + "_estimate_first_response"] = data.response;
+            responses[current_country + "_estimate_first_response"] = data.response.Q0;
             console.log(responses);
+            let result = current_country + "_estimate_first_response = " + data.response.Q0;
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "hindsight bias",
+                factor: data.condition,
+                condition: data.con,
+                choice: data.response.Q0,
+                stimulus: stim,
+                auxiliary_info1: result,
+                rt: data.rt,
+            }
+            save_data(s1_data, 'introspection');
+
         }
     }],
     randomize_order: false
@@ -173,7 +192,8 @@ var country_memory = {
     timeline: [{
         type: jsPsychSurveyText,
         questions: function() {
-            var country_display = current_country.replace(/_/g, ' ');
+            country_display = current_country.replace(/_/g, ' ');
+            stim = "What was your ORIGINAL ANSWER when we asked you to estimate how many people lived in " + country_display + "?";
             return [{
                 prompt: "What was your ORIGINAL ANSWER when we asked you to estimate how many people lived in " + country_display + "?",
                 required: required_general,
@@ -184,6 +204,19 @@ var country_memory = {
         on_finish: function (data) {
             console.log(data.response);
             responses[current_country + "_recall_original_response"] = data.response.Q0;
+            let result = current_country + "_recall_original_response = " + data.response.Q0;
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "hindsight bias",
+                factor: data.condition,
+                condition: data.con,
+                choice: data.response.Q0,
+                stimulus: stim,
+                auxiliary_info1: result,
+                rt: data.rt,
+            }
+            save_data(s1_data, 'introspection');
         }
     }],
     randomize_order: false
@@ -292,6 +325,8 @@ var loop_country_memory = {
         slider_start: 50,
         require_movement: require_movement_general,
         on_finish: function (data) {
+            choice=JSON.stringify(responses);
+            console.log(choice);
             hindsight_intro_confidence_response = data.response;
             s1_data = {
                 subject: data.subject,
@@ -300,7 +335,7 @@ var loop_country_memory = {
                 task_name: "hindsight",
                 condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
                 stimulus: null,
-                choice: responses,
+                choice: null,
                 auxiliary_info1: null,
                 openq_response: hindsight_openQ_response,
                 introspect_rating: hindsight_intro_response1,
@@ -330,5 +365,10 @@ var loop_country_memory = {
             loop_answer_or_control, loop_country_memory, hindsight_familiar, 
             hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
     };
+
+    /*var hindsight = {
+        timeline: [loop_country_memory, hindsight_familiar, 
+            hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
+    };*/
 
 //#endregion hindsight
