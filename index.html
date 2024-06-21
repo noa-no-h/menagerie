@@ -31,7 +31,7 @@
         var urlParams = parseURLParams(window.location.href);
         var subject_id_url = '';
         var debug = false;
-        /*if (typeof urlParams != "undefined") {
+        if (typeof urlParams != "undefined") {
             if (urlParams.hasOwnProperty('PROLIFIC_PID')) {
                 subject_id_url = urlParams.PROLIFIC_PID[0];
             }
@@ -40,7 +40,8 @@
                 debug = urlParams.debug[0];
             }
         }
-        var id = subject_id_url;*/
+        var id = subject_id_url;
+        console.log("debug: " + debug);
 
         /* create timeline */
         var jsPsych = initJsPsych({
@@ -1372,7 +1373,7 @@ var next_task = {
             };
         }
 
-        //timeline.push(next_task)
+        timeline.push(halo)
         //timeline.push(mere_exposure)
         timeline.push(preload)
         timeline.push(intro)

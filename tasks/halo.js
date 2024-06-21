@@ -48,18 +48,39 @@ for (i = 0; i < num_stimuli; i++) {
     choice[stimuli_list[i]]=null;
 }
 
+var stimulus = null;
 var halo_trial = {
     type: jsPsychSurveyLikert,
-    preamble: function(){return '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>'
+    preamble: function(){
+
+        stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>'
+        return stimulus;
 },
     questions: [
       {prompt: "On a scale of 1-5, how persuasive do you think this person is?", labels: ["1", "2", "3", "4", "5"], required: true},
     ],
     scale_width: 500,
     on_finish: function (data) {
-        console.log(data.response);
-        choice[stimuli_list[list_index]] = data.response.Q0;
-        console.log(choice)
+        //console.log(data.response);
+        //choice[stimuli_list[list_index]] = data.response.Q0;
+        console.log("data.response.Q0: " + data.response.Q0);
+
+        var s1_data = {
+            subject: data.subject,
+            version: data.version,
+            factor: data.condition,
+            task_name: "halo",
+            condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
+            stimulus: stimulus,
+            choice: data.response.Q0,
+            auxiliary_info1: null,
+            openq_response: null,
+            introspect_rating: null,
+            introspect_open: null,
+            familiarity: null,
+            rt: data.rt
+        };
+        save_data(s1_data, 'introspection');
     }
   };
 
@@ -151,7 +172,7 @@ var halo_intro_confidence = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
-            task_name: "reference price",
+            task_name: "halo",
             condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
             stimulus: null,
             choice: choice,
