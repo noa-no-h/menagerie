@@ -1,0 +1,226 @@
+# Setup -------------------------------------------------------------------
+
+require(dplyr)
+require(ggplot2)
+require(lme4)
+require(lmerTest)
+require(sjPlot)
+require(magrittr)
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+data <- read.csv('data.csv') %>%
+  arrange(subject, task_name)
+head(data)
+
+data = data %>%
+  filter(familiarity != "No") %>% #only when people are not familiar with a task
+  mutate(
+    task_name = factor(task_name)  # Convert task_name to a factor
+  )
+
+View(data)
+
+
+
+# 1 Did we see the effects? -------------------------------------------------
+
+
+
+## 1.1 anchoring effect? -----------------------------------------------------------------------
+
+
+### Antarctica -----------------------------------------------------------------------
+
+data$choice <- as.numeric(data$choice)
+
+anchor_antarctica_data <- data %>%
+  filter(task_name == "anchoring") %>%
+  filter(stimulus != "")%>%
+  filter(stimulus == "Antarctic Temperature")
+  
+
+
+#violin
+ggplot(anchor_antarctica_data, aes(x = condition, y = choice)) +
+  geom_violin(trim = FALSE, fill = "skyblue", alpha = 0.5) +
+  geom_jitter(width = 0.2, size = 1, alpha = 0.7) +
+  labs(title = "Distribution of Estimates by Anchor Presence", x = "Anchor Presence", y = "Estimate") +
+  theme_minimal()
+
+#bar
+ggplot(summary_anchor_antarctica_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity", position = position_dodge(), color = "black") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2, position = position_dodge(0.9)) +
+  labs(title = "Mean Estimates by Anchor Presence", x = "Anchor Presence", y = "Mean Estimate") +
+  theme_minimal()
+
+#analysis
+
+low_anchor <- anchor_antarctica_data %>%
+  filter(condition == "Low Anchor") %>%
+  pull(choice)
+
+no_anchor <- anchor_antarctica_data %>%
+  filter(condition == "No Anchor") %>%
+  pull(choice)
+
+t_test_result <- t.test(low_anchor, no_anchor, var.equal = TRUE)
+
+print(t_test_result)
+
+
+### Whale -----------------------------------------------------------------------
+data$choice <- as.numeric(data$choice)
+
+anchor_whale_data <- data %>%
+  filter(task_name == "anchoring") %>%
+  filter(stimulus != "") %>%
+  filter(stimulus == "Whale Length")
+  
+summary_anchor_whale_data <- anchor_whale_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice, na.rm = TRUE),
+    se_choice = sd(choice, na.rm = TRUE) / sqrt(n())
+  )
+
+
+ggplot(anchor_whale_data, aes(x = condition, y = choice)) +
+  geom_violin(trim = FALSE, fill = "skyblue", alpha = 0.5) +
+  geom_jitter(width = 0.2, size = 1, alpha = 0.7) +
+  labs(title = "Distribution of Estimates by Anchor Presence", x = "Anchor Presence", y = "Estimate") +
+  theme_minimal()
+
+#analysis
+
+low_anchor <- anchor_whale_data %>%
+  filter(condition == "Low Anchor") %>%
+  pull(choice)
+
+no_anchor <- anchor_whale_data %>%
+  filter(condition == "No Anchor") %>%
+  pull(choice)
+
+t_test_result <- t.test(low_anchor, no_anchor, var.equal = TRUE)
+
+print(t_test_result)
+
+## 1.2 associative memory effect? -----------------------------------------------------------------------
+
+#plot
+associative_data <- data %>%
+  filter(task_name == "associative memory") %>%
+  filter(stimulus != "") %>%
+  mutate(false_alarm = ifelse(choice == "Original" & auxiliary_info1 == "New", 1, 0))
+
+factor_ex_associative = associative_data %>%
+  filter(factor == "Factor-Excluded")
+
+factor_in_associative = associative_data %>%
+  filter(factor == "Factor-Included") 
+
+false_alarm_summary <- associative_data %>%
+  group_by(factor) %>%
+  summarize(count_false_alarm = sum(false_alarm))
+
+ggplot(false_alarm_summary, aes(x = factor, y = count_false_alarm)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Count of False Alarms by Condition",
+       x = "Condition",
+       y = "Count of False Alarms") +
+  theme_minimal()
+
+#analysis
+
+false_alarm_ex <- associative_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  pull(false_alarm)
+
+false_alarm_in <- associative_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(false_alarm)
+
+prop_ex <- sum(false_alarm_ex) / length(false_alarm_ex)
+prop_in <- sum(false_alarm_in) / length(false_alarm_in)
+
+successes <- c(sum(false_alarm_ex), sum(false_alarm_in))
+trials <- c(length(false_alarm_ex), length(false_alarm_in))
+
+test_result <- prop.test(successes, trials, alternative = "less")
+
+print(test_result)
+
+
+## 1.3 availability effect? -----------------------------------------------------------------------
+
+
+
+
+
+## 1.4 belief effect? -----------------------------------------------------------------------
+## 1.5 causal inference? -----------------------------------------------------------------------
+## 1.6 contact principle? -----------------------------------------------------------------------
+## 1.7 decoy effect? -----------------------------------------------------------------------
+## 1.8 double effect? -----------------------------------------------------------------------
+## 1.9 halo effect? -----------------------------------------------------------------------
+data$choice <- as.numeric(data$choice)
+
+halo_bar_data <- data %>%
+  filter(task_name == "halo") %>%
+  filter(stimulus != "") %>%
+  mutate(
+    condition = case_when(
+      grepl("img/U", stimulus) ~ "unattractive",
+      grepl("img/A", stimulus) ~ "attractive",
+      grepl("img/M", stimulus) ~ "average",
+      TRUE ~ condition
+    )
+  )
+
+summary_halo_data <- halo_bar_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice, na.rm = TRUE),
+    se_choice = sd(choice, na.rm = TRUE) / sqrt(n())
+  )
+
+ggplot(summary_halo_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Average Persuasiveness by Attractiveness", x = "Condition", y = "Average Choice") +
+  theme_minimal()
+
+anova_model <- aov(choice ~ condition, data = halo_bar_data)
+summary(anova_model)
+tukey_hsd <- TukeyHSD(anova_model)
+print(tukey_hsd)
+
+
+## 1.10 hindsight bias? -----------------------------------------------------------------------
+## 1.11 mere exposure effect? -----------------------------------------------------------------------
+## 1.12 reference price? -----------------------------------------------------------------------
+## 1.13 representativeness heuristic? -----------------------------------------------------------------------
+## 1.14 status quo bias? -----------------------------------------------------------------------
+
+# 2 Introspection-----------------------------------------------------------------------
+
+## 2.1 anchoring effect? -----------------------------------------------------------------------
+
+
+
+## 2.2 associative memory effect? -----------------------------------------------------------------------
+## 2.3 availability effect? -----------------------------------------------------------------------
+## 2.4 belief effect? -----------------------------------------------------------------------
+## 2.5 causal inference? -----------------------------------------------------------------------
+## 2.6 contact principle? -----------------------------------------------------------------------
+## 2.7 decoy effect? -----------------------------------------------------------------------
+## 2.8 double effect? -----------------------------------------------------------------------
+## 2.9 halo effect? -----------------------------------------------------------------------
+## 2.10 hindsight bias? -----------------------------------------------------------------------
+## 2.11 mere exposure effect? -----------------------------------------------------------------------
+## 2.12 reference price? -----------------------------------------------------------------------
+## 2.13 representativeness heuristic? -----------------------------------------------------------------------
+## 2.14 status quo bias? -----------------------------------------------------------------------
+
+
+
