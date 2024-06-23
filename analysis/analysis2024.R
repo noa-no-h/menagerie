@@ -13,7 +13,7 @@ data <- read.csv('data.csv') %>%
 head(data)
 
 data = data %>%
-  filter(familiarity != "No") %>% #only when people are not familiar with a task
+  filter(familiarity != "Yes") %>% #only when people are not familiar with a task
   mutate(
     task_name = factor(task_name)  # Convert task_name to a factor
   )
@@ -31,13 +31,13 @@ View(data)
 
 ### Antarctica -----------------------------------------------------------------------
 
-data$choice <- as.numeric(data$choice)
 
 anchor_antarctica_data <- data %>%
   filter(task_name == "anchoring") %>%
   filter(stimulus != "")%>%
   filter(stimulus == "Antarctic Temperature")
   
+anchor_antarctica_data$choice <- as.numeric(anchor_antarctica_data$choice)
 
 
 #violin
@@ -67,16 +67,17 @@ no_anchor <- anchor_antarctica_data %>%
 t_test_result <- t.test(low_anchor, no_anchor, var.equal = TRUE)
 
 print(t_test_result)
+#p-value = 0.001
 
 
 ### Whale -----------------------------------------------------------------------
-data$choice <- as.numeric(data$choice)
-
 anchor_whale_data <- data %>%
   filter(task_name == "anchoring") %>%
   filter(stimulus != "") %>%
   filter(stimulus == "Whale Length")
   
+anchor_whale_data$choice <- as.numeric(anchor_whale_data$choice)
+
 summary_anchor_whale_data <- anchor_whale_data %>%
   group_by(condition) %>%
   summarize(
@@ -104,6 +105,7 @@ no_anchor <- anchor_whale_data %>%
 t_test_result <- t.test(low_anchor, no_anchor, var.equal = TRUE)
 
 print(t_test_result)
+#p-value = 0.8
 
 ## 1.2 associative memory effect? -----------------------------------------------------------------------
 
@@ -149,7 +151,7 @@ trials <- c(length(false_alarm_ex), length(false_alarm_in))
 test_result <- prop.test(successes, trials, alternative = "less")
 
 print(test_result)
-
+#p-value = 2e-05
 
 ## 1.3 availability effect? -----------------------------------------------------------------------
 
@@ -163,7 +165,6 @@ print(test_result)
 ## 1.7 decoy effect? -----------------------------------------------------------------------
 ## 1.8 double effect? -----------------------------------------------------------------------
 ## 1.9 halo effect? -----------------------------------------------------------------------
-data$choice <- as.numeric(data$choice)
 
 halo_bar_data <- data %>%
   filter(task_name == "halo") %>%
@@ -176,6 +177,9 @@ halo_bar_data <- data %>%
       TRUE ~ condition
     )
   )
+
+halo_bar_data$choice <- as.numeric(halo_bar_data$choice)
+
 
 summary_halo_data <- halo_bar_data %>%
   group_by(condition) %>%
@@ -208,7 +212,51 @@ print(tukey_hsd)
 
 
 
+
 ## 2.2 associative memory effect? -----------------------------------------------------------------------
+
+
+associative_data <- data %>%
+  filter(task_name == "associative memory") %>%
+  filter(introspect_rating != "") %>%
+  filter(familiarity == "No")
+
+summary_data <- associative_data %>%
+  group_by(factor) %>%
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = sd(as.numeric(introspect_rating), na.rm = TRUE) / sqrt(n())
+  )
+
+View(associative_data)
+
+ggplot(summary_data, aes(x = factor, y = mean_introspect_rating)) +
+  geom_bar(stat = "identity", position = position_dodge(), color = "black") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating),
+                width = 0.2, position = position_dodge(0.9)) +
+  labs(title = "Difference in Introspect Rating between Factors",
+       x = "Group",
+       y = "Mean Introspect Rating") +
+  theme_minimal()
+
+
+#analysis
+
+factor_ex_introspect <- associative_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  mutate(introspect_rating = as.numeric(introspect_rating)) %>%
+  pull(introspect_rating)
+
+factor_in_introspect <- associative_data %>%
+  filter(factor == "Factor-Included") %>%
+  mutate(introspect_rating = as.numeric(introspect_rating)) %>%
+  pull(introspect_rating)
+
+t_test_result <- t.test(factor_ex_introspect, factor_in_introspect, var.equal = TRUE)
+print(t_test_result)
+
+#p=0.1
+
 ## 2.3 availability effect? -----------------------------------------------------------------------
 ## 2.4 belief effect? -----------------------------------------------------------------------
 ## 2.5 causal inference? -----------------------------------------------------------------------
