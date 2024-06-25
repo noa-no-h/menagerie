@@ -155,6 +155,39 @@ print(test_result)
 
 ## 1.3 availability effect? -----------------------------------------------------------------------
 
+availability_data = data %>%
+  filter(task_name == "availability") %>%
+  mutate(choice_binary = as.numeric(choice == "List 1"))
+
+ggplot(availability_data, aes(x = factor, fill = choice)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Comparison of Choice Between Excluded and Included Factors",
+       x = "Factor",
+       y = "Count",
+       fill = "choice") +
+  theme_minimal()
+
+#analysis
+
+list_one_ex = availability_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  pull(choice_binary)
+
+list_one_in = availability_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(choice_binary)
+
+prop_ex <- sum(list_one_ex) / length(list_one_ex)
+prop_in <- sum(list_one_in) / length(list_one_in)
+
+successes <- c(sum(list_one_ex), sum(list_one_in))
+trials <- c(length(list_one_ex), length(list_one_in))
+
+test_result <- prop.test(successes, trials, alternative = "less")
+
+print(test_result)
+
+#p-value = 0.004
 
 
 
@@ -210,6 +243,62 @@ print(tukey_hsd)
 
 ## 2.1 anchoring effect? -----------------------------------------------------------------------
 
+data_anchoring <- data %>%
+  filter(task_name == "anchoring") %>%
+  filter(stimulus != "")
+
+data_anchoring$choice <- as.numeric(data_anchoring$choice)
+
+
+#View(data_anchoring)
+
+median_antarctic <- data_anchoring %>%
+  filter(condition == 'No Anchor') %>%
+  filter(stimulus == 'Antarctic Temperature') %>%
+  summarize(median_choice = median(choice, na.rm = TRUE)) %>%
+  pull(median_choice)
+
+median_whale <- data_anchoring %>%
+  filter(condition == 'No Anchor') %>%
+  filter(stimulus == 'Whale Length') %>%
+  summarize(median_choice = median(choice, na.rm = TRUE)) %>%
+  pull(median_choice)
+
+print(median_antarctic)
+print(median_whale)
+
+antarctic_subject_showing_effect <- data_anchoring %>%
+  filter(stimulus == 'Antarctic Temperature') %>%
+  filter(condition == 'Low Anchor') %>%
+  filter(choice < median_antarctic) %>%
+  pull(subject)
+
+whale_subject_showing_effect <- data_anchoring %>%
+  filter(stimulus == 'Whale Length') %>%
+  filter(condition == 'Low Anchor') %>%
+  filter(choice < median_whale) %>%
+  pull(subject)
+
+View(whale_subject_showing_effect)
+View(antarctic_subject_showing_effect)
+
+
+
+common_subjects <- intersect(antarctic_subject_showing_effect, whale_subject_showing_effect)
+View(common_subjects)
+
+introspection_showing_effect <- data %>%
+  filter(subject %in% common_subjects) %>%
+  filter(choice == '') %>%
+  filter(task_name == 'anchoring') %>%
+  pull(introspect_rating)
+
+print(introspection_showing_effect)
+
+
+
+
+
 
 
 
@@ -258,6 +347,10 @@ print(t_test_result)
 #p=0.1
 
 ## 2.3 availability effect? -----------------------------------------------------------------------
+
+
+
+
 ## 2.4 belief effect? -----------------------------------------------------------------------
 ## 2.5 causal inference? -----------------------------------------------------------------------
 ## 2.6 contact principle? -----------------------------------------------------------------------
