@@ -284,22 +284,59 @@ View(antarctic_subject_showing_effect)
 
 
 
-common_subjects <- intersect(antarctic_subject_showing_effect, whale_subject_showing_effect)
-View(common_subjects)
+# If we do this, we get no subjects because there are no people in the whale group showing the effect:
+#common_subjects <- intersect(antarctic_subject_showing_effect, whale_subject_showing_effect)
+#View(common_subjects)
 
-introspection_showing_effect <- data %>%
-  filter(subject %in% common_subjects) %>%
-  filter(choice == '') %>%
-  filter(task_name == 'anchoring') %>%
+#did the subjects who were anchored feel they were more affected than the factor-excluded subjects
+
+#this section in progress
+
+introspection_anchoring <- data %>%
+  filter(task_name == "anchoring") %>%
+  filter(introspect_rating != "") %>%
+  mutate(introspect_rating = as.numeric(introspect_rating))
+  
+anchored_affected_introspection <- introspection_anchoring %>%
+  filter(subject %in% antarctic_subject_showing_effect) %>%
+  filter(factor == 'Factor-Included') %>%
+  
   pull(introspect_rating)
 
-print(introspection_showing_effect)
+anchored_unaffected_introspection <- introspection_anchoring %>%
+  filter(!subject %in% antarctic_subject_showing_effect) %>%
+  filter(factor == 'Factor-Included') %>%
+  pull(introspect_rating)
 
+unanchored_introspection <- introspection_anchoring %>%
+  filter(factor == 'Factor-Excluded') %>%
+  pull(introspect_rating)
 
+#View(anchored_affected_introspection)
+#View(anchored_unaffected_introspection)
+#View(unanchored_introspection)
 
+anchored_affected_stats <- mean_se(anchored_affected_introspection)
+anchored_unaffected_stats <- mean_se(anchored_unaffected_introspection)
+unanchored_stats <- mean_se(unanchored_introspection)
 
+data_plot <- data.frame(
+  Group = c("Anchored Affected", "Anchored Unaffected", "Unanchored"),
+  Mean = c(anchored_affected_stats["mean"], anchored_unaffected_stats["mean"], unanchored_stats["mean"]),
+  SE = c(anchored_affected_stats["se"], anchored_unaffected_stats["se"], unanchored_stats["se"])
+)
 
+ggplot(data_plot, aes(x = Group, y = Mean)) +
+  geom_bar(stat = "identity", position = "dodge", fill = "skyblue") +
+  geom_errorbar(aes(ymin = Mean - SE, ymax = Mean + SE), width = 0.2, position = position_dodge(0.9)) +
+  labs(title = "Comparison of Introspection Ratings",
+       x = "Group",
+       y = "Introspection Rating") +
+  theme_minimal()
 
+t_test_result <- t.test(anchored_affected_introspection, unanchored_introspection, var.equal = TRUE)
+print(t_test_result)
+#p-value = 0.05
 
 
 ## 2.2 associative memory effect? -----------------------------------------------------------------------
@@ -354,6 +391,89 @@ print(t_test_result)
 ## 2.4 belief effect? -----------------------------------------------------------------------
 ## 2.5 causal inference? -----------------------------------------------------------------------
 ## 2.6 contact principle? -----------------------------------------------------------------------
+
+contact.data = data %>% 
+  filter(task_name == 'contact principle') %>%
+  mutate(introspect_rating = as.numeric(introspect_rating))
+
+ggplot(contact.data, aes(x = condition, fill = choice)) +
+  geom_bar(position = "dodge", color = 'white') + 
+  theme_black()
+contact.data.graph = contact.data %>% group_by(condition) %>%
+  summarize(choice.m = mean(choice == 'Impermissible'),
+            choice.se = se.prop(choice == 'Impermissible'))
+
+ggplot(contact.data.graph, aes(x = condition, y = choice.m, fill = condition)) +
+  geom_col(color = 'white') + 
+  theme_black() +
+  labs(x = 'Condition', y = '% saying the action\nwas morally wrong') +
+  geom_errorbar(aes(ymin = choice.m - choice.se,
+                    ymax = choice.m + choice.se),
+                color = 'white', width = .2) +
+  scale_fill_manual(values = c("Contact" = "#4FADEA", "No Contact" = "#FFC000")) +
+  theme(legend.position = 'none')
+
+#** inferential statistics ----
+contact <- table(contact.data$choice, contact.data$condition)
+contact
+contactChi <- chisq.test(contact)
+contactChi$expected >= 5
+contactChi
+
+#** introspection ratings ----
+
+contact.data.graph <- contact.data %>% group_by(factor) %>%
+  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
+
+ggplot(contact.data.graph, aes(x = factor, y = introspect.m)) +
+  geom_col(fill = "lightblue") + 
+  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
+  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
+  labs(x = "Test Version")
+
+contact_intro.t <- t.test(contact.data$introspect_rating ~ contact.data$factor)
+contact_intro.t
+
+#p=0.2
+
+#AM: splitting by whether they made choices suggesting that they showed the effect or not 
+
+contact.data = contact.data %>%
+  mutate(choice.matches.condition = ifelse(condition == 'Contact',
+                                           choice == 'Impermissible',
+                                           choice == 'Permissible'))
+contact.data.graph2 <- contact.data %>%
+  group_by(factor, choice.matches.condition) %>%
+  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
+
+ggplot(contact.data.graph2, aes(x = factor, y = introspect.m, fill = choice.matches.condition)) +
+  geom_col(position = dodge) + 
+  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), position = dodge) +
+  theme(
+    axis.text = element_text(size = 12), 
+    axis.title = element_text(size = 12),
+    legend.text = element_text(size = 10),
+    legend.title = element_text(size = 12)
+  ) +
+  labs(x = "Test Version")
+
+contact_intro2 = lm(introspect_rating ~ factor * choice.matches.condition, contact.data)
+summary(contact_intro2)
+
+for (i in 1:nrow(df)) {
+  if (df$task_name[i] == 'contact principle' & !is.na(df$introspect_rating[i])) {
+    which.row = contact.data$subject == df$subject[i]
+    if (any(which.row)) {
+      df$effect.size.fac[i] = contact.data$choice.matches.condition[which.row]
+    }
+  }
+}
+
+contact_intro2.t = contact.data %>% filter(factor == 'Factor-Included') %$%
+  t.test(introspect_rating ~ choice.matches.condition)
+
+
+
 ## 2.7 decoy effect? -----------------------------------------------------------------------
 ## 2.8 double effect? -----------------------------------------------------------------------
 ## 2.9 halo effect? -----------------------------------------------------------------------
