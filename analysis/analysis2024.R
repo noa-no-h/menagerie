@@ -243,6 +243,8 @@ print(tukey_hsd)
 
 ## 2.1 anchoring effect? -----------------------------------------------------------------------
 
+#note to self: in 2.1, used some code from AM_final_analysis (hence "." where I usually have "_")
+
 data_anchoring <- data %>%
   filter(task_name == "anchoring") %>%
   filter(stimulus != "")
@@ -290,7 +292,6 @@ View(antarctic_subject_showing_effect)
 
 #did the subjects who were anchored feel they were more affected than the factor-excluded subjects
 
-#this section in progress
 
 introspection_anchoring <- data %>%
   filter(task_name == "anchoring") %>%
