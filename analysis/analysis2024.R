@@ -121,12 +121,23 @@ factor_ex_associative = associative_data %>%
 factor_in_associative = associative_data %>%
   filter(factor == "Factor-Included") 
 
+
 false_alarm_summary <- associative_data %>%
   group_by(factor) %>%
-  summarize(count_false_alarm = sum(false_alarm))
+  summarize(
+    count_false_alarm = sum(false_alarm),
+    n = n(), 
+    p = mean(false_alarm),
+    se_false_alarm = sqrt(p * (1 - p) / n)  # standard error for binomial 
+  )
+
+View(false_alarm_summary)
+
 
 ggplot(false_alarm_summary, aes(x = factor, y = count_false_alarm)) +
   geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = count_false_alarm - se_false_alarm, ymax = count_false_alarm + se_false_alarm),
+                width = 0.2) +
   labs(title = "Count of False Alarms by Condition",
        x = "Condition",
        y = "Count of False Alarms") +
@@ -355,13 +366,13 @@ summary_data <- associative_data %>%
     se_introspect_rating = sd(as.numeric(introspect_rating), na.rm = TRUE) / sqrt(n())
   )
 
-View(associative_data)
+#View(associative_data)
 
 ggplot(summary_data, aes(x = factor, y = mean_introspect_rating)) +
   geom_bar(stat = "identity", position = position_dodge(), color = "black") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating),
                 width = 0.2, position = position_dodge(0.9)) +
-  labs(title = "Difference in Introspect Rating between Factors",
+  labs(title = "Introspection Rating in Factor-Excluded and Factor-Included",
        x = "Group",
        y = "Mean Introspect Rating") +
   theme_minimal()
@@ -393,6 +404,7 @@ print(t_test_result)
 ## 2.5 causal inference? -----------------------------------------------------------------------
 ## 2.6 contact principle? -----------------------------------------------------------------------
 
+#note: just copied these over from the other doc. Have not looked them over or tweaked them yet. 
 contact.data = data %>% 
   filter(task_name == 'contact principle') %>%
   mutate(introspect_rating = as.numeric(introspect_rating))
