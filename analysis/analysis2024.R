@@ -54,6 +54,14 @@ ggplot(anchor_antarctica_data, aes(x = condition, y = choice)) +
   theme_minimal()
 
 #bar
+summary_anchor_antarctica_data <- anchor_antarctica_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice, na.rm = TRUE),
+    se_choice = sd(choice, na.rm = TRUE) / sqrt(n())
+  )
+
+
 ggplot(summary_anchor_antarctica_data, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity", position = position_dodge(), color = "black") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2, position = position_dodge(0.9)) +
@@ -70,7 +78,7 @@ no_anchor <- anchor_antarctica_data %>%
   filter(condition == "No Anchor") %>%
   pull(choice)
 
-t_test_result <- t.test(low_anchor, no_anchor, var.equal = TRUE)
+t_test_result <- t.test(low_anchor, no_anchor)
 
 print(t_test_result)
 #p-value = 0.001
@@ -169,10 +177,13 @@ introspection_anchoring <- data %>%
   filter(introspect_rating != "") %>%
   mutate(introspect_rating = as.numeric(introspect_rating))
 
+anchored_introspection <- introspection_anchoring %>%
+  filter(factor == 'Factor-Included') %>%
+  pull(introspect_rating)
+
 anchored_affected_introspection <- introspection_anchoring %>%
   filter(subject %in% antarctic_subject_showing_effect) %>%
   filter(factor == 'Factor-Included') %>%
-  
   pull(introspect_rating)
 
 anchored_unaffected_introspection <- introspection_anchoring %>%
@@ -194,8 +205,8 @@ unanchored_stats <- mean_se(unanchored_introspection)
 
 data_plot <- data.frame(
   Group = c("Anchored Affected", "Anchored Unaffected", "Unanchored"),
-  Mean = c(anchored_affected_stats["mean"], anchored_unaffected_stats["mean"], unanchored_stats["mean"]),
-  SE = c(anchored_affected_stats["se"], anchored_unaffected_stats["se"], unanchored_stats["se"])
+  Mean = c(anchored_affected_stats["y"], anchored_unaffected_stats["y"], unanchored_stats["y"]),
+  SE = c(anchored_affected_stats["y"]-anchored_affected_stats["ymin"], anchored_unaffected_stats["y"]-anchored_unaffected_stats["ymin"], unanchored_stats["y"]-unanchored_stats["ymin"])
 )
 
 ggplot(data_plot, aes(x = Group, y = Mean)) +
@@ -206,9 +217,12 @@ ggplot(data_plot, aes(x = Group, y = Mean)) +
        y = "Introspection Rating") +
   theme_minimal()
 
-t_test_result <- t.test(anchored_affected_introspection, unanchored_introspection, var.equal = TRUE)
+t_test_result <- t.test(anchored_affected_introspection, unanchored_introspection)
 print(t_test_result)
 #p-value = 0.05
+
+t_test_result <- t.test(anchored_introspection, unanchored_introspection)
+print(t_test_result)
 
 # 2 associative memory effect ----
 ## 2.1 do we see the effect? -----------------------------------------------------------------------
@@ -217,7 +231,8 @@ print(t_test_result)
 associative_data <- data %>%
   filter(task_name == "associative memory") %>%
   filter(stimulus != "") %>%
-  mutate(false_alarm = ifelse(choice == "Original" & auxiliary_info1 == "New", 1, 0))
+  filter(auxiliary_info1 == 'New') %>% 
+  mutate(false_alarm = ifelse(choice == "Original", 1, 0))
 
 factor_ex_associative = associative_data %>%
   filter(factor == "Factor-Excluded")
@@ -237,10 +252,9 @@ false_alarm_summary <- associative_data %>%
 
 View(false_alarm_summary)
 
-
-ggplot(false_alarm_summary, aes(x = factor, y = count_false_alarm)) +
+ggplot(false_alarm_summary, aes(x = factor, y = p)) +
   geom_bar(stat = "identity", fill = "skyblue") +
-  geom_errorbar(aes(ymin = count_false_alarm - se_false_alarm, ymax = count_false_alarm + se_false_alarm),
+  geom_errorbar(aes(ymin = p - se_false_alarm, ymax = p + se_false_alarm),
                 width = 0.2) +
   labs(title = "Count of False Alarms by Condition",
        x = "Condition",
@@ -309,7 +323,7 @@ factor_in_introspect <- associative_data %>%
   mutate(introspect_rating = as.numeric(introspect_rating)) %>%
   pull(introspect_rating)
 
-t_test_result <- t.test(factor_ex_introspect, factor_in_introspect, var.equal = TRUE)
+t_test_result <- t.test(factor_ex_introspect, factor_in_introspect)
 print(t_test_result)
 
 #p=0.1
@@ -651,7 +665,19 @@ summary(anova_model)
 tukey_hsd <- TukeyHSD(anova_model)
 print(tukey_hsd)
 
+summary(lm(choice ~ condition, data = halo_bar_data))
+
+
 ##9.2 introspection TO DO----
+
+
+summary_halo_data <- data %>%
+  filter(task_name == "halo", stimulus == "") %>% 
+  group_by(factor) %>%
+  summarize(
+    mean_choice = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_choice = se(introspect_rating)
+  )
 
 #10 hindsight bias ----
 ##10.1 do we see the effect? TO DO----
