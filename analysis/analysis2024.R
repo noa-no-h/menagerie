@@ -6,6 +6,8 @@ require(lme4)
 require(lmerTest)
 require(sjPlot)
 require(magrittr)
+require(readr)
+
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
@@ -81,7 +83,7 @@ no_anchor <- anchor_antarctica_data %>%
 t_test_result <- t.test(low_anchor, no_anchor)
 
 print(t_test_result)
-#p-value = 0.001
+#p-value = 0.0007
 
 
 ### Whale -----------------------------------------------------------------------
@@ -116,10 +118,10 @@ no_anchor <- anchor_whale_data %>%
   filter(condition == "No Anchor") %>%
   pull(choice)
 
-t_test_result <- t.test(low_anchor, no_anchor, var.equal = TRUE)
+t_test_result <- t.test(low_anchor, no_anchor, var.equal = FALSE)
 
 print(t_test_result)
-#p-value = 0.8
+#p-value = 0.83
 
 ## 1.2 introspection -----------------------------------------------------------------------
 
@@ -408,19 +410,21 @@ avail_intro2 = lm(introspect_rating ~ factor * choice.matches.condition, data.av
 summary(avail_intro2)
 
 # transfer to main data for later analyses
-for (i in 1:nrow(data)) {
-  if (data$task_name[i] == 'availability' & !is.na(data$introspect_rating[i])) {
-    which.row = data.avail$subject == data$subject[i]
-    if (any(which.row)) {
-      data$effect.size.fac[i] = data.avail$choice.matches.condition[which.row]
-    }
-  }
-}
+# for (i in 1:nrow(data)) {
+#   if (data$task_name[i] == 'availability' & !is.na(data$introspect_rating[i])) {
+#     which.row = data.avail$subject == data$subject[i]
+#     if (any(which.row)) {
+#       data$effect.size.fac[i] = data.avail$choice.matches.condition[which.row]
+#     }
+#   }
+# }
 
 avail_intro2.t = data.avail %>% filter(factor == 'Factor-Included') %$%
   t.test(introspect_rating ~ choice.matches.condition)
 
 print(avail_intro2.t)
+
+#p-value = 0.1811
 
 # 4. Belief effect ----
 
@@ -440,7 +444,6 @@ length(unique(data.belief2$subject))
 data.bel.graph <- data.belief2 %>% filter(subject %in% data.belief$subject) %>% 
   filter(!is.na(choice)) %>%
   filter(!is.na(condition)) %>% filter(factor == "Factor-Included") #%>%
-#filter(auxiliary_info1 == "Valid") ## ADAM: Why filter for only valid here?
 
 ggplot(data.bel.graph, aes(x = condition.fac, fill = choice)) +
   geom_bar(position = "dodge") + 
@@ -679,6 +682,8 @@ summary_halo_data <- data %>%
     se_choice = se(introspect_rating)
   )
 
+
+
 #10 hindsight bias ----
 ##10.1 do we see the effect? TO DO----
 ##10.2 introspection TO DO----
@@ -687,19 +692,257 @@ summary_halo_data <- data %>%
 ##11.1 do we see the effect? TO DO----
 ##11.2 introspection TO DO----
 
-#12 reference price ----
-##12.1 do we see the effect? TO DO---
-##12.2 introspection TO DO----
+#12 reference price ✅ ----
+##12.1 do we see the effect? ----
 
-#13 representativeness ----
-##13.1 do we see the effect TO DO----
-##13.2 introspection TO DO----
+#When subjects were told the hotel was fancy, were 
+#they more likely to give a higher price they'd be willing to pay?
 
-#14 status quo ----
-##14.1 do we see the effect TO DO ----
-##14.2 introspection TO DO----
+reference_price_data <- data %>%
+  filter(task_name == "reference price") %>%
+  mutate(choice_parsed = parse_number(choice))
+
+View(reference_price_data)
+
+summary_reference_price_data <- reference_price_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_parsed),
+    se_choice = se(choice_parsed)
+  )
+
+ggplot(summary_reference_price_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Amount Willing to Pay for Beer", x = "Condition", y = "Average Amount Willing to Pay (Dollars)") +
+  theme_minimal()
+
+t.test(choice_parsed ~ factor, data = reference_price_data)
+# p-value = 0.4913
 
 
+##12.2 introspection----
+
+#Did factor included give lower introspection numbers than 
+#factor excluded?
+
+summary_reference_price_data <- reference_price_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_reference_price_data, aes(x = condition, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Reference-Price Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+t.test(introspect_rating ~ factor, data = reference_price_data)
+#p-value = 0.8909
+
+#"intro_rating(included and higher than mean price)
+#<
+#  intro_rating(included and not higher than mean price)
+#"
+
+#mean price among excluded
+mean_price_among_excluded <- mean(reference_price_data$choice_parsed[reference_price_data$factor == "Factor-Excluded"])
+
+reference_price_data <- reference_price_data %>%
+  mutate(effect_group = case_when(
+    choice_parsed > mean_price_among_excluded & factor == "Factor-Included" ~ "Included and Higher Than Mean",
+    choice_parsed <= mean_price_among_excluded & factor == "Factor-Included" ~ "Included and Not Higher Than Mean",
+    factor == "Factor-Excluded" ~ "Excluded"
+  ))
+
+summary_reference_price_data <- reference_price_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_reference_price_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Reference Price Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
 
 
+summary(lm(introspect_rating ~ effect_group, data = reference_price_data))
+
+
+#13 representativeness  ✅ ----
+##13.1 do we see the effect ----
+
+#When subjects were given the description about Jack, 
+#did more of them say he was an engineer?
+
+representativeness_data <- data %>%
+  filter(task_name == "rep") %>%
+  mutate(choice = as.numeric(choice))
+
+summary_representativeness_data <- representativeness_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice),
+    se_choice = se(choice)
+  )
+
+ggplot(summary_representativeness_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Is Jack an Engineer?", x = "Condition", y = "average likelihood of engineer") +
+  theme_minimal()
+
+t.test(choice ~ factor, data = representativeness_data)
+# p-value = 7.142e-06
+
+##13.2 introspection----
+
+#Did factor included give higher introspection 
+#numbers than factor excluded?
+
+summary_representativeness_data <- representativeness_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_representativeness_data, aes(x = condition, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Representativeness Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+t.test(introspect_rating ~ factor, data = representativeness_data)
+#p-value = 0.2962
+
+#next question: "intro_rating(included and said Jack was more likely to be engineer than mean of excluded)
+#>
+#  intro_rating(included and not said Jack was more likely to be engineer than mean of excluded"
+
+#mean likelihood of engineer among excluded
+mean_likelihood_of_engineer <- mean(representativeness_data$choice[representativeness_data$factor == "Factor-Excluded"])
+print(mean_likelihood_of_engineer)
+
+representativeness_data <- representativeness_data %>%
+  mutate(effect_group = case_when(
+    choice > mean_likelihood_of_engineer & factor == "Factor-Included" ~ "Included and Said Engineer",
+    choice <= mean_likelihood_of_engineer & factor == "Factor-Included" ~ "Included and Not Said Engineer",
+    factor == "Factor-Excluded" ~ "Excluded"
+  ))
+
+summary_representativeness_data <- representativeness_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_representativeness_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+summary(lm(introspect_rating ~ effect_group, data = representativeness_data))
+
+
+#14 status quo ✅ ----
+
+##14.1 do we see the effect ----
+
+#When subjects were told the status quo, 
+#were they more likely to recommend the 70/30 allocation?
+
+status_quo_data <- data %>%
+  filter(task_name == "status_quo") %>%
+  mutate(choice_binary = as.numeric(choice == "70/30"))
+
+
+summary_status_quo_data <- status_quo_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_binary),
+    se_choice = se.prop(choice_binary)
+  )
+
+ggplot(summary_status_quo_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Choices to continue the status quo", x = "Condition", y = "Percent subjects who recommended the status quo") +
+  theme_minimal()
+
+status_quo_choices_ex <- status_quo_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  pull(choice_binary)
+
+status_quo_choices_in <- status_quo_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(choice_binary)
+
+#analysis -- is there a better way to do this?
+prop_ex <- sum(status_quo_choices_ex) / length(status_quo_choices_ex)
+prop_in <- sum(status_quo_choices_in) / length(status_quo_choices_in)
+
+successes <- c(sum(status_quo_choices_ex), sum(status_quo_choices_in))
+trials <- c(length(status_quo_choices_ex), length(status_quo_choices_in))
+
+test_result <- prop.test(successes, trials, alternative = "less")
+print(test_result)
+
+#p-value = 0.3625
+  
+##14.2 introspection----
+
+#Did factor included give lower introspection 
+#numbers than factor excluded?
+
+summary_status_quo_data <- status_quo_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_status_quo_data, aes(x = condition, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+t.test(introspect_rating ~ factor, data = status_quo_data)
+#p-value = 0.3647
+
+#next question: "intro_rating(included and said 70/30)
+#<
+#  intro_rating(included and said 50/50)"
+
+
+status_quo_data <- status_quo_data %>%
+  mutate(effect_group = case_when(
+    choice == "70/30" & factor == "Factor-Included" ~ "Included and Status Quo",
+    choice == "50/50" & factor == "Factor-Included" ~ "Included and not Status Quo",
+    factor == "Factor-Excluded" ~ "Excluded"
+  ))
+
+summary_status_quo_data <- status_quo_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_status_quo_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+summary(lm(introspect_rating ~ effect_group, data = status_quo_data))
+#effect_groupIncluded and Status Quo       0.0062 ** 
 
