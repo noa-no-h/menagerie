@@ -538,105 +538,295 @@ for (i in 1:nrow(data)) {
 ## 5.1 do we see the effect?TO DO ----
 ## 5.2 introspectionTO DO----
 
-#6. contact principle ----
-## 6.1 do we see the effect? TO DO----
+#6. contact principle✅  ----
+## 6.1 do we see the effect?----
+
+#Did subjects for whom Frank needed to make physical contact 
+#judge his action as less acceptable?
+
+contact_data = data %>% 
+  filter(task_name == 'contact principle') %>%
+  mutate(choice_binary = as.numeric(choice == "Permissible"))
+
+summary_contact_data <- contact_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_binary),
+    se_choice = se.prop(choice_binary)
+  )
+
+ggplot(summary_contact_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Contact Effect", x = "Condition", y = "Permissibility") +
+  theme_minimal()
+
+contact_choices_ex <- contact_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  pull(choice_binary)
+
+contact_choices_in <- contact_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(choice_binary)
+
+#analysis -- is there a better way to do this?
+prop_ex <- sum(contact_choices_ex) / length(contact_choices_ex)
+prop_in <- sum(contact_choices_in) / length(contact_choices_in)
+
+successes <- c(sum(contact_choices_ex), sum(contact_choices_in))
+trials <- c(length(contact_choices_ex), length(contact_choices_in))
+
+test_result <- prop.test(successes, trials, alternative = "less")
+print(test_result)
+
 ## 6.2 introspection ----
 
-#note: just copied these over from the other doc. Have not looked them over or tweaked them yet. 
-contact.data = data %>% 
-  filter(task_name == 'contact principle') %>%
-  mutate(introspect_rating = as.numeric(introspect_rating))
+#Did factor included give higher introspection numbers 
+#than factor excluded?
 
-ggplot(contact.data, aes(x = condition, fill = choice)) +
-  geom_bar(position = "dodge", color = 'white') + 
-  theme_black()
-contact.data.graph = contact.data %>% group_by(condition) %>%
-  summarize(choice.m = mean(choice == 'Impermissible'),
-            choice.se = se.prop(choice == 'Impermissible'))
+summary_contact_data <- contact_data %>%
+  group_by(factor) %>%
+  mutate(introspect_rating = as.numeric(introspect_rating)) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
 
-ggplot(contact.data.graph, aes(x = condition, y = choice.m, fill = condition)) +
-  geom_col(color = 'white') + 
-  theme_black() +
-  labs(x = 'Condition', y = '% saying the action\nwas morally wrong') +
-  geom_errorbar(aes(ymin = choice.m - choice.se,
-                    ymax = choice.m + choice.se),
-                color = 'white', width = .2) +
-  scale_fill_manual(values = c("Contact" = "#4FADEA", "No Contact" = "#FFC000")) +
-  theme(legend.position = 'none')
 
-#** inferential statistics ----
-contact <- table(contact.data$choice, contact.data$condition)
-contact
-contactChi <- chisq.test(contact)
-contactChi$expected >= 5
-contactChi
 
-#** introspection ratings ----
+ggplot(summary_contact_data, aes(x = factor, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Contact Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
 
-contact.data.graph <- contact.data %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
+t.test(introspect_rating ~ factor, data = contact_data)
 
-ggplot(contact.data.graph, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
+#intro_rating(included and acceptable)
+#>
+#intro_rating(included and unacceptable)
 
-contact_intro.t <- t.test(contact.data$introspect_rating ~ contact.data$factor)
-contact_intro.t
+contact_data <- contact_data %>%
+  mutate(effect_group = case_when(
+    choice == "Permissible" & factor == "Factor-Included" ~ "Included and Permissible",
+    choice == "Impermissible" & factor == "Factor-Included" ~ "Included and Impermissible",
+    factor == "Factor-Excluded" ~ "Excluded"
+  ))
 
-#p=0.2
+summary_contact_data <- contact_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
 
-#AM: splitting by whether they made choices suggesting that they showed the effect or not 
+ggplot(summary_contact_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
 
-contact.data = contact.data %>%
-  mutate(choice.matches.condition = ifelse(condition == 'Contact',
-                                           choice == 'Impermissible',
-                                           choice == 'Permissible'))
-contact.data.graph2 <- contact.data %>%
-  group_by(factor, choice.matches.condition) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
+summary(lm(introspect_rating ~ effect_group, data = contact_data))
 
-ggplot(contact.data.graph2, aes(x = factor, y = introspect.m, fill = choice.matches.condition)) +
-  geom_col(position = dodge) + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), position = dodge) +
-  theme(
-    axis.text = element_text(size = 12), 
-    axis.title = element_text(size = 12),
-    legend.text = element_text(size = 10),
-    legend.title = element_text(size = 12)
-  ) +
-  labs(x = "Test Version")
 
-contact_intro2 = lm(introspect_rating ~ factor * choice.matches.condition, contact.data)
-summary(contact_intro2)
 
-for (i in 1:nrow(data)) {
-  if (data$task_name[i] == 'contact principle' & !is.na(data$introspect_rating[i])) {
-    which.row = contact.data$subject == data$subject[i]
-    if (any(which.row)) {
-      data$effect.size.fac[i] = contact.data$choice.matches.condition[which.row]
-    }
-  }
-}
 
-contact_intro2.t = contact.data %>% filter(factor == 'Factor-Included') %$%
-  t.test(introspect_rating ~ choice.matches.condition)
+#7. decoy effect ✅  ----
+    ## 7.1 do we see the effect? TO DO----
 
-#7. decoy effect ----
-## 7.1 do we see the effect? TO DO----
-## 7.2 introspection TO DO----
+#Were subjects who saw Brand W more likely to choose brand N?
+decoy_data <- data %>%
+  filter(task_name == "decoy effect") %>%
+  mutate(choice_binary = as.numeric(choice == "Brand N (Target)"))
 
-#8. Double effect ----
-##8.1 do we see the effect? TO DO----
-##8.2 introspection TO DO----
+summary_decoy_data <- decoy_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_binary),
+    se_choice = se.prop(choice_binary)
+  )
 
-#9. Halo Effect ----
-##9.1 do we see the effect? ----
+ggplot(summary_decoy_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Decoy Effect", x = "Condition", y = "Choosing Brand N") +
+  theme_minimal()
 
+decoy_choices_ex <- decoy_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  pull(choice_binary)
+
+decoy_choices_in <- decoy_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(choice_binary)
+
+#analysis -- is there a better way to do this?
+prop_ex <- sum(decoy_choices_ex) / length(decoy_choices_ex)
+prop_in <- sum(decoy_choices_in) / length(decoy_choices_in)
+
+successes <- c(sum(decoy_choices_ex), sum(decoy_choices_in))
+trials <- c(length(decoy_choices_ex), length(decoy_choices_in))
+
+test_result <- prop.test(successes, trials, alternative = "less")
+print(test_result)
+
+    ## 7.2 introspection ----
+
+#Did factor included give higher introspection numbers 
+#factor excluded?
+
+summary_decoy_data <- decoy_data %>%
+  group_by(factor) %>%
+  summarize(
+    mean_intro = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_decoy_data, aes(x = factor, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Decoy Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+#"intro_rating(included and chose brand N)
+#>
+#intro_rating(included and did not choose brand N)"
+
+decoy_data <- decoy_data %>%
+  mutate(effect_group = case_when(
+    choice == "Brand N (Target)" & factor == "Factor-Included" ~ "Included and Chose Brand N",
+    choice != "Brand N (Target)" & factor == "Factor-Included" ~ "Included and Did Not Choose Brand N",
+    factor == "Factor-Excluded" ~ "Excluded"
+  ))
+
+summary_decoy_data <- decoy_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_decoy_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+summary(lm(introspect_rating ~ effect_group, data = decoy_data))
+
+
+
+
+#8. Double effect ✅  ----
+    ##8.1 do we see the effect? ----
+
+#Were subjects who saw Peter's killing as means to an end more likely 
+#to judge it permissible than those who saw it as a side-effect?
+
+#double_effect_data <- data %>%
+#  filter(task_name == "double effect") %>%
+#  mutate(choice = as.numeric(choice))
+
+#temporary until we fix why choice is coming up Null 
+double_effect_data <- read_csv("double.csv") %>%
+  filter(familiarity != "Yes") %>% #only when people are not familiar with a task
+  mutate(
+    task_name = factor(task_name)  # Convert task_name to a factor
+  ) %>%
+  mutate(choice_binary = as.numeric(choice == "Permissible"))
+
+summary_double_effect_data <- double_effect_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_binary),
+    se_choice = se.prop(choice_binary)
+  )
+
+ggplot(summary_double_effect_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Double Effect", x = "Condition", y = "Permissibility") +
+  theme_minimal()
+
+double_choices_ex <- double_effect_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  pull(choice_binary)
+
+double_choices_in <- double_effect_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(choice_binary)
+
+#analysis -- is there a better way to do this?
+prop_ex <- sum(double_choices_ex) / length(double_choices_ex)
+prop_in <- sum(double_choices_in) / length(double_choices_in)
+
+successes <- c(sum(double_choices_ex), sum(double_choices_in))
+trials <- c(length(double_choices_ex), length(double_choices_in))
+
+test_result <- prop.test(successes, trials, alternative = "less")
+print(test_result)
+
+    ##8.2 introspection----
+
+#Did factor included give higher introspection numbers 
+#than factor excluded?
+
+summary_double_effect_data <- double_effect_data %>%
+  group_by(factor) %>%
+  mutate(introspect_rating = as.numeric(introspect_rating)) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+str(summary_double_effect_data)
+
+
+ggplot(summary_double_effect_data, aes(x = factor, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Double Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+t.test(introspect_rating ~ factor, data = double_effect_data)
+
+#"intro_rating(included and permissible)
+#>
+#intro_rating(included and not permissible)"
+
+double_effect_data <- double_effect_data %>%
+  mutate(effect_group = case_when(
+    choice == "Permissible" & factor == "Factor-Included" ~ "Included and Permissible",
+    choice == "Impermissible" & factor == "Factor-Included" ~ "Included and Impermissible",
+    factor == "Factor-Excluded" ~ "Excluded"
+  ))
+
+summary_double_effect_data <- double_effect_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_double_effect_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+summary(lm(introspect_rating ~ effect_group, data = double_effect_data))
+
+
+
+#9. Halo Effect  ✅ ----
+    ##9.1 do we see the effect? ----
+
+#Did subjects who were shown some attractive and 
+#some attractive faces think the attractive were more persuasive, with the subjects who only saw neutral faces calling in the middle?
 
 halo_bar_data <- data %>%
   filter(task_name == "halo") %>%
+  mutate(choice = as.numeric(choice))%>%
   filter(stimulus != "") %>%
   mutate(
     condition = case_when(
@@ -647,14 +837,13 @@ halo_bar_data <- data %>%
     )
   )
 
-halo_bar_data$choice <- as.numeric(halo_bar_data$choice)
 
 
 summary_halo_data <- halo_bar_data %>%
   group_by(condition) %>%
   summarize(
-    mean_choice = mean(choice, na.rm = TRUE),
-    se_choice = sd(choice, na.rm = TRUE) / sqrt(n())
+    mean_choice = mean(choice),
+    se_choice = se(choice)
   )
 
 ggplot(summary_halo_data, aes(x = condition, y = mean_choice)) +
@@ -663,37 +852,209 @@ ggplot(summary_halo_data, aes(x = condition, y = mean_choice)) +
   labs(title = "Average Persuasiveness by Attractiveness", x = "Condition", y = "Average Choice") +
   theme_minimal()
 
-anova_model <- aov(choice ~ condition, data = halo_bar_data)
-summary(anova_model)
-tukey_hsd <- TukeyHSD(anova_model)
-print(tukey_hsd)
 
 summary(lm(choice ~ condition, data = halo_bar_data))
 
 
-##9.2 introspection TO DO----
+    ##9.2 introspection ----
 
+#Did factor included give higher introspection 
+#numbers than factor excluded?
 
 summary_halo_data <- data %>%
   filter(task_name == "halo", stimulus == "") %>% 
   group_by(factor) %>%
   summarize(
-    mean_choice = mean(as.numeric(introspect_rating), na.rm = TRUE),
-    se_choice = se(introspect_rating)
+    mean_intro = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_intro = se(introspect_rating)
   )
+
+ggplot(summary_halo_data, aes(x = factor, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Halo Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+t.test(introspect_rating ~ factor, data = halo_data)
+
+
+
+#next question:"intro_rating(included and gave all attractive faces higher than mean persuasive scores)
+#>
+#  intro_rating(included and did not give all attractive faces higher than mean persuasive scores)"
+
+halo_data <- data %>%
+  filter(task_name == "halo") %>%
+  filter(stimulus != "") %>%
+  mutate(choice = as.numeric(choice)) %>%
+  mutate(
+    condition = case_when(
+      grepl("img/U", stimulus) ~ "unattractive",
+      grepl("img/A", stimulus) ~ "attractive",
+      grepl("img/M", stimulus) ~ "average",
+      TRUE ~ condition
+    )
+  )
+
+
+#mean persuasive scores among excluded
+mean_persuasive_among_excluded <- mean(halo_data$choice[halo_data$factor == "Factor-Excluded"])
+
+#find subjects who gave all attractive faces higher than mean persuasive scores
+subject_list_included_and_higher_than_mean = halo_data %>%
+  filter(factor == "Factor-Included" & condition == "attractive") %>%
+  group_by(subject) %>%
+  summarize(all_choices_higher = all(choice > mean_persuasive_among_excluded)) %>%
+  filter(all_choices_higher) %>%
+  pull(subject)
+
+# List of all subjects in "Factor-Included"
+all_subjects_included = halo_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(subject) %>%
+  unique()
+
+# List of subjects in "Factor-Included" who did not rate all "attractive" faces higher than the mean persuasive score among excluded subjects
+subject_list_included_and_not_higher_than_mean = setdiff(all_subjects_included, subject_list_included_and_higher_than_mean)
+
+
+halo_data <- data %>%
+  filter(task_name == "halo") %>%
+  filter(stimulus == "") %>%
+  mutate(effect_group = case_when(
+    subject %in% subject_list_included_and_higher_than_mean ~ "Included and Higher Than Mean",
+    subject %in% subject_list_included_and_not_higher_than_mean ~ "Included and Not Higher Than Mean",
+    factor == "Factor-Excluded" ~ "Excluded"
+    )) 
+
+View(halo_data)
+
+summary_halo_data <- halo_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_halo_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Halo Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+
+summary(lm(introspect_rating ~ effect_group, data = halo_data))
 
 
 
 #10 hindsight bias ----
-##10.1 do we see the effect? TO DO----
-##10.2 introspection TO DO----
+    ##10.1 do we see the effect? TO DO----
+    ##10.2 introspection TO DO----
+#11 mere exposure ✅ ----
+    ##11.1 do we see the effect? ----
 
-#11 mere exposure ----
-##11.1 do we see the effect? TO DO----
-##11.2 introspection TO DO----
+#Were the most seen words the most liked?
+
+mere_exposure_data <- data %>%
+  filter(task_name == "mere exposure") %>%
+  filter(stimulus != "") %>%
+  mutate(choice = as.numeric(choice))
+
+summary_mere_exposure_data <- mere_exposure_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice),
+    se_choice = se(choice)
+  )
+
+ggplot(summary_mere_exposure_data, aes(x = condition, y = mean_choice)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Mere Exposure effect", x = "Times seen the word", y = "Average rating of word") +
+  theme_minimal()
+
+summary(lm(choice ~ condition, data = mere_exposure_data))
+
+
+    ##11.2 introspection----
+
+#Did factor included give higher introspection numbers 
+#than factor excluded?
+
+mere_exposure_data <- data %>%
+  filter(task_name == "mere exposure") %>%
+  filter(stimulus == "") %>%
+  mutate(choice = as.numeric(choice))
+
+summary_mere_exposure_data <- mere_exposure_data %>%
+  group_by(factor) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_mere_exposure_data, aes(x = factor, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Mere Exposure Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
+t.test(introspect_rating ~ factor, data = mere_exposure_data)
+
+#next question: "intro_rating(included and their mean rating of how much they liked the words was greater than the mean rating for excluded)
+#>
+#intro_rating(included and not their mean rating of how much they liked the words was greater than the mean rating for excluded)"
+
+
+mere_exposure_data <- data %>%
+  filter(task_name == "mere exposure") %>%
+  filter(stimulus != "") %>%
+  mutate(choice = as.numeric(choice))
+
+#mean rating among excluded
+mean_rating_excluded = mean(mere_exposure_data$choice[mere_exposure_data$factor == "Factor-Excluded"])
+
+#I do not know why but these two subjects never gave introspection ratings
+filtered_data <- data %>%
+  filter(!(subject %in% c("58635484a73baa00010db537", "65e29e4514fa80bea57284b7")))
+
+#make new table with subject number, average rating, and introspection rating
+subject_data <- filtered_data %>%
+  group_by(subject) %>%
+  filter(task_name == "mere exposure") %>%
+  mutate(choice = as.numeric(choice)) %>%
+  summarise(
+    average_choice_rating_per_subject = mean(choice, na.rm = TRUE),
+    introspect_rating = first(introspect_rating[!is.na(introspect_rating)]),
+    factor = first(factor)
+  )
+
+
+#make new column for effect group
+subject_data <- subject_data %>%
+    mutate(effect_group = case_when(
+      average_choice_rating_per_subject > mean_rating_excluded & factor == "Factor-Included" ~ "Included and Rating Higher Than Excluded Mean",
+      average_choice_rating_per_subject <= mean_rating_excluded & factor == "Factor-Included" ~ "Included and Rating Not Higher Than Excluded Mean",
+    factor == "Factor-Excluded" ~ "Excluded"
+  ))
+
+
+summary_mere_exposure_data <- subject_data %>%
+  group_by(effect_group) %>%
+  summarize(
+    mean_intro = mean(introspect_rating),
+    se_intro = se(introspect_rating)
+  )
+
+ggplot(summary_mere_exposure_data, aes(x = effect_group, y = mean_intro)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  geom_errorbar(aes(ymin = mean_intro - se_intro, ymax = mean_intro + se_intro), width = 0.2) +
+  labs(title = "Mere Exposure Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_minimal()
+
 
 #12 reference price ✅ ----
-##12.1 do we see the effect? ----
+    ##12.1 do we see the effect? ----
 
 #When subjects were told the hotel was fancy, were 
 #they more likely to give a higher price they'd be willing to pay?
@@ -721,7 +1082,7 @@ t.test(choice_parsed ~ factor, data = reference_price_data)
 # p-value = 0.4913
 
 
-##12.2 introspection----
+    ##12.2 introspection----
 
 #Did factor included give lower introspection numbers than 
 #factor excluded?
@@ -775,7 +1136,7 @@ summary(lm(introspect_rating ~ effect_group, data = reference_price_data))
 
 
 #13 representativeness  ✅ ----
-##13.1 do we see the effect ----
+    ##13.1 do we see the effect ----
 
 #When subjects were given the description about Jack, 
 #did more of them say he was an engineer?
@@ -800,7 +1161,7 @@ ggplot(summary_representativeness_data, aes(x = condition, y = mean_choice)) +
 t.test(choice ~ factor, data = representativeness_data)
 # p-value = 7.142e-06
 
-##13.2 introspection----
+    ##13.2 introspection----
 
 #Did factor included give higher introspection 
 #numbers than factor excluded?
@@ -854,7 +1215,7 @@ summary(lm(introspect_rating ~ effect_group, data = representativeness_data))
 
 #14 status quo ✅ ----
 
-##14.1 do we see the effect ----
+    ##14.1 do we see the effect ----
 
 #When subjects were told the status quo, 
 #were they more likely to recommend the 70/30 allocation?
@@ -897,7 +1258,7 @@ print(test_result)
 
 #p-value = 0.3625
   
-##14.2 introspection----
+    ##14.2 introspection----
 
 #Did factor included give lower introspection 
 #numbers than factor excluded?
