@@ -31,14 +31,11 @@ View(data)
 
 p.vals = c()
 
-# 1 anchoring effect -------------------------------------------------
+# 1 anchoring effect✅  -------------------------------------------------
+    ## 1.1 Do we see the effect -----------------------------------------------------------------------
 
 
-
-## 1.1 Do we see the effect -----------------------------------------------------------------------
-
-
-### Antarctica -----------------------------------------------------------------------
+    ### Antarctica -----------------------------------------------------------------------
 
 
 anchor_antarctica_data <- data %>%
@@ -88,7 +85,7 @@ print(t_test_result)
 #p-value = 0.0007
 
 
-### Whale -----------------------------------------------------------------------
+    ### Whale -----------------------------------------------------------------------
 anchor_whale_data <- data %>%
   filter(task_name == "anchoring") %>%
   filter(stimulus != "") %>%
@@ -125,7 +122,7 @@ t_test_result <- t.test(low_anchor, no_anchor, var.equal = FALSE)
 print(t_test_result)
 #p-value = 0.83
 
-## 1.2 introspection -----------------------------------------------------------------------
+    ## 1.2 introspection -----------------------------------------------------------------------
 
 #did factor included give higher introspection numbers than factor excluded?
 
