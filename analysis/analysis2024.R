@@ -10,6 +10,7 @@ require(readr)
 library(stringr)
 
 
+
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
@@ -18,16 +19,64 @@ dodge <- position_dodge(width=0.9)
 
 data <- read.csv('data.csv') %>%
   arrange(subject, task_name) %>%
-  mutate(introspect_rating = as.numeric(introspect_rating))
+  mutate(total_time = ifelse(grepl("^total_time", introspect_rating), introspect_rating, NA)) %>%
+  mutate(introspect_rating = ifelse(grepl("^total_time", introspect_rating), NA, introspect_rating)) %>%
+mutate(introspect_rating = as.numeric(introspect_rating))
 head(data)
 
 data = data %>%
-  filter(familiarity != "Yes") %>% #only when people are not familiar with a task
-  mutate(
-    task_name = factor(task_name)  # Convert task_name to a factor
-  )
+  filter(familiarity != "Yes") 
 
-View(data)
+#find subjects who need to be excluded
+  
+attention_exclude <- data %>%
+  filter((`task_name` == "attention check 2" & `auxiliary_info1` == "Failure") |
+           (`task_name` == "attention check 3" & `auxiliary_info1` == "Incorrect")) %>%
+    pull(subject)
+    
+  events <- read.csv('browser_events.csv') %>%
+    arrange(subject) %>%
+    filter(version == "v5_pilot1")
+  
+  tab_away_exclude <- events %>%
+    filter(browser_event == "blur") %>%
+    group_by(subject) %>%
+    summarize(blurs = n(), more_than_twelve = as.numeric(n() > 12))%>%
+    filter(more_than_twelve == 1) %>%
+    pull(subject)
+  
+  blur_histogram_data <- events %>%
+    filter(browser_event == "blur") %>%
+    group_by(subject) %>%
+    summarize(blurs = n(), more_than_twelve = as.numeric(n() > 12))
+    
+  
+  #View(attention_exclude)
+  #blur histogram
+  
+  ggplot(blur_histogram_data, aes(x = blurs)) +
+    geom_histogram(binwidth = 1, fill = "skyblue", color = "black") +
+    labs(title = "Blur Histogram", x = "Number of Blurs", y = "Count") +
+    theme_minimal()
+  
+  time_exclude <- data %>%
+    filter(total_time != "") %>%
+    mutate(total_time = parse_number(total_time)) %>%
+    mutate(total_time = total_time/60000)
+ 
+   View(time_exclude)
+  
+  ggplot(time_exclude, aes(x = total_time)) +
+    geom_histogram(fill = "skyblue", color = "black") +
+    labs(title = "Time Histogram", x = "Minutes", y = "Count") +
+    theme_minimal()
+  
+  to_exclude <- union(attention_exclude, tab_away_exclude)
+  
+  data <- data %>%
+    filter(!subject %in% to_exclude)
+  
+  
 
 p.vals = c()
 
@@ -40,12 +89,9 @@ p.vals = c()
 
 anchor_antarctica_data <- data %>%
   filter(task_name == "anchoring") %>%
-  filter(stimulus != "")%>%
   filter(stimulus == "Antarctic Temperature") %>%
-  mutate(choice = as.numeric(choice))
+  mutate(choice = as.numeric(choice)) 
   
-anchor_antarctica_data$choice <- as.numeric(anchor_antarctica_data$choice)
-
 
 #violin
 ggplot(anchor_antarctica_data, aes(x = condition, y = choice)) +
@@ -155,7 +201,7 @@ anchoring_subjects <- data %>%
   mutate(less_than_mean = ifelse(choice < mean_antarctica_estimate, 1, 0)) %>%
   select(subject, less_than_mean, factor, choice)
 
-View(anchoring_subjects)
+#View(anchoring_subjects)
 
 #find subjects who were anchored
 subject_list_included_and_anchored = anchoring_subjects %>%
@@ -216,7 +262,7 @@ associative_data_only_new <- data %>%
   filter(auxiliary_info1 == 'New') %>%
   mutate(false_alarm = ifelse(choice == "Original", 1, 0))
 
-View(associative_data_only_new)
+#View(associative_data_only_new)
 
 summary_associative_data_only_new <- associative_data_only_new %>%
   group_by(condition) %>%
@@ -282,7 +328,7 @@ associative_data_by_subject <- associative_data_only_new %>%
     factor = first(factor)
     )
 
-#View(associative_data_by_subject)
+##View(associative_data_by_subject)
 
 #mean false alarms among excluded
 mean_false_alarm_among_excluded <- mean(associative_data_by_subject$total_false_alarms[associative_data_by_subject$factor == "Factor-Excluded"])
@@ -323,8 +369,8 @@ summary_associative_data <- associative_data %>%
     se_intro = se(introspect_rating)
   )
 
-View(associative_data)
-View(summary_associative_data)
+#View(associative_data)
+#View(summary_associative_data)
 
 ggplot(summary_associative_data, aes(x = effect_group, y = mean_intro)) +
   geom_bar(stat = "identity", fill = "skyblue") +
@@ -500,7 +546,7 @@ belief_data <- data %>%
   filter(stimulus != "") %>%
   mutate(choice = as.numeric(choice))
 
-View(belief_data_by_subject)
+#View(belief_data_by_subject)
 
 belief_data_by_subject <- data %>%
   filter(task_name == "belief") %>%
@@ -543,7 +589,7 @@ belief_data <- data %>%
     factor == "Factor-Excluded" ~ "Excluded"
   )) 
 
-View(belief_data)
+#View(belief_data)
 
 summary_belief_data <- belief_data %>%
   group_by(effect_group) %>%
@@ -1024,7 +1070,7 @@ halo_data <- data %>%
     factor == "Factor-Excluded" ~ "Excluded"
     )) 
 
-View(halo_data)
+#View(halo_data)
 
 summary_halo_data <- halo_data %>%
   group_by(effect_group) %>%
@@ -1160,7 +1206,7 @@ reference_price_data <- data %>%
   filter(task_name == "reference price") %>%
   mutate(choice_parsed = parse_number(choice))
 
-View(reference_price_data)
+#View(reference_price_data)
 
 summary_reference_price_data <- reference_price_data %>%
   group_by(condition) %>%
@@ -1404,3 +1450,13 @@ ggplot(summary_status_quo_data, aes(x = effect_group, y = mean_intro)) +
 summary(lm(introspect_rating ~ effect_group, data = status_quo_data))
 #effect_groupIncluded and Status Quo       0.0062 ** 
 
+if (!requireNamespace("knitr", quietly = TRUE)) {
+  install.packages("knitr")
+}
+library(knitr)
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
+
+# Use the stitch function
+knitr::spin("analysis2024.R")
