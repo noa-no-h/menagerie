@@ -1092,6 +1092,133 @@ summary(lm(introspect_rating ~ effect_group, data = halo_data))
 
 #10 hindsight bias ----
     ##10.1 do we see the effect? TO DO----
+
+#Did subjects who saw the correct answers misremember their previous answers as closer to the correct answer than the subjects who did not see the correct answers?
+
+# Vectorized function to handle different formats
+parse_choice_vectorized <- function(choices) {
+  # Define regular expression patterns
+  pattern_million <- regex("milion| milliion| mil| million| Million| millon", ignore_case = TRUE)
+  pattern_k <- regex("k", ignore_case = TRUE)
+  
+  parsed_choices <- sapply(choices, function(choice) {
+    # Remove commas
+    choice_clean <- str_replace_all(choice, ",", "")
+    
+    if (str_detect(choice_clean, pattern_million)) {
+      # Remove variations of "million" text
+      num_str <- str_replace(choice_clean, pattern_million, "")
+      
+      # Convert to numeric
+      num <- as.numeric(num_str)
+      
+      # If conversion to numeric results in NA, return the original choice
+      if (is.na(num)) {
+        return(choice)
+      }
+      
+      # Multiply by 1 million
+      result <- num * 10^6
+    } else if (str_detect(choice_clean, pattern_k)) {
+      # Remove "k" text
+      num_str <- str_replace(choice_clean, pattern_k, "")
+      
+      # Convert to numeric
+      num <- as.numeric(num_str)
+      
+      # If conversion to numeric results in NA, return the original choice
+      if (is.na(num)) {
+        return(choice)
+      }
+      
+      # Multiply by 1 thousand
+      result <- num * 10^3
+    } else {
+      # If no "million" or "k", handle as a simple number
+      num <- as.numeric(choice_clean)
+      
+      # If conversion to numeric results in NA, return the original choice
+      if (is.na(num)) {
+        return(choice)
+      }
+      
+      result <- num
+    }
+    
+    # Return as character with no scientific notation
+    return(format(result, scientific = FALSE))
+  }, USE.NAMES = FALSE)
+  
+  return(parsed_choices)
+}
+
+
+
+true_values <- c(
+  Pakistan = 203177034,
+  Nigeria = 199045324,
+  Mexico = 131738729,
+  Vietnam = 97074662,
+  The_Democratic_Republic_of_the_Congo = 85705256,
+  Thailand = 69256846,
+  Tanzania = 60229204,
+  South_Korea = 51273440,
+  Colombia = 49705306,
+  Uganda = 45169147,
+  Ukraine = 43877093,
+  Malaysia = 32294009,
+  North_Korea = 25683863,
+  Niger = 22850032,
+  Burkina_Faso = 20106983,
+  Romania = 19519762,
+  Zimbabwe = 17154637,
+  The_Netherlands = 17114912,
+  Somalia = 14600000,
+  Guinea = 13270289,
+  Benin = 11683042,
+  Haiti = 11193952,
+  Greece = 11133944,
+  The_Czech_Republic = 10629078,
+  Azerbaijan = 9980369
+)
+
+
+
+hindsight_data <- data %>%
+  filter(task_name == "hindsight bias") %>%
+  filter(!(subject %in% c("66749b876f32a4ad246db5da","5f2d95153c1140074cc81b4c","667469ea0d42f70a9a75567b","667444e5662b7a4ebf82d5e1","665c6f67d9ea69740afbcab8","6273238a4a8b39041ff1bd2c", "664d3c950d24d83ca7b4dd68", "6020606d7b0258677b881f63", "6159fe7811a7e1b94401c33f"))) %>%
+  mutate(parsed_choice = parse_choice_vectorized(choice)) %>%
+  mutate(which_estimate = case_when(
+    str_detect(auxiliary_info1, "_first_response") ~ "first",
+    str_detect(auxiliary_info1, "_recall_original_response") ~ "recall",
+    TRUE ~ NA_character_
+  )) %>%
+  
+
+  
+  # Extract the country name
+  mutate(country = case_when(
+    str_detect(auxiliary_info1, "_estimate") ~ str_extract(auxiliary_info1, "^[^_]+(?:_[^_]+)*(?=_estimate)"),
+    str_detect(auxiliary_info1, "_recall") ~ str_extract(auxiliary_info1, "^[^_]+(?:_[^_]+)*(?=_recall)"),
+    TRUE ~ NA_character_
+  ))%>%
+
+  mutate(true_value = true_values[country]) %>%
+  mutate(difference_from_true = true_values - choice)
+
+means_hindsight <- hindsight_data %>%
+  group_by(subject) %>%
+  summarise(
+    mean_first_estimate = mean(choice[response_type == "first"], na.rm = TRUE),
+    mean_second_estimate = mean(choice[response_type == "recall"], na.rm = TRUE)
+  )
+
+affected_subjects <- means_hindsight %>%
+  filter(mean_first_estimate < mean_second_estimate)
+  
+  View(hindsight_data)
+
+  
     ##10.2 introspection TO DO----
 #11 mere exposure ✅ ----
     ##11.1 do we see the effect? ----
