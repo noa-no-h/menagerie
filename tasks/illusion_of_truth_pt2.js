@@ -76,7 +76,7 @@ var transformedTrueOld = transformList(true_old, 'true_old');
 
 // Combine the transformed lists
 var included_twelve_statements = _.shuffle(transformedFalseNew.slice(0,3).concat(transformedFalseOld.slice(0,3), transformedTrueNew.slice(0,3), transformedTrueOld.slice(0,3)));
-var excluded_twelve_statements = _.shuffle(transformedFalseNew.slice(0,6).concat(transformedTrueOld.slice(0,6)));
+var excluded_twelve_statements = _.shuffle(transformedFalseOld.slice(0,6).concat(transformedTrueOld.slice(0,6)));
 console.log("included: ", included_twelve_statements);
 console.log("excluded: ", excluded_twelve_statements);
 
@@ -148,6 +148,14 @@ var illusion_of_truth_questions = {
             require_movement: require_movement_general,
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('type') },
             on_finish: function (data) {
+                function isFalsePositive(response, trivia_type) {
+                    if (response < 50 && (trivia_type === "false_new" || trivia_type === "false_old")) {
+                        return 'false positive';
+                    }
+                    return 'not false positive';
+                }
+                
+
                 var s1_data = {
                     subject: data.subject,
                     version: data.version,
@@ -155,8 +163,8 @@ var illusion_of_truth_questions = {
                     task_name: "illusion of truth pt2",
                     choice: data.response,
                     stimulus: data.stim,
-                    auxiliary_info1: data.aux,
-                    condition: countInArray(stimulus_array, data.aux),
+                    auxiliary_info1: isFalsePositive(data.response, data.aux),
+                    condition: data.aux,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -236,7 +244,7 @@ var illusion_of_truth_intro_confidence = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
-            task_name: "mere exposure",
+            task_name: "illusion of truth",
             condition: condition[0],
             stimulus: null,
             choice: null,

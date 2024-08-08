@@ -17,9 +17,13 @@ var imaginability_question = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `An illness called Hypo-A is becoming increasingly prevalent in your city. The symptoms of this disease are: low energy level, muscle aches, and frequent severe headaches. Now judge how likely it you could contract Hypo-A in the future`
+            return `An illness called Hypo-A is becoming increasingly prevalent in your city. 
+            <p>The symptoms of this disease are: low energy level, muscle aches, and frequent severe headaches. 
+            <p>Now judge how likely it you could contract Hypo-A in the future`
         } else {
-            return `<An illness called Scenia-B is becoming increasingly prevalent in your city. The symptoms of this disease are: vague sense of disorientation, a malfunctioning nervous system and an inflamed liver.’ Now judge how likely it you could contract Scenia-B in the future`
+            return `An illness called Scenia-B is becoming increasingly prevalent in your city. 
+            <p>The symptoms of this disease are: vague sense of disorientation, a malfunctioning nervous system and an inflamed liver.
+            <p>Now judge how likely it you could contract Scenia-B in the future`
         }
     },
     labels: ['very likely (1)', '2', '3', '4', '5', '6', '7', '8', '9', 'very unlikely (10)'],
@@ -38,7 +42,8 @@ var imaginability_openQ_response = null;
 var imaginability_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked to judge the probability of contracting a disease after reading about its symptoms.</p><p>Describe your thought process while judging the likelihood of catching the disease. How did you come to your eventual judgment?</p>`,
+        prompt: `<p>In this exercise, you were asked to judge the probability of contracting a disease after reading about its symptoms.</p>
+        <p>Describe your thought process while judging the likelihood of catching the disease. How did you come to your eventual judgment?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
