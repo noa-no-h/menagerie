@@ -23,7 +23,7 @@ var omission_question = {
 
 <p> Immediately after the accident, both men exclaimed that it was the other's fault. When the police came. Peter told them that the accident was caused by Lyle's failure to stop. Lyle told the police that the accident was caused by Peter's failure to stop.  
 
-<p> Unknown to either man, there was an eyewitness to the accident, Ellen. Like Lyle, Ellen is a town resident. She thought to herself, "I know the accident is Lyle's fault, but I know Lyle and do not wish him to be punished. The only way that Lyle will be faulted by the police is if I testify that the accident is indeed Lyle's fault."  Ellen told the police that the accident was caused by Peter's failure to stop. Peter is charged with failure to stop and fined.    
+<p> Unknown to either man, there was an eyewitness to the accident, Ellen. Like Lyle, Ellen is a town resident. She thought to herself, "I know the accident is Lyle's fault, but I know Lyle and do not wish him to be punished. The only way that Lyle will be faulted by the police is if I testify that the accident is indeed Lyle's fault."  <b> Ellen told the police that the accident was caused by Peter's failure to stop. </b> Peter is charged with failure to stop and fined.    
             <p><i>Please rate Ellen's morality in the situation on the given scale:     
 -100 (as immoral as possible to be in this situation) to 0 (not immoral at all)
 <i><p>(Slide instructions: Please move the slider to one point of your choice)
@@ -37,7 +37,7 @@ var omission_question = {
 
 <p> Unknown to either man, there was an eyewitness to the accident, Ellen. Like Lyle, Ellen is a town resident. She thought to herself, "I know the accident is Lyle's fault, but I know Lyle and do not wish him to be punished. The only way that Lyle will be faulted by the police is if I testify that the accident is indeed Lyle's fault."  
 
-<p>Ellen <b> told the police nothing. Peter is charged </b> with failure to stop and fined.     
+<p>Ellen <b> told the police nothing. </b> Peter is charged with failure to stop and fined.     
             <p><i>Please rate Ellen's morality in the situation on the given scale:     
 -100 (as immoral as possible to be in this situation) to 0 (not immoral at all)
 <i><p>(Slide instructions: Please move the slider to one point of your choice)
@@ -76,7 +76,7 @@ var omission_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In the scenario you saw, Ellen told the police that the accident was Peter's fault.</p>
+            return `<p>In the scenario you saw, Ellen lied and told the police that the accident was Peter's fault.</p>
                 <p>Do you think the fact that Ellen <b>told the police Peter was at fault as opposed to remaining silent</b> affected your judgment about Ellen's morality in the situation? If so, how?`
         } else {
             return `<p>In the scenario you saw, Ellen said nothing to the police.

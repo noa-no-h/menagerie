@@ -63,7 +63,7 @@ var nine_false_statements = [
         var illusion_of_truth_instructions1 = {
             type: jsPsychInstructions,
             pages: [
-                `<p>For approximately the next three minutes, you will see a series of trivia statements
+                `<p>For approximately the next three minutes, you will see a series of trivia statements. Some will be true and others will be false.
                 <br><p>The trivia statements will be presented automatically - there is no need to press any buttons.
 Please read the trivia statements carefully as they are presented, but do not do anything else. You
 will not be able to pause the study, so make sure you have no distractions.</p>

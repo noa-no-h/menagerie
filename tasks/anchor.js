@@ -1,4 +1,8 @@
  ///#region 1. Anchoring Trivia (Mussweiler & Strack, 1999) - BETWEEN
+ var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the initial example value)?</p>';
+
+ 
+ 
  var anchor_instructions = {
     type: jsPsychInstructions,
     pages: [
@@ -188,7 +192,6 @@ const anchor_none = {
     type: jsPsychSurvey,
     survey_json: {
         showQuestionNumbers: false,
-        title: 'Anchoring Task',
         completeText: 'Done!',
         pageNextText: 'Continue',
         pagePrevText: 'Previous',

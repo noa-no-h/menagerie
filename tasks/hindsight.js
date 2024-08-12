@@ -76,6 +76,36 @@ var control = {Pakistan:"The movie, Avatar, cost $237,000,000 to make.",
             Azerbaijan: "The movie, Scream, cost $15,000,000 to make.",
         };
 
+
+true_values = {
+    Pakistan: 203177034,
+    Nigeria: 199045324,
+    Mexico: 131738729,
+    Vietnam: 97074662,
+    The_Democratic_Republic_of_the_Congo: 85705256,
+    Thailand: 69256846,
+    Tanzania: 60229204,
+    South_Korea: 51273440,
+    Colombia: 49705306,
+    Uganda: 45169147,
+    Ukraine: 43877093,
+    Malaysia: 32294009,
+    North_Korea: 25683863,
+    Niger: 22850032,
+    Burkina_Faso: 20106983,
+    Romania: 19519762,
+    Zimbabwe: 17154637,
+    The_Netherlands: 17114912,
+    Somalia: 14600000,
+    Guinea: 13270289,
+    Benin: 11683042,
+    Haiti: 11193952,
+    Greece: 11133944,
+    The_Czech_Republic: 10629078,
+    Azerbaijan: 9980369
+}
+          
+
 var responses = {};
 for (var i = 0; i < country_list_shuffled.length; i++) {
     var country = country_list_shuffled[i];
@@ -87,7 +117,7 @@ var current_country = country_list_shuffled[0];
 
 var stim = null;
 var country_display = null;
-var first_estimate = {
+/*var first_estimate = {
     timeline: [{
         type: jsPsychSurveyText,
         questions: function() {
@@ -111,7 +141,7 @@ var first_estimate = {
             s1_data = {
                 subject: data.subject,
                 version: data.version,
-                task_name: "hindsight bias",
+                task_name: "hindsight",
                 factor: data.condition,
                 condition: data.con,
                 choice: data.response.Q0,
@@ -124,7 +154,64 @@ var first_estimate = {
         }
     }],
     randomize_order: false
+};*/
+
+
+var first_estimate = {
+    timeline: [{
+        type: jsPsychSurvey,
+        survey_json: {
+            showQuestionNumbers: false,
+            focusFirstQuestionAutomatic: true,
+            completeText: "Next",
+            pages: [
+                {
+                    name: "page1",
+                    elements: [
+                        {
+                            type: "text",
+                            name: "countryEstimate",
+                            maskType: "numeric",
+                            maskSettings: {
+                                "precision": 1
+                              },
+                            title: function() {
+                                country_display = current_country.replace(/_/g, ' ');
+                                return "How many people live in " + country_display + "?";
+                            },
+                            isRequired: true,
+                            placeHolder: "Enter your estimate here",
+                            size: 25
+                        }
+                    ]
+                }
+            ]
+        },
+        
+        on_finish: function(data) {
+            var responses = data.response;
+            var estimate = responses.countryEstimate;
+            var difference = Math.abs(true_values[current_country] - estimate);
+            console.log("difference: ", difference);
+            //var result = current_country + "_estimate_first_response = " + estimate;
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "hindsight",
+                factor: data.condition,
+                condition: data.con,
+                choice: estimate,
+                stimulus: data.stimulus, // Make sure 'stimulus' is properly defined if used
+                auxiliary_info1: difference,
+                rt: data.rt,
+            };
+            save_data(s1_data, 'introspection');
+            console.log(responses);
+        }
+    }],
+    randomize_order: false
 };
+
 
 
 
@@ -190,25 +277,45 @@ var loop_answer_or_control = {
 
 var country_memory = {
     timeline: [{
-        type: jsPsychSurveyText,
-        questions: function() {
-            country_display = current_country.replace(/_/g, ' ');
-            stim = "What was your ORIGINAL ANSWER when we asked you to estimate how many people lived in " + country_display + "?";
-            return [{
-                prompt: "What was your ORIGINAL ANSWER when we asked you to estimate how many people lived in " + country_display + "?",
-                required: required_general,
-                rows: 2,
-                columns: 10
-            }];
+        type: jsPsychSurvey,
+        survey_json: {
+            showQuestionNumbers: false,
+            focusFirstQuestionAutomatic: true,
+            pages: [
+                {
+                    name: "page1",
+                    elements: [
+                        {
+                            type: "text",
+                            name: "countryMemory",
+                            maskType: "numeric",
+                            maskSettings: {
+                                "precision": 1
+                              },
+                            title: function() {
+                                country_display = current_country.replace(/_/g, ' ');
+                                return "What was your ORIGINAL ANSWER when we asked you to estimate how many people lived in " + country_display + "?";
+                             },
+                            isRequired: true,
+                            placeHolder: "Enter your original answer here",
+                            size: 25
+                        }
+                    ]
+                }
+            ]
         },
+
         on_finish: function (data) {
-            console.log(data.response);
+            var memory = data.response.countryMemory
+            console.log("memory: ", memory);
             responses[current_country + "_recall_original_response"] = data.response.Q0;
             let result = current_country + "_recall_original_response = " + data.response.Q0;
+            var difference = Math.abs(true_values[current_country] - memory);
+            console.log("difference: ", difference);
             s1_data = {
                 subject: data.subject,
                 version: data.version,
-                task_name: "hindsight bias",
+                task_name: "hindsight",
                 factor: data.condition,
                 condition: data.con,
                 choice: data.response.Q0,

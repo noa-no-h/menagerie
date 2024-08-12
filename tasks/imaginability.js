@@ -17,16 +17,16 @@ var imaginability_question = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `An illness called Hypo-A is becoming increasingly prevalent in your city. 
+            return `Imagine an illness called Hypo-A is becoming increasingly prevalent in your city. 
             <p>The symptoms of this disease are: low energy level, muscle aches, and frequent severe headaches. 
             <p>Now judge how likely it you could contract Hypo-A in the future`
         } else {
-            return `An illness called Scenia-B is becoming increasingly prevalent in your city. 
+            return `Imagine an illness called Scenia-B is becoming increasingly prevalent in your city. 
             <p>The symptoms of this disease are: vague sense of disorientation, a malfunctioning nervous system and an inflamed liver.
             <p>Now judge how likely it you could contract Scenia-B in the future`
         }
     },
-    labels: ['very likely (1)', '2', '3', '4', '5', '6', '7', '8', '9', 'very unlikely (10)'],
+    labels: ['very unlikely (1)', '2', '3', '4', '5', '6', '7', '8', '9', 'very likely (10)'],
     slider_width: introspection_q_slider_width,
     min: -100,
     max: 0,
@@ -63,7 +63,7 @@ var imaginability_introspect1 = {
             <p>Do you think the fact that the symptoms were <b>easy to imagine</b> influenced your judgment of how likely you were to contract the disease? If so, how?</p>`
         } else {
             return `<p>In this task, you read about a disease with symptoms  that were likely difficult to imagine experiencing (a vague sense of disorientation, a malfunctioning nervous system and an inflamed liver).
-            <p>Now, imagine if the symptoms had instead been <i> easy to imagine experiencing</i>. (such as (a low energy level, muscle aches, and frequent severe headaches) 
+            <p>Now, imagine if the symptoms had instead been <i> easy to imagine experiencing</i> (such as a low energy level, muscle aches, and frequent severe headaches). 
             <p>Do you think the fact that the symptoms would be <b>easy to imagine</b> would have influenced your judgment of how likely you were to contract the disease? If so, how?</p>`
         }
     },

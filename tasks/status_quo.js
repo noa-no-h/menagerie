@@ -9,9 +9,9 @@ body, gas tank configurations, seatbelts) and
 ii) improving the safety of interstate highways 
 (guard rails, grading, highway interchanges, 
 and implementing selective reduced
-speed limits). Currently the commission allocates 
+speed limits). <b>Currently the commission allocates 
 approximately 70% of its funds to auto safety and 
-30% of its funds to highway safety. 
+30% of its funds to highway safety. </b>
 Since there is a ceiling on its total spending, these are
 the commission's two options. Please select the option you would recommend.<br><br>`;
 
@@ -135,6 +135,7 @@ slider_start: 50,
 require_movement: require_movement_general,
 on_finish: function (data) {
     status_quo_intro_confidence_response = data.response;
+    var stimulus = condition[0] == 'Factor-Included' ? status_quo_stimulus_factor_included : status_quo_stimulus_factor_excluded;
     s1_data = {
         subject: data.subject,
         version: data.version,

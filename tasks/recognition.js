@@ -116,25 +116,26 @@ function checkRecognizableDisease(disease) {
 }
 
 
-var list_index = 0;
+var recognition_list_index = 0;
 var city_trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus: function(){
-        console.log("list_index:", list_index);
-        console.log("stimulus:", city_list[list_index]);
+        console.log("recognition_list_index:", recognition_list_index);
+        console.log("city_list: " + city_list);
+        console.log("stimulus:", city_list[recognition_list_index]);
         return("Please guess which city has the larger population.");
 
     },
     choices: function(){
-        console.log("list_index:", list_index);
-        console.log("stimulus:", city_list[list_index]);
-        return([city_list[list_index][0], city_list[list_index][1]]);
+        console.log("recognition_list_index:", recognition_list_index);
+        console.log("stimulus:", city_list[recognition_list_index]);
+        return([city_list[recognition_list_index][0], city_list[recognition_list_index][1]]);
     },
     on_finish: function (data) {
         console.log("data.response: " + data.response);
-        var response = city_list[list_index][data.response]
+        var response = city_list[recognition_list_index][data.response]
         console.log("response: " + response);
-        var stimulus_category = [getCategory(city_list[list_index[0]]),getCategory(city_list[list_index[1]])];
+        var stimulus_category = [getCategory(city_list[recognition_list_index[0]]),getCategory(city_list[recognition_list_index[1]])];
         var recognizable = checkRecognizableCity(response)
         console.log("recognizable: " + recognizable);
 
@@ -160,10 +161,10 @@ var city_trial = {
   var loop_city = {
     timeline: [city_trial],
     loop_function: function(data){
-        console.log("list_index", list_index,"city_list.length - 1", city_list.length - 1)
-        if (list_index != city_list.length - 1) {
-            list_index = list_index + 1;
-            console.log(list_index, city_list[list_index]);
+        console.log("recognition_list_index", recognition_list_index,"city_list.length - 1", city_list.length - 1)
+        if (recognition_list_index != city_list.length - 1) {
+            recognition_list_index = recognition_list_index + 1;
+            console.log(recognition_list_index, city_list[recognition_list_index]);
             return true; //loop
         } else {
             return false; // don't loop
@@ -171,25 +172,25 @@ var city_trial = {
     }
 }
 
-var disease_list_index = 0;
+var disease_recognition_list_index = 0;
 var disease_trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus: function(){
-        //console.log("disease_list_index:", disease_list_index);
-        //console.log("stimulus:", disease_list[disease_list_index]);
+        //console.log("disease_recognition_list_index:", disease_recognition_list_index);
+        //console.log("stimulus:", disease_list[disease_recognition_list_index]);
         return("Please guess which disease has the highest annual incidence rate in a typical year in the US.");
 
     },
     choices: function(){
-        //console.log("disease_list_index:", disease_list_index);
-        //console.log("stimulus:", disease_list[disease_list_index]);
-        return([disease_list[disease_list_index][0], disease_list[disease_list_index][1]]);
+        //console.log("disease_recognition_list_index:", disease_recognition_list_index);
+        //console.log("stimulus:", disease_list[disease_recognition_list_index]);
+        return([disease_list[disease_recognition_list_index][0], disease_list[disease_recognition_list_index][1]]);
     },
     on_finish: function (data) {
         console.log("data.response: " + data.response);
-        var response = disease_list[disease_list_index][data.response]
+        var response = disease_list[disease_recognition_list_index][data.response]
         console.log("response: " + response);
-        var stimulus_category = [getCategory(disease_list[disease_list_index[0]]),getCategory(disease_list[disease_list_index[1]])];
+        var stimulus_category = [getCategory(disease_list[disease_recognition_list_index[0]]),getCategory(disease_list[disease_recognition_list_index[1]])];
         var recognizable = checkRecognizableDisease(response)
         console.log("recognizable: " + recognizable);
 
@@ -215,10 +216,10 @@ var disease_trial = {
   var loop_disease = {
     timeline: [disease_trial],
     loop_function: function(data){
-        console.log("disease_list_index", disease_list_index)
-        if (disease_list_index != disease_list.length - 1) {
-            disease_list_index = disease_list_index + 1;
-            console.log(disease_list_index, disease_list[disease_list_index]);
+        console.log("disease_recognition_list_index", disease_recognition_list_index)
+        if (disease_recognition_list_index != disease_list.length - 1) {
+            disease_recognition_list_index = disease_recognition_list_index + 1;
+            console.log(disease_recognition_list_index, disease_list[disease_recognition_list_index]);
             return true; //loop
         } else {
             return false; // don't loop

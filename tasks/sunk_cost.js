@@ -22,7 +22,7 @@ var sunk_cost_question = {
             return `<p><b>Please consider the following scenario:</b></p>
     <p>Imagine you are a student and are planning to submit an entry to the 'new invention' competition organized by the students' club.
     <p>You have spent $90 preparing a design for an innovative rocket engine and estimate that it will take you an additional $30 to finish it.
-    <p> You just learned that <strong>the winner of the previous year's competition was also working on a rocket engine </strong> design similar to yours.    
+    <p> You just learned that <strong>the winner of the previous year's competition was also working on a rocket engine </strong> design similar to yours. You worry that the winner's design will make yours look worse in comparison.    
     <p>You had also thought about working on an (equally innovative and good) design for a solar-powered pump that would cost about $30 to complete.
     <p>Based on on this scenario, please complete the following sentence by clicking one of the buttons below:
     <p> You can submit only one entry, and since the deadline  is very close, you must choose now. The question is - Should you spend $30 trying to finish your rocket engine design given what you know, or would you rather work on the solar- powered pump?
@@ -31,7 +31,7 @@ var sunk_cost_question = {
             return `<p><b>Please consider the following scenario:</b></p>
     <p>Imagine you are a student and are planning to submit an entry to the 'new invention' competition organized by the students' club.
     <p>You thought about preparing a design for an innovative rocket engine, and you estimate that it will cost approximately $30 to finish it.
-    <p> You just learned that <strong>the winner of the previous year's competition was also working on a rocket engine </strong> design similar to yours.    
+    <p> You just learned that <strong>the winner of the previous year's competition was also working on a rocket engine </strong> design similar to yours. You worry that the winner's design will make yours look worse in comparison.    
     <p>You had also thought about working on an (equally innovative and good) design for a solar-powered pump that would cost about $30 to complete.
     <p>Based on on this scenario, please complete the following sentence by clicking one of the buttons below:
     <p> You can submit only one entry, and since the deadline  is very close, you must choose now. The question is - Should you spend $30 trying to finish your rocket engine design given what you know, or would you rather work on the solar- powered pump?
@@ -66,11 +66,11 @@ var sunk_cost_introspect1 = {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, you were asked which design to submit to the new invention competition, given that the winner of the previous year's competition was also working on a similar rocket engine.</p>
                 <p>We also told you that you had already spent $90 on your rocket engine design.</p>
-                <p>Do you think <b>knowing you had already spent $90</b> on the rocket engine design affected your response? If so, how?</p>`;
+                <p>Do you think <b>the fact that you had already spent $90</b> on the rocket engine design affected your response? If so, how?</p>`;
          } else {
             return `<p>In this exercise, you were asked which design to submit to the new invention competition, given that the winner of the previous year's competition was also working on a similar rocket engine.</p>
                 <p>Now imagine that you had already spent $90 on your rocket engine design.</p>
-                <p>Do you think <b>knowing you had already spent $90</b> on the rocket engine design would have affected your response? If so, how?</p>`;
+                <p>Do you think <b>the fact that you had already spent $90</b> on the rocket engine design would have affected your response? If so, how?</p>`;
          }
     },
     labels: condition[0] == 'Factor-Included' ? introspection_q_labels_sunk_cost1 : introspection_q_labels_sunk_cost2,
