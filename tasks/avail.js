@@ -180,20 +180,20 @@ var avail_openQ = {
     }
 };
 
-var introspection_q_labels_avail1 = [`<strong>It made me more likely to think that the first list (where all the men were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to think that the second list (where all the women were famous) contained more men</strong>`];
-var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that first list (where all the men were famous) contained more men</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to think that the second list (where all the women were famous) contained more men</strong>`];
+var introspection_q_labels_avail1 = [`<strong>It made me more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
+var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
 
 var avail_intro_response1 = null;
 var avail_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this exercise, you were asked to memorize two lists of names. Some of the names on these lists belonged to very famous people, while others belonged to less famous people.</p>
-        <p>Specifically, in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were less famous. However, in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were less famous.</p>
+            return `<p>In this exercise, you were asked to memorize two lists of names. Some of the names on these lists belonged to very famous people, while others belonged to people who are not famous.</p>
+        <p>Specifically, in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were not famous. However, in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were not famous.</p>
         <p>Do you think the <b>fame of the people in each list</b> affected your response about which list contained more men? If so, how?`
         } else {
             return `<p>In this exercise, you were asked to memorize two lists of names. None of the names on the list you saw belonged to very famous people.</p>
-        <p>Now, imagine if some of the names on each list had belonged to very famous people. For example, imagine that in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were less famous. And imagine that in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were less famous.</p>
+        <p>Now, imagine if some of the names on each list had belonged to very famous people. For example, imagine that in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were not famous. And imagine that in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were not famous.</p>
         <p>If this were the case, do you think the <b>fame of the people in each list</b> would have affected your response about which list contained more men? If so, how?`
         }
     },

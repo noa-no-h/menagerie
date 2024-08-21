@@ -45,8 +45,16 @@ if (condition[0] == "Factor-Included") {
 var cause = null
 var cause_question = {
     type: jsPsychHtmlSliderResponse,
-    stimulus: `<b>Please tell us much you agree or disagree with the statement below.</b> There are no right or wrong answers; we are simply interested in your opinion.
-<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p>`,
+    stimulus: function(){
+        image = null;
+        if (cause_condition == cause_one) {
+            image = "img/oneball.png"
+        } else {
+            image = "img/nineballs.png"
+        }
+        return `<b>Please tell us much you agree or disagree with the statement below.</b> There are no right or wrong answers; we are simply interested in your opinion.
+<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p>`
+    },
     labels: [`<strong>1<br>totally disagree</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>totally agree</strong>`],
     slider_width: 750,
     min: 10,

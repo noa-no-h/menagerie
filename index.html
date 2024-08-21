@@ -167,7 +167,7 @@
             pages: [
                 `<p><b>Welcome to the experiment.</b></p> <p>Click next to begin.</p>`,
                 `<p>You must be 18 years or older to complete this study. If you under 18, please exit now.`,
-                `<p>This study will take around 45 minutes to complete. You must complete the experiment in one sitting.
+                `<p>This study will take around an hour to complete. You must complete the experiment in one sitting.
                 <b>So, before you start, please make sure that you have one hour to devote entirely
                 to this study.</b> We appreciate your participation.</p>`,
                 `<p>On the next page, you'll find a consent form. Please read it and select "Yes" if you wish to participate in the study.`,
@@ -300,7 +300,7 @@
             pages: [
                 `<p>Thank you for beginning the study! You will be asked to complete a variety of short judgment/decision-making tasks.</p>`,
                 `<p>While you're completing the decision-making tasks, please <b>pay attention to how you're making your judgments/decisions</b>.</p>`,
-                `<p>The study will take around 45 minutes to complete.</p>
+                `<p>The study will take around an hour to complete.</p>
                 <p>We will now begin with the first phase of the study. Please click the button below to continue!</p>
             `],
             show_clickable_nav: true
@@ -505,7 +505,7 @@ var next_task = {
         if (next_task_index >= total_tasks) {
             return `<p>Thank you for completing all of the exercises!</p>
                     <p>You have now finished the first phase of the study, and will now begin the <b>second phase</b> of the study.</p>
-                    <p>In this phase, you will be asked to answer a series of questionnaires. These should take around 2 minutes in total to complete. Please try to answer each questionnaire as honestly as possible.</p>
+                    <p>In this phase, you will be asked to answer a few questions. These should take around 2 minutes in total to complete. Please try to answer each questionnaire as honestly as possible.</p>
                     <p><i>Click the button below to begin the second phase.</i></p>`;
         } else {
             return `<p>This exercise is now complete. Great job!</p>
@@ -1312,33 +1312,28 @@ var next_task = {
             ],
             on_finish: function (data) {
                 s1_data = {
-                    /*phq91: phq91_responses,
-                    phq92: phq92_responses,
-                    gad71: gad71_responses,
-                    gad72: gad72_responses,
-                    audit: audit_responses,
-                    ocir: ocir_responses,
-                    spq: spq_responses,
-                    tas: tas_responses,
-                    icar_responses: icar_responses,
-                    icar_correct: JSON.stringify(correct_ans),
-                    icar_num_correct: correct_ans.length,*/
-                    feedback: feedback,
-                    total_time: Date.now() - start_time,
                     subject: data.subject,
                     version: data.version,
-                    factor: "gender: " + data.response.gender,
-                    task_name: "demographics",
-                    condition: "age: " + age,
-                    stimulus: "education: "+ data.response.education,
-                    choice: "income: " + data.response.income,
-                    auxiliary_info1: "feedback: "+ feedback,
-                    openq_response: "race: " + race,
-                    introspect_rating: "total_time: " + (Date.now() - start_time),
-                    introspect_open: null,
-                    familiarity: null
+                    gender: data.response.gender,
+                    age: age,
+                    education: data.response.education,
+                    income: data.response.income,
+                    race: race,
+                    phq91: null,
+                    phq92: null,
+                    gad71: null,
+                    gad72: null,
+                    audit: null,
+                    ocir: null,
+                    spq: null,
+                    tas: null,
+                    icar_responses: null,
+                    icar_correct: null,
+                    icar_num_correct: null,
+                    feedback: feedback,
+                    total_time: Date.now() - start_time
                 }
-                save_data(s1_data, 'introspection');
+                save_data(s1_data, 'introspect_demo');
             }
         }
 
@@ -1375,7 +1370,7 @@ var next_task = {
                 <p><b>What was the hypothesis?</b>
                 This research is exploratory; we do not have any specific hypotheses yet.</p>
                 <p><b>Did we tell you everything?</b>
-                The factors that we presented in the form of "on a scale of 1-9, how much do you think (factor) influenced your decision" have been shown through past research to affect the decisions they pertained to. We were curious to see whether subjects would be able to identify this, and to what degree.</p>
+                The factors that we presented in the form of a scale from being affected by the factor in one direction to being affected by the factor in the other direction. These factors have been shown through past research to affect the decisions they pertained to. We were curious to see whether subjects would be able to identify the direction and strength of each effect.</p>
                 <p><b>Why is this study important?</b>
                 These insights are important for understanding how people introspect on their decision-making processes, and chart a potential path towards better human introspection.</p>
                 <p><b>How to contact the researcher:</b>
@@ -1407,9 +1402,8 @@ var next_task = {
             };
         }
 
-        //timeline.push(hindsight)
+        timeline.push(cause)
         //timeline.push(avail)
-        //timeline.push(illusion_of_truth_pt2)
         //timeline.push(hindsight)
         //timeline.push(omission)
         //timeline.push(sunk_cost)

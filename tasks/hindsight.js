@@ -199,9 +199,9 @@ var first_estimate = {
                 version: data.version,
                 task_name: "hindsight",
                 factor: data.condition,
-                condition: data.con,
+                condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
                 choice: estimate,
-                stimulus: data.stimulus, // Make sure 'stimulus' is properly defined if used
+                stimulus: current_country + " first estimate",
                 auxiliary_info1: difference,
                 rt: data.rt,
             };
@@ -317,10 +317,10 @@ var country_memory = {
                 version: data.version,
                 task_name: "hindsight",
                 factor: data.condition,
-                condition: data.con,
-                choice: data.response.Q0,
-                stimulus: stim,
-                auxiliary_info1: result,
+                condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
+                choice: memory,
+                stimulus: current_country + " memory",
+                auxiliary_info1: difference,
                 rt: data.rt,
             }
             save_data(s1_data, 'introspection');
@@ -366,19 +366,19 @@ var loop_country_memory = {
     };
 
     var introspection_q_labels_hindsight1 = [
-        `<strong>It pushed my memory towards the country's true population value.</strong>`,
+        `<strong>It pushed my memory <u>TOWARDS</u> the country's true population value.</strong>`,
         "",
         "<strong>It did not affect my response</strong>",
         "",
-        `<strong>It pushed my memory away from the country's true population value.</strong>`
+        `<strong>It pushed my memory <u>AWAY FROM</u> the country's true population value.</strong>`
     ];
 
     var introspection_q_labels_hindsight2 = [
-        `<strong>It would have pushed my memory towards the country's true population value.</strong>`,
+        `<strong>It would have pushed my memory <u>TOWARDS</u> the country's true population value.</strong>`,
         "",
         "<strong>It would not have affected my response</strong>",
         "",
-        `<strong>It would have pushed my memory away from the country's true population value.</strong>`
+        `<strong>It would have pushed my memory <u>AWAY FROM</u> the country's true population value.</strong>`
     ];
 
     var hindsight_intro_response1 = null;
@@ -392,8 +392,8 @@ var loop_country_memory = {
                         <p>Do you think <b>being told the true population for each country</b> affected your response? If so, how?</p>`;
             } else {
                 return `<p>In this exercise, you were asked to estimate the population of a series of countries. And later on, you were asked to recall the population estimate you had made earlier.</p>
-                        <p>Now, imagine if, in between these two sets of questions, <b>we told you the true population for each country.</b></p>
-                        <p>For example, imagine if, early on, we asked you to estimate the population of Peru. Later on in the exercise, we told you the true population of Peru. Near the end of the exercise, we asked you to recall the population estimate you had made earlier for Peru. </p>
+                        <p>Now, imagine that in between these two sets of questions, <b>we told you the true population for each country.</b> instead of showing you facts about movie budgets.</p>
+                        <p>For example, imagine the following scenario: Early on, we asked you to estimate the population of Peru. Later on in the exercise, we told you the true population of Peru. Near the end of the exercise, we asked you to recall the population estimate you had made earlier for Peru. </p>
                         <p>If this were the case, do you think <b>being told the true population for each country</b> would have affected your response? If so, how?</p>`;
             }
         },

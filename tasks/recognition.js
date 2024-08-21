@@ -12,7 +12,7 @@ var preload = {
 var recognition_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will be presented with a series of trivia questions.</p>
+        `<p>In this exercise, you will be presented with another series of trivia questions.</p>
         <br><p>Please do not search the answers online while you are completing the study; if you are unsure of an answer, please just make your best guess.
         <p><i>Click the Next button below when you are ready to see the first question.</i></p>`
     ],
@@ -239,8 +239,8 @@ var recognition_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think the city had a <u>smaller </u> population or that the disease had a <u> lower </u> annual incidence rate. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>larger </u> population or that the disease had a <u> higher </u> annual incidence rate.'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think the city had a <u>smaller </u> population or that the disease had a <u> lower </u> annual incidence rate.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>larger </u> population or that the disease had a <u> higher </u> annual incidence rate.'];
+var introspection_q_labels_ref_price1 = ['<strong>It made me think the city had a <u>SMALLER </u> population or that the disease had a <u> LOWER </u> annual incidence rate. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population or that the disease had a <u> HIGHER </u> annual incidence rate.'];
+var introspection_q_labels_ref_price2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population or that the disease had a <u> LOWER </u> annual incidence rate.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population or that the disease had a <u> HIGHER </u> annual incidence rate.'];
 
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
@@ -249,11 +249,11 @@ var recognition_introspect1 = {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, you were presented with a series of trivia questions.
             <p>In each one, you were either asked to pick the city with the larger population or the disease with the higher annual incidence rate in the US. </p>
-            <p>Some of the diseases and cities (like Cholera or New York) you likely recognized the names of. While others (like Tularemia or Lexington–Fayette) you may have recognized less well. How do you think your <b>recognition</b> of the disease or city affected your impression of their population or annual incidence rate?</p>`;
+            <p>Some of the diseases and cities (like Cholera or New York) you likely recognized the names of. While others (like Tularemia or Lexington–Fayette) you may have recognized less well. How do you think <b>how much you'd heard of the disease or city before</b> affected your impression of their population or annual incidence rate?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of trivia questions.
             <p>In each one, you were either asked to pick the city with the larger population or the disease with the higher annual incidence rate in the US. </p>
-            <p>Imagine if some of the diseases and cities (like Cholera or New York) were ones you recognized the names of. While others (like Tularemia or Lexington–Fayette) were ones you recognized less well. How do you think your <b>recognition</b> of the disease or city would have affected your impression of their population or annual incidence rate?</p>`;
+            <p>Imagine if some of the diseases and cities (like Cholera or New York) were ones you likely recognized the names of. While others (like Tularemia or Lexington–Fayette) were ones you likely recognized less well. How do you think <b>how much you'd heard of the disease or city before</b> would have affected your impression of their population or annual incidence rate?</p>`;
         }
     },
     labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,

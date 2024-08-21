@@ -31,6 +31,17 @@ var neutral_list = ['img/M1 LF-240.jpg', 'img/M2 WM-230.jpg', 'img/M3 BM-034.jpg
                     'img/M5 WM-221.jpg', 'img/M6 WM-214.jpg', 'img/M7 WM-254.jpg', 'img/M8 BM-232.jpg'
 ];
 
+var attractiveness = {
+    'img/A1 WF-233.jpg': 5.47826087, 'img/A2 BF-240.jpg': 5.310344828,
+    'img/A3 LF-249.jpg': 5.24137931, 'img/A4 BF-233.jpg': 5.12,
+    'img/U1 AM-224.jpg': 1.52, 'img/U2 LM-240.jpg': 1.541666667,
+    'img/U3 BF-200.jpg': 1.551724138, 'img/U4 WF-002.jpg': 1.612903226,
+    'img/M1 LF-240.jpg': 3.142857143, 'img/M2 WM-230.jpg':3.142857143,
+    'img/M3 BM-034.jpg':3.144444444, 'img/M4 LF-252.jpg': 3.148148148,
+    'img/M5 WM-221.jpg': 3.153846154, 'img/M6 WM-214.jpg': 3.12, 
+    'img/M7 WM-254.jpg': 3.153846154, 'img/M8 BM-232.jpg': 3.16
+}
+
 var stimuli_list = [];
 var ordered_stimuli_list = [];
 if (condition[0] == 'Factor-Included'){
@@ -50,21 +61,25 @@ for (i = 0; i < num_stimuli; i++) {
 
 var stimulus = null;
 var halo_trial = {
-    type: jsPsychSurveyLikert,
-    preamble: function(){
-
+    type: jsPsychHtmlSliderResponse,
+    stimulus: function(){
         stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>'
+        
         return stimulus;
-},
-    questions: [
-      {prompt: "On a scale of 1-5, how persuasive do you think this person is?", labels: ["1", "2", "3", "4", "5"], required: true},
-    ],
-    scale_width: 500,
+    },
+    
+    scale_width: 200,
+    labels: ["1", "2", "3", "4", "5"],
+    min: 1,
+    max: 5,
+    step: 1,
+    slider_start: 3,
     on_finish: function (data) {
         //console.log(data.response);
         //choice[stimuli_list[list_index]] = data.response.Q0;
-        console.log("data.response.Q0: " + data.response.Q0);
-
+        console.log("data.response: " + data.response);
+        stimulus = stimuli_list[list_index];
+        console.log("stimulus: " + stimulus);
         var s1_data = {
             subject: data.subject,
             version: data.version,
@@ -72,8 +87,8 @@ var halo_trial = {
             task_name: "halo",
             condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
             stimulus: stimulus,
-            choice: data.response.Q0 + 1,
-            auxiliary_info1: null,
+            choice: data.response,
+            auxiliary_info1: attractiveness[stimulus],
             openq_response: null,
             introspect_rating: null,
             introspect_open: null,
@@ -112,8 +127,8 @@ var halo_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think they were less persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think they were more persuasive</strong>'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think they were less persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were more persuasive</strong>'];
+var introspection_q_labels_ref_price1 = ['<strong>It made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think they were <u>MORE</u> persuasive</strong>'];
+var introspection_q_labels_ref_price2 = ['<strong>It would have made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were <u>MORE</u> persuasive</strong>'];
 
 var halo_intro_response1 = null;
 var halo_introspect1 = {

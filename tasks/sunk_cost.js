@@ -1,6 +1,6 @@
 //#region 5. sunk_cost Effect - BETWEEN
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that <b>you had already spent $90</b> on the rocket engine design)?</p>";
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that you had already spent $90 on the rocket engine design)?</p>";
 
 
 var sunk_cost_instructions = {
@@ -22,7 +22,7 @@ var sunk_cost_question = {
             return `<p><b>Please consider the following scenario:</b></p>
     <p>Imagine you are a student and are planning to submit an entry to the 'new invention' competition organized by the students' club.
     <p>You have spent $90 preparing a design for an innovative rocket engine and estimate that it will take you an additional $30 to finish it.
-    <p> You just learned that <strong>the winner of the previous year's competition was also working on a rocket engine </strong> design similar to yours. You worry that the winner's design will make yours look worse in comparison.    
+    <p> You just learned that <strong>the winner of the previous year's competition is also working on a rocket engine </strong> design similar to yours. You worry that the winner's design will make yours look worse in comparison.    
     <p>You had also thought about working on an (equally innovative and good) design for a solar-powered pump that would cost about $30 to complete.
     <p>Based on on this scenario, please complete the following sentence by clicking one of the buttons below:
     <p> You can submit only one entry, and since the deadline  is very close, you must choose now. The question is - Should you spend $30 trying to finish your rocket engine design given what you know, or would you rather work on the solar- powered pump?
@@ -31,7 +31,7 @@ var sunk_cost_question = {
             return `<p><b>Please consider the following scenario:</b></p>
     <p>Imagine you are a student and are planning to submit an entry to the 'new invention' competition organized by the students' club.
     <p>You thought about preparing a design for an innovative rocket engine, and you estimate that it will cost approximately $30 to finish it.
-    <p> You just learned that <strong>the winner of the previous year's competition was also working on a rocket engine </strong> design similar to yours. You worry that the winner's design will make yours look worse in comparison.    
+    <p> You just learned that <strong>the winner of the previous year's competition is also working on a rocket engine </strong> design similar to yours. You worry that the winner's design will make yours look worse in comparison.    
     <p>You had also thought about working on an (equally innovative and good) design for a solar-powered pump that would cost about $30 to complete.
     <p>Based on on this scenario, please complete the following sentence by clicking one of the buttons below:
     <p> You can submit only one entry, and since the deadline  is very close, you must choose now. The question is - Should you spend $30 trying to finish your rocket engine design given what you know, or would you rather work on the solar- powered pump?
@@ -56,8 +56,8 @@ var sunk_cost_openQ = {
     }
 };
 
-var introspection_q_labels_sunk_cost1 = [`<strong>It made me more likely to choose the <u>rocket engine</u>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to choose the <u>solar-powered pump</u>`];
-var introspection_q_labels_sunk_cost2 = [`<strong>It would have made me more likely to choose the <u>rocket engine</u>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to choose the <u>solar-powered pump`];
+var introspection_q_labels_sunk_cost1 = [`<strong>It made me more likely to choose the <u>ROCKET ENGINE</u>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to choose the <u>SOLAR-POWERED PUMP</u>`];
+var introspection_q_labels_sunk_cost2 = [`<strong>It would have made me more likely to choose the <u>ROCKET ENGINE</u>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to choose the <u>SOLAR-POWERED PUMP</u>`];
 
 var sunk_cost_intro_response1 = null;
 var sunk_cost_introspect1 = {

@@ -1,12 +1,12 @@
 //#region 4. omission Principle - BETWEEN
 
-var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether or not Ellen told the police that Peter was at fault)?</p>';
+var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether James actively poisoned the one villager)?</p>';
 
 
 var omission_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p> In this exercise, you will be given a hypothetical scenario and then asked to judge the morality of one of the actors in that scenario.</p>
+        `<p> In this exercise, you will be given a hypothetical scenario and then asked to judge the moral permissibility of the actions in that scenario.</p>
 <p><i>Please click the button below to view the scenario.</i>`,
     ],
     show_clickable_nav: true
@@ -17,38 +17,24 @@ var omission_question = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>Peter, a resident of Ohio, is driving through a small town in South Carolina. At a 4-way stop, he gets into a small accident with a town resident named Lyle. The accident came about like this:     
-
-<p> Traveling north, Lyle approached the 4-way stop and failed either to slow down or to stop. Meanwhile, Peter had just finished stopping and began to move east through this intersection. Peter noticed that a car, Lyle's, was crossing the intersection after having failed to stop. Peter slammed on his brakes, but too late to prevent his car from hitting Lyle's car as it passed in front of him. The accident was clearly Lyle's fault, because the accident was caused by his failure to stop. However, because the accident's cause is not clear from its effects, the police may believe that Peter failed to stop and that caused Peter to run into Lyle's car broadside.  
-
-<p> Immediately after the accident, both men exclaimed that it was the other's fault. When the police came. Peter told them that the accident was caused by Lyle's failure to stop. Lyle told the police that the accident was caused by Peter's failure to stop.  
-
-<p> Unknown to either man, there was an eyewitness to the accident, Ellen. Like Lyle, Ellen is a town resident. She thought to herself, "I know the accident is Lyle's fault, but I know Lyle and do not wish him to be punished. The only way that Lyle will be faulted by the police is if I testify that the accident is indeed Lyle's fault."  <b> Ellen told the police that the accident was caused by Peter's failure to stop. </b> Peter is charged with failure to stop and fined.    
-            <p><i>Please rate Ellen's morality in the situation on the given scale:     
--100 (as immoral as possible to be in this situation) to 0 (not immoral at all)
+            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. James decides to poison the one.
+            <p><i>Please rate James's action on the given scale:     
+1 (Forbidden) to 7 (Obligatory)
 <i><p>(Slide instructions: Please move the slider to one point of your choice)
 </i></p>`
         } else {
-            return `<p>Peter, a resident of Ohio, is driving through a small town in South Carolina. At a 4-way stop, he gets into a small accident with a town resident named Lyle. The accident came about like this:     
-
-<p> Traveling north, Lyle approached the 4-way stop and failed either to slow down or to stop. Meanwhile, Peter had just finished stopping and began to move east through this intersection. Peter noticed that a car, Lyle's, was crossing the intersection after having failed to stop. Peter slammed on his brakes, but too late to prevent his car from hitting Lyle's car as it passed in front of him. The accident was clearly Lyle's fault, because the accident was caused by his failure to stop. However, because the accident's cause is not clear from its effects, the police may believe that Peter failed to stop and that caused Peter to run into Lyle's car broadside.  
-
-<p> Immediately after the accident, both men exclaimed that it was the other's fault. When the police came. Peter told them that the accident was caused by Lyle's failure to stop. Lyle told the police that the accident was caused by Peter's failure to stop.  
-
-<p> Unknown to either man, there was an eyewitness to the accident, Ellen. Like Lyle, Ellen is a town resident. She thought to herself, "I know the accident is Lyle's fault, but I know Lyle and do not wish him to be punished. The only way that Lyle will be faulted by the police is if I testify that the accident is indeed Lyle's fault."  
-
-<p>Ellen <b> told the police nothing. </b> Peter is charged with failure to stop and fined.     
-            <p><i>Please rate Ellen's morality in the situation on the given scale:     
--100 (as immoral as possible to be in this situation) to 0 (not immoral at all)
+            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, notices that the one has accidentally consumed a poisonous substance. James can administer the antidote to the one villager. If James withholds the antidote from the one, the one will die by sunrise, and the five will not be sacrificed. If James does provide the antidote to the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides not to provide the antidote to the one.
+<p><i>Please rate James's action on the given scale:     
+1 (Forbidden) to 7 (Obligatory)
 <i><p>(Slide instructions: Please move the slider to one point of your choice)
 </i></p>`
         }
     },
-    labels: ['-100 (as immoral as possible to be in this situation', '0 (not immoral at all)'],
+    labels: ['1<br>(Forbidden)', '2', '3', '4<br>(Permissible)','5', '6', '7<br>(Obligatory)'],
     slider_width: introspection_q_slider_width,
-    min: -100,
-    max: 0,
-    slider_start: -50,
+    min: 1,
+    max: 7,
+    slider_start: 4,
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br><br>",    
     on_finish: function (data) {
@@ -68,20 +54,20 @@ var omission_openQ = {
     }
 };
 
-var introspection_q_labels_omission1 = [`<strong>It made me <u>LESS</u> likely to judge Ellen as immoral</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge Ellen as immoral</strong>`];
-var introspection_q_labels_omission2 = [`<strong>It would have made me <u>LESS</u> likely to judge Ellen as immoral</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge Ellen as immoral</strong>`];
+var introspection_q_labels_omission1 = [`<strong>It made me <u>LESS</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge the action as permissible</strong>`];
+var introspection_q_labels_omission2 = [`<strong>It would have made me <u>LESS</u> likely to judge the action as permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge the action as permissible</strong>`];
 
 var omission_intro_response1 = null;
 var omission_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In the scenario you saw, Ellen lied and told the police that the accident was Peter's fault.</p>
-                <p>Do you think the fact that Ellen <b>told the police Peter was at fault as opposed to remaining silent</b> affected your judgment about Ellen's morality in the situation? If so, how?`
+            return `<p>Sometimes when someone harms other people, it is through actively doing something (for example, poisoning someone). Other times it is through failing to do something that would prevent harm (for example, failing to give someone who has already been poisoned an antidote). 
+            <p>In the scenario you read, James actively poisoned the one villager. Do you think the fact that he <b>actively poisoned the one villager</b> as opposed to failing to prevent the villager’s death affected your judgement of the permissibility of his action? If so, how?`
         } else {
-            return `<p>In the scenario you saw, Ellen said nothing to the police.
-            <p>Now, imagine if Ellen <i>had instead told the police that the accident was Peter's fault</i> 
-            <p>Do you think the fact that Ellen <b>told the police Peter was at fault as opposed to remaining silent</b> would have affected your judgment about Ellen's morality in the situation? If so, how?`
+            return `<p>Sometimes when someone harms other people, it is through actively doing something (for example, poisoning someone). Other times it is through failing to do something that would prevent harm (for example, failing to give someone who has already been poisoned an antidote). 
+            <p>Now, imagine if James had actively poisoned the one villager instead of failing to give him an antidote.
+            <p>Do you think the fact that James <b>actively poisoned the one villager instead of failing to give him an antidote</b> would have affected your judgement of the permissibility of his action? If so, how?`
         }
     },
     labels: condition[0] == 'Factor-Included' ? introspection_q_labels_omission1 : introspection_q_labels_omission2,

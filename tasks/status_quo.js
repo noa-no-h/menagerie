@@ -1,4 +1,4 @@
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by being told that the current allocation of funds was 70% auto safety / 30% highway safety)?</p>";
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by being told that the <u>current allocation</u> of funds was 70% auto safety / 30% highway safety)?</p>";
 
 
 var status_quo_stimulus_factor_included =
@@ -43,7 +43,13 @@ timeline: [
     {
         type: jsPsychHtmlButtonResponse,
         stimulus: stimulus,
-        choices: ['Allocate 70% to auto safety and 30% to highway safety', 'Allocate 50% to auto safety and 50% to highway safety'],
+        choices: function(){
+            if (condition[0] == 'Factor-Included') {
+                return  ['Stay with the current allocation: 70% to auto safety and 30% to highway safety', 'Switch to a new allocation: 50% to auto safety and 50% to highway safety']
+            } else {
+                return ['Allocate 70% to auto safety and 30% to highway safety', 'Allocate 50% to auto safety and 50% to highway safety']
+            }
+        },   
         prompt: '',
         on_finish: function (data) {
             console.log(data.response ? "50/50" : "70/30")
@@ -91,12 +97,12 @@ type: jsPsychHtmlSliderResponse,
 stimulus: function () {
     if (condition[0] == "Factor-Included") {
         return `<p>In this exercise, you were asked what allocation of funds you would recommend to the National Highway Safety Commission.</p>
-                <p>We first told you that the <b>current allocations of funds is 70% to auto safety and 30% to highway safety</b>  before asking you what you would recommend.</p>
-                <p>Do you think <b>knowing that the current allocation of funds is 70% to auto safety and 30% to highway safety</b> affected your response? If so, how?</p>`;
+                <p>We first told you that the <b><u>current allocations</u> of funds is 70% to auto safety and 30% to highway safety</b>  before asking you what you would recommend.</p>
+                <p>Do you think <b>knowing that the <u>current allocation</u> of funds is 70% to auto safety and 30% to highway safety</b> affected your response? If so, how?</p>`;
     } else {
         return `<p>In this exercise, you were asked what allocation of funds you would recommend to the National Highway Safety Commission.</p>
-                <p>Now, imagine if you had first been told the <b>current allocation of funds</b> is 70% auto safety / 30% highway safety.</p>
-                <p>If this were the case, do you think <b>knowing that the current allocation of funds is 70% to auto safety and 30% to highway safety</b> would have affected your response? If so, how?</p>`;
+                <p>Now, imagine if you had first been told the <b><u>current allocation</u> of funds</b> is 70% auto safety / 30% highway safety.</p>
+                <p>If this were the case, do you think <b>knowing that the <u>current allocation</u> of funds is 70% to auto safety and 30% to highway safety</b> would have affected your response? If so, how?</p>`;
     }
 },
 labels: condition[0] == "Factor-Included" ? introspection_q_labels_status_quo1 : introspection_q_labels_status_quo2,

@@ -54,7 +54,7 @@
  var anchor_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will be asked to answer a series of trivia questions. Some of these questions may be difficult, but please try your best answer each one.</p>
+        `<p>In this exercise, you will be asked to answer another trivia question. Some of these questions may be difficult, but please try your best answer each one.</p>
     </p><i>Please click the button below to view the first question.</i></p>`
     ],
     show_clickable_nav: true
@@ -310,7 +310,7 @@ var anchor_openQ_response = null;
 var anchor_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked a series of trivia questions.</p><p>Describe your thought process while answering these questions. How did you come to your eventual answers for each question? Please try to describe how you answered each question individually.</p>`,
+        prompt: `<p>In this exercise, you were asked a trivia question.</p><p>Describe your thought process while answering the question. How did you come to your eventual answers for each question? Please try to describe how you answered each question individually.</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {

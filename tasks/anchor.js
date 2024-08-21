@@ -6,8 +6,8 @@
  var anchor_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will be asked to answer a series of trivia questions. Some of these questions may be difficult, but please try your best answer each one.</p>
-    </p><i>Please click the button below to view the first question.</i></p>`
+        `<p>In this exercise, you will be asked to answer another trivia question. Please make your best guess and do not look up the answer online.</p>
+    </p><i>Please click the button below to view the question.</i></p>`
     ],
     show_clickable_nav: true
 }
@@ -39,27 +39,6 @@ const anchor_low = {
                         inputType: "number"
                     }
                 ]
-            },
-            {
-                name: "page2",
-                elements: [
-                    {
-                        type: "radiogroup",
-                        name: "WhaleAnchor",
-                        title: "Was the longest recorded blue whale shorter or longer than 68 feet?",
-                        choices: [
-                            { value: "Shorter", text: "Shorter" },
-                            { value: "Longer", text: "Longer" }
-                        ]
-                    },
-                    {
-                        type: "text",
-                        name: "WhaleOpen",
-                        title: "How long was the longest recorded blue whale (in feet)?",
-                        isRequired: true,
-                        inputType: "number"
-                    }
-                ]
             }
         ]
     },
@@ -84,18 +63,6 @@ const anchor_low = {
         };
         save_data(s1_data, 'introspection');
 
-        var s2_data = {
-            subject: data.subject,
-            version: data.version,
-            task_name: "anchoring",
-            condition: "Low Anchor",
-            factor: data.condition,
-            choice: data.response.WhaleOpen,
-            auxiliary_info1: whaleAnchorResponse,
-            stimulus: "Whale Length",
-            rt: data.rt,
-        };
-        save_data(s2_data, 'introspection');
     }
 };
 
@@ -129,7 +96,7 @@ const anchor_high = {
                     }
                 ]
             },
-            {
+            /*{
                 name: "page2",
                 elements: [
                     {
@@ -147,7 +114,7 @@ const anchor_high = {
                         inputType: "number"
                     }
                 ]
-            }
+            }*/
         ]
     },
     on_start: function() {
@@ -171,7 +138,7 @@ const anchor_high = {
         };
         save_data(s1_data, 'introspection');
 
-        var s2_data = {
+        /*var s2_data = {
             subject: data.subject,
             version: data.version,
             task_name: "anchoring",
@@ -181,8 +148,8 @@ const anchor_high = {
             auxiliary_info1: whaleAnchorResponse,
             stimulus: "Whale Length",
             rt: data.rt,
-        };
-        save_data(s2_data, 'introspection');
+        };*/
+        //save_data(s2_data, 'introspection');
     }
 };
 
@@ -208,18 +175,7 @@ const anchor_none = {
                     }
                 ]
             },
-            {
-                name: "page2",
-                elements: [
-                    {
-                        type: "text",
-                        name: "WhaleOpen",
-                        title: "How long was the longest recorded blue whale (in meters)?",
-                        isRequired: true,
-                        inputType: "number"
-                    }
-                ]
-            }
+            
         ]
     },
     on_finish: function(data) {
@@ -266,7 +222,15 @@ var anchor_openQ_response = null;
 var anchor_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked a series of trivia questions.</p><p>Describe your thought process while answering these questions. How did you come to your eventual answers for each question? Please try to describe how you answered each question individually.</p>`,
+        prompt: function() {
+            if (condition[0] == "Factor-Included"){
+                return `<p>In this exercise, you were asked two related trivia questions.</p><p>Describe your thought process while answering the questions. How did you come to your eventual answers for each question? Please try to describe how you answered each question individually.</p>`;
+
+            } else {
+                return `<p>In this exercise, you were asked a trivia question.</p><p>Describe your thought process while answering the question. How did you come to your eventual answer?</p>`;
+
+            }
+        },
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -274,22 +238,22 @@ var anchor_openQ = {
     }
 };
 
-var introspection_q_labels_anchor1 = [`<strong>It pushed my answer further away from the example value (e.g., further away from 68 feet or -45 degrees)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It pushed my answer closer to the example value (e.g., closer to 68 feet or -45 degrees)</strong>`];
-var introspection_q_labels_anchor2 = [`<strong>It would have pushed my answer further away from the example value (e.g., further away from 68 feet or -45 degrees)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have pushed my answer closer to the example value (e.g., closer to 68 feet or -45 degrees)</strong>`];
+var introspection_q_labels_anchor1 = [`<strong>It pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from 68 feet or -45 degrees)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It pushed my answer <u>CLOSER</u> to the example value (e.g., closer to 68 feet or -45 degrees)</strong>`];
+var introspection_q_labels_anchor2 = [`<strong>It would have pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from 68 feet or -45 degrees)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have pushed my answer <u>CLOSER</u> to the example value (e.g., closer to 68 feet or -45 degrees)</strong>`];
 
 var anchor_intro_response1 = null;
 var anchor_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>Both of the trivia questions you saw came in pairs, where the first question would ask you if the answer was greater or less than an <b>example value</b>.
-        <p>Specifically, in the blue whale question, we first asked you whether the longest recorded blue whale was shorter or longer than 68 feet. Then, we asked you to provide an estimate of how long the longest recorded blue whale was. Similarly, in the Antarctic temperature question, we first asked you whether the average winter temperature was above or below -45 degrees, and then asked you to provide an estimate of the average winter temperature.
-        <p>Do you think the <b>presence of these example values</b> in each question affected your responses? If so, how?`
+            return `<p>The trivia question you saw came in pairs, where the first question would ask you if the answer was greater or less than an <b>example value</b>.
+        <p>Specifically, we first asked you whether the mean winter antarctic temperature in the Antarctic was higher or lower than -45 degrees Fahrenheit. Then, we asked you to provide an estimate of the mean winter temperature in the Antarctic. 
+        <p>Do you think the <b>presence of the example value (-45 degrees Fahrenheit)</b> affected your response? If so, how?`
         } else {
-            return `<p>Both of the trivia questions you saw asked you to estimate a specific value (e.g. “How long was the longest recorded blue whale in feet?”)
+            return `<p>The trivia question you saw asked you to estimate a specific value: the mean winter temperature in the Antarctic.
         <p>Now, imagine if before we asked you to provide this estimate, we first asked you if you thought the value was greater or less than an <b>example value.</b>
-        <p>For example, in the blue whale question, imagine that we first asked you whether the longest recorded blue whale was shorter or longer than 68 feet. Then, we asked you to provide an estimate of how long the longest recorded blue whale was. Similarly, in the Antarctic temperature question, imagine that we first asked you whether the average winter temperature in Antarctica was above or below -45 degrees, and then asked you to provide an estimate of the average winter temperature.
-        <p>Do you think the <b>presence of such example values</b> in each question would have affected your responses? If so, how?`
+        <p>For example, imagine that we first asked you whether the mean winter temperature in the Antarctic was higher or lower than -45 degrees Fahrenheit. Then, we asked you to provide an estimate of the mean winter temperature in the Antarctic.
+        <p>Do you think the <b>presence of such an example value</b> would have affected your response? If so, how?`
         }
     },
     labels: condition[0] == 'Factor-Included' ? introspection_q_labels_anchor1 : introspection_q_labels_anchor2,
@@ -367,4 +331,4 @@ var anchor_familiar = {
 }
 
 var anchor = {
-    timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_introspect2, anchor_intro_confidence]}
+    timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_intro_confidence]}

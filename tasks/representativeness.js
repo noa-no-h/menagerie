@@ -24,9 +24,8 @@ var rep_stimulus_factor_excluded =
 `Imagine that a panel of psychologists have interviewed and administered 
 personality tests to 30 engineers and 70 lawyers, all successful in 
 their respective fields.<br><br>
-One individual, Jack, is chosen from the sample at random. Assuming y
-ou are given no other information about Jack, please use the slider 
-below indicate your probability that the he is an engineer, on a scale 
+One individual, Jack, is chosen from the sample at random. Assuming you are given no other information about Jack, please use the slider 
+below to indicate your probability that he is an engineer, on a scale 
 from 0 to 100.<br><br>
 The probability that Jack is one of the 30 engineers in the sample of 
 100 is:`;
@@ -79,19 +78,19 @@ on_finish: function (data) {
 };
 
 var introspection_q_labels_rep1 = [
-    `<strong>It made me say he was less likely to be an engineer.</strong>`,
+    `<strong>It made me say he was <u>LESS</u> likely to be an engineer.</strong>`,
     "",
     "<strong>It did not affect my response</strong>",
     "",
-    `<strong>It made me say he was more likely to be an engineer.</strong>`  // Corrected closing tag
+    `<strong>It made me say he was <u>MORE</u> likely to be an engineer.</strong>`  // Corrected closing tag
 ];
 
 var introspection_q_labels_rep2 = [
-    `<strong>It would have made me say he was less likely to be an engineer.</strong>`,
+    `<strong>It would have made me say he was <u>LESS</u> likely to be an engineer.</strong>`,
     "",
     "<strong>It would not have affected my response</strong>",
     "",
-    `<strong>It would have made me say he was more likely to be an engineer.</strong>`
+    `<strong>It would have made me say he was <u>MORE</u> likely to be an engineer.</strong>`
 ];
 var rep_intro_response1 = null;
 var rep_introspect1 = {
@@ -111,7 +110,7 @@ stimulus: function () {
                     is generally conservative, careful, and 
                     ambitious. He shows no interest in political and social issues and 
                     spends most of his free time on his many hobbies which include home 
-                    carpentry, sailing, and mathematical puzzles.”.</p>
+                    carpentry, sailing, and mathematical puzzles.”</p>
                     <p>If this were the case, do you think <b>being given that information about him</b> would have affected your response? If so, how?</p>`;
     }
 },

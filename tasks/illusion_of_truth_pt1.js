@@ -18,18 +18,19 @@ var confidence_q = "<p>How confident are you that you gave the correct answer to
         `<p style = "font-size:30px">Lake Baikal is the world's largest freshwater lake by volume</p>`,
         `<p style = "font-size:30px">Female turkeys generally weigh half as much as males</p>`
     ]
-
-var nine_false_statements = [
+    
+    var nine_false_statements = [
     `<p style = "font-size:30px">The mouth of a sea urchin is on its top</p>`,
     `<p style = "font-size:30px">The grape plant is a large herb</p>`,
     `<p style = "font-size:30px">Dough is boiled in the process of making croissants</p>`,
     `<p style = "font-size:30px">Neptune is part of the Kuiper belt</p>`,
     `<p style = "font-size:30px">The longbow was invented after the crossbow</p>`,
     `<p style = "font-size:30px">Sheep are a type of tylopod mammal</p>`,
-    `<p style = "font-size:30px">Most limes have more acid than lemon</p>`,
     `<p style = "font-size:30px">The Caspian Sea is the lowest body of water on the surface of the Earth</p>`,
-    `<p style = "font-size:30px">The Nile river flows southward</p>`
-    ]       
+    `<p style = "font-size:30px">The Nile river flows southward</p>`,
+    `<p style = "font-size:30px">Bike riding is the first event in a triathlon</p>`
+    
+    ]            
     
     var shuffled_eighteen_statements = _.shuffle(nine_true_statements.concat(nine_false_statements))
     console.log(shuffled_eighteen_statements);
@@ -63,7 +64,7 @@ var nine_false_statements = [
         var illusion_of_truth_instructions1 = {
             type: jsPsychInstructions,
             pages: [
-                `<p>For approximately the next three minutes, you will see a series of trivia statements. Some will be true and others will be false.
+                `<p>For approximately the next three minutes, you will see a series of trivia statements. <b>Some will be true and others will be false.</b>
                 <br><p>The trivia statements will be presented automatically - there is no need to press any buttons.
 Please read the trivia statements carefully as they are presented, but do not do anything else. You
 will not be able to pause the study, so make sure you have no distractions.</p>
@@ -103,7 +104,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
                             subject: data.subject,
                             version: data.version,
                             factor: data.condition,
-                            task_name: "mere exposure",
+                            task_name: "illusion of truth pt1",
                             choice: data.response,
                             stimulus: data.stim,
                             condition: countInArray(stimulus_array, data.aux),
@@ -185,7 +186,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
                     subject: data.subject,
                     version: data.version,
                     factor: data.condition,
-                    task_name: "mere exposure",
+                    task_name: "illusion of truth pt1",
                     condition: condition[0],
                     stimulus: null,
                     choice: null,

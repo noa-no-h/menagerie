@@ -107,7 +107,7 @@ var imaginability_intro_confidence = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
-            task_name: "imaginability effect",
+            task_name: "imaginability",
             condition: condition[0] == "Factor-Included" ? "Easy to Imagine" : "Difficult to Imagine",
             choice: choice,
             stimulus: null,
