@@ -1,7 +1,7 @@
 //#region recognition
 // Pachur, Mata, Schooler 2009
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by how much you recognized the name of the disease or city)?</p>";
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by how much you recognized the name of the city)?</p>";
 
 
 var preload = {
@@ -231,7 +231,7 @@ var recognition_openQ_response = null;
 var recognition_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were presented with a series of trivia questions. In each one, you were either asked to pick the city with the larger population or the disease with the higher annual incidence rate in the US. </p><p>Describe your thought process behind your decision about which city or disease to select. How did you come to your eventual decision?</p>`,
+        prompt: `<p>In this exercise, you were presented with a series of trivia questions. In each one, you were either asked to pick the city with the larger population. </p><p>Describe your thought process behind your decision about which city to select. How did you come to your eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -239,8 +239,8 @@ var recognition_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think the city had a <u>SMALLER </u> population or that the disease had a <u> LOWER </u> annual incidence rate. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population or that the disease had a <u> HIGHER </u> annual incidence rate.'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population or that the disease had a <u> LOWER </u> annual incidence rate.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population or that the disease had a <u> HIGHER </u> annual incidence rate.'];
+var introspection_q_labels_ref_price1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_ref_price2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
 
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
@@ -248,12 +248,12 @@ var recognition_introspect1 = {
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, you were presented with a series of trivia questions.
-            <p>In each one, you were either asked to pick the city with the larger population or the disease with the higher annual incidence rate in the US. </p>
-            <p>Some of the diseases and cities (like Cholera or New York) you likely recognized the names of. While others (like Tularemia or Lexington–Fayette) you may have recognized less well. How do you think <b>how much you'd heard of the disease or city before</b> affected your impression of their population or annual incidence rate?</p>`;
+            <p>In each one, you were either asked to pick the city with the larger population. </p>
+            <p>Some of the cities (like New York) you likely recognized the names of. While others (like Lexington–Fayette) you may have recognized less well. How do you think <b>how much you'd heard of the city before</b> affected your impression of its population?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of trivia questions.
-            <p>In each one, you were either asked to pick the city with the larger population or the disease with the higher annual incidence rate in the US. </p>
-            <p>Imagine if some of the diseases and cities (like Cholera or New York) were ones you likely recognized the names of. While others (like Tularemia or Lexington–Fayette) were ones you likely recognized less well. How do you think <b>how much you'd heard of the disease or city before</b> would have affected your impression of their population or annual incidence rate?</p>`;
+            <p>In each one, you were either asked to pick the city with the larger population. </p>
+            <p>Imagine if some of the  cities (like New York) were ones you likely recognized the names of. While others (likeLexington–Fayette) were ones you likely recognized less well. How do you think <b>how much you'd heard of the city before</b> would have affected your impression of its population?</p>`;
         }
     },
     labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,
@@ -324,7 +324,9 @@ var recognition_familiar = {
 };
 
 var recognition = {
-    timeline: [preload, recognition_instructions, loop_city, loop_disease, recognition_familiar, recognition_openQ, recognition_introspect1, recognition_intro_confidence]
+    //timeline: [preload, recognition_instructions, loop_city, loop_disease, recognition_familiar, recognition_openQ, recognition_introspect1, recognition_intro_confidence]
+    timeline: [preload, recognition_instructions, loop_city, recognition_familiar, recognition_openQ, recognition_introspect1, recognition_intro_confidence]
+
 };
 
 // end region reference price 
