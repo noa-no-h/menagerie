@@ -159,7 +159,7 @@ const anchor_none = {
     type: jsPsychSurvey,
     survey_json: {
         showQuestionNumbers: false,
-        completeText: 'Done!',
+        completeText: 'Complete',
         pageNextText: 'Continue',
         pagePrevText: 'Previous',
         pages: [
@@ -238,8 +238,8 @@ var anchor_openQ = {
     }
 };
 
-var introspection_q_labels_anchor1 = [`<strong>It pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from 68 feet or -45 degrees)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It pushed my answer <u>CLOSER</u> to the example value (e.g., closer to 68 feet or -45 degrees)</strong>`];
-var introspection_q_labels_anchor2 = [`<strong>It would have pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from 68 feet or -45 degrees)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have pushed my answer <u>CLOSER</u> to the example value (e.g., closer to 68 feet or -45 degrees)</strong>`];
+var introspection_q_labels_anchor1 = [`<strong>It pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from -45 degrees)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It pushed my answer <u>CLOSER</u> to the example value (e.g., closer to -45 degrees)</strong>`];
+var introspection_q_labels_anchor2 = [`<strong>It would have pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from -45 degrees)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have pushed my answer <u>CLOSER</u> to the example value (e.g., closer to -45 degrees)</strong>`];
 
 var anchor_intro_response1 = null;
 var anchor_introspect1 = {

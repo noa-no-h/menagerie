@@ -12,6 +12,8 @@ library(RColorBrewer)
 library(extrafont)
 library(Cairo)
 library(tidyr)
+library(brms)
+
 
 
 
@@ -31,11 +33,17 @@ data <- read.csv('data.csv') %>%
   mutate(total_time = ifelse(grepl("^total_time", introspect_rating), introspect_rating, NA)) %>%
   mutate(introspect_rating = ifelse(grepl("^total_time", introspect_rating), NA, introspect_rating)) %>%
 mutate(introspect_rating = as.numeric(introspect_rating))
-head(data)
+View(data)
 
 data = data %>%
   filter(familiarity != "Yes") %>%
-  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
+  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded")))
+
+subjects_all = data %>%
+  pull(subject) %>%
+  unique()
+
+View(subjects_all)
   
 
 #find subjects who need to be excluded
@@ -83,6 +91,8 @@ attention_exclude <- data %>%
     theme_custom()
   
   to_exclude <- union(attention_exclude, tab_away_exclude)
+  
+  
   
   data <- data %>%
     filter(!subject %in% to_exclude)
@@ -185,6 +195,54 @@ t_test_result <- t.test(low_anchor, no_anchor)
 
 print(t_test_result)
 #p-value = 0.0007
+
+#brms
+
+# Recode the condition levels
+anchor_antarctica_data <- anchor_antarctica_data %>%
+  mutate(condition = recode(condition, "Low Anchor" = "Factor-Included", "No Anchor" = "Factor-Excluded"))
+
+# Make sure that "Factor-Included" is the first level
+anchor_antarctica_data <- anchor_antarctica_data %>%
+  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded")))
+
+# Specify the Bayesian mixed model
+model <- brm(
+  formula = bf(choice ~ condition + (1 + condition | subject) ),
+  data = anchor_antarctica_data,
+  family = gaussian(),  # Default; specifies a linear model for continuous outcome
+  prior = c(
+    prior(normal(0, 10), class = "Intercept"),
+    prior(normal(0, 5), class = "b"),  # Prior on condition effect
+    prior(exponential(1), class = "sd")  # Prior on standard deviations of random effects
+  ),
+  iter = 4000,  # Increase if needed for convergence
+  chains = 4,  # Number of MCMC chains
+  cores = 4,  # Number of cores for parallel computing
+  seed = 123  # Seed for reproducibility
+)
+
+# Summarize the model to see the results
+summary(model)
+
+# Get marginal effects for the condition variable
+marginal_effects_data <- marginal_effects(model, "condition", method = "posterior_epred")
+condition_effect <- as.data.frame(marginal_effects_data$condition)
+
+# Plot the marginal effects with credible intervals
+ggplot(condition_effect, aes(x = condition, y = estimate__)) +
+  geom_bar(stat = "identity", aes(fill = condition), position = position_dodge()) +
+  geom_errorbar(
+    aes(ymin = lower__, ymax = upper__), width = 0.2, position = position_dodge(0.9)
+  ) +
+  labs(title = "Estimated Mean Choice by Factor Condition",
+       x = "Condition",
+       y = "Estimated Mean Choice") +
+  scale_fill_manual(values = in_and_ex) +  # Assuming in_and_ex contains desired colors
+  theme_custom()+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+
 
 
     ### Whale -----------------------------------------------------------------------
@@ -389,7 +447,55 @@ ggplot(summary_anchoring, aes(x = factor, y = mean_introspect_rating, fill = aff
 
 summary(lm(introspect_rating ~ effect_group, data = reference_data))
 
+## brm -----
 
+
+anchoring_introspection <- data %>%
+  filter(task_name == "anchoring") %>%
+  filter(introspect_rating != "")
+
+anchoring_subjects <- data %>%
+  group_by(subject) %>%
+  left_join(anchoring_introspection %>% select(subject, introspect_rating), by = "subject") %>%
+  filter(task_name == "anchoring") %>%
+  filter(stimulus == "Antarctic Temperature")%>%
+  rename(estimate_of_effect_size = introspect_rating.y)%>%
+  mutate(distance_from_anchor = abs(as.numeric(choice) + 30))
+
+
+# Fit the Bayesian mixed-effects model
+model <- brm(
+  formula = estimate_of_effect_size ~ distance_from_anchor + (1 + factor | subject),
+  data = anchoring_subjects,
+  family = gaussian(),  # Assuming estimate_of_effect_size is continuous
+  prior = c(
+    prior(normal(0, 10), class = "Intercept"),
+    prior(normal(0, 5), class = "b"),  # Prior on fixed effects
+    prior(exponential(1), class = "sd")  # Prior on random effects SDs
+  ),
+  iter = 4000,
+  chains = 4,
+  cores = 4,
+  seed = 123
+)
+
+# Summarize the model
+summary(model)
+
+
+# Extract posterior samples for the fixed effect of `distance_from_anchor`
+posterior_samples <- posterior_samples(model)
+
+# Plot the posterior distribution of the effect of `distance_from_anchor`
+ggplot(posterior_samples, aes(x = b_distance_from_anchor)) +
+  geom_density(fill = "NA", alpha = 0.5) +
+  labs(
+    title = str_wrap("Posterior Distribution: Introspection on Anchor Effect", width = 30),
+    x = str_wrap("Effect of Distance from Anchor on Estimate of Effect Size", width = 30),
+    y = "Density"
+  ) +
+  theme_custom()
+  
 
 # 2 associative memory effect✅ ----
     ## 2.1 do we see the effect? -----------------------------------------------------------------------
@@ -1134,6 +1240,8 @@ summary_causal <- causal_data_by_subject %>%
 
 #View(summary_causal)
 
+
+
 ggplot(summary_causal, aes(x = factor, y = mean_introspect_rating, fill = affected, group = affected)) + 
   theme_custom() +
   geom_bar(stat = "identity", position = position_dodge(0.9)) +
@@ -1151,6 +1259,52 @@ ggplot(summary_causal, aes(x = factor, y = mean_introspect_rating, fill = affect
 
 
 summary(lm(introspect_rating ~ effect_group, data = causal_data))
+
+## brm ----
+
+causal_data_by_subject <- data %>%
+  filter(task_name == "causal inference") %>%
+  group_by(subject) %>%
+  filter(any(!is.na(introspect_rating))) %>%
+  rename(estimate_of_effect_size = introspect_rating) %>%
+  mutate(choice = as.numeric(choice))
+  
+# Fit the Bayesian mixed-effects model
+model <- brm(
+  formula = estimate_of_effect_size ~ choice + (1 + factor | subject),
+  data = causal_data_by_subject,
+  family = gaussian(),  # Assuming estimate_of_effect_size is continuous
+  prior = c(
+    prior(normal(0, 10), class = "Intercept"),
+    prior(normal(0, 5), class = "b"),  # Prior on fixed effects
+    prior(exponential(1), class = "sd")  # Prior on random effects SDs
+  ),
+  iter = 4000,
+  chains = 4,
+  cores = 4,
+  seed = 123
+)
+
+# Summarize the model
+summary(model)
+
+
+# Extract posterior samples for the fixed effect of `distance_from_anchor`
+posterior_samples <- posterior_samples(model)
+
+colnames(posterior_samples)
+
+ggplot(posterior_samples, aes(x = b_choice)) +
+  geom_density(fill = NA, alpha = 0.5) +  # Set fill to NA for no fill
+  labs(
+    title = str_wrap("Posterior Distribution: Introspection on Causal Effect", width = 30),
+    x = str_wrap("Effect of Causality Report on Estimate of Effect Size", width = 30),
+    y = "Density"
+  ) +
+  theme_custom() +
+  theme(
+    plot.title = element_text(hjust = 0.5)  # Center the title
+  )
 
 #6. contact principle✅  ----
     ## 6.1 do we see the effect?----
@@ -2019,6 +2173,7 @@ ggplot(medians_summary, aes(x = estimate_type, y = mean_choice, fill = factor)) 
   guides(fill = FALSE)
 
 
+
     ##10.2 introspection----
 
 #Did factor included give lower introspection numbers than factor excluded?
@@ -2696,7 +2851,44 @@ ggplot(summary_status_quo, aes(x = factor, y = mean_introspect_rating, fill = af
   guides(fill = FALSE, color = FALSE) +
   scale_y_continuous(limits = c(0, 100))
 
+# all tasks
 
+# Calculate introspection ratings for all tasks
+summary_all_tasks <- data %>%
+  filter(introspect_rating != "") %>%
+  group_by(task_name, factor) %>%
+  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
+  summarize(
+    mean_introspect_rating = 100 - mean(introspect_rating),
+    se_introspect_rating = se(introspect_rating)
+  ) %>%
+  ungroup()
+
+# Now summarize across tasks
+summary_overall <- summary_all_tasks %>%
+  group_by(factor) %>%
+  summarize(
+    overall_mean_introspect_rating = mean(mean_introspect_rating),
+    overall_se_introspect_rating = se(se_introspect_rating))
+
+# Plotting the overall averages
+ggplot(summary_overall, aes(x = factor, y = overall_mean_introspect_rating, fill = factor)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin = overall_mean_introspect_rating - overall_se_introspect_rating, 
+        ymax = overall_mean_introspect_rating + overall_se_introspect_rating), 
+    width = 0.2
+  ) +
+  labs(
+    title = "Overall Introspection Ratings Across Tasks",
+    x = "Condition",
+    y = "Introspection Rating"
+  ) +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex) +
+  guides(fill = FALSE) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
+  scale_y_continuous(limits = c(0, 100))
 
 # Knittr ----
 
