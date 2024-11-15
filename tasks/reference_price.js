@@ -16,17 +16,42 @@ var ref_price_instructions = {
     show_clickable_nav: true
 };
 
+
 var choice = null;
+
 var ref_price_trial = {
     timeline: [{
-        type: jsPsychSurveyText,
-        questions: [{
-            prompt: condition[0] == 'Factor-Included' ? ref_price_hotel_stimulus : ref_price_motel_stimulus,
-            required: required_general, rows: 2, columns: 4
-        }],
+
+        type: jsPsychSurvey,
+    survey_json: {
+        showQuestionNumbers: false,
+        focusFirstQuestionAutomatic: true,
+        completeText: "Next",
+        pages: [
+            {
+                name: "page1",
+                elements: [
+                    {
+                        type: "text",
+                        name: "referencePrice",
+                        maskType: "numeric",
+                        maskSettings: {
+                            "precision": 1
+                          },
+                        title: function() {
+                            return condition[0] == 'Factor-Included' ? ref_price_hotel_stimulus : ref_price_motel_stimulus;
+                        },
+                        isRequired: true,
+                        placeHolder: "Enter your dollar amount here",
+                        size: 25
+                    }
+                ]
+            }
+        ]
+    },
         on_finish: function (data) {
             console.log(data.response);
-            choice = data.response.Q0;
+            choice = data.response.referencePrice;
         }
     }],
     randomize_order: false
@@ -47,6 +72,8 @@ var ref_price_openQ = {
 var introspection_q_labels_ref_price1 = ['<strong>It made the price I was willing to pay <u>HIGHER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made the price I was willing to pay <u>LOWER</u></strong>'];
 var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay <u>HIGHER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay <u>LOWER</u></strong>'];
 
+
+    
 var ref_price_intro_response1 = null;
 var ref_price_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -111,6 +138,7 @@ var ref_price_intro_confidence = {
             familiarity: familiarity,
             rt: data.rt
         };
+        console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

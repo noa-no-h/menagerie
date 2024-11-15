@@ -80,12 +80,23 @@ var halo_trial = {
         console.log("data.response: " + data.response);
         stimulus = stimuli_list[list_index];
         console.log("stimulus: " + stimulus);
+        function findListContainingString(str) {
+            if (attractive_list.includes(str)) {
+              return "attractive"; 
+            } else if (unattractive_list.includes(str)) {
+              return "unattractive"; 
+            } else if (neutral_list.includes(str)) {
+              return "neutral"; 
+            } else {
+              return null; 
+            }
+          }
         var s1_data = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
             task_name: "halo",
-            condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
+            condition: findListContainingString(stimulus),
             stimulus: stimulus,
             choice: data.response,
             auxiliary_info1: attractiveness[stimulus],

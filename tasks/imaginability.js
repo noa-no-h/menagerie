@@ -28,9 +28,9 @@ var imaginability_question = {
     },
     labels: ['very unlikely (1)', '2', '3', '4', '5', '6', '7', '8', '9', 'very likely (10)'],
     slider_width: introspection_q_slider_width,
-    min: -100,
-    max: 0,
-    slider_start: -50,
+    min: 1,
+    max: 10,
+    slider_start: 5,
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br><br>",    
     on_finish: function (data) {

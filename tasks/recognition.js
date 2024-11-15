@@ -132,10 +132,14 @@ var city_trial = {
         return([city_list[recognition_list_index][0], city_list[recognition_list_index][1]]);
     },
     on_finish: function (data) {
-        console.log("data.response: " + data.response);
+        //console.log("data.response: " + data.response);
         var response = city_list[recognition_list_index][data.response]
-        console.log("response: " + response);
-        var stimulus_category = [getCategory(city_list[recognition_list_index[0]]),getCategory(city_list[recognition_list_index[1]])];
+        //console.log("response: " + response);
+        var stimulus_category = [getCategory(city_list[recognition_list_index][0]),getCategory(city_list[recognition_list_index][1])];
+        //console.log("city_list[recognition_list_index]: " + city_list[recognition_list_index]);
+        //console.log("typeof city_list[recognition_list_index]: " + typeof city_list[recognition_list_index]);
+        //console.log("recognition_list_index[0]: " + recognition_list_index[0]);
+        //console.log("stimulus_category: " + stimulus_category);
         var recognizable = checkRecognizableCity(response)
         console.log("recognizable: " + recognizable);
 
@@ -144,9 +148,9 @@ var city_trial = {
             version: data.version,
             factor: data.condition,
             task_name: "recognition: city",
-            condition: stimulus_category,
-            stimulus: stimulus,
-            choice: data.response,
+            condition: stimulus_category.toString(),
+            stimulus: city_list[recognition_list_index].toString(),
+            choice: response,
             auxiliary_info1: recognizable,
             openq_response: null,
             introspect_rating: null,
