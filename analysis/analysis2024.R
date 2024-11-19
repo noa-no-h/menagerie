@@ -28,6 +28,46 @@ se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
 se.prop = function(x) {return(sqrt(mean(x, na.rm = T) * (1-mean(x, na.rm = T)) / sum(!is.na(x))))}
 dodge <- position_dodge(width=0.9)
 
+
+# color palettes: hot for included, cool for excluded
+
+#Included vs. Excluded
+in_and_ex <- c("#F37121", "#4793AF")
+
+in_neutral_ex <- c("#F37121", "#D3D3D3", "#4793AF")
+
+effect_no <- c("#e74c3c", "#D3D3D3")
+
+#In&Effect, In&NoEffect, Ex&Effect, Ex&NoEffect
+four_colors <- c("#f1c40f", "#e74c3c","#9b59b6", "#1abc9c")
+
+#In&Effect, In&NoEffect, Ex
+three_colors <- c("#f1c40f", "#e74c3c","#4793AF")
+
+#In&Effect, Ex
+two_colors <- c("#f1c40f", "#e74c3c")
+
+theme_custom <- function() {
+  theme_minimal(base_family = "Optima") +
+    theme(
+      axis.text.x = element_text(size = 15, margin = margin(t = 0, r = 0, b = 0, l = 1)), 
+      axis.text.y = element_text(size = 15),
+      axis.title.x = element_text(size = 15),
+      axis.title.y = element_text(size = 15),
+      plot.title = element_text(size = 18, face = "bold"),
+      legend.text = element_text(size = 15),
+      legend.title = element_text(size = 15),
+      strip.text = element_text(size = 15),
+      aspect.ratio = 1,  # Set the aspect ratio here
+      panel.grid.major.x = element_blank(),  # Remove major vertical grid lines
+      panel.grid.minor.x = element_blank()   # Remove minor vertical grid lines
+    )
+}
+
+#font_import(pattern = "Optima", prompt = FALSE)
+#loadfonts(device = "pdf")
+
+
 data <- read.csv('data.csv') %>%
   arrange(subject, task_name) %>%
   mutate(total_time = ifelse(grepl("^total_time", introspect_rating), introspect_rating, NA)) %>%
@@ -47,12 +87,6 @@ View(data)
 data = data %>%
   filter(familiarity != "Yes") %>%
   mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded")))
-
-subjects_all = data %>%
-  pull(subject) %>%
-  unique()
-
-View(subjects_all)
   
 
 #find subjects who need to be excluded
@@ -110,46 +144,6 @@ attention_exclude <- data %>%
 
 p.vals = c()
 
-
-# color palettes: hot for included, cool for excluded
-
-#Included vs. Excluded
-in_and_ex <- c("#F37121", "#4793AF")
-
-in_neutral_ex <- c("#F37121", "#D3D3D3", "#4793AF")
-
-effect_no <- c("#e74c3c", "#D3D3D3")
-
-#In&Effect, In&NoEffect, Ex&Effect, Ex&NoEffect
-four_colors <- c("#f1c40f", "#e74c3c","#9b59b6", "#1abc9c")
-
-#In&Effect, In&NoEffect, Ex
-three_colors <- c("#f1c40f", "#e74c3c","#4793AF")
-
-#In&Effect, Ex
-two_colors <- c("#f1c40f", "#e74c3c")
-
-theme_custom <- function() {
-  theme_minimal(base_family = "Optima") +
-    theme(
-      axis.text.x = element_text(size = 15, margin = margin(t = 0, r = 0, b = 0, l = 1)), 
-      axis.text.y = element_text(size = 15),
-      axis.title.x = element_text(size = 15),
-      axis.title.y = element_text(size = 15),
-      plot.title = element_text(size = 18, face = "bold"),
-      legend.text = element_text(size = 15),
-      legend.title = element_text(size = 15),
-      strip.text = element_text(size = 15),
-      aspect.ratio = 1,  # Set the aspect ratio here
-      panel.grid.major.x = element_blank(),  # Remove major vertical grid lines
-      panel.grid.minor.x = element_blank()   # Remove minor vertical grid lines
-    )
-}
-
-
-
-font_import(pattern = "Optima", prompt = FALSE)
-loadfonts(device = "pdf")
 
 # 1 anchoring effect✅  -------------------------------------------------
     ## 1.1 Do we see the effect -----------------------------------------------------------------------
