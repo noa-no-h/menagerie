@@ -1219,7 +1219,8 @@ ggplot(summary_overall, aes(x = factor, y = overall_mean_introspect_rating, fill
 ##17.1 do we see the effect? ----
 
 sunk_cost_data <- data %>%
-  filter(task_name == "sunk_cost effect") 
+  filter(task_name == "sunk_cost effect") %>% 
+  mutate(switched = choice == 'Solar-powered Pump')
 
 
 percentage_sunk_cost_data <- sunk_cost_data %>%
@@ -1231,6 +1232,7 @@ percentage_sunk_cost_data <- sunk_cost_data %>%
   ) %>%
   mutate(percentage_solar_powered = (solar_powered_count / total_in_condition) * 100)
 
+summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
 
 ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_solar_powered, fill = condition)) +
   geom_bar(stat = "identity") +
@@ -1246,6 +1248,8 @@ solar_powered_counts <- percentage_sunk_cost_data$solar_powered_count
 total_counts <- percentage_sunk_cost_data$total_in_condition
 prop_test_result <- prop.test(solar_powered_counts, total_counts)
 print(prop_test_result)
+
+glm()
 
 # Knittr ----
 
