@@ -72,7 +72,16 @@ data <- read.csv('data.csv') %>%
   arrange(subject, task_name) %>%
   mutate(total_time = ifelse(grepl("^total_time", introspect_rating), introspect_rating, NA)) %>%
   mutate(introspect_rating = ifelse(grepl("^total_time", introspect_rating), NA, introspect_rating)) %>%
-mutate(introspect_rating = as.numeric(introspect_rating))
+mutate(introspect_rating = as.numeric(introspect_rating))%>%
+  mutate(introspect_rating = if_else(
+    introspect_rating != "" & task_name %in% c("associative memory", "availability", 
+                                               "decoy effect", "hindsight bias", 
+                                               "omission principle", "reference price",
+                                               "status_quo", "sunk_cost effect"),
+    100 - introspect_rating,
+    introspect_rating
+  ))
+
 View(data)
 
 data = data %>%

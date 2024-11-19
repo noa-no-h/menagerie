@@ -65,7 +65,16 @@ data <- read.csv('full_pilot.csv') %>%
   arrange(subject, task_name) %>%
   filter(familiarity != "Yes") %>%
   mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-  mutate(introspect_rating = as.numeric(introspect_rating))
+  mutate(introspect_rating = as.numeric(introspect_rating)) %>%
+  mutate(introspect_rating = as.numeric(introspect_rating))%>%
+  mutate(introspect_rating = if_else(
+    introspect_rating != "" & task_name %in% c("associative memory", "availability", 
+                                               "decoy effect", "hindsight bias", 
+                                               "omission principle", "reference price",
+                                               "status_quo", "sunk_cost effect"),
+    100 - introspect_rating,
+    introspect_rating
+  ))
 View(data)
 
 subjects_all = data %>%
@@ -1250,6 +1259,216 @@ prop_test_result <- prop.test(solar_powered_counts, total_counts)
 print(prop_test_result)
 
 glm()
+# Q1: Aggregating across tasks, are participants aware that they are being influenced by the heuristics or biases? ----
+
+
+q1data <- data %>%
+  filter(introspect_rating != "" & factor == "Factor-Included") 
+  
+#restrict to factor included condition. Find HDI for intercept
+
+  model <- brm(
+    formula = introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
+    data = q1data,
+    family = gaussian(),
+    prior = c(
+      prior(normal(0, 10), class = "Intercept"),
+      prior(exponential(1), class = "sd")
+    ),
+    chains = 4,           # Number of MCMC chains
+    iter = 2000,          # Number of iterations per chain
+    warmup = 500,         # Number of warmup iterations per chain
+    cores = 4             # Number of cores to use for computation
+  )
+  
+  summary(model)
+  #          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+  #Intercept    57.25      2.58    51.80    61.97 1.00     1510     2654
+  
+# Q1.5: How about factor excluded?   
+  
+  
+  q15data <- data %>%
+    filter(introspect_rating != "" & factor == "Factor-Excluded") 
+  
+  #restrict to factor included condition. Find HDI for intercept
+  
+  model <- brm(
+    formula = introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
+    data = q15data,
+    family = gaussian(),
+    prior = c(
+      prior(normal(0, 10), class = "Intercept"),
+      prior(exponential(1), class = "sd")
+    ),
+    chains = 4,           # Number of MCMC chains
+    iter = 2000,          # Number of iterations per chain
+    warmup = 500,         # Number of warmup iterations per chain
+    cores = 4             # Number of cores to use for computation
+  )
+  
+  summary(model)
+  
+# Q2: Does that awareness come from actual experience of the heuristic or bias, or is it attributable to lay theories? ----
+
+  
+  q2data <- data %>%
+    filter(introspect_rating != "") 
+  
+
+  model <- brm(
+    formula = introspect_rating ~ factor + (1 | subject) + (1 + factor | task_name),
+    data = q2data,
+    family = gaussian(),
+    prior = c(
+      prior(normal(0, 10), class = "Intercept"),
+      prior(exponential(1), class = "sd")
+    ),
+    chains = 4,           # Number of MCMC chains
+    iter = 2000,          # Number of iterations per chain
+    warmup = 500,         # Number of warmup iterations per chain
+    cores = 4             # Number of cores to use for computation
+  )
+  
+  summary(model)
+  
+  #                      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+  #Intercept                57.94      2.48    52.60    62.49 1.00     1862
+  #factorFactorMExcluded    -1.69      1.99    -5.70     2.24 1.00     4873
+  #Tail_ESS
+  #Intercept                 2084
+  #factorFactorMExcluded     4111
+  
+#Q3 Are participants who are more impacted by a bias consciously aware of the extent to which they are affected by heuristics and biases? ----
+
+  #Halo
+  halo_affected_data = data %>%
+    filter(task_name == "halo") %>%
+    mutate(
+      affected_level = if_else(
+        stimulus != "",
+        #attractiveness is likert 1-7
+        100* abs((as.numeric(auxiliary_info1) - 1) / 6 - (as.numeric(choice) - 1) / 4), 
+        NA_real_  
+      )
+    )
+  
+  
+    # Hindsight
+  hindsight_affected_data <- data %>%
+    filter(task_name == "hindsight") %>%
+    mutate(country = word(stimulus, 1)) %>%
+        group_by(country) %>%
+    mutate(
+      first_estimate = if_else(grepl("first estimate", stimulus), as.numeric(choice), NA_real_),
+      memory_estimate = if_else(grepl("memory", stimulus), as.numeric(choice), NA_real_)
+    ) %>%
+    fill(first_estimate, .direction = "downup") %>%  # Fill down and up to have the first estimate in each row
+    fill(memory_estimate, .direction = "downup") %>% # Same for memory estimate
+    ungroup() %>% mutate(
+      affected_level = if_else(
+        grepl("memory", stimulus),  # Only calculate for "memory" rows
+        # Calculate the affected level as the normalized difference
+        abs(first_estimate - memory_estimate) / abs(as.numeric(auxiliary_info1) - first_estimate) * 100,
+        NA_real_  # Set to NA if condition is not met
+      )
+    )
+    
+  
+  # illusion of truth
+  illusion_of_truth_affected_data <- data %>%
+    filter(task_name == "illusion of truth pt2") %>%
+    mutate(
+      affected_level = if_else(
+        task_name == "illusion of truth pt2" & stimulus != "" & auxiliary_info1 == "false positive",
+        100, 0))
+  
+  #imaginability
+  imaginability_affected_data <- imaginability_data %>%
+    mutate(
+      affected_level = if_else(
+        condition == "Easy to Imagine",
+        (choice - 1) / 9 * 100,  # Scale 1 to 10 choice to 0 to 100 for Easy to Imagine
+        (10 - choice) / 9 * 100  # Scale 1 to 10 choice to 100 to 0 for Difficult to Imagine
+      )
+    )
+  
+  
+  #omission
+  omission_affected_data <- data %>%
+    filter(task_name == "omission principle") %>%
+    mutate(
+      affected_level = if_else(
+        condition == "commission",
+        (as.numeric(choice) - 1) / 6 * 100,         # When condition is "commission"
+        100 - ((as.numeric(choice) - 1) / 6 * 100)  # When condition is not "commission" (assumed to be omission)
+      )
+    )
+  
+  #reference price TO DO
+  reference_price_affected_data <- data %>%
+    filter(task_name == "reference price")
+  
+  #representativeness TO DO
+  
+  #status quo
+  status_quo_affected_data <- data %>%
+    filter(task_name == "status_quo") %>%
+    mutate(
+      affected_level = if_else(
+        choice == "70/30",
+        100, 0))
+  
+  #sunk cost
+  sunk_cost_affected_data <- data %>%
+    filter(task_name == "sunk_cost effect") %>%
+    mutate(
+      affected_level = if_else(
+        choice == "Rocket Engine",
+        100, 0))
+  
+  list_affected_dfs <- list(
+    halo_affected_data,
+    #hindsight_affected_data,
+    #illusion_of_truth_affected_data,
+    #imaginability_affected_data,
+    #omission_affected_data,
+    status_quo_affected_data,
+    sunk_cost_affected_data
+    
+  )
+  
+  # Convert `choice` to character in each data frame and bind them
+  affected_level_data <- bind_rows(lapply(list_affected_dfs, function(df) {
+    df %>% mutate(choice = as.character(choice))
+  }))
+  
+  
+View(affected_level_data)
+
+
+q3data <- affected_level_data %>%
+  filter(introspect_rating != "" & !is.na(affected_level))
+
+
+model <- brm(
+  formula = introspect_rating ~ affected_level * factor + (1 + affected_level | subject) + (1 + factor * affected_level | task_name)
+,
+  data = q3data,
+  family = gaussian(),
+  prior = c(
+    prior(normal(0, 10), class = "Intercept"),
+    prior(exponential(1), class = "sd")
+  ),
+  chains = 4,           # Number of MCMC chains
+  iter = 2000,          # Number of iterations per chain
+  warmup = 500,         # Number of warmup iterations per chain
+  cores = 4             # Number of cores to use for computation
+)
+
+summary(model)
+  
+ ----
 
 # Knittr ----
 
