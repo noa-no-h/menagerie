@@ -133,6 +133,7 @@
     <script src="tasks/illusion_of_truth_pt1.js"></script>
     <script src="tasks/sunk_cost.js"></script>
     <script src="tasks/recognition.js"></script>
+    <script src="tasks/hindsight2.js"></script>
 
 
 
@@ -168,8 +169,8 @@
             pages: [
                 `<p><b>Welcome to the experiment.</b></p> <p>Click next to begin.</p>`,
                 `<p>You must be 18 years or older to complete this study. If you under 18, please exit now.`,
-                `<p>This study will take around 40 minutes to complete. You must complete the experiment in one sitting.
-                <b>So, before you start, please make sure that you have 40 minutes to devote entirely
+                `<p>This study will take around 30 minutes to complete. You must complete the experiment in one sitting.
+                <b>So, before you start, please make sure that you have 30 minutes to devote entirely
                 to this study.</b> We appreciate your participation.</p>`,
                 `<p>On the next page, you'll find a consent form. Please read it and select "Yes" if you wish to participate in the study.`,
             ],
@@ -301,7 +302,7 @@
             pages: [
                 `<p>Thank you for beginning the study! You will be asked to complete a variety of short judgment/decision-making tasks.</p>`,
                 `<p>While you're completing the decision-making tasks, please <b>pay attention to how you're making your judgments/decisions</b>.</p>`,
-                `<p>The study will take around 40 minutes to complete.</p>
+                `<p>The study will take around 30 minutes to complete.</p>
                 <p>Please click the button below to continue!</p>
             `],
             show_clickable_nav: true
@@ -549,15 +550,20 @@ var next_task = {
                         recognition]; */
 
         //November 2024 pilot
-        var task_list = [halo, hindsight, imaginability, omission, 
+        //var task_list = [halo, hindsight, imaginability, omission, 
+        //                recognition, reference_price, representativeness,
+         //               status_quo, sunk_cost];
+
+        //November 2024 pilot without hindsight, illusory truth, imaginability
+        var task_list = [halo, omission, 
                         recognition, reference_price, representativeness,
                         status_quo, sunk_cost];
 
         console.log("task_list: ", task_list);
 
         var task_list_shuffled_no_in_between = _.shuffle(task_list);
-        task_list_shuffled_no_in_between.unshift(illusion_of_truth_pt1);
-        task_list_shuffled_no_in_between.push(illusion_of_truth_pt2);
+        //task_list_shuffled_no_in_between.unshift(illusion_of_truth_pt1);
+        //task_list_shuffled_no_in_between.push(illusion_of_truth_pt2);
 
         var task_list_shuffled = [];
         for (let i = 0; i < task_list_shuffled_no_in_between.length; i++) {
@@ -1413,7 +1419,7 @@ var next_task = {
         }
 
         
-        //timeline.push(halo)
+        timeline.push(hindsight2)
         timeline.push(preload)
         timeline.push(intro)
         timeline.push(tasks)
