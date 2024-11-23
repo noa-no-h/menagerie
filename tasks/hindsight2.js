@@ -1,9 +1,9 @@
-//#region 5. Double Effect - BETWEEN
+//#region 5. hindsight Effect - BETWEEN
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that the man's death was <b>necessary</b> in order to achieve Peter's goal)?</p>";
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by your knowledge of the actual outcomes of the event)?</p>";
 
 
-var double_instructions = {
+var hindsight_instructions = {
     type: jsPsychInstructions,
     pages: [
         `<p> A short description of a real social
@@ -20,7 +20,8 @@ participation.</p>
 var probBritish = null;
 var probGurka = null;
 var probStalemate = null;
-var double_question = {
+
+var hindsight_question = {
     type: jsPsychSurvey,
     survey_json: {
         showQuestionNumbers: false,
@@ -52,14 +53,14 @@ var double_question = {
                     },
                     {
                         type: "text",
-                        name: "B",
+                        name: "GurkaVictory",
                         title: "Probability of Gurka victory:",
                         inputType: "number",
                         isRequired: true
                     },
                     {
                         type: "text",
-                        name: "C",
+                        name: "Stalemate",
                         title: "Probability that the two sides reached a military stalemate, but were unable to come to a peace settlement:",
                         inputType: "number",
                         isRequired: true
@@ -69,43 +70,48 @@ var double_question = {
         ]
     },
     on_finish: function (data) {
-        const responses = data.response;
+        // Parse the responses
+        probBritish = parseInt(data.response.BritishVictory, 10);
+        probGurka = parseInt(data.response.GurkaVictory, 10);
+        probStalemate = parseInt(data.response.Stalemate, 10);
+
+        console.log("Saved probabilities:");
+        console.log("British Victory:", probBritish);
+        console.log("Gurka Victory:", probGurka);
+        console.log("Stalemate:", probStalemate);
     }
 };
 
-var double_openQ_response = null;
-var double_openQ = {
+var hindsight_openQ_response = null;
+var hindsight_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked to judge the moral permissibility of an action in a hypothetical scenario.</p><p>Describe your thought process while judging whether the action was morally permissible. How did you come to your eventual judgment?</p>`,
+        prompt: `<p>In this exercise, you were asked to judge the probability of occurrence of each of the four possible outcomes.</p><p>Describe your thought process while judging the probabilities. How did you come to your eventual judgment?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
-        double_openQ_response = data.response.Q0;
+        hindsight_openQ_response = data.response.Q0;
     }
 };
 
-var introspection_q_labels_double1 = [`<strong>It made me <u>LESS</u> likely to judge Peter's action as morally permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge Peter's action as morally permissible</strong>`];
-var introspection_q_labels_double2 = [`<strong>It would have made me <u>LESS</u> likely to judge Peter's action as morally permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge Peter's action as morally permissible</strong>`];
+var introspection_q_labels_hindsight1 = [`<strong>It made me judge the actual outcome as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me judge the actual outcome as <u>MORE</u> likely </strong>`];
+var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the actual outcome as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me judge the actual outcome as <u>MORE</u> likely </strong>`];
 
-var double_intro_response1 = null;
-var double_introspect1 = {
+var hindsight_intro_response1 = null;
+var hindsight_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>Sometimes when someone kills other people, the deaths are "collateral damage" -- i.e., killing the other people wasn't <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on a gun manufacturing factory of an enemy country, and there happens to be a worker in the factory who gets killed. In this case, the worker's death was not necessary for the military strike to achieve its goal of blowing up the factory; the worker's death was just a side effect (i.e. "collateral damage") of the strike.
-            <p>Other times when someone kills other people, killing them was <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on an enemy general in order to cripple the enemy's leadership team. In this case, killing the general was necessary in order to achieve the country's goal of crippling the enemy leadership.</p>
-            <p>In the case you read, killing the man was necessary to achieve Peter's goal of breaking the window and saving the five children. Without killing the man, he wouldn't have been able to break the window and save the children; the man was used as a <b>means</b> to achieve Peter's goal.</p>
-            <p>Do you think this fact -- that the man's death was <b>necessary</b> in order to achieve Peter's goal -- influenced your judgment of whether Peter's actions were morally permissible or not? If so, how?</p>`
+            return `<p>After reading about the historical event, you were told that the two sides reached a military stalemate, but were unable to come to a peace settlement.</p>
+            <p> You were then asked to judge the probabilities of occurrence of each of the four possible outcomes listed, <b>answering as you would have had you not known what happened.</p>
+            <p>Do you think <b>your knowledge that the outcome was a military stalemate</b> influenced your judgment of the probabilities of occurrence of each of the four possible outcomes? If so, how?</p>`
         } else {
-            return `<p>Sometimes when someone kills other people, the deaths are "collateral damage" -- i.e., killing the other people wasn't <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on a gun manufacturing factory of an enemy country, and there happens to be a worker in the factory who gets killed. In this case, the worker's death was not necessary for the military strike to achieve its goal of blowing up the factory; the worker's death was just a side effect (i.e. "collateral damage") of the strike.
-            <p>Other times when someone kills other people, killing them was <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on an enemy general in order to cripple the enemy's leadership team. In this case, killing the general was necessary in order to achieve the country's goal of crippling the enemy leadership.</p>
-            <p>In the case you read, killing the man was a <b>side effect</b> of achieving Peter's goal of breaking the window and saving the five children -- i.e., the man's death was "collateral damage". If the man hadn't happened to be there, Peter would still have been able to break the window and save the children.</p>
-            <p>Now, imagine if killing the man <i>was</i> necessary to achieve Peter's goal of breaking the window and saving the five children. In other words, imagine if Peter would not have been able to save the five children without killing the man. In this case, the man would have been used as a <b>means</b> to achieve Peter's goal.
-            <p>Do you think this fact -- that the man's death <b>would have been necessary</b> in order to achieve Peter's goal -- would have influenced your judgment of whether Peter's actions were morally permissible or not? If so, how?</p>`
+            return `<p>After reading about the historical event, you were  asked to judge the probabilities of occurrence of each of the four possible outcomes listed. </p>
+            <p> Imagine that you had been told which  outcome had actually occurred but had been asked to judge the probabilities of occurrence <b>answering as you would have had you not known what happened.</p>
+            <p>Do you think <b>your knowledge that the outcome was a military stalemate</b> would have influenced your judgment of the probabilities of occurrence of each of the four possible outcomes? If so, how?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_double1 : introspection_q_labels_double2,
+    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_hindsight1 : introspection_q_labels_hindsight2,
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -113,24 +119,24 @@ var double_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br><br>",
     on_finish: function (data) {
-        double_intro_response1 = data.response
+        hindsight_intro_response1 = data.response
     }
 };
 
-var double_intro_response2 = null;
-var double_introspect2 = {
+var hindsight_intro_response2 = null;
+var hindsight_introspect2 = {
     type: jsPsychSurveyText,
     questions: [{
         prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you give the rating that you did?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
-        double_intro_response2 = data.response.Q0
+        hindsight_intro_response2 = data.response.Q0
     }
 };
 
-var double_intro_confidence_response = null;
-var double_intro_confidence = {
+var hindsight_intro_confidence_response = null;
+var hindsight_intro_confidence = {
     type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
@@ -140,27 +146,29 @@ var double_intro_confidence = {
     slider_start: 50,
     require_movement: require_movement_general,
     on_finish: function (data) {
-        double_intro_confidence_response = data.response;
+        hindsight_intro_confidence_response = data.response;
         s1_data = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
-            task_name: "double effect",
-            condition: condition[0] == "Factor-Included" ? "Means" : "Side Effect",
-            choice: moral == 0 ? "Permissible" : "Impermissible",
+            task_name: "hindsight effect",
+            condition: condition[0] == "Factor-Included" ? "knowlege of outcome" : "no knowledge of outcome",
+            choice: probStalemate,
+            auxiliary_info1: probBritish + "," + probGurka,
             stimulus: null,
-            openq_response: double_openQ_response,
-            introspect_rating: double_intro_response1,
-            introspect_open: double_intro_confidence_response,
+            openq_response: hindsight_openQ_response,
+            introspect_rating: hindsight_intro_response1,
+            introspect_open: hindsight_intro_confidence_response,
             familiarity: familiarity,
             rt: data.rt
         }
+        console.log(s1_data)
         save_data(s1_data, 'introspection')
     }
 };
 
 var familiarity = null;
-var double_familiar = {
+var hindsight_familiar = {
     type: jsPsychHtmlButtonResponse,
     stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
@@ -172,8 +180,8 @@ var double_familiar = {
 }
 
 var hindsight2 = {
-    timeline: [double_instructions, double_question, double_familiar, double_openQ, double_introspect1, double_intro_confidence]
+    timeline: [hindsight_instructions, hindsight_question, hindsight_familiar, hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
 }
 
 //#endregion
-//timeline.push(double)
+//timeline.push(hindsight)
