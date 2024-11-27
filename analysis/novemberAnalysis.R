@@ -1114,6 +1114,8 @@ trials <- c(length(status_quo_choices_ex), length(status_quo_choices_in))
 test_result <- prop.test(successes, trials, alternative = "less")
 print(test_result)
 
+summary(glm(choice_binary ~ condition, data = status_quo_data, family = 'binomial'))
+
 
 ##16.2 introspection----
 
@@ -1229,7 +1231,8 @@ ggplot(summary_overall, aes(x = factor, y = overall_mean_introspect_rating, fill
 
 sunk_cost_data <- data %>%
   filter(task_name == "sunk_cost effect") %>% 
-  mutate(switched = choice == 'Solar-powered Pump')
+  mutate(switched = choice == 'Solar-powered Pump',
+         switched.num = as.numeric(switched))
 
 
 percentage_sunk_cost_data <- sunk_cost_data %>%
@@ -1258,7 +1261,10 @@ total_counts <- percentage_sunk_cost_data$total_in_condition
 prop_test_result <- prop.test(solar_powered_counts, total_counts)
 print(prop_test_result)
 
-glm()
+summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
+
+test = brm(switched.num ~ condition, data = sunk_cost_data, family = 'binomial')
+
 # Q1: Aggregating across tasks, are participants aware that they are being influenced by the heuristics or biases? ----
 
 
@@ -1470,7 +1476,41 @@ summary(model)
   
  ----
 
-# Knittr ----
+
+# Q4: Variation across tasks ----------------------------------------------
+model <- brm(
+  formula = introspect_rating ~ factor + (1 | subject) + (1 + factor | task_name),
+  data = data %>% filter(introspect_rating != ''),
+  family = gaussian(),
+  prior = c(
+    prior(normal(0, 10), class = "Intercept"),
+    prior(exponential(1), class = "sd")
+  ),
+  chains = 4,           # Number of MCMC chains
+  iter = 2000,          # Number of iterations per chain
+  warmup = 500,         # Number of warmup iterations per chain
+  cores = 4             # Number of cores to use for computation
+)
+
+summary(model)
+hdi(model, effects = 'all')
+
+model2 <- brm(
+  formula = introspect_rating ~ task_name + factor * task_name + (1 | subject), #+ (1 + factor | task_name),
+  data = data %>% filter(introspect_rating != ''),
+  family = gaussian(),
+  prior = c(
+    prior(normal(0, 10), class = "Intercept"),
+    prior(exponential(1), class = "sd")
+  ),
+  chains = 4,           # Number of MCMC chains
+  iter = 2000,          # Number of iterations per chain
+  warmup = 500,         # Number of warmup iterations per chain
+  cores = 4             # Number of cores to use for computation
+)
+summary(model2)
+
+  # Knittr ----
 
 if (!requireNamespace("knitr", quietly = TRUE)) {
   install.packages("knitr")
