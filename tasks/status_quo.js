@@ -1,31 +1,39 @@
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by being told that the <u>current allocation</u> of funds was 70% auto safety / 30% highway safety)?</p>";
+var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>";
 
 
 var status_quo_stimulus_factor_included =
-`The National Highway Safety Commission is deciding
+`In this study we are interested in your perceptions of decision making situations. Below is a scenario, please read the scenario carefully and answer the questions that follow. <br><br>
+The National Highway Safety Commission is deciding
 how to allocate its budget between two safety research 
-programs: i) improving automobile safety (bumpers,
-body, gas tank configurations, seatbelts) and 
-ii) improving the safety of interstate highways 
+programs: <br>
+1) improving automobile safety (bumpers,
+body, gas tank configurations, seatbelts) <br>
+
+2) improving the safety of interstate highways 
 (guard rails, grading, highway interchanges, 
 and implementing selective reduced
-speed limits). <b>Currently the commission allocates 
-approximately 70% of its funds to auto safety and 
-30% of its funds to highway safety. </b>
-Since there is a ceiling on its total spending, these are
-the commission's two options. Please select the option you would recommend.<br><br>`;
+speed limits). <br><br>
+
+<b>Currently the commission allocates 
+approximately 50% of its funds to auto safety and 
+50% of its funds to highway safety.</b>
+
+<br><br>To make sure you understood the scenario, please answer the following comprehension questions:`;
 
 var status_quo_stimulus_factor_excluded =
-`The National Highway Safety Commission is deciding
+`In this study we are interested in your perceptions of decision making situations. Below is a scenario, please read the scenario carefully and answer the questions that follow. <br><br>
+The National Highway Safety Commission is deciding
 how to allocate its budget between two safety research 
-programs: i) improving automobile safety (bumpers,
-body, gas tank configurations, seatbelts) and 
-ii) improving the safety of interstate highways 
+programs: <br>
+1) improving automobile safety (bumpers,
+body, gas tank configurations, seatbelts) <br>
+
+2) improving the safety of interstate highways 
 (guard rails, grading, highway interchanges, 
 and implementing selective reduced
-speed limits).  
-Since there is a ceiling on its total spending, these are
-the commission's two options. Please select the option you would recommend.<br><br>`;
+speed limits). <br><br>
+
+To make sure you understood the scenario, please answer the following comprehension questions:`;
 
 var status_quo_instructions = {
 type: jsPsychInstructions,
@@ -36,29 +44,211 @@ pages: [
 show_clickable_nav: true
 };
 
+var passed = null;
+
 var stimulus = condition[0] == 'Factor-Included' ? status_quo_stimulus_factor_included : status_quo_stimulus_factor_excluded;
-var choice = null;
+var choice = "not status quo";
+var which_option = null;
+var comprehension_outcome = null;
 var status_quo_trial = {
 timeline: [
     {
         type: jsPsychHtmlButtonResponse,
-        stimulus: stimulus,
+        stimulus: condition[0] == 'Factor-Included' 
+                            ? "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br>Reminder of the scenario:<br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.<br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?":
+                            "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view.<br> <br>Reminder of the scenario:<br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?",
         choices: function(){
             if (condition[0] == 'Factor-Included') {
-                return  ['Stay with the current allocation: 70% to auto safety and 30% to highway safety', 'Switch to a new allocation: 50% to auto safety and 50% to highway safety']
+                return  ["Maintain present budget amounts for the programs", "Increase auto program by 10% and lower highway program by like amount", "Increase auto program by 20% and lower highway program by like amount", "Decrease auto program by 20% and raise highway program by like amount"]
             } else {
-                return ['Allocate 70% to auto safety and 30% to highway safety', 'Allocate 50% to auto safety and 50% to highway safety']
+                return ['Allocate 70% to auto safety and 30% to highway safety','Allocate 30% to auto safety and 70% to highway safety','Allocate 60% to auto safety and 40% to highway safety', 'Allocate 50% to auto safety and 50% to highway safety']
             }
         },   
         prompt: '',
         on_finish: function (data) {
-            console.log(data.response ? "50/50" : "70/30")
-            choice = data.response ? "50/50" : "70/30";
+            console.log(data.response)
+            if (condition[0] == 'Factor-Included') {
+                if (data.response == 0) {
+                    which_option = "Maintain present budget amounts for the programs"
+                    choice = "status quo"
+                } else if (data.response == 1) {
+                    which_option = "Increase auto program by 10% and lower highway program by like amount"
+                } else if (data.response == 2) {
+                    which_option = "Increase auto program by 20% and lower highway program by like amount"
+                } else if (data.response == 3) {
+                    which_option = "Decrease auto program by 20% and raise highway program by like amount"
+                }
+            }
+            else{
+                if (data.response == 0) {
+                    which_option = "Allocate 70% to auto safety and 30% to highway safety"
+                } else if (data.response == 1) {
+                    which_option = "Allocate 30% to auto safety and 70% to highway safety"
+                } else if (data.response == 2) {
+                    which_option = "Allocate 60% to auto safety and 40% to highway safety"
+                } else if (data.response == 3) {
+                    which_option = "Allocate 50% to auto safety and 50% to highway safety"
+                    choice = "status quo"
+                }
+            }
+            console.log(data.response)
         }
     },
 ],
 randomize_order: false
 };
+
+var comprehension_questions = {
+    timeline: [
+        {
+            type: jsPsychSurveyMultiChoice,
+            questions: [
+                {
+                    prompt: function() {
+                        return condition[0] === 'Factor-Included' 
+                            ? status_quo_stimulus_factor_included + "<br><br>" +
+                              "The National Highway Safety Commission is deciding regarding the allocation of which budget?" 
+                            : status_quo_stimulus_factor_excluded + "<br><br>" +
+                              "The National Highway Safety Commission is deciding regarding the allocation of which budget?";
+                    },
+                    name: "comprehensionAllocation",
+                    options: [
+                        "Automobile safety",
+                        "Safety of interstate highway",
+                        "Safety of interstate highway and automobile safety"
+                    ],
+                    required: true
+                },
+                {
+                    prompt: "The budget allocated for improving <u>automobile safety</u> will be used for improving at least which of the following?",
+                    name: "comprehensionAuto",
+                    options: [
+                        "Doors & seats",
+                        "Wheels & roof",
+                        "Bumpers, seat-belts, gas configuration, & body",
+                        "Engine"
+                    ],
+                    required: true
+                },
+                {
+                    prompt: "The budget allocated for improving <u>safety of interstate highway</u> will be used for improving at least which of the following?",
+                    name: "comprehensionHighway",
+                    options: [
+                        "Road signs and traffic lights",
+                        "Radars and traffic jams monitors",
+                        "Guard rails, grading, interchanges, selective reduced speed limits",
+                        "Road holes & faster turns"
+                    ],
+                    required: true
+                },
+                {
+                    prompt: function() {
+                        return condition[0] === 'Factor-Included' 
+                            ? "How is the budget currently allocated by the commission between auto-safety and highway safety?" 
+                            : "";
+                    },
+                    name: "comprehensionStatusQuo",
+                    options: function() {
+                        return condition[0] === 'Factor-Included'
+                            ? [
+                                "70% for auto safety and 30% for highway safety",
+                                "30% for auto safety and 70% for highway safety",
+                                "60% for auto safety and 40% for highway safety",
+                                "50% for auto safety and 50% for highway safety"
+                              ]
+                            : [""];
+                    },
+                    required: function() {
+                        return condition[0] === 'Factor-Included'; 
+                    }
+                }
+            ],
+            on_finish: function(data) {
+                console.log(data.response);
+
+                // Determine auxiliary_info1 status based on responses
+                if (condition[0] === 'Factor-Included') {
+                    if (
+                        data.response.comprehensionAllocation === "Safety of interstate highway and automobile safety" &&
+                        data.response.comprehensionAuto === "Bumpers, seat-belts, gas configuration, & body" &&
+                        data.response.comprehensionHighway === "Guard rails, grading, interchanges, selective reduced speed limits" &&
+                        data.response.comprehensionStatusQuo === "50% for auto safety and 50% for highway safety"
+                    ) {
+                        passed = true;
+                        comprehension_outcome = "passed";
+                    } else {
+                        passed = false;
+                        comprehension_outcome = "failed";
+                    }
+                } else {
+                    data.response.comprehensionStatusQuo = "null";
+                    if (
+                        data.response.comprehensionAllocation === "Safety of interstate highway and automobile safety" &&
+                        data.response.comprehensionAuto === "Bumpers, seat-belts, gas configuration, & body" &&
+                        data.response.comprehensionHighway === "Guard rails, grading, interchanges, selective reduced speed limits"
+                    ) {
+                        passed = true;
+                        comprehension_outcome = "passed";
+                    } else {
+                        passed = false;
+                        comprehension_outcome = "failed";
+                    }
+                } 
+
+                s1_data = {
+                    subject: data.subject,
+                    version: data.version,
+                    factor: data.condition,
+                    task_name: "status_quo",
+                    condition: condition[0],
+                    stimulus: "comprehension",
+                    choice: comprehension_outcome,
+                    auxiliary_info1: data.response.comprehensionAllocation + data.response.comprehensionAuto + data.response.comprehensionHighway + data.response.comprehensionStatusQuo,
+                    openq_response: null,
+                    introspect_rating: null,
+                    introspect_open: null,
+                    familiarity: null,
+                    rt: data.rt
+                };
+                console.log(s1_data);
+                save_data(s1_data, 'introspection');
+                
+                
+            }
+        }
+    ]
+};
+
+
+function comprehension_loop() {
+    return {
+        timeline: [
+            
+            {
+                type: jsPsychHtmlButtonResponse,
+                stimulus: function() {
+                    if (passed) {
+                        return "Correct!";
+                    } else {
+                        return "You answered at least one comprehension question incorrectly. Please try again.";
+                    }
+                },
+                choices: function() {
+                    if (passed) {
+                        return ["Continue"];
+                    } else {
+                        return ["Retry"];
+                    }
+                },
+            },
+            comprehension_questions
+        ],
+        loop_function: function() {
+            return !passed; // Continue the loop if comprehension is not passed
+        }
+    };
+}
+
 
 var status_quo_openQ_response = null;
 var status_quo_openQ = {
@@ -76,19 +266,19 @@ on_finish: function (data) {
 };
 
 var introspection_q_labels_status_quo1 = [
-`<strong>It made me more likely to recommend the allocation: 70% auto safety / 30% highway safety</strong>`,
+`<strong>It made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
 "",
 "<strong>It did not affect my response</strong>",
 "",
-`<strong>It made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+`<strong>It made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
 
 var introspection_q_labels_status_quo2 = [
-`<strong>It would have made me more likely to recommend the allocation: 70% auto safety / 30% highway safety</strong>`,
+`<strong>It would have made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
 "",
 "<strong>It would not have affected my response</strong>",
 "",
-`<strong>It would have made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+`<strong>It would have made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
 
 var status_quo_intro_response1 = null;
@@ -97,12 +287,12 @@ type: jsPsychHtmlSliderResponse,
 stimulus: function () {
     if (condition[0] == "Factor-Included") {
         return `<p>In this exercise, you were asked what allocation of funds you would recommend to the National Highway Safety Commission.</p>
-                <p>We first told you that the <b><u>current allocations</u> of funds is 70% to auto safety and 30% to highway safety</b>  before asking you what you would recommend.</p>
-                <p>Do you think <b>knowing that the <u>current allocation</u> of funds is 70% to auto safety and 30% to highway safety</b> affected your response? If so, how?</p>`;
+                <p>We first told you that the <b><u>current allocations</u> of funds is 50% to auto safety and 50% to highway safety</b>  before asking you what you would recommend.</p>
+                <p>Do you think <b>knowing that the <u>current allocation</u> of funds is 50% to auto safety and 50% to highway safety</b> affected your response? If so, how?</p>`;
     } else {
         return `<p>In this exercise, you were asked what allocation of funds you would recommend to the National Highway Safety Commission.</p>
-                <p>Now, imagine if you had first been told the <b><u>current allocation</u> of funds</b> is 70% auto safety / 30% highway safety.</p>
-                <p>If this were the case, do you think <b>knowing that the <u>current allocation</u> of funds is 70% to auto safety and 30% to highway safety</b> would have affected your response? If so, how?</p>`;
+                <p>Now, imagine if you had first been told the <b><u>current allocation</u> of funds</b> is 50% auto safety / 50% highway safety.</p>
+                <p>If this were the case, do you think <b>knowing that the <u>current allocation</u> of funds is 50% to auto safety and 50% to highway safety</b> would have affected your response? If so, how?</p>`;
     }
 },
 labels: condition[0] == "Factor-Included" ? introspection_q_labels_status_quo1 : introspection_q_labels_status_quo2,
@@ -116,6 +306,8 @@ on_finish: function (data) {
     status_quo_intro_response1 = data.response;
 }
 };
+
+
 
 var status_quo_intro_response2 = null;
 var status_quo_introspect2 = {
@@ -150,7 +342,7 @@ on_finish: function (data) {
         condition: condition[0],
         stimulus: stimulus,
         choice: choice,
-        auxiliary_info1: null,
+        auxiliary_info1: which_option,
         openq_response: status_quo_openQ_response,
         introspect_rating: status_quo_intro_response1,
         introspect_open: status_quo_intro_confidence_response,
@@ -175,5 +367,5 @@ on_finish: function (data) {
 
 
 var status_quo = {
-timeline: [status_quo_instructions, status_quo_trial, status_quo_familiar, status_quo_openQ, status_quo_introspect1, status_quo_intro_confidence]
+timeline: [status_quo_instructions, comprehension_questions, comprehension_loop(), status_quo_trial, status_quo_familiar, status_quo_openQ, status_quo_introspect1, status_quo_intro_confidence]
 };
