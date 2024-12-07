@@ -1,7 +1,7 @@
 //#region 5. hindsight Effect - BETWEEN
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by your knowledge of the actual outcomes of the event)?</p>";
 
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by your knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
 
 var hindsight_instructions = {
     type: jsPsychInstructions,
@@ -129,7 +129,7 @@ var comprehension_questions = {
                 factor: data.condition,
                 task_name: "hindsight effect",
                 condition: condition[0] == "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
-                choice: passed,
+                choice: passed.toString(),
                 auxiliary_info1: comprehension_choice,
                 openq_response: null,
                 introspect_rating: null,
@@ -207,7 +207,7 @@ var hindsight_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function (data) {
         hindsight_intro_response1 = data.response
     }

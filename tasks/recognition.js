@@ -1,8 +1,8 @@
 //#region recognition
 // Pachur, Mata, Schooler 2009
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by how much you recognized the name of the city)?</p>";
 
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by how much you recognized the name of the city)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how much you recognized the name of the city)?</p>";
 
 var preload = {
     type: jsPsychPreload,
@@ -11,13 +11,26 @@ var preload = {
 
 var recognition_instructions = {
     type: jsPsychInstructions,
-    pages: [
-        `<p>In this exercise, you will be presented with another series of trivia questions.</p>
-        <br><p>Please do not search the answers online while you are completing the study; if you are unsure of an answer, please just make your best guess.
-        <p><i>Click the Next button below when you are ready to see the first question.</i></p>`
-    ],
+    pages: function() {
+        if (trivia_question_already) {
+            return [
+                `<p>In this exercise, you will be asked to answer another series of trivia questions.</p>
+            <br><p>Please do not search the answers online while you are completing the study; if you are unsure of an answer, please just make your best guess.
+            <p><i>Click the Next button below when you are ready to see the first question.</i></p>`
+            ];
+        } else {
+            trivia_question_already = true;
+            return [
+                `<p>In this exercise, you will be asked to answer a series of trivia questions.</p>
+            <br><p>Please do not search the answers online while you are completing the study; if you are unsure of an answer, please just make your best guess.
+            <p><i>Click the Next button below when you are ready to see the first question.</i></p>`
+            ];
+        }
+    },
     show_clickable_nav: true
-};
+    };
+
+
 
 
 var choice = null;
@@ -266,7 +279,7 @@ var recognition_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function (data) {
         recognition_intro_response1 = data.response;
     }

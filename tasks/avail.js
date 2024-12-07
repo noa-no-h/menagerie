@@ -1,6 +1,6 @@
 //#region 2. Famous Names (Tversky & Kahneman, 1973) - BETWEEN
-var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fame of the people in each list)?</p>';
 
+var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fame of the people in each list)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fame of the people in each list)?</p>';
 
 var avail_included_stimuli = [
     {
@@ -203,7 +203,7 @@ var avail_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function (data) {
         avail_intro_response1 = data.response
     }

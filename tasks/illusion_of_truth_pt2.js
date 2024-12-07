@@ -3,7 +3,7 @@
 //Ongoing Secondary Tasks Can Reduce the Illusory Truth Effect
 //Deva P. Ly, Daniel M. Bernstein, Eryn J. Newman*
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether you had seen the statement before in the experiment)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether you had seen the statement earlier in this study)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by whether you had seen the statement earlier in this study)?</p>";
 
 
 //preparing stimuli
@@ -191,8 +191,8 @@ var illusion_of_truth_openQ = {
     }
 };
 
-var introspection_q_labels_mee1 = [`<strong>When I had seen a trivia statement before in the experiment, that made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement before in the experiment did not affect my response</strong>", "", `<strong>When I had seen a trivia statement before in the experiment, that made me judge the statement as <u>MORE</u> likely to be true</strong>`];
-var introspection_q_labels_mee2 = [`<strong>If I had seen a trivia statement before in the experiment, that would have made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement before in the experiment would not have affected my response</strong>", "", `<strong>If I had seen a trivia statement before in the experiment, that would have made me judge the statement as <u>MORE</u> likely to be true</strong>`];
+var introspection_q_labels_mee1 = [`<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study did not affect my response</strong>", "", `<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>MORE</u> likely to be true</strong>`];
+var introspection_q_labels_mee2 = [`<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study would not have affected my response</strong>", "", `<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>MORE</u> likely to be true</strong>`];
 
 var illusion_of_truth_intro_response1 = null;
 var illusion_of_truth_introspect1 = {
@@ -201,11 +201,11 @@ var illusion_of_truth_introspect1 = {
         if (condition[0] == "Factor-Included") {
             return `During this exercise, you were shown a series of trivia statements and you were asked to assess whether each claim was true or false. 
                     <p>Some of these claims had been shown to you earlier in the experiment and some you just saw for the first time.
-                    <p>Do you think <b>seeing the statement before in the experiment</b> affected  your assessment of whether it was true or false? If so, how?`
+                    <p>Do you think <b>seeing the statement earlier in this study</b> affected  your assessment of whether it was true or false? If so, how?`
         } else {
             return `During this exercise, you were shown a series of trivia statements and you were asked to assess whether each claim was true or false. 
                     <p>Earlier in this experiment, you were shown another series of trivia statements. Now, imagine if some of the trivia statements you were just asked to assess had also been shown to you earlier in the experiment. 
-                    Do you think <b>seeing the statement before in the experiment</b> would have  affected your assessment of whether it was true or false? If so, how?`
+                    Do you think <b>seeing the statement earlier in this study</b> would have  affected your assessment of whether it was true or false? If so, how?`
                         }
     },
     labels: condition[0] == 'Factor-Included' ? introspection_q_labels_mee1 : introspection_q_labels_mee2,
@@ -214,7 +214,7 @@ var illusion_of_truth_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br><br><br><br><br>",
+    prompt: "<br><br><br><br>",
     on_finish: function (data) {
         illusion_of_truth_intro_response1 = data.response
     }

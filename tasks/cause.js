@@ -1,7 +1,7 @@
 //#region 3. Causal Inference (Morris et al., 2019) - BETWEEN
 
-var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that there was only one green ball in the left box)?</p>';
 
+var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that there was only one green ball in the left box)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that there was only one green ball in the left box)?</p>';
 
 var cause_instructions = {
     type: jsPsychInstructions,
