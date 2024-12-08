@@ -341,5 +341,9 @@ var anchor_familiar = {
     }
 }
 
-var anchor = {
-    timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_intro_confidence]}
+if (only_main_question){
+    var anchor = {
+        timeline: [anchor_instructions, anchor_trials]}
+}
+else{var anchor = {
+    timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_intro_confidence]}}

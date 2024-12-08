@@ -448,6 +448,12 @@ on_finish: function (data) {
 };
 
 
-var status_quo = {
-timeline: [status_quo_instructions, comprehension_loop(), status_quo_trial, status_quo_familiar, status_quo_openQ, status_quo_introspect1, status_quo_intro_confidence]
-};
+
+if (only_main_question) {
+    var status_quo = {
+        timeline: [status_quo_instructions, comprehension_loop(), status_quo_trial]    };
+} else {
+    var status_quo = {
+        timeline: [status_quo_instructions, comprehension_loop(), status_quo_trial, status_quo_familiar, status_quo_openQ, status_quo_introspect1, status_quo_intro_confidence]
+    };
+}

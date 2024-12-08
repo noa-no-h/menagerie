@@ -329,8 +329,17 @@ var belief_familiar = {
     }
 }
 
-var belief = {
-    timeline: [belief_instructions1, belief_practice1, belief_practice1_feedback, belief_practice2, belief_practice2_feedback, belief_instructions2, belief_trials, belief_familiar, belief_openQ, belief_introspect1, belief_intro_confidence]
-};
+
+
+if (only_main_question) {
+    var belief = {
+        timeline: [belief_instructions1, belief_practice1, belief_practice1_feedback, belief_practice2, belief_practice2_feedback, belief_instructions2, belief_trials]
+    };
+} else {
+    var belief = {
+        timeline: [belief_instructions1, belief_practice1, belief_practice1_feedback, belief_practice2, belief_practice2_feedback, belief_instructions2, belief_trials, belief_familiar, belief_openQ, belief_introspect1, belief_intro_confidence]
+    };
+}
+
 //#endregion
 //timeline.push(belief)

@@ -262,8 +262,15 @@ var avail_familiar = {
     }
 }
 
-var avail = {
-    timeline: [avail_instructions, avail_trials, avail_question, avail_familiar, avail_openQ, avail_introspect1, avail_intro_confidence]
+
+if (only_main_question) {
+    var avail = {
+        timeline: [avail_instructions, avail_trials, avail_question]    
+    };
+} else {
+    var avail = {
+        timeline: [avail_instructions, avail_trials, avail_question, avail_familiar, avail_openQ, avail_introspect1, avail_intro_confidence]
+    };
 }
 
 /*var avail_excluded = {

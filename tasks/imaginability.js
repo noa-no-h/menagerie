@@ -133,8 +133,15 @@ var imaginability_familiar = {
     }
 }
 
-var imaginability = {
-    timeline: [imaginability_instructions, imaginability_question, imaginability_familiar, imaginability_openQ, imaginability_introspect1, imaginability_intro_confidence]
+
+if (only_main_question) {
+    var imaginability = {
+        timeline: [imaginability_instructions, imaginability_question]
+    };
+} else {
+    var imaginability = {
+        timeline: [imaginability_instructions, imaginability_question, imaginability_familiar, imaginability_openQ, imaginability_introspect1, imaginability_intro_confidence]
+    };
 }
 
 //#endregion

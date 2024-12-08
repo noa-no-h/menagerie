@@ -136,9 +136,19 @@ var omission_familiar = {
 }
 
 
-var omission = {
-    timeline: [omission_instructions, omission_question, omission_familiar, omission_openQ, omission_introspect1, omission_intro_confidence]
+
+
+
+if (only_main_question) {
+    var omission = {
+        timeline: [omission_instructions, omission_question]
+    };
+} else {
+    var omission = {
+        timeline: [omission_instructions, omission_question, omission_familiar, omission_openQ, omission_introspect1, omission_intro_confidence]
+    };
 }
+
 
 //#endregion
 //timeline.push(omission)

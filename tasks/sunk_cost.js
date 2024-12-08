@@ -139,8 +139,15 @@ var sunk_cost_familiar = {
     }
 }
 
-var sunk_cost = {
-    timeline: [sunk_cost_instructions, sunk_cost_question, sunk_cost_familiar, sunk_cost_openQ, sunk_cost_introspect1, sunk_cost_intro_confidence]
+
+if (only_main_question) {
+    var sunk_cost = {
+        timeline: [sunk_cost_instructions, sunk_cost_question]
+    };
+} else {
+    var sunk_cost = {
+        timeline: [sunk_cost_instructions, sunk_cost_question, sunk_cost_familiar, sunk_cost_openQ, sunk_cost_introspect1, sunk_cost_intro_confidence]
+    };
 }
 
 //#endregion

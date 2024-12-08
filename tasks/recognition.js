@@ -340,10 +340,17 @@ var recognition_familiar = {
     }
 };
 
-var recognition = {
-    //timeline: [preload, recognition_instructions, loop_city, loop_disease, recognition_familiar, recognition_openQ, recognition_introspect1, recognition_intro_confidence]
-    timeline: [preload, recognition_instructions, loop_city, recognition_familiar, recognition_openQ, recognition_introspect1, recognition_intro_confidence]
 
-};
+
+if (only_main_question) {
+    var recognition = {
+        timeline: [preload, recognition_instructions, loop_city]
+    };
+} else {
+    var recognition = {
+        timeline: [preload, recognition_instructions, loop_city, recognition_familiar, recognition_openQ, recognition_introspect1, recognition_intro_confidence]
+    };
+}
+
 
 // end region reference price 

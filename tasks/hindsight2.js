@@ -269,8 +269,16 @@ var hindsight_familiar = {
     }
 }
 
-var hindsight2 = {
-    timeline: [hindsight_instructions, comprehension_loop(),hindsight_question, hindsight_familiar, hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
+
+
+if (only_main_question) {
+    var hindsight2 = {
+        timeline: [hindsight_instructions, comprehension_loop(),hindsight_question]
+    };
+} else {
+    var hindsight2 = {
+        timeline: [hindsight_instructions, comprehension_loop(),hindsight_question, hindsight_familiar, hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
+    };
 }
 
 //#endregion

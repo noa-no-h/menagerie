@@ -161,8 +161,15 @@ var cause_familiar = {
     }
 }
 
-var cause = {
-    timeline: [cause_instructions, cause_condition, cause_question, cause_familiar, cause_openQ, cause_introspect1, cause_intro_confidence]
+
+if (only_main_question) {
+    var cause = {
+        timeline: [cause_instructions, cause_condition, cause_question]
+    };
+} else {
+    var cause = {
+        timeline: [cause_instructions, cause_condition, cause_question, cause_familiar, cause_openQ, cause_introspect1, cause_intro_confidence]
+    };
 }
 
 //#endregion

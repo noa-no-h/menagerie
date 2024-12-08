@@ -136,8 +136,16 @@ var double_familiar = {
     }
 }
 
-var double = {
-    timeline: [double_instructions, double_question, double_familiar, double_openQ, double_introspect1, double_intro_confidence]
+
+
+if (only_main_question) {
+    var double = {
+        timeline: [double_instructions, double_question]
+    };
+} else {
+    var double = {
+        timeline: [double_instructions, double_question, double_familiar, double_openQ, double_introspect1, double_intro_confidence]
+    };
 }
 
 //#endregion

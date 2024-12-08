@@ -155,8 +155,15 @@ var ref_price_familiar = {
     }
 };
 
-var reference_price = {
-    timeline: [ref_price_instructions, ref_price_trial, ref_price_familiar, ref_price_openQ, ref_price_introspect1, ref_price_intro_confidence]
-};
+
+if (only_main_question) {
+    var reference_price = {
+        timeline: [ref_price_instructions, ref_price_trial]
+    };
+} else {
+    var reference_price = {
+        timeline: [ref_price_instructions, ref_price_trial, ref_price_familiar, ref_price_openQ, ref_price_introspect1, ref_price_intro_confidence]
+    };
+}
 
 // end region reference price 

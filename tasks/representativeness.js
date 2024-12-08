@@ -183,8 +183,15 @@ on_finish: function (data) {
 }
 };
 
-var representativeness = {
-timeline: [rep_instructions, rep_trial, rep_familiar, rep_openQ, rep_introspect1, rep_intro_confidence]
-};
+
+if (only_main_question) {
+    var representativeness = {
+        timeline: [rep_instructions, rep_trial]
+    };
+} else {
+    var representativeness = {
+        timeline: [rep_instructions, rep_trial, rep_familiar, rep_openQ, rep_introspect1, rep_intro_confidence]
+    };
+}
 
 //#endregion representativeness

@@ -165,8 +165,17 @@ var decoy_familiar = {
     }
 }
 
-var decoy = {
-    timeline: [decoy_instructions, decoy_question, decoy_familiar, decoy_openQ, decoy_introspect1, decoy_intro_confidence]
+
+
+if (only_main_question) {
+    var decoy = {
+        timeline: [decoy_instructions, decoy_question]
+    };
+} else {
+    var decoy = {
+        timeline: [decoy_instructions, decoy_question, decoy_familiar, decoy_openQ, decoy_introspect1, decoy_intro_confidence]
+    };
 }
+
 //#endregion
 //timeline.push(decoy)

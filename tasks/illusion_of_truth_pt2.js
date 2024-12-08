@@ -125,7 +125,7 @@ for (var i = 0; i < included_twelve_statements.length; i++) {
 var illusion_of_truth_instructions1 = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this next task, you will see series of trivia statements appear on the screen. Half of these statements are ones that you have already seen, and half are new. Some of these trivia statements are true and some of these trivia statements are false.
+        `<p>In this next task, you will see series of statements appear on the screen. Half of these statements are ones that you have already seen, and half are new. Some of these trivia statements are true and some of these trivia statements are false.
         <br><p>You will be asked to assess whether each claim is true or false. When you see each statement appear on the screen, please read it carefully and answer the following question:
 <br> <p><strong> Is this statement true or false? </strong>
 <br><p>You will be asked to answer this question on a scale from definitely false to definitely true.</p>
@@ -275,8 +275,15 @@ var illusion_of_truth_familiar = {
     }
 }
 
-var illusion_of_truth_pt2 = {
-    timeline: [illusion_of_truth_instructions1, illusion_of_truth_questions, illusion_of_truth_familiar, illusion_of_truth_openQ, illusion_of_truth_introspect1, illusion_of_truth_intro_confidence]
+
+if (only_main_question) {
+    var illusion_of_truth_pt2 = {
+        timeline: [illusion_of_truth_instructions1, illusion_of_truth_questions]
+    };
+} else {
+    var illusion_of_truth_pt2 = {
+        timeline: [illusion_of_truth_instructions1, illusion_of_truth_questions, illusion_of_truth_familiar, illusion_of_truth_openQ, illusion_of_truth_introspect1, illusion_of_truth_intro_confidence]
+    };
 }
 
 //#endregion

@@ -226,8 +226,16 @@ var halo_familiar = {
     }
 };
 
-var halo = {
-    timeline: [preload, halo_instructions, loop_halo, halo_familiar, halo_openQ, halo_introspect1, halo_intro_confidence]
-};
+
+
+if (only_main_question) {
+    var halo = {
+        timeline: [preload, halo_instructions, loop_halo]
+    };
+} else {
+    var halo = {
+        timeline: [preload, halo_instructions, loop_halo, halo_familiar, halo_openQ, halo_introspect1, halo_intro_confidence]
+    };
+}
 
 // end region reference price 

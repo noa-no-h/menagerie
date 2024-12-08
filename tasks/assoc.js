@@ -343,8 +343,16 @@ var assoc_familiar = {
     }
 }
 
-var assoc = {
-    timeline: [assoc_instructions, assoc_listTrials, assoc_instructions2, assoc_practice, assoc_practice_feedback, assoc_targetTrials, assoc_familiar, assoc_openQ, assoc_introspect1, assoc_intro_confidence]
+
+if (only_main_question) {
+    var assoc = {
+        timeline: [assoc_instructions, assoc_listTrials, assoc_instructions2, assoc_practice, assoc_practice_feedback, assoc_targetTrials]
+    };
+} else {
+    var assoc = {
+        timeline: [assoc_instructions, assoc_listTrials, assoc_instructions2, assoc_practice, assoc_practice_feedback, assoc_targetTrials, assoc_familiar, assoc_openQ, assoc_introspect1, assoc_intro_confidence]
+    };
 }
+
 //#endregion
 //timeline.push(assoc)
