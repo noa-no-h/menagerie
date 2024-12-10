@@ -116,38 +116,6 @@ p.vals = c()
 #font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
 
-# seen before analysis ----
-
-#data <- read.csv('November_2024_pilot.csv') %>%
-data_with_seen_before <- read.csv('full_pilot.csv') %>%
-  filter(subject != "") %>%
-  arrange(subject, task_name) %>%
-  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-  mutate(introspect_rating = as.numeric(introspect_rating))
-View(data_with_seen_before)
-
-familiarity_percentage <- data_with_seen_before %>%
-  group_by(task_name) %>%
-  summarise(total_responses = n(),
-            yes_responses = sum(familiarity == "Yes")) %>%
-  mutate(percentage_yes = (yes_responses / total_responses) * 100)
-
-
-ggplot(familiarity_percentage, aes(x = fct_reorder(task_name, percentage_yes, .desc = TRUE), y = percentage_yes)) +
-  geom_bar(stat = "identity", fill = "sky blue") +
-  geom_text(aes(label = paste0(round(percentage_yes, 1), "%", " ", task_name), y = 0), 
-            vjust = 0, 
-            angle = 90, 
-            color = "black",
-            family = "Optima",
-            size = 5, 
-            hjust = 0) + 
-  labs(title = "Percent Familiar With Each Task",
-       x = "Task",
-       y = "Percent Familiar") +
-  theme_custom()+
-  theme(axis.text.x = element_blank())
-
 #7. Halo Effect  ✅ ----
 ##7.1 do we see the effect? ----
 
@@ -305,15 +273,30 @@ ggplot(halo_data_introspection %>% filter(factor == 'Factor-Included'), aes(x = 
 
 #Did subjects who saw the correct answers misremember their previous answers as closer to the correct answer than the subjects who did not see the correct answers?
 
-hindsight_late <- data %>%
-  filter(task_name == "hindsight") %>%
-  filter(as.numeric(choice)<2000000000) %>%
-  filter(as.Date(timestamp) > as.Date("2024-11-07")) %>%
-  filter(!(subject %in% c("6109ca40ef8f38498af102ff", 
+hindsight_data <- data %>%
+  filter(task_name == "hindsight") %>% 
+  mutate(choice = as.numeric(choice), auxiliary_info1 = as.numeric(auxiliary_info1)) %>% 
+  filter(as.Date(timestamp) > as.Date("2024-11-07"), # Noa, can you explain these to me?
+        !(subject %in% c("6109ca40ef8f38498af102ff", 
                           "670b086620f71c5b6cc49abc", 
-                          "5a93bb216475f900019fa294"))) %>%
-  filter(choice != "") %>%
-  mutate(auxiliary_info1 = as.numeric(auxiliary_info1))
+                          "5a93bb216475f900019fa294")))
+
+high_cutoff = 1e10
+low_cutoff = 1000
+hindsight_subj_exclude = hindsight_data %>% 
+  group_by(subject) %>% 
+  filter(choice != '') %>% 
+  summarize(max.choice = max(choice, na.rm = T),
+            min.choice = min(choice, na.rm = T),
+            num.high.choices = sum(choice > high_cutoff),
+            num.low.choices = sum(choice < low_cutoff)) %>% 
+  filter(num.high.choices > 1 | num.low.choices > 1) %>% 
+  pull(subject)
+
+hindsight_data = hindsight_data %>% 
+  filter(!(subject %in% hindsight_subj_exclude),
+         choice < high_cutoff,
+         choice > low_cutoff)
 
 
 
@@ -1057,38 +1040,91 @@ ggplot(summary_overall, aes(x = factor, y = overall_mean_introspect_rating, fill
 sunk_cost_data <- data %>%
   filter(task_name == "sunk_cost effect") %>% 
   mutate(switched = choice == 'Solar-powered Pump',
-         switched.num = as.numeric(switched))
-
+         switched.num = as.numeric(switched),
+         condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost")))
 
 percentage_sunk_cost_data <- sunk_cost_data %>%
   group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost"))) %>%
-  summarize(
-    total_in_condition = n(),  # Total number of subjects in each condition
-    solar_powered_count = sum(choice == "Solar-powered Pump")  # Count who chose "Solar-powered pump"
-  ) %>%
-  mutate(percentage_solar_powered = (solar_powered_count / total_in_condition) * 100)
+  summarize(mean_switched = mean(switched),
+            se_switched = se.prop(switched),
+            total = n())
 
-summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
-
-ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_solar_powered, fill = condition)) +
+ggplot(percentage_sunk_cost_data, aes(x = condition, y = mean_switched, fill = condition)) +
   geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin = mean_switched - se_switched, 
+        ymax = mean_switched + se_switched), 
+    width = 0.2
+  ) +
   labs(title = "Percentage Switching Projects by Condition", x = "Condition", y = "Percentage of Choices to Switch") +
-  geom_text(aes(label = paste0("n=", total_in_condition)), 
+  geom_text(aes(label = paste0("n=", total)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
-solar_powered_counts <- percentage_sunk_cost_data$solar_powered_count
-total_counts <- percentage_sunk_cost_data$total_in_condition
-prop_test_result <- prop.test(solar_powered_counts, total_counts)
-print(prop_test_result)
-
 summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
 
-test = brm(switched.num ~ condition, data = sunk_cost_data, family = 'binomial')
+sunkcost_effect_analysis = brm(switched.num ~ condition,
+                               data = sunk_cost_data,
+                               family = 'bernoulli')
+summary(sunkcost_effect_analysis)
+hdi(sunkcost_effect_analysis, effects = 'all')
+
+## introspection
+
+# Factor-included vs factor-excluded
+
+sunk_cost_data_introspection = sunk_cost_data %>% 
+  filter(stimulus == "")
+
+summary_sunk_cost_data_introspection <- sunk_cost_data_introspection %>% 
+  group_by(factor) %>%
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(summary_sunk_cost_data_introspection, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "Sunk Cost Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+sunk_cost_data_introspection_analysis = brm(introspect_rating ~ factor,
+                                  data = sunk_cost_data_introspection)
+summary(sunk_cost_data_introspection_analysis)
+hdi(sunk_cost_data_introspection_analysis, effects = 'all')
+
+# Looking at individual effect size
+sunk_cost_data = sunk_cost_data %>% 
+  mutate(effect_size = ifelse(condition == 'Sunk Cost', !switched, switched),
+         effect_size = as.numeric(effect_size))
+
+sunk_cost_data_introspection = sunk_cost_data_introspection %>% 
+  left_join(sunk_cost_data %>% select(subject, effect_size), by = 'subject')
+
+sunk_cost_data_introspection = sunk_cost_data_introspection %>% 
+  mutate(showed_effect = factor(ifelse(effect_size > 0, 'Showed effect', 'No effect')))
+
+sunk_cost_data_introspection_summary = sunk_cost_data_introspection %>% 
+  filter(factor == 'Factor-Included') %>% 
+  group_by(showed_effect) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating, na.rm = T),
+            se_introspect_rating = se(introspect_rating),
+  )
+
+ggplot(sunk_cost_data_introspection_summary,
+       aes(x = showed_effect, y = mean_introspect_rating)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "Sunk Cost Introspection ratings", x = "Showed effect?", y = "Introspection rating") +
+  theme_custom()
 
 # Q1: Aggregating across tasks, are participants aware that they are being influenced by the heuristics or biases? ----
 
