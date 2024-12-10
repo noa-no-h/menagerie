@@ -1,6 +1,6 @@
 //#region 7. Associative Memory (Roediger & McDermott, 1995) - WITHIN
-var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether the word was related to the topic of sleep)?</p>';
 
+var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether the word was related to the topic of sleep)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by whether the word was related to the topic of sleep)?</p>';
 
 var assoc_instructions = {
     type: jsPsychInstructions,
@@ -283,7 +283,7 @@ var assoc_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>>",
     on_finish: function (data) {
         assoc_intro_response1 = data.response
     }
@@ -343,8 +343,16 @@ var assoc_familiar = {
     }
 }
 
-var assoc = {
-    timeline: [assoc_instructions, assoc_listTrials, assoc_instructions2, assoc_practice, assoc_practice_feedback, assoc_targetTrials, assoc_familiar, assoc_openQ, assoc_introspect1, assoc_intro_confidence]
+
+if (only_main_question) {
+    var assoc = {
+        timeline: [assoc_instructions, assoc_listTrials, assoc_instructions2, assoc_practice, assoc_practice_feedback, assoc_targetTrials]
+    };
+} else {
+    var assoc = {
+        timeline: [assoc_instructions, assoc_listTrials, assoc_instructions2, assoc_practice, assoc_practice_feedback, assoc_targetTrials, assoc_familiar, assoc_openQ, assoc_introspect1, assoc_intro_confidence]
+    };
 }
+
 //#endregion
 //timeline.push(assoc)

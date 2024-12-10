@@ -1,6 +1,7 @@
 //#region representativeness
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the information you were told about Jack)?</p>";
+
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the information you were told about Jack)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the information you were told about Jack)?</p>";
 
 var rep_stimulus_factor_included =
 `Imagine that a panel of psychologists have interviewed and administered 
@@ -53,7 +54,7 @@ timeline: [{
     start: 50,
     step: 10,
     require_movement: true,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function(data) {
         console.log(data.response);
         choice = data.response;
@@ -120,7 +121,7 @@ min: introspection_q_min,
 max: introspection_q_max,
 slider_start: 50,
 require_movement: introspection_q_require,
-prompt: "<br><br><br><br><br><br>",
+prompt: "<br><br><br>",
 on_finish: function (data) {
     rep_intro_response1 = data.response;
 }
@@ -182,8 +183,15 @@ on_finish: function (data) {
 }
 };
 
-var representativeness = {
-timeline: [rep_instructions, rep_trial, rep_familiar, rep_openQ, rep_introspect1, rep_intro_confidence]
-};
+
+if (only_main_question) {
+    var representativeness = {
+        timeline: [rep_instructions, rep_trial]
+    };
+} else {
+    var representativeness = {
+        timeline: [rep_instructions, rep_trial, rep_familiar, rep_openQ, rep_introspect1, rep_intro_confidence]
+    };
+}
 
 //#endregion representativeness

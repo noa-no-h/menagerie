@@ -1,6 +1,7 @@
 //#region Halo
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by attractiveness of the face)?</p>";
+
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by attractiveness of the face)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by attractiveness of the face)?</p>";
 
 
 var preload = {
@@ -164,7 +165,7 @@ var halo_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function (data) {
         halo_intro_response1 = data.response;
     }
@@ -225,8 +226,16 @@ var halo_familiar = {
     }
 };
 
-var halo = {
-    timeline: [preload, halo_instructions, loop_halo, halo_familiar, halo_openQ, halo_introspect1, halo_intro_confidence]
-};
+
+
+if (only_main_question) {
+    var halo = {
+        timeline: [preload, halo_instructions, loop_halo]
+    };
+} else {
+    var halo = {
+        timeline: [preload, halo_instructions, loop_halo, halo_familiar, halo_openQ, halo_introspect1, halo_intro_confidence]
+    };
+}
 
 // end region reference price 

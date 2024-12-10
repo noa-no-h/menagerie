@@ -3,8 +3,8 @@
 //Ongoing Secondary Tasks Can Reduce the Illusory Truth Effect
 //Deva P. Ly, Daniel M. Bernstein, Eryn J. Newman*
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the number of times you saw each statement)?</p>";
  
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the number of times you saw each statement)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the number of times you saw each statement)?</p>";
 
     //preparing stimuli
     var nine_true_statements = [
@@ -64,7 +64,7 @@ var confidence_q = "<p>How confident are you that you gave the correct answer to
         var illusion_of_truth_instructions1 = {
             type: jsPsychInstructions,
             pages: [
-                `<p>For approximately the next three minutes, you will see a series of trivia statements. <b>Some will be true and others will be false.</b>
+                `<p>For approximately the next three minutes, you will see a series of trivia statements. 
                 <br><p>The trivia statements will be presented automatically - there is no need to press any buttons.
 Please read the trivia statements carefully as they are presented, but do not do anything else. You
 will not be able to pause the study, so make sure you have no distractions.</p>
@@ -152,7 +152,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
             max: introspection_q_max,
             slider_start: 50,
             require_movement: introspection_q_require,
-            prompt: "<br><br><br><br><br><br><br><br><br><br>",
+            prompt: "<br><br><br><br><br><br><br>",
             on_finish: function (data) {
                 illusion_of_truth_intro_response1 = data.response
             }

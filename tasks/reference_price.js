@@ -1,7 +1,7 @@
 //#region Reference Price - BETWEEN (Thaler, 2008)
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fanciness of the hotel selling the beer)?</p>";
 
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fanciness of the hotel selling the beer)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fanciness of the hotel selling the beer)?</p>";
 
 var ref_price_hotel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. What price do you tell him? (Please answer in dollars with only a number)`;
 
@@ -93,7 +93,7 @@ var ref_price_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function (data) {
         ref_price_intro_response1 = data.response;
     }
@@ -155,8 +155,15 @@ var ref_price_familiar = {
     }
 };
 
-var reference_price = {
-    timeline: [ref_price_instructions, ref_price_trial, ref_price_familiar, ref_price_openQ, ref_price_introspect1, ref_price_intro_confidence]
-};
+
+if (only_main_question) {
+    var reference_price = {
+        timeline: [ref_price_instructions, ref_price_trial]
+    };
+} else {
+    var reference_price = {
+        timeline: [ref_price_instructions, ref_price_trial, ref_price_familiar, ref_price_openQ, ref_price_introspect1, ref_price_intro_confidence]
+    };
+}
 
 // end region reference price 

@@ -133,8 +133,15 @@ var contact_familiar = {
 }
 
 
-var contact = {
-    timeline: [contact_instructions, contact_question, contact_familiar, contact_openQ, contact_introspect1, contact_intro_confidence]
+
+if (only_main_question) {
+    var contact = {
+        timeline: [contact_instructions, contact_question]
+    };
+} else {
+    var contact = {
+        timeline: [contact_instructions, contact_question, contact_familiar, contact_openQ, contact_introspect1, contact_intro_confidence]
+    };
 }
 
 //#endregion

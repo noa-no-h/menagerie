@@ -1,17 +1,16 @@
 //#region 5. hindsight Effect - BETWEEN
 
-var confidence_q = "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by your knowledge of the actual outcomes of the event)?</p>";
 
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by your knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
 
 var hindsight_instructions = {
     type: jsPsychInstructions,
     pages: [
         `<p> A short description of a real social
-or personal events appears on the next page with a
+or personal event appears on the next page with a
 number of possible outcomes. On the basis of
 these data, we ask you to evaluate the likelihood
-of the outcomes listed. We thank you for your
-participation.</p>
+of the outcomes listed.</p>
     <p><i>Please click the button below to view the passage.</i>`,
     ],
     show_clickable_nav: true
@@ -34,13 +33,13 @@ var hindsight_question = {
                         name: "event_description",
                         html: function () {
                             if (condition[0] === "Factor-Included") {
-                                return `<p><b>Please consider the following event:</b></p>
-                                    <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats. The two sides reached a military stalemate, but were unable to come to a peace settlement.</p>
-                                    <p>In the light of the information appearing in the passage, what was the probability of occurrence of each of the four possible outcomes listed below? (The probabilities should sum to 100%) <b>Please answer as you would have had you not known what happened.</b></p>`;
+                                return `
+                                    <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p> <p> <u>The result was a British victory.</u></p>
+                                    <p>In the light of the information appearing in the passage, please estimate the probability of occurrence of each of the four possible outcomes listed below. There are no right or wrong answers, answer based on your intuition. (The probabilities should sum to 100%). <b> Answer as if you do not know the outcome, estimating the case at that time before outcomes were known.</b></p>`;
                             } else {
-                                return `<p><b>Please consider the following event:</b></p>
+                                return `
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
-                                    <p>In the light of the information appearing in the passage, what was the probability of occurrence of each of the four possible outcomes listed below? (The probabilities should sum to 100%)</p>`;
+                                    <p>In the light of the information appearing in the passage, please estimate the probability of occurrence of each of the four possible outcomes listed below. There are no right or wrong answers, answer based on your intuition. (The probabilities should sum to 100%). </p>`;
                             }
                         }
                     },
@@ -60,8 +59,15 @@ var hindsight_question = {
                     },
                     {
                         type: "text",
-                        name: "Stalemate",
+                        name: "StalemateNoPeace",
                         title: "Probability that the two sides reached a military stalemate, but were unable to come to a peace settlement:",
+                        inputType: "number",
+                        isRequired: true
+                    },
+                    {
+                        type: "text",
+                        name: "StalematePeace",
+                        title: "Probability that the two sides reached a military stalemate and came to a peace settlement:",
                         inputType: "number",
                         isRequired: true
                     }
@@ -73,14 +79,99 @@ var hindsight_question = {
         // Parse the responses
         probBritish = parseInt(data.response.BritishVictory, 10);
         probGurka = parseInt(data.response.GurkaVictory, 10);
-        probStalemate = parseInt(data.response.Stalemate, 10);
+        probStalemateNoPeace = parseInt(data.response.StalemateNoPeace, 10);
+        probStalematePeace = parseInt(data.response.StalematePeace, 10);
 
         console.log("Saved probabilities:");
         console.log("British Victory:", probBritish);
         console.log("Gurka Victory:", probGurka);
-        console.log("Stalemate:", probStalemate);
+        console.log("Stalemate No Peace:", probStalemateNoPeace);
+        console.log("Stalemate Peace:", probStalematePeace);
     }
 };
+
+var passed = null;
+
+var comprehension_questions = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: function () {
+        if (condition[0] === "Factor-Included") {
+            return `
+                <p><b>Please consider the following event:</b></p>
+                <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
+                <p><u>The result was a British victory.</u></p>
+                <br>
+                <p>To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?</p>`;
+        } else {
+            return `
+                <p><b>Please consider the following event:</b></p>
+                <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
+                <br>
+                <p>To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?</p>`;
+        }
+    },
+    choices: ["British victory", "Gurka victory", "Military stalemate with no peace settlement", "Military stalemate with a peace settlement", "The case did not indicate the outcome"],
+    on_finish: function (data) {
+        console.log(data.response)
+        if (condition[0] === "Factor-Included") {
+            passed = data.response == 0;
+            console.log(passed)
+        }
+        else{
+            passed = data.response == 4;
+            console.log(passed)
+        }
+        choices= ["British victory", "Gurka victory", "Military stalemate with no peace settlement", "Military stalemate with a peace settlement", "The case did not indicate the outcome"]
+        comprehension_choice = choices[data.response];
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                factor: data.condition,
+                task_name: "hindsight effect",
+                condition: condition[0] == "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
+                choice: passed.toString(),
+                auxiliary_info1: comprehension_choice,
+                openq_response: null,
+                introspect_rating: null,
+                introspect_open: null,
+                familiarity: null,
+                rt: data.rt
+            }
+            console.log(s1_data)
+            save_data(s1_data, 'introspection')
+    
+}
+};
+
+
+function comprehension_loop() {
+    return {
+        timeline: [
+            comprehension_questions,
+            {
+                type: jsPsychHtmlButtonResponse,
+                stimulus: function () {
+                    if (passed) {
+                        return "Correct!";
+                    } else {
+                        return "You answered the comprehension question incorrectly. Please try again.";
+                    }
+                },
+                choices: function () {
+                    if (passed) {
+                        return ["Continue"];
+                    } else {
+                        return ["Retry"];
+                    }
+                }
+            }
+        ],
+        loop_function: function () {
+            return !passed; // Keep looping until comprehension is passed
+        }
+    };
+}
+
 
 var hindsight_openQ_response = null;
 var hindsight_openQ = {
@@ -94,21 +185,20 @@ var hindsight_openQ = {
     }
 };
 
-var introspection_q_labels_hindsight1 = [`<strong>It made me judge the actual outcome as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me judge the actual outcome as <u>MORE</u> likely </strong>`];
-var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the actual outcome as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me judge the actual outcome as <u>MORE</u> likely </strong>`];
+var introspection_q_labels_hindsight1 = [`<strong>It made me judge the outcome of British victory as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
+var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the outcome of British victory  as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
 
 var hindsight_intro_response1 = null;
 var hindsight_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>After reading about the historical event, you were told that the two sides reached a military stalemate, but were unable to come to a peace settlement.</p>
-            <p> You were then asked to judge the probabilities of occurrence of each of the four possible outcomes listed, <b>answering as you would have had you not known what happened.</p>
-            <p>Do you think <b>your knowledge that the outcome was a military stalemate</b> influenced your judgment of the probabilities of occurrence of each of the four possible outcomes? If so, how?</p>`
+            return `<p> After reading about the historical event, we had told you what actually happened: a British victory.</p>
+            <p> You were then asked to judge the probabilities of occurrence of each of the four possible outcomes but answering <b> as if </b>you had not known the true outcome.</p>
+            <p>Do you think the fact that you knew the true outcome — a British victory — influenced your judgment of how likely the outcome of British victory was?</p>`
         } else {
-            return `<p>After reading about the historical event, you were  asked to judge the probabilities of occurrence of each of the four possible outcomes listed. </p>
-            <p> Imagine that you had been told which  outcome had actually occurred but had been asked to judge the probabilities of occurrence <b>answering as you would have had you not known what happened.</p>
-            <p>Do you think <b>your knowledge that the outcome was a military stalemate</b> would have influenced your judgment of the probabilities of occurrence of each of the four possible outcomes? If so, how?</p>`
+            return `<p>Imagine that, after reading about the historical event, we had told you what actually happened: a British victory. Then, imagine we had asked you the same question -- to judge the probabilities of the four possible outcomes -- but answering <b> as if </b>you had not known the true outcome.</p>
+            <p>In this case, do you think the fact that you would have known the true outcome — a British victory — would have influenced your judgment of how likely the outcome of British victory was?</p>`
         }
     },
     labels: condition[0] == 'Factor-Included' ? introspection_q_labels_hindsight1 : introspection_q_labels_hindsight2,
@@ -117,7 +207,7 @@ var hindsight_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function (data) {
         hindsight_intro_response1 = data.response
     }
@@ -152,9 +242,9 @@ var hindsight_intro_confidence = {
             version: data.version,
             factor: data.condition,
             task_name: "hindsight effect",
-            condition: condition[0] == "Factor-Included" ? "knowlege of outcome" : "no knowledge of outcome",
-            choice: probStalemate,
-            auxiliary_info1: probBritish + "," + probGurka,
+            condition: condition[0] == "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
+            choice: probBritish,
+            auxiliary_info1: probBritish + "," + probGurka + "," + probStalemateNoPeace + "," + probStalematePeace,
             stimulus: null,
             openq_response: hindsight_openQ_response,
             introspect_rating: hindsight_intro_response1,
@@ -179,8 +269,16 @@ var hindsight_familiar = {
     }
 }
 
-var hindsight2 = {
-    timeline: [hindsight_instructions, hindsight_question, hindsight_familiar, hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
+
+
+if (only_main_question) {
+    var hindsight2 = {
+        timeline: [hindsight_instructions, comprehension_loop(),hindsight_question]
+    };
+} else {
+    var hindsight2 = {
+        timeline: [hindsight_instructions, comprehension_loop(),hindsight_question, hindsight_familiar, hindsight_openQ, hindsight_introspect1, hindsight_intro_confidence]
+    };
 }
 
 //#endregion

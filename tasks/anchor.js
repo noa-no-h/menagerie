@@ -1,16 +1,27 @@
  ///#region 1. Anchoring Trivia (Mussweiler & Strack, 1999) - BETWEEN
- var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the initial example value)?</p>';
+
+ var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the initial example value)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have influenced by the initial example value)?</p>';
 
  
- 
- var anchor_instructions = {
+
+var anchor_instructions = {
     type: jsPsychInstructions,
-    pages: [
-        `<p>In this exercise, you will be asked to answer another trivia question. Please make your best guess and do not look up the answer online.</p>
-    </p><i>Please click the button below to view the question.</i></p>`
-    ],
+    pages: function() {
+        if (trivia_question_already) {
+            return [
+                `<p>In this exercise, you will be asked to answer another trivia question. Please make your best guess and do not look up the answer online.</p>
+                 <p><i>Please click the button below to view the question.</i></p>`
+            ];
+        } else {
+            trivia_question_already = true;
+            return [
+                `<p>In this exercise, you will be asked to answer a trivia question. Please make your best guess and do not look up the answer online.</p>
+                <p><i>Please click the button below to view the question.</i></p>`
+            ];
+        }
+    },
     show_clickable_nav: true
-}
+};
 
 const anchor_low = {
     type: jsPsychSurvey,
@@ -262,7 +273,7 @@ var anchor_introspect1 = {
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
-    prompt: "<br><br><br><br><br><br>",
+    prompt: "<br><br><br>",
     on_finish: function (data) {
         anchor_intro_response1 = data.response
     }
@@ -330,5 +341,9 @@ var anchor_familiar = {
     }
 }
 
-var anchor = {
-    timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_intro_confidence]}
+if (only_main_question){
+    var anchor = {
+        timeline: [anchor_instructions, anchor_trials]}
+}
+else{var anchor = {
+    timeline: [anchor_instructions, anchor_trials, anchor_familiar, anchor_openQ, anchor_introspect1, anchor_intro_confidence]}}
