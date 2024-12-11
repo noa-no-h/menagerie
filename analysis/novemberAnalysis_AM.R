@@ -205,7 +205,7 @@ halo_data_introspection = halo_data %>%
 # halo_effect_sizes = ranef(halo_effect_analysis_factorincluded)$subject[,1,2]
 # hist(halo_effect_sizes)
 
-halo_data_introspection_experience = halo_data %>% 
+halo_data_introspection_experience = halo_data_introspection %>% 
   filter(factor == 'Factor-Included')
 
 halo_effectsizes <- halo_data_choices %>%
@@ -218,7 +218,7 @@ halo_effectsizes <- halo_data_choices %>%
 
 halo_data_introspection_experience = halo_data_introspection_experience %>% 
   left_join(halo_effectsizes, by = 'subject') %>% 
-  mutate(showed_effect = factor(effect_size > 0, c(T,F), c('Showed effect', 'No effect')))
+  mutate(showed_effect = factor(effect_size > 0, c(T,F), c('Effect', 'No effect')))
 
 # dichotomous
 halo_summary_introspection_experience = halo_data_introspection_experience %>% 
@@ -277,46 +277,6 @@ halo_analysis_introspection_both = brm(introspect_rating ~ factor,
                                   data = halo_data_introspection)
 summary(halo_analysis_introspection_both)
 hdi(halo_analysis_introspection_both, effects = 'all')
-
-#9 illusory truth ----
-##9.1 do we see the effect? ----
-
-illusory_truth_data <- data %>%
-  filter(task_name == "illusion of truth pt2") %>%
-  filter(stimulus != "")
-
-false_positive_counts <- illusory_truth_data %>%
-  filter(auxiliary_info1 == "false positive") %>%
-  group_by(subject, factor) %>%
-  summarize(false_positive_count = n()) %>%
-  ungroup()
-
-# Step 2: Calculate the average and standard error of false positives per subject for each factor
-average_false_positives <- false_positive_counts %>%
-  group_by(factor) %>%
-  summarize(
-    avg_false_positive = mean(false_positive_count),
-    se_false_positive = se(false_positive_count),
-    count = n()
-  )
-
-
-ggplot(average_false_positives, aes(x = factor, y = avg_false_positive, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = avg_false_positive - se_false_positive, ymax = avg_false_positive + se_false_positive), width = 0.2) +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  labs(title = "Illusory Truth", x = "Condition", y = "Average False Positive Count") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-t_test_result <- t.test(
-  false_positive_count ~ factor,  # Compare false positives between factors
-  data = false_positive_counts,   # Use the data frame with counts per subject
-)
-print(t_test_result)
 
 #12 Omission effect ----
 ##12.1 do we see the effect? ----
@@ -414,7 +374,7 @@ ggplot(omission_summary_introspection_both, aes(x = factor, y = mean_introspect_
   scale_y_continuous(limits = c(0, 100))
 
 omission_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                          data = omission_data_introspection)
+                                           data = omission_data_introspection)
 summary(omission_analysis_introspection_both)
 hdi(omission_analysis_introspection_both, effects = 'all')
 
@@ -462,7 +422,7 @@ recognition_effectsize = recognition_data %>%
 
 recognition_data_introspection_experience = recognition_data_introspection_experience %>% 
   left_join(recognition_data_effectsize, 'subject') %>% 
-  mutate(showed_effect = effect_size > 0.5)
+  mutate(showed_effect = factor(effect_size > 0.5, c(T,F), c('Effect', 'No effect')))
 
 # dichotomous
 recognition_summary_introspection_experience = recognition_data_introspection_experience %>% 
@@ -824,19 +784,19 @@ hdi(statusquo_analysis_introspection_both)
 #17 sunk cost ----
 ##17.1 do we see the effect? ----
 
-sunk_cost_data <- data %>%
+sunkcost_data <- data %>%
   filter(task_name == "sunk_cost effect") %>% 
   mutate(switched = choice == 'Solar-powered Pump',
          switched.num = as.numeric(switched),
          condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost")))
 
-percentage_sunk_cost_data <- sunk_cost_data %>%
+sunkcost_summary <- sunkcost_data %>%
   group_by(condition) %>%
   summarize(mean_switched = mean(switched),
             se_switched = se.prop(switched),
             total = n())
 
-ggplot(percentage_sunk_cost_data, aes(x = condition, y = mean_switched, fill = condition)) +
+ggplot(sunkcost_summary, aes(x = condition, y = mean_switched, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(
     aes(ymin = mean_switched - se_switched, 
@@ -849,9 +809,8 @@ ggplot(percentage_sunk_cost_data, aes(x = condition, y = mean_switched, fill = c
             family = "Optima") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 sunkcost_effect_analysis = brm(switched.num ~ condition,
                                data = sunk_cost_data,
@@ -859,63 +818,83 @@ sunkcost_effect_analysis = brm(switched.num ~ condition,
 summary(sunkcost_effect_analysis)
 hdi(sunkcost_effect_analysis, effects = 'all')
 
-## introspection
 
-# Factor-included vs factor-excluded
+##17.2 are people aware of the effect? -----------------------------------------
 
-sunk_cost_data_introspection = sunk_cost_data %>% 
-  filter(stimulus == "")
+## in experience condition
+sunkcost_data_introspection_experience = sunkcost_data %>% 
+  filter(factor == 'Factor-Included') %>% 
+  mutate(effect_size = !switched,
+         showed_effect = factor(!switched, c(T,F), c('Effect', 'No effect')))
 
-summary_sunk_cost_data_introspection <- sunk_cost_data_introspection %>% 
-  group_by(factor) %>%
+# dichotomized
+sunkcost_summary_introspection_experience <- sunkcost_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
   summarize(
     mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
     se_introspect_rating = se(introspect_rating)
   )
 
-ggplot(summary_sunk_cost_data_introspection, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
+ggplot(sunkcost_summary_introspection_experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Sunk Cost Introspection ratings", x = "Condition", y = "introspection rating") +
+  labs(title = "sunkcost introspection ratings", x = "Showed effect", y = "introspection rating") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
   scale_y_continuous(limits = c(0, 100))
 
-sunk_cost_data_introspection_analysis = brm(introspect_rating ~ factor,
-                                            data = sunk_cost_data_introspection)
-summary(sunk_cost_data_introspection_analysis)
-hdi(sunk_cost_data_introspection_analysis, effects = 'all')
+sunkcost_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1, sunkcost_data_introspection_experience)
+summary(sunkcost_analysis_introspection_experience_midpoint)
+hdi(sunkcost_analysis_introspection_experience_midpoint)
 
-# Looking at individual effect size
-sunk_cost_data = sunk_cost_data %>% 
-  mutate(effect_size = ifelse(condition == 'Sunk Cost', !switched, switched),
-         effect_size = as.numeric(effect_size))
+sunkcost_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect, sunkcost_data_introspection_experience)
+summary(sunkcost_analysis_introspection_experience_dichotomized)
+hdi(sunkcost_analysis_introspection_experience_dichotomized)
 
-sunk_cost_data_introspection = sunk_cost_data_introspection %>% 
-  left_join(sunk_cost_data %>% select(subject, effect_size), by = 'subject')
+## across conditions
 
-sunk_cost_data_introspection = sunk_cost_data_introspection %>% 
-  mutate(showed_effect = factor(ifelse(effect_size > 0, 'Showed effect', 'No effect')))
-
-sunk_cost_data_introspection_summary = sunk_cost_data_introspection %>% 
-  filter(factor == 'Factor-Included') %>% 
-  group_by(showed_effect) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating, na.rm = T),
-            se_introspect_rating = se(introspect_rating),
+sunkcost_summary_introspection_both <- sunkcost_data %>%
+  mutate(condition = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
+  group_by(condition) %>%
+  summarize(
+    mean_introspect_rating = mean(introspect_rating), # check this
+    se_introspect_rating = se(introspect_rating)
   )
 
-ggplot(sunk_cost_data_introspection_summary,
-       aes(x = showed_effect, y = mean_introspect_rating)) +
+ggplot(sunkcost_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Sunk Cost Introspection ratings", x = "Showed effect?", y = "Introspection rating") +
-  theme_custom()
+  labs(title = "Status Quo Introspection Ratings", x = "Condition", y = "Introspection rating") +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+sunkcost_analysis_introspection_both = brm(introspect_rating ~ condition,
+                                            sunkcost_data)
+summary(sunkcost_analysis_introspection_both)
+hdi(sunkcost_analysis_introspection_both)
 
 
 # all tasks ---------------------------------------------------------------
 
+all_list_introspection_experience = list(halo_data_introspection_experience,
+                                         omission_data_introspection_experience,
+                                         recognition_data_introspection_experience,
+                                         reference_data_introspection_experience,
+                                         representativeness_data_introspection_experience,
+                                         sunkcost_data_introspection_experience)
+
+all_data_introspection_experience = all_list_introspection_experience[[1]] %>% 
+  select(subject, task_name, introspect_rating, effect_size, showed_effect)
+for (i in 2:length(all_data_introspection_experience)) {
+  all_data_introspection_experience = all_data_introspection_experience %>% 
+    rbind(all_list_introspection_experience[[i]] %>% 
+            select(subject, task_name, introspect_rating, effect_size, showed_effect))
+}
 
 # Calculate introspection ratings for all tasks
 summary_all_tasks <- data %>%
