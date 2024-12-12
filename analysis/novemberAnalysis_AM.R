@@ -45,6 +45,7 @@ theme_custom <- function() {
 
 se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
 se.prop = function(x) {return(sqrt(mean(x, na.rm = T) * (1-mean(x, na.rm = T)) / sum(!is.na(x))))}
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 dodge <- position_dodge(width=0.9)
 
 # Load data ---------------------------------------------------------------
@@ -54,14 +55,15 @@ data <- read.csv('full_pilot.csv') %>%
   arrange(subject, task_name) %>%
   #filter(familiarity != "Yes") %>%
   mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded")),
-         introspect_rating = as.numeric(introspect_rating),
+         introspect_rating = as.numeric(introspect_rating), # make numeric
          introspect_rating = if_else(
             introspect_rating != "" & task_name %in% c("associative memory", "availability", 
                                                        "decoy effect", "hindsight bias", 
                                                        "omission principle", "reference price",
                                                        "status_quo", "sunk_cost effect"),
             100 - introspect_rating,
-            introspect_rating)
+            introspect_rating), # reverse-coded ones
+         introspect_rating = introspect_rating - 50 # center around midpoint of zero
          )
 
 subjects_all = data %>%
@@ -111,44 +113,10 @@ print(number_to_exclude)
 data <- data %>%
   filter(!subject %in% to_exclude)
 
-p.vals = c()
-
 #font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
 
-# seen before analysis ----
-
-#data <- read.csv('November_2024_pilot.csv') %>%
-data_with_seen_before <- read.csv('full_pilot.csv') %>%
-  filter(subject != "") %>%
-  arrange(subject, task_name) %>%
-  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-  mutate(introspect_rating = as.numeric(introspect_rating))
-View(data_with_seen_before)
-
-familiarity_percentage <- data_with_seen_before %>%
-  group_by(task_name) %>%
-  summarise(total_responses = n(),
-            yes_responses = sum(familiarity == "Yes")) %>%
-  mutate(percentage_yes = (yes_responses / total_responses) * 100)
-
-
-ggplot(familiarity_percentage, aes(x = fct_reorder(task_name, percentage_yes, .desc = TRUE), y = percentage_yes)) +
-  geom_bar(stat = "identity", fill = "sky blue") +
-  geom_text(aes(label = paste0(round(percentage_yes, 1), "%", " ", task_name), y = 0), 
-            vjust = 0, 
-            angle = 90, 
-            color = "black",
-            family = "Optima",
-            size = 5, 
-            hjust = 0) + 
-  labs(title = "Percent Familiar With Each Task",
-       x = "Task",
-       y = "Percent Familiar") +
-  theme_custom()+
-  theme(axis.text.x = element_blank())
-
-#7. Halo Effect  ✅ ----
+#7. Halo effect ----
 ##7.1 do we see the effect? ----
 
 #Did subjects who were shown some attractive and 
@@ -159,7 +127,7 @@ halo_data <- data %>%
   mutate(choice = as.numeric(choice),
          auxiliary_info1 = as.numeric(auxiliary_info1))
 
-halo_bar_data = halo_data %>% 
+halo_data_choices = halo_data %>% 
   filter(stimulus != "") %>%
   mutate(
     condition = case_when(
@@ -170,7 +138,7 @@ halo_bar_data = halo_data %>%
     )
   )
 
-summary_halo_data <- halo_bar_data %>%
+halo_summary <- halo_data_choices %>%
   group_by(condition) %>%
   summarize(
     mean_choice = mean(choice),
@@ -181,7 +149,7 @@ summary_halo_data <- halo_bar_data %>%
   )
 
 # manipulation check
-ggplot(summary_halo_data, aes(x = condition, y = mean_attractiveness, fill = condition)) +
+ggplot(halo_summary, aes(x = condition, y = mean_attractiveness, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_attractiveness - se_attractiveness, ymax = mean_attractiveness + se_attractiveness), width = 0.2) +
   geom_text(aes(label = paste0("n=", count)), 
@@ -193,7 +161,7 @@ ggplot(summary_halo_data, aes(x = condition, y = mean_attractiveness, fill = con
   guides(fill = FALSE)
 
 # actual effect
-ggplot(summary_halo_data, aes(x = condition, y = mean_choice, fill = condition)) +
+ggplot(halo_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
   geom_text(aes(label = paste0("n=", count)), 
@@ -202,19 +170,15 @@ ggplot(summary_halo_data, aes(x = condition, y = mean_choice, fill = condition))
   labs(title = "Average Persuasiveness by Attractiveness", x = "Condition", y = "Average Choice") +
   theme_custom()+
   scale_fill_manual(values = in_neutral_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-# frequentist analysis
-anova_result <- aov(choice ~ condition, data = halo_bar_data)
-summary(anova_result)
-tukey_result <- TukeyHSD(anova_result)
-print(tukey_result)
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 # bayesian analysis
-halo_effect_analysis = brm(choice ~ condition + (1 | subject),
-                           data = halo_bar_data)
-summary(halo_effect_analysis)
-hdi(halo_effect_analysis, effects = 'all')
+halo_analysis = brm(choice ~ condition + (1 | subject),
+                    data = halo_data_choices,
+                    save_pars = save_pars(group = F))
+summary(halo_analysis)
+hdi(halo_analysis, effects = 'all')
 
 # 
 # ggplot(halo_bar_data, aes(x = auxiliary_info1, y = choice)) +
@@ -228,22 +192,82 @@ hdi(halo_effect_analysis, effects = 'all')
 # correlation_test <- cor.test(halo_bar_data$choice, halo_bar_data$auxiliary_info1)
 # print(correlation_test)
 
-
-##7.2 introspection ----
-
-# Factor-included vs factor-excluded
+##7.2 are people aware of the effect? ----
 
 halo_data_introspection = halo_data %>% 
   filter(stimulus == "")
 
-summary_halo_data_introspection <- halo_data_introspection %>% 
+## in experience condition
+
+# halo_effect_analysis_factorincluded = brm(choice ~ condition + (condition | subject),
+#                            data = halo_bar_data %>% filter(factor == 'Factor-Included'))
+# summary(halo_effect_analysis_factorincluded)
+# hdi(halo_effect_analysis, effects = 'all')
+# halo_effect_sizes = ranef(halo_effect_analysis_factorincluded)$subject[,1,2]
+# hist(halo_effect_sizes)
+
+halo_data_introspection_experience = halo_data_introspection %>% 
+  filter(factor == 'Factor-Included')
+
+halo_effectsizes <- halo_data_choices %>%
+  filter(factor == 'Factor-Included') %>%
+  group_by(subject, condition) %>%
+  summarize(mean_choice = mean(choice), .groups = 'drop') %>%
+  pivot_wider(names_from = condition, values_from = mean_choice) %>%
+  mutate(effect_size = attractive - unattractive) %>%
+  select(-attractive, -unattractive)
+
+halo_data_introspection_experience = halo_data_introspection_experience %>% 
+  left_join(halo_effectsizes, by = 'subject') %>% 
+  mutate(showed_effect = factor(effect_size > 0, c(T,F), c('Effect', 'No effect')),
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size))
+
+# dichotomous
+halo_summary_introspection_experience = halo_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating, na.rm = T),
+            se_introspect_rating = se(introspect_rating),
+  )
+
+ggplot(halo_summary_introspection_experience,
+       aes(x = showed_effect, y = mean_introspect_rating)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "Halo Introspection ratings", x = "Showed effect?", y = "Introspection rating") +
+  theme_custom()
+
+halo_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
+                                                      halo_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                      save_pars = save_pars(group = F))
+summary(halo_analysis_introspection_experience_midpoint)
+hdi(halo_analysis_introspection_experience_midpoint)
+
+halo_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect, halo_data_introspection_experience,
+                                                          save_pars = save_pars(group = F))
+summary(halo_analysis_introspection_experience_dichotomized)
+hdi(halo_analysis_introspection_experience_dichotomized)
+
+# continuous
+ggplot(halo_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
+  geom_point() +
+  geom_smooth(method='lm') +
+  theme_custom()+
+  labs(title = "Halo Introspection ratings", x = "Effect size", y = "Introspection rating")
+
+halo_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size, halo_data_introspection_experience,
+                                                        save_pars = save_pars(group = F))
+summary(halo_analysis_introspection_experience_continuous)
+hdi(halo_analysis_introspection_experience_continuous)
+
+# across conditions
+halo_summary_introspection_both <- halo_data_introspection %>% 
   group_by(factor) %>%
   summarize(
     mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
     se_introspect_rating = se(introspect_rating)
   )
 
-ggplot(summary_halo_data_introspection, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
+ggplot(halo_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(title = "Halo Introspection ratings", x = "Condition", y = "introspection rating") +
@@ -253,411 +277,20 @@ ggplot(summary_halo_data_introspection, aes(x = factor, y = mean_introspect_rati
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
   scale_y_continuous(limits = c(0, 100))
 
-halo_introspection_analysis = brm(introspect_rating ~ factor,
-                                  data = halo_data_introspection)
-summary(halo_introspection_analysis)
-hdi(halo_introspection_analysis, effects = 'all')
-
-# Looking at individual effect size
-halo_effect_analysis_factorincluded = brm(choice ~ condition + (condition | subject),
-                           data = halo_bar_data %>% filter(factor == 'Factor-Included'))
-summary(halo_effect_analysis_factorincluded)
-hdi(halo_effect_analysis, effects = 'all')
-halo_effect_sizes = ranef(halo_effect_analysis_factorincluded)$subject[,1,2]
-hist(halo_effect_sizes)
-
-halo_effect_sizes2 <- halo_bar_data %>%
-  filter(factor == 'Factor-Included') %>%
-  group_by(subject, condition) %>%
-  summarize(mean_choice = mean(choice), .groups = 'drop') %>%
-  pivot_wider(names_from = condition, values_from = mean_choice) %>%
-  mutate(effect_size = attractive - unattractive) %>%
-  select(-attractive, -unattractive)
-
-halo_data_introspection = halo_data_introspection %>% 
-  left_join(halo_effect_sizes2, by = 'subject') %>% 
-  mutate(showed_effect = factor(ifelse(is.na(effect_size), 'Factor-excluded',
-                                ifelse(effect_size > 0, 'Showed effect', 'No effect'))))
-
-halo_data_introspection_summary = halo_data_introspection %>% 
-  #filter(factor == 'Factor-Included') %>% 
-  group_by(showed_effect) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating, na.rm = T),
-            se_introspect_rating = se(introspect_rating),
-  )
-
-ggplot(halo_data_introspection_summary,
-       aes(x = showed_effect, y = mean_introspect_rating)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Halo Introspection ratings", x = "Showed effect?", y = "Introspection rating") +
-  theme_custom()
-
-ggplot(halo_data_introspection %>% filter(factor == 'Factor-Included'), aes(x = effect_size, y = introspect_rating)) +
-  geom_point() +
-  geom_smooth(method='lm') +
-  theme_custom()+
-  labs(title = "Halo Introspection ratings", x = "Effect size", y = "Introspection rating")
-
-
-#8 hindsight bias ----
-##8.1 do we see the effect? ----
-
-#Did subjects who saw the correct answers misremember their previous answers as closer to the correct answer than the subjects who did not see the correct answers?
-
-hindsight_late <- data %>%
-  filter(task_name == "hindsight") %>%
-  filter(as.numeric(choice)<2000000000) %>%
-  filter(as.Date(timestamp) > as.Date("2024-11-07")) %>%
-  filter(!(subject %in% c("6109ca40ef8f38498af102ff", 
-                          "670b086620f71c5b6cc49abc", 
-                          "5a93bb216475f900019fa294"))) %>%
-  filter(choice != "") %>%
-  mutate(auxiliary_info1 = as.numeric(auxiliary_info1))
-
-
-
-convert_to_numeric <- function(values) {
-  # Remove all commas
-  values <- gsub(",", "", values)
-  
-  # Handle ' million', ' Million', 'M'
-  millions <- grepl(" million| milliion| millon| mil| Million|M", values)
-  values[millions] <- as.numeric(gsub(" million| milliion| millon| mil| Million|M", "", values[millions])) * 1e6
-  
-  # Handle 'k'
-  thousands <- grepl("k", values, ignore.case = TRUE)
-  values[thousands] <- as.numeric(gsub("k|K", "", values[thousands])) * 1e3
-  
-  # Attempt to convert the rest directly to numeric
-  values[!millions & !thousands] <- suppressWarnings(as.numeric(values[!millions & !thousands]))
-  
-  return(values)
-}
-
-
-
-
-true_values <- c(
-  Pakistan = 203177034,
-  Nigeria = 199045324,
-  Mexico = 131738729,
-  Vietnam = 97074662,
-  The_Democratic_Republic_of_the_Congo = 85705256,
-  Thailand = 69256846,
-  Tanzania = 60229204,
-  South_Korea = 51273440,
-  Colombia = 49705306,
-  Uganda = 45169147,
-  Ukraine = 43877093,
-  Malaysia = 32294009,
-  North_Korea = 25683863,
-  Niger = 22850032,
-  Burkina_Faso = 20106983,
-  Romania = 19519762,
-  Zimbabwe = 17154637,
-  The_Netherlands = 17114912,
-  Somalia = 14600000,
-  Guinea = 13270289,
-  Benin = 11683042,
-  Haiti = 11193952,
-  Greece = 11133944,
-  The_Czech_Republic = 10629078,
-  Azerbaijan = 9980369
-)
-
-View(hindsight_data)
-
-hindsight_early <- data %>%
-  filter(task_name == "hindsight bias") %>%
-  filter(!(subject %in% c("66749b876f32a4ad246db5da","5f2d95153c1140074cc81b4c","667469ea0d42f70a9a75567b","667444e5662b7a4ebf82d5e1","665c6f67d9ea69740afbcab8","6273238a4a8b39041ff1bd2c", "664d3c950d24d83ca7b4dd68", "6020606d7b0258677b881f63", "6159fe7811a7e1b94401c33f"))) %>%
-  mutate(parsed_choice = convert_to_numeric(choice)) %>%
-  filter(parsed_choice != "NA") %>%
-  mutate(which_estimate = case_when(
-    str_detect(auxiliary_info1, "_first_response") ~ "first",
-    str_detect(auxiliary_info1, "_recall_original_response") ~ "recall",
-    TRUE ~ NA_character_
-  )) %>%
-  mutate(stimulus = case_when(
-    str_detect(auxiliary_info1, "_first_response") ~ "first estimate",
-    str_detect(auxiliary_info1, "_recall_original_response") ~ "memory",
-    TRUE ~ NA_character_
-  )) %>%
-  
-  # Extract the country name
-  mutate(country = case_when(
-    str_detect(auxiliary_info1, "_estimate") ~ str_extract(auxiliary_info1, "^[^_]+(?:_[^_]+)*(?=_estimate)"),
-    str_detect(auxiliary_info1, "_recall") ~ str_extract(auxiliary_info1, "^[^_]+(?:_[^_]+)*(?=_recall)"),
-    TRUE ~ NA_character_
-  ))%>%
-  
-  mutate(true_value = true_values[country])%>%
-  mutate(auxiliary_info1 = as.numeric(true_value) - as.numeric(parsed_choice))%>%
-  mutate(condition = factor)
-
-View(hindsight_early)
-
-# medians_hindsight <- hindsight_data %>%
-#   group_by(subject) %>%
-#   summarise(
-#     median_first_estimate = abs(median(difference_from_true[which_estimate == "first estimate"], na.rm = TRUE)),
-#     median_second_estimate = abs(median(difference_from_true[which_estimate == "memory"], na.rm = TRUE)),
-#     factor = first(factor),
-#     introspect_rating = first(introspect_rating)
-#   ) %>%
-#   filter(!is.na(median_first_estimate) & !is.na(median_second_estimate))
-# 
-# View(medians_hindsight)
-# 
-# custom_labels <- c("median_first_estimate" = "Median First Estimate",
-#                    "median_second_estimate" = "Median Second Estimate")
-# 
-# 
-# medians_summary <- medians_hindsight %>%
-#   pivot_longer(cols = c(median_first_estimate, median_second_estimate),
-#                names_to = "estimate_type",
-#                values_to = "estimate_value") %>%
-#   group_by(estimate_type, factor) %>%
-#   mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-#   
-#   summarise(
-#     mean_choice = mean(estimate_value),
-#     se_choice = se(estimate_value),
-#     n_choice = n()
-#   )
-
-hindsight_data <- bind_rows(hindsight_early, hindsight_late)
-
-
-# Create the subject-by-subject table with four categories
-comparison_table <- hindsight_data %>%
-  # Create a new column to identify if it's "first estimate" or "memory"
-  mutate(stimulus_type = ifelse(grepl("first estimate$", stimulus), "first_estimate", "memory")) %>%
-  # Group by subject, condition,  and stimulus_type
-  group_by(subject, condition, stimulus_type) %>%
-  # Calculate the mean of auxiliary_info1 for each group
-  summarize(avg_auxiliary_info1 = mean(auxiliary_info1, na.rm = TRUE)) %>%
-  ungroup() %>%
-  # Pivot the data to have separate columns for each combination of status and stimulus_type
-  pivot_wider(names_from = stimulus_type, values_from = avg_auxiliary_info1)
-
-# Calculate summary statistics (mean, standard error, and count)
-hindsight_summary_data <- comparison_table %>%
-  rename(first_estimate = `first_estimate`, memory = `memory`) %>%
-  pivot_longer(cols = c(first_estimate, memory), names_to = "estimate_type", values_to = "avg_auxiliary_info1") %>%
-  group_by(condition, estimate_type) %>%
-  summarize(
-    mean_auxiliary_info1 = mean(avg_auxiliary_info1, na.rm = TRUE),
-    se_auxiliary_info1 = sd(avg_auxiliary_info1, na.rm = TRUE) / sqrt(n()),
-    n_auxiliary_info1 = n()
-  ) %>%
-  ungroup() %>%
-  mutate(combined_condition = factor(
-    paste(condition, estimate_type),
-    levels = c("Factor-Included first_estimate", "Factor-Included memory", 
-               "Factor-Excluded first_estimate", "Factor-Excluded memory")
-  ))
-
-
-
-# Plot with error bars and n labels
-ggplot(hindsight_summary_data, aes(x = combined_condition, y = mean_auxiliary_info1, fill = combined_condition)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  geom_errorbar(aes(ymin = mean_auxiliary_info1 - se_auxiliary_info1, ymax = mean_auxiliary_info1 + se_auxiliary_info1),
-                width = 0.2, position = position_dodge(0.9)) +
-  geom_text(aes(label = paste0("n=", n_auxiliary_info1)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  labs(title = "Hindsight Effect",
-       x = "Condition and Estimate Type", y = "Average Distance from True Value") +
-  theme_custom() +
-  scale_fill_manual(values = c("#F37121", "#F37121","#4793AF", "#4793AF")) +
-  scale_x_discrete(labels = function(x) str_wrap(str_replace_all(x, "_", " "), width = 10))+
-  guides(fill = FALSE)
-
-t_test_result <- t.test(
-  memory ~ condition,
-  data = comparison_table)
-print(t_test_result)
-
-
-##8.2 introspection----
-
-#Did factor included give lower introspection numbers than factor excluded?
-
-hindsight_data <- data %>%
-  filter(task_name == "hindsight") %>%
-  filter(stimulus == "") 
-
-View(hindsight_data)
-View(summary_hindsight_data)
-
-summary_hindsight_data <- hindsight_data %>%
-  group_by(factor) %>%
-  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-  summarize(
-    mean_introspect_rating = 100-mean(introspect_rating),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(summary_hindsight_data, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Hindsight Introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))+
-  scale_y_continuous(limits = c(0, 100))
-
-
-t.test(introspect_rating ~ factor, data = mere_exposure_data)
-
-##"intro_rating(included and average distance between the answer and the true number is lower after than before)
-#<
-#intro_rating(included and average distance between the answer and the true number is not lower after than before)"
-
-hindsight_introspection <- data %>%
-  filter(task_name == "hindsight")
-#this was because of a bug where all the introspect ratings were saved under hindsight instead of hindsight bias
-
-medians_hindsight <- hindsight_data %>%
-  group_by(subject) %>%
-  summarise(
-    median_first_estimate = abs(median(difference_from_true[which_estimate == "first estimate"], na.rm = TRUE)),
-    median_second_estimate = abs(median(difference_from_true[which_estimate == "memory"], na.rm = TRUE)),
-    factor = first(factor),
-    introspect_rating = first(introspect_rating)
-  ) %>%
-  filter(!is.na(median_first_estimate) & !is.na(median_second_estimate))
-
-
-View(medians_hindsight)
-
-summary_hindsight <- medians_hindsight %>%
-  mutate(affected = if_else(median_first_estimate > median_second_estimate, 
-                            "Affected by Bias", 
-                            "Not Affected by Bias"))%>%
-  left_join(hindsight_introspection %>% select(subject, introspect_rating), by = "subject") %>%
-  select(factor, affected, introspect_rating.y) %>%
-  group_by(factor, affected) %>%
-  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-  mutate(factor = recode(factor, 
-                         `Factor-Included` = "Factor Included", 
-                         `Factor-Excluded` = "Factor Excluded")) %>%
-  summarise(
-    mean_introspect_rating = 100-mean(introspect_rating.y),
-    se_introspect_rating = se(introspect_rating.y),
-    n = n()
-  )
-
-ggplot(summary_hindsight, aes(x = factor, y = mean_introspect_rating, fill = affected, group = affected)) + 
-  theme_custom() +
-  geom_bar(stat = "identity", position = position_dodge(0.9)) +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2, position = position_dodge(0.9)) +
-  geom_text(aes(label = paste("n =", n), x = stage(factor, after_stat = x - .9 / 2 / 2), y = mean_introspect_rating), 
-            hjust = 0, vjust=-0.35, family = "optima", size = 4, position = position_dodge(0.9)) +
-  geom_text(aes(label = str_wrap(affected, width = 10), y = 15, color = affected), 
-            position = position_dodge(0.9), vjust = 0, family = "optima", size = 5, lineheight = 0.8) +
-  labs(title = "Hindsight Introspection", x = "", y = "Introspection Rating") +
-  scale_fill_manual(values = effect_no) +
-  scale_color_manual(values = c("Affected by Bias" = "white", "Not Affected by Bias" = "black")) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
-  guides(fill = FALSE, color = FALSE) +
-  scale_y_continuous(limits = c(0, 100))
-
-
-
-
-#9 illusory truth ----
-##9.1 do we see the effect? ----
-
-illusory_truth_data <- data %>%
-  filter(task_name == "illusion of truth pt2") %>%
-  filter(stimulus != "")
-
-false_positive_counts <- illusory_truth_data %>%
-  filter(auxiliary_info1 == "false positive") %>%
-  group_by(subject, factor) %>%
-  summarize(false_positive_count = n()) %>%
-  ungroup()
-
-# Step 2: Calculate the average and standard error of false positives per subject for each factor
-average_false_positives <- false_positive_counts %>%
-  group_by(factor) %>%
-  summarize(
-    avg_false_positive = mean(false_positive_count),
-    se_false_positive = se(false_positive_count),
-    count = n()
-  )
-
-
-ggplot(average_false_positives, aes(x = factor, y = avg_false_positive, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = avg_false_positive - se_false_positive, ymax = avg_false_positive + se_false_positive), width = 0.2) +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  labs(title = "Illusory Truth", x = "Condition", y = "Average False Positive Count") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-t_test_result <- t.test(
-  false_positive_count ~ factor,  # Compare false positives between factors
-  data = false_positive_counts,   # Use the data frame with counts per subject
-)
-print(t_test_result)
-
-
-#10 imaginability ----
-#10.1 do we see the effect? ----
-
-imaginability_data11 <- data %>%
-  filter(task_name == "imaginability") %>%
-  #mutate(choice = 100+as.numeric(choice)) %>%
-  filter(as.Date(timestamp) == "2024-11-11") %>%
-  mutate(choice = as.numeric(choice))
-  
-imaginability_data8 <- data %>%
-  filter(task_name == "imaginability") %>%
-  filter(as.Date(timestamp) == "2024-11-08") %>%
-  mutate(choice = 0.09 * ((as.numeric(choice)) + 100) + 1) 
-
-imaginability_data <- rbind(imaginability_data11, imaginability_data8)
-
-summary_imaginability_data <- imaginability_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("Difficult to Imagine", "Easy to Imagine"))) %>%
-  summarize(
-    mean_choice = mean(choice),
-    se_choice = se(choice),
-    count = n()
-  )
-
-ggplot(summary_imaginability_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Imaginability Effect", x = "Condition", y = "Perceived Likelihood of Catching Disease") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-
-t.test(choice ~ factor, data = imaginability_data)
-
-
-#12 omission ----
+halo_analysis_introspection_both = brm(introspect_rating ~ factor,
+                                  data = halo_data_introspection,
+                                  save_pars = save_pars(group = F))
+summary(halo_analysis_introspection_both)
+hdi(halo_analysis_introspection_both, effects = 'all')
+
+#12 Omission effect ----
 ##12.1 do we see the effect? ----
-
 
 omission_data <- data %>%
   filter(task_name == "omission principle") %>%
   mutate(choice = as.numeric(choice))
 
-summary_omission_data <- omission_data %>%
+omission_summary <- omission_data %>%
   group_by(condition) %>%
   mutate(condition = factor(condition, levels = c("commission", "omission"))) %>%
   summarize(
@@ -666,7 +299,7 @@ summary_omission_data <- omission_data %>%
     count = n()
   )
 
-ggplot(summary_omission_data, aes(x = condition, y = mean_choice, fill = condition)) +
+ggplot(omission_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
   labs(title = "Omission Principle", x = "Condition", y = "Forbidden to Obligatory") +
@@ -675,24 +308,105 @@ ggplot(summary_omission_data, aes(x = condition, y = mean_choice, fill = conditi
             family = "Optima") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = "none")+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
+omission_analysis = brm(choice ~ condition, omission_data,
+                        save_pars = save_pars(group = F))
+summary(omission_analysis)
+hdi(omission_analysis)
 
-t.test(choice ~ factor, data = omission_data)
+##12.2 are people aware of the effect? -----------------------------------------
 
+omission_data_introspection = omission_data %>% 
+  filter(stimulus == "")
 
+## in experience condition
+omission_data_introspection_experience <- omission_data_introspection %>% 
+  filter(factor == 'Factor-Included') %>% 
+  mutate(effect_size = choice,
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
+         showed_effect = factor(choice < 4, c(T,F), c('Effect', 'No effect')))
 
-#13 recognition ----
+# dichotomized
+omission_summary_introspection_experience <- omission_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(omission_summary_introspection_experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "Omission introspection ratings", x = "Showed effect", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+omission_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
+                                                          omission_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                          save_pars = save_pars(group = F))
+summary(omission_analysis_introspection_experience_midpoint)
+hdi(omission_analysis_introspection_experience_midpoint)
+
+omission_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect, omission_data_introspection_experience,
+                                                              save_pars = save_pars(group = F))
+summary(omission_analysis_introspection_experience_dichotomized)
+hdi(omission_analysis_introspection_experience_dichotomized)
+
+# continuous
+ggplot(omission_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  theme_custom() +
+  labs(x = 'Choice', y = 'Influence rating')
+
+omission_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size, omission_data_introspection_experience,
+                                                            save_pars = save_pars(group = F))
+summary(omission_analysis_introspection_experience_continuous)
+hdi(omission_analysis_introspection_experience_continuous)
+
+# across conditions
+
+omission_summary_introspection_both <- omission_data_introspection %>% 
+  group_by(factor) %>%
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(omission_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "Omission introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+omission_analysis_introspection_both = brm(introspect_rating ~ factor,
+                                           data = omission_data_introspection,
+                                           save_pars = save_pars(group = F))
+summary(omission_analysis_introspection_both)
+hdi(omission_analysis_introspection_both, effects = 'all')
+
+#13 Recognition heuristic ----
 ##13.1 do we see the effect? ----
 
 recognition_data <- data %>%
   filter(task_name == "recognition: city") %>%
-  filter(factor == "Factor-Included")
+  filter(factor == "Factor-Included") %>% 
+  mutate(chose_recognizable = auxiliary_info1 == 'chose recognizable',
+         chose_recognizable_num = as.numeric(chose_recognizable))
 
-count_recognition_data <- recognition_data %>%
+recognition_count <- recognition_data %>%
   count(auxiliary_info1)
 
-ggplot(count_recognition_data, aes(x = auxiliary_info1, y = n, fill = auxiliary_info1)) +
+ggplot(recognition_count, aes(x = auxiliary_info1, y = n, fill = auxiliary_info1)) +
   geom_bar(stat = "identity") +
   labs(title = "Recognition Effect for City Population", x = "Within Factor-Included", y = "Count") +
   geom_text(aes(label = paste0("n=", n)), 
@@ -700,27 +414,112 @@ ggplot(count_recognition_data, aes(x = auxiliary_info1, y = n, fill = auxiliary_
             family = "Optima") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
-count_data <- table(recognition_data$auxiliary_info1)
-chisq_test <- chisq.test(count_data)
-print(chisq_test)
+recognition_analysis = brm(chose_recognizable_num ~ 1 + (1 | subject), 
+                           recognition_data,
+                           family = 'bernoulli',
+                           save_pars = save_pars(group = F))
+summary(recognition_analysis)
+hdi(recognition_analysis)
 
-#14 reference price ✅ ----
+##13.2 are people aware of the effect? -----------------------------------------
+recognition_data_introspection <- data %>%
+  filter(task_name == "recognition")
+
+## in experience condition
+recognition_data_introspection_experience <- recognition_data_introspection %>%
+  filter(factor == "Factor-Included")
+
+recognition_effectsize = recognition_data %>% 
+  group_by(subject) %>% 
+  summarize(effect_size = mean(chose_recognizable)) %>% 
+  select(subject, effect_size)
+
+recognition_data_introspection_experience = recognition_data_introspection_experience %>% 
+  left_join(recognition_effectsize, 'subject') %>% 
+  mutate(showed_effect = factor(effect_size > 0.5, c(T,F), c('Effect', 'No effect')),
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size))
+
+# dichotomous
+recognition_summary_introspection_experience = recognition_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating),
+            se_introspect_rating = se(introspect_rating))
+
+ggplot(recognition_summary_introspection_experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "Recognition introspection ratings: Experience condition", x = "Showed effect", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+
+recognition_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
+                                                                recognition_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                             save_pars = save_pars(group = F))
+summary(recognition_analysis_introspection_experience_midpoint)
+hdi(recognition_analysis_introspection_experience_midpoint)
+
+recognition_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect,
+                                                                recognition_data_introspection_experience,
+                                                                save_pars = save_pars(group = F))
+summary(recognition_analysis_introspection_experience_dichotomous)
+hdi(recognition_analysis_introspection_experience_dichotomous)
+
+# continuous
+ggplot(recognition_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  theme_custom() +
+  labs(x = 'Choice', y = 'Influence rating')
+
+recognition_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
+                                                               recognition_data_introspection_experience,
+                                                               save_pars = save_pars(group = F))
+summary(recognition_analysis_introspection_experience_continuous)
+hdi(recognition_analysis_introspection_experience_continuous)
+
+# across conditions
+recognition_summary_introspection_both <- recognition_data_introspection %>% 
+  group_by(factor) %>%
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(recognition_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "recognition introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+recognition_analysis_introspection_both = brm(introspect_rating ~ factor,
+                                           data = recognition_data_introspection,
+                                           save_pars = save_pars(group = F))
+summary(recognition_analysis_introspection_both)
+hdi(recognition_analysis_introspection_both, effects = 'all')
+
+#14 Reference price ----
 ##14.1 do we see the effect? ----
 
 #When subjects were told the hotel was fancy, were 
 #they more likely to give a higher price they'd be willing to pay?
 
-reference_price_data <- data %>%
+reference_data <- data %>%
   filter(task_name == "reference price") %>%
-  mutate(choice_parsed = parse_number(choice))
+  mutate(choice_parsed = parse_number(choice)) %>% 
+  filter(choice_parsed <= 40)
 
-
-
-##View(reference_price_data)
-
-summary_reference_price_data <- reference_price_data %>%
+reference_summary <- reference_data %>%
   group_by(condition) %>%
   mutate(condition = factor(condition, levels = c("hotel", "motel"))) %>%
   summarize(
@@ -729,7 +528,7 @@ summary_reference_price_data <- reference_price_data %>%
     count = n()
   )
 
-ggplot(summary_reference_price_data, aes(x = condition, y = mean_choice, fill = condition)) +
+ggplot(reference_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
   labs(title = "Amount Willing to Pay for Beer", x = "Condition", y = "Average Amount Willing to Pay (Dollars)") +
@@ -738,135 +537,100 @@ ggplot(summary_reference_price_data, aes(x = condition, y = mean_choice, fill = 
             family = "Optima") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
+reference_analysis = brm(choice_parsed ~ condition,
+                         reference_data,
+                         save_pars = save_pars(group = F))
+summary(reference_analysis)
+hdi(reference_analysis)
 
-t.test(choice_parsed ~ factor, data = reference_price_data)
+##14.2 are people aware of the effect?----
+reference_data_introspection = reference_data
 
+# in experience condition
+reference_median = mean(reference_data$choice_parsed[reference_data$factor == 'Factor-Excluded'])
+reference_data_introspection_experience = reference_data_introspection %>% 
+  filter(factor == 'Factor-Included') %>% 
+  mutate(effect_size = choice_parsed,
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
+         showed_effect = factor(choice_parsed > reference_median, c(T,F), c('Effect', 'No effect')))
 
-##14.2 introspection----
-
-#Did factor included give lower introspection numbers than 
-#factor excluded?
-
-summary_reference_price_data <- reference_price_data %>%
-  group_by(condition) %>%
+# dichotomized
+reference_summary_introspection_experience <- reference_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
   summarize(
-    mean_introspect_rating = 100-mean(introspect_rating),
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
     se_introspect_rating = se(introspect_rating)
   )
 
-ggplot(summary_reference_price_data, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
+ggplot(reference_summary_introspection_experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "reference introspection ratings", x = "Showed effect", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+reference_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
+                                                           reference_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                           save_pars = save_pars(group = F))
+summary(reference_analysis_introspection_experience_midpoint)
+hdi(reference_analysis_introspection_experience_midpoint)
+
+reference_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                               reference_data_introspection_experience,
+                                                               save_pars = save_pars(group = F))
+summary(reference_analysis_introspection_experience_dichotomized)
+hdi(reference_analysis_introspection_experience_dichotomized)
+
+# continuous
+ggplot(reference_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  theme_custom() +
+  labs(x = 'Choice', y = 'Influence rating')
+
+reference_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
+                                                             reference_data_introspection_experience,
+                                                             save_pars = save_pars(group = F))
+summary(reference_analysis_introspection_experience_continuous)
+hdi(reference_analysis_introspection_experience_continuous)
+
+# across conditions
+reference_summary_introspection_both <- reference_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_introspect_rating = mean(introspect_rating),
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(reference_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(title = "Reference Price Introspection ratings", x = "Condition", y = "introspection rating") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
+  guides(fill = "none")+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
 
+reference_analysis_introspection_both = brm(introspect_rating ~ condition,
+                                            reference_data,
+                                            save_pars = save_pars(group = F))
+summary(reference_analysis_introspection_both)
+hdi(reference_analysis_introspection_both)
 
-t.test(introspect_rating ~ factor, data = reference_price_data)
-#p-value = 0.8909
-
-#"intro_rating(included and higher than median price)
-#<
-#  intro_rating(included and not higher than median price)
-#"
-
-#median price among excluded
-median_price_among_excluded <- median(reference_price_data$choice_parsed[reference_price_data$factor == "Factor-Excluded"])
-
-reference_price_data <- reference_price_data %>%
-  mutate(effect_group = case_when(
-    choice_parsed > median_price_among_excluded & factor == "Factor-Included" ~ "Included and Higher Than Median",
-    choice_parsed <= median_price_among_excluded & factor == "Factor-Included" ~ "Included and Not Higher Than Median",
-    choice_parsed > median_price_among_excluded & factor == "Factor-Excluded" ~ "Excluded and Higher Than Median",
-    choice_parsed <= median_price_among_excluded & factor == "Factor-Excluded" ~ "Excluded and Not Higher Than Median",
-    factor == "Factor-Excluded" ~ "Excluded"
-  ))%>%
-  mutate(effect_group = factor(effect_group, levels = c("Included and Higher Than Median", "Included and Not Higher Than Median",  "Excluded and Higher Than Median", "Excluded and Not Higher Than Median")))
-
-
-
-
-summary_reference_price_data <- reference_price_data %>%
-  group_by(effect_group) %>%
-  summarize(
-    mean_introspect_rating = 100-mean(introspect_rating),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(summary_reference_price_data, aes(x = effect_group, y = mean_introspect_rating, fill = effect_group)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Reference Price Introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom() +
-  scale_fill_manual(values = four_colors) +
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
-
-
-
-summary(lm(introspect_rating ~ effect_group, data = reference_price_data))
-
-## New version ----
-
-median_price_among_excluded <- median(reference_price_data$choice_parsed[reference_price_data$factor == "Factor-Excluded"])
-
-View(reference_data)
-
-reference_data <- data %>%
-  group_by(subject) %>%
-  filter(task_name == "reference price") %>%
-  summarise(
-    choice_parsed = parse_number(choice),
-    affected = if_else(choice_parsed > median_price_among_excluded, 
-                       "Affected by Bias", 
-                       "Not Affected by Bias"),
-    factor = recode(factor(factor, levels = c("Factor-Included", "Factor-Excluded")), 
-                    `Factor-Included` = "Factor Included", 
-                    `Factor-Excluded` = "Factor Excluded"),
-    introspect_rating = introspect_rating,
-    condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded")) 
-  ) 
-
-
-summary_reference <- reference_data %>%
-  group_by(factor, affected) %>%
-  summarise(
-    mean_introspect_rating = 100-mean(introspect_rating),
-    se_introspect_rating = se(introspect_rating),
-    n = n()
-  )
-
-
-ggplot(summary_reference, aes(x = factor, y = mean_introspect_rating, fill = affected, group = affected)) + 
-  theme_custom() +
-  geom_bar(stat = "identity", position = position_dodge(0.9)) +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2, position = position_dodge(0.9)) +
-  geom_text(aes(label = paste("n =", n), x = stage(factor, after_stat = x - .9 / 2 / 2), y = mean_introspect_rating), 
-            hjust = 0, vjust=-0.35, family = "optima", size = 4, position = position_dodge(0.9)) +
-  geom_text(aes(label = str_wrap(affected, width = 10), y = 15, color = affected), 
-            position = position_dodge(0.9), vjust = 0, family = "optima", size = 5, lineheight = 0.8) +
-  labs(title = "Reference Price Introspection", x = "", y = "Introspection Rating") +
-  scale_fill_manual(values = effect_no) +
-  scale_color_manual(values = c("Affected by Bias" = "white", "Not Affected by Bias" = "black")) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
-  guides(fill = FALSE, color = FALSE) +
-  scale_y_continuous(limits = c(0, 100))
-
-
-
-summary(lm(introspect_rating ~ effect_group, data = reference_data))
-
-
-#15 representativeness ----
+#15 Representativeness ----
 ##15.1 do we see the effect? ----
 
 representativeness_data <- data %>%
   filter(task_name == "rep") %>%
   mutate(choice = as.numeric(choice))
 
-summary_representativeness_data <- representativeness_data %>%
+representativeness_summary <- representativeness_data %>%
   group_by(condition) %>%
   mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) %>%
   summarize(
@@ -875,7 +639,7 @@ summary_representativeness_data <- representativeness_data %>%
     count = n()
   )
 
-ggplot(summary_representativeness_data, aes(x = condition, y = mean_choice, fill = condition)) +
+ggplot(representativeness_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
   labs(title = "Is Jack an Engineer?", x = "Condition", y = "average likelihood of engineer") +
@@ -884,24 +648,102 @@ ggplot(summary_representativeness_data, aes(x = condition, y = mean_choice, fill
             family = "Optima") +
   theme_custom() +
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
-t.test(choice ~ factor, data = representativeness_data)
+representativeness_analysis = brm(choice ~ condition,
+                                  representativeness_data,
+                                  save_pars = save_pars(group = F))
+summary(representativeness_analysis)
+hdi(representativeness_analysis)
 
+##15.2 are people aware of the effect? -----------------------------------------
+representativeness_data_introspection = representativeness_data
 
-#16 status quo ✅ ----
+# in experience condition
+representativeness_median = mean(representativeness_data$choice[representativeness_data$factor == 'Factor-Excluded'])
+representativeness_data_introspection_experience = representativeness_data_introspection %>% 
+  filter(factor == 'Factor-Included') %>% 
+  mutate(effect_size = choice,
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
+         showed_effect = factor(choice > representativeness_median, c(T,F), c('Effect', 'No effect')))
 
-##16.1 do we see the effect ----
+# dichotomized
+representativeness_summary_introspection_experience <- representativeness_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = se(introspect_rating)
+  )
 
-#When subjects were told the status quo, 
-#were they more likely to recommend the 70/30 allocation?
+ggplot(representativeness_summary_introspection_experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "representativeness introspection ratings", x = "Showed effect", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
 
-status_quo_data <- data %>%
+representativeness_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
+                                                                    representativeness_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                                    save_pars = save_pars(group = F))
+summary(representativeness_analysis_introspection_experience_midpoint)
+hdi(representativeness_analysis_introspection_experience_midpoint)
+
+representativeness_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                                        representativeness_data_introspection_experience,
+                                                                        save_pars = save_pars(group = F))
+summary(representativeness_analysis_introspection_experience_dichotomized)
+hdi(representativeness_analysis_introspection_experience_dichotomized)
+
+# continuous
+ggplot(representativeness_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
+  geom_point() +
+  geom_smooth(method = 'lm') +
+  theme_custom() +
+  labs(x = 'Choice', y = 'Influence rating')
+
+representativeness_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
+                                                                      representativeness_data_introspection_experience,
+                                                                      save_pars = save_pars(group = F))
+summary(representativeness_analysis_introspection_experience_continuous)
+hdi(representativeness_analysis_introspection_experience_continuous)
+
+# across conditions
+representativeness_summary_introspection_both <- representativeness_data_introspection %>%
+  group_by(condition) %>%
+  summarize(
+    mean_introspect_rating = mean(introspect_rating),
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(representativeness_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "representativeness Price Introspection ratings", x = "Condition", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = "none")+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
+
+representativeness_analysis_introspection_both = brm(introspect_rating ~ condition,
+                                                     representativeness_data,
+                                                     save_pars = save_pars(group = F))
+summary(representativeness_analysis_introspection_both)
+hdi(representativeness_analysis_introspection_both)
+
+#16 status quo ----
+
+##16.1 do we see the effect? ----
+
+statusquo_data <- data %>%
   filter(task_name == "status_quo") %>%
   mutate(choice_binary = as.numeric(choice == "70/30"))%>%
   mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
 
-summary_status_quo_data <- status_quo_data %>%
+statusquo_summary <- statusquo_data %>%
   group_by(condition) %>%
   summarize(
     mean_choice = mean(choice_binary),
@@ -909,445 +751,321 @@ summary_status_quo_data <- status_quo_data %>%
     count = n()
   )
 
-ggplot(summary_status_quo_data, aes(x = condition, y = mean_choice, fill = condition)) +
+ggplot(statusquo_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice,
+                    ymax = mean_choice + se_choice),
+                width = 0.2)+
   labs(title = "Choices to continue the status quo", x = "Condition", y = "Percent subjects who recommended the status quo") +
   geom_text(aes(label = paste0("n=", count)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
    theme_custom() +
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
+statusquo_analysis = brm(choice_binary ~ condition,
+                         data = statusquo_data,
+                         family = 'bernoulli',
+                         save_pars = save_pars(group = F))
+summary(statusquo_analysis)
+hdi(statusquo_analysis)
 
+##16.2 are people aware of the effect? ----
+statusquo_data_introspection = statusquo_data
 
-status_quo_choices_ex <- status_quo_data %>%
-  filter(factor == "Factor-Excluded") %>%
-  pull(choice_binary)
+## in experience condition
+statusquo_data_introspection_experience = statusquo_data_introspection %>% 
+  filter(factor == 'Factor-Included') %>% 
+  mutate(effect_size = choice_binary,
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
+         showed_effect = factor(choice_binary, c(1,0), c('Effect', 'No effect')))
 
-status_quo_choices_in <- status_quo_data %>%
-  filter(factor == "Factor-Included") %>%
-  pull(choice_binary)
-
-#analysis -- is there a better way to do this?
-prop_ex <- sum(status_quo_choices_ex) / length(status_quo_choices_ex)
-prop_in <- sum(status_quo_choices_in) / length(status_quo_choices_in)
-
-successes <- c(sum(status_quo_choices_ex), sum(status_quo_choices_in))
-trials <- c(length(status_quo_choices_ex), length(status_quo_choices_in))
-
-test_result <- prop.test(successes, trials, alternative = "less")
-print(test_result)
-
-summary(glm(choice_binary ~ condition, data = status_quo_data, family = 'binomial'))
-
-
-##16.2 introspection----
-
-#Did factor included give lower introspection 
-#numbers than factor excluded?
-
-summary_status_quo_data <- status_quo_data %>%
-  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-  group_by(condition) %>%
+# dichotomized
+statusquo_summary_introspection_experience <- statusquo_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
   summarize(
-    mean_introspect_rating = 100-mean(introspect_rating),
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
     se_introspect_rating = se(introspect_rating)
   )
 
-View(summary_status_quo_data)
+ggplot(statusquo_summary_introspection_experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "statusquo introspection ratings", x = "Showed effect", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
 
-ggplot(summary_status_quo_data, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
+statusquo_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
+                                                           statusquo_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                           save_pars = save_pars(group = F))
+summary(statusquo_analysis_introspection_experience_midpoint)
+hdi(statusquo_analysis_introspection_experience_midpoint)
+
+statusquo_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                               statusquo_data_introspection_experience,
+                                                               save_pars = save_pars(group = F))
+summary(statusquo_analysis_introspection_experience_dichotomized)
+hdi(statusquo_analysis_introspection_experience_dichotomized)
+
+## across conditions
+
+statusquo_summary_introspection_both <- statusquo_data %>%
+  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) %>%
+  group_by(condition) %>%
+  summarize(
+    mean_introspect_rating = mean(introspect_rating), # check this
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(statusquo_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(title = "Status Quo Introspection Ratings", x = "Condition", y = "Introspection rating") +
   theme_custom() +
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
-
-
-t.test(introspect_rating ~ factor, data = status_quo_data)
-#p-value = 0.3647
-
-#next question: "intro_rating(included and said 70/30)
-#<
-#  intro_rating(included and said 50/50)"
-
-status_quo_data <- data %>%
-  group_by(subject) %>%
-  filter(task_name == "status_quo") %>%
-  summarise(
-    affected = if_else(choice == "70/30", 
-                       "Affected by Bias", 
-                       "Not Affected by Bias"),
-    factor = recode(factor(factor, levels = c("Factor-Included", "Factor-Excluded")), 
-                    `Factor-Included` = "Factor Included", 
-                    `Factor-Excluded` = "Factor Excluded"),
-    introspect_rating = introspect_rating,
-    condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded")) 
-  ) 
-
-View(summary_status_quo)
-
-summary_status_quo <- status_quo_data %>%
-  group_by(factor, affected) %>%
-  summarise(
-    mean_introspect_rating = 100-mean(introspect_rating),
-    se_introspect_rating = se(introspect_rating),
-    n = n()
-  )
-
-ggplot(summary_status_quo, aes(x = factor, y = mean_introspect_rating, fill = affected, group = affected)) + 
-  theme_custom() +
-  geom_bar(stat = "identity", position = position_dodge(0.9)) +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2, position = position_dodge(0.9)) +
-  geom_text(aes(label = paste("n =", n), x = stage(factor, after_stat = x - .9 / 2 / 2), y = mean_introspect_rating), 
-            hjust = 0, vjust=-0.35, family = "optima", size = 4, position = position_dodge(0.9)) +
-  geom_text(aes(label = str_wrap(affected, width = 10), y = 15, color = affected), 
-            position = position_dodge(0.9), vjust = 0, family = "optima", size = 5, lineheight = 0.8) +
-  labs(title = "Status Quo Bias Introspection", x = "", y = "Introspection Rating") +
-  scale_fill_manual(values = effect_no) +
-  scale_color_manual(values = c("Affected by Bias" = "white", "Not Affected by Bias" = "black")) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
-  guides(fill = FALSE, color = FALSE) +
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
   scale_y_continuous(limits = c(0, 100))
 
-# all tasks
-
-# Calculate introspection ratings for all tasks
-summary_all_tasks <- data %>%
-  filter(introspect_rating != "") %>%
-  group_by(task_name, factor) %>%
-  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
-  summarize(
-    mean_introspect_rating = 100 - mean(introspect_rating),
-    se_introspect_rating = se(introspect_rating)
-  ) %>%
-  ungroup()
-
-# Now summarize across tasks
-summary_overall <- summary_all_tasks %>%
-  group_by(factor) %>%
-  summarize(
-    overall_mean_introspect_rating = mean(mean_introspect_rating),
-    overall_se_introspect_rating = se(se_introspect_rating))
-
-# Plotting the overall averages
-ggplot(summary_overall, aes(x = factor, y = overall_mean_introspect_rating, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(
-    aes(ymin = overall_mean_introspect_rating - overall_se_introspect_rating, 
-        ymax = overall_mean_introspect_rating + overall_se_introspect_rating), 
-    width = 0.2
-  ) +
-  labs(
-    title = "Overall Introspection Ratings Across Tasks",
-    x = "Condition",
-    y = "Introspection Rating"
-  ) +
-  theme_custom() +
-  scale_fill_manual(values = in_and_ex) +
-  guides(fill = FALSE) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
-  scale_y_continuous(limits = c(0, 100))
+statusquo_analysis_introspection_both = brm(introspect_rating ~ condition,
+                                            statusquo_data,
+                                            save_pars = save_pars(group = F))
+summary(statusquo_analysis_introspection_both)
+hdi(statusquo_analysis_introspection_both)
 
 #17 sunk cost ----
 ##17.1 do we see the effect? ----
 
-sunk_cost_data <- data %>%
+sunkcost_data <- data %>%
   filter(task_name == "sunk_cost effect") %>% 
   mutate(switched = choice == 'Solar-powered Pump',
-         switched.num = as.numeric(switched))
+         switched.num = as.numeric(switched),
+         condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost")))
 
-
-percentage_sunk_cost_data <- sunk_cost_data %>%
+sunkcost_summary <- sunkcost_data %>%
   group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost"))) %>%
-  summarize(
-    total_in_condition = n(),  # Total number of subjects in each condition
-    solar_powered_count = sum(choice == "Solar-powered Pump")  # Count who chose "Solar-powered pump"
-  ) %>%
-  mutate(percentage_solar_powered = (solar_powered_count / total_in_condition) * 100)
+  summarize(mean_switched = mean(switched),
+            se_switched = se.prop(switched),
+            total = n())
 
-summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
-
-ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_solar_powered, fill = condition)) +
+ggplot(sunkcost_summary, aes(x = condition, y = mean_switched, fill = condition)) +
   geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin = mean_switched - se_switched, 
+        ymax = mean_switched + se_switched), 
+    width = 0.2
+  ) +
   labs(title = "Percentage Switching Projects by Condition", x = "Condition", y = "Percentage of Choices to Switch") +
-  geom_text(aes(label = paste0("n=", total_in_condition)), 
+  geom_text(aes(label = paste0("n=", total)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
-solar_powered_counts <- percentage_sunk_cost_data$solar_powered_count
-total_counts <- percentage_sunk_cost_data$total_in_condition
-prop_test_result <- prop.test(solar_powered_counts, total_counts)
-print(prop_test_result)
-
-summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
-
-test = brm(switched.num ~ condition, data = sunk_cost_data, family = 'binomial')
-
-# Q1: Aggregating across tasks, are participants aware that they are being influenced by the heuristics or biases? ----
+sunkcost_analysis = brm(switched.num ~ condition,
+                        data = sunkcost_data,
+                        family = 'bernoulli',
+                        save_pars = save_pars(group = F))
+summary(sunkcost_analysis)
+hdi(sunkcost_analysis, effects = 'all')
 
 
-q1data <- data %>%
-  filter(introspect_rating != "" & factor == "Factor-Included") 
-  
-#restrict to factor included condition. Find HDI for intercept
+##17.2 are people aware of the effect? -----------------------------------------
+sunkcost_data_introspection = sunkcost_data
 
-  model <- brm(
-    formula = introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
-    data = q1data,
-    family = gaussian(),
-    prior = c(
-      prior(normal(0, 10), class = "Intercept"),
-      prior(exponential(1), class = "sd")
-    ),
-    chains = 4,           # Number of MCMC chains
-    iter = 2000,          # Number of iterations per chain
-    warmup = 500,         # Number of warmup iterations per chain
-    cores = 4             # Number of cores to use for computation
+## in experience condition
+sunkcost_data_introspection_experience = sunkcost_data_introspection %>% 
+  filter(factor == 'Factor-Included') %>% 
+  mutate(effect_size = !switched,
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
+         showed_effect = factor(!switched, c(T,F), c('Effect', 'No effect')))
+
+# dichotomized
+sunkcost_summary_introspection_experience <- sunkcost_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = se(introspect_rating)
   )
-  
-  summary(model)
-  #          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-  #Intercept    57.25      2.58    51.80    61.97 1.00     1510     2654
-  
-# Q1.5: How about factor excluded?   
-  
-  
-  q15data <- data %>%
-    filter(introspect_rating != "" & factor == "Factor-Excluded") 
-  
-  #restrict to factor included condition. Find HDI for intercept
-  
-  model <- brm(
-    formula = introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
-    data = q15data,
-    family = gaussian(),
-    prior = c(
-      prior(normal(0, 10), class = "Intercept"),
-      prior(exponential(1), class = "sd")
-    ),
-    chains = 4,           # Number of MCMC chains
-    iter = 2000,          # Number of iterations per chain
-    warmup = 500,         # Number of warmup iterations per chain
-    cores = 4             # Number of cores to use for computation
+
+ggplot(sunkcost_summary_introspection_experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "sunkcost introspection ratings", x = "Showed effect", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+sunkcost_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
+                                                          sunkcost_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                          save_pars = save_pars(group = F))
+summary(sunkcost_analysis_introspection_experience_midpoint)
+hdi(sunkcost_analysis_introspection_experience_midpoint)
+
+sunkcost_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                              sunkcost_data_introspection_experience,
+                                                              save_pars = save_pars(group = F))
+summary(sunkcost_analysis_introspection_experience_dichotomized)
+hdi(sunkcost_analysis_introspection_experience_dichotomized)
+
+## across conditions
+
+sunkcost_summary_introspection_both <- sunkcost_data_introspection %>%
+  mutate(condition = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
+  group_by(condition) %>%
+  summarize(
+    mean_introspect_rating = mean(introspect_rating), # check this
+    se_introspect_rating = se(introspect_rating)
   )
-  
-  summary(model)
-  
-# Q2: Does that awareness come from actual experience of the heuristic or bias, or is it attributable to lay theories? ----
 
-  
-  q2data <- data %>%
-    filter(introspect_rating != "") 
-  
+ggplot(sunkcost_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "Status Quo Introspection Ratings", x = "Condition", y = "Introspection rating") +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
 
-  model <- brm(
-    formula = introspect_rating ~ factor + (1 | subject) + (1 + factor | task_name),
-    data = q2data,
-    family = gaussian(),
-    prior = c(
-      prior(normal(0, 10), class = "Intercept"),
-      prior(exponential(1), class = "sd")
-    ),
-    chains = 4,           # Number of MCMC chains
-    iter = 2000,          # Number of iterations per chain
-    warmup = 500,         # Number of warmup iterations per chain
-    cores = 4             # Number of cores to use for computation
-  )
-  
-  summary(model)
-  
-  #                      Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
-  #Intercept                57.94      2.48    52.60    62.49 1.00     1862
-  #factorFactorMExcluded    -1.69      1.99    -5.70     2.24 1.00     4873
-  #Tail_ESS
-  #Intercept                 2084
-  #factorFactorMExcluded     4111
-  
-#Q3 Are participants who are more impacted by a bias consciously aware of the extent to which they are affected by heuristics and biases? ----
-
-  #Halo
-  halo_affected_data = data %>%
-    filter(task_name == "halo") %>%
-    mutate(
-      affected_level = if_else(
-        stimulus != "",
-        #attractiveness is likert 1-7
-        100* abs((as.numeric(auxiliary_info1) - 1) / 6 - (as.numeric(choice) - 1) / 4), 
-        NA_real_  
-      )
-    )
-  
-  
-    # Hindsight
-  hindsight_affected_data <- data %>%
-    filter(task_name == "hindsight") %>%
-    mutate(country = word(stimulus, 1)) %>%
-        group_by(country) %>%
-    mutate(
-      first_estimate = if_else(grepl("first estimate", stimulus), as.numeric(choice), NA_real_),
-      memory_estimate = if_else(grepl("memory", stimulus), as.numeric(choice), NA_real_)
-    ) %>%
-    fill(first_estimate, .direction = "downup") %>%  # Fill down and up to have the first estimate in each row
-    fill(memory_estimate, .direction = "downup") %>% # Same for memory estimate
-    ungroup() %>% mutate(
-      affected_level = if_else(
-        grepl("memory", stimulus),  # Only calculate for "memory" rows
-        # Calculate the affected level as the normalized difference
-        abs(first_estimate - memory_estimate) / abs(as.numeric(auxiliary_info1) - first_estimate) * 100,
-        NA_real_  # Set to NA if condition is not met
-      )
-    )
-    
-  
-  # illusion of truth
-  illusion_of_truth_affected_data <- data %>%
-    filter(task_name == "illusion of truth pt2") %>%
-    mutate(
-      affected_level = if_else(
-        task_name == "illusion of truth pt2" & stimulus != "" & auxiliary_info1 == "false positive",
-        100, 0))
-  
-  #imaginability
-  imaginability_affected_data <- imaginability_data %>%
-    mutate(
-      affected_level = if_else(
-        condition == "Easy to Imagine",
-        (choice - 1) / 9 * 100,  # Scale 1 to 10 choice to 0 to 100 for Easy to Imagine
-        (10 - choice) / 9 * 100  # Scale 1 to 10 choice to 100 to 0 for Difficult to Imagine
-      )
-    )
-  
-  
-  #omission
-  omission_affected_data <- data %>%
-    filter(task_name == "omission principle") %>%
-    mutate(
-      affected_level = if_else(
-        condition == "commission",
-        (as.numeric(choice) - 1) / 6 * 100,         # When condition is "commission"
-        100 - ((as.numeric(choice) - 1) / 6 * 100)  # When condition is not "commission" (assumed to be omission)
-      )
-    )
-  
-  #reference price TO DO
-  reference_price_affected_data <- data %>%
-    filter(task_name == "reference price")
-  
-  #representativeness TO DO
-  
-  #status quo
-  status_quo_affected_data <- data %>%
-    filter(task_name == "status_quo") %>%
-    mutate(
-      affected_level = if_else(
-        choice == "70/30",
-        100, 0))
-  
-  #sunk cost
-  sunk_cost_affected_data <- data %>%
-    filter(task_name == "sunk_cost effect") %>%
-    mutate(
-      affected_level = if_else(
-        choice == "Rocket Engine",
-        100, 0))
-  
-  list_affected_dfs <- list(
-    halo_affected_data,
-    #hindsight_affected_data,
-    #illusion_of_truth_affected_data,
-    #imaginability_affected_data,
-    #omission_affected_data,
-    status_quo_affected_data,
-    sunk_cost_affected_data
-    
-  )
-  
-  # Convert `choice` to character in each data frame and bind them
-  affected_level_data <- bind_rows(lapply(list_affected_dfs, function(df) {
-    df %>% mutate(choice = as.character(choice))
-  }))
-  
-  
-View(affected_level_data)
+sunkcost_analysis_introspection_both = brm(introspect_rating ~ condition,
+                                           sunkcost_data,
+                                           save_pars = save_pars(group = F))
+summary(sunkcost_analysis_introspection_both)
+hdi(sunkcost_analysis_introspection_both)
 
 
-q3data <- affected_level_data %>%
-  filter(introspect_rating != "" & !is.na(affected_level))
+# all tasks ---------------------------------------------------------------
 
+## in experience condition
+all_list_introspection_experience = list(halo_data_introspection_experience,
+                                         omission_data_introspection_experience,
+                                         recognition_data_introspection_experience,
+                                         reference_data_introspection_experience,
+                                         representativeness_data_introspection_experience,
+                                         sunkcost_data_introspection_experience)
 
-model <- brm(
-  formula = introspect_rating ~ affected_level * factor + (1 + affected_level | subject) + (1 + factor * affected_level | task_name)
-,
-  data = q3data,
-  family = gaussian(),
-  prior = c(
-    prior(normal(0, 10), class = "Intercept"),
-    prior(exponential(1), class = "sd")
-  ),
-  chains = 4,           # Number of MCMC chains
-  iter = 2000,          # Number of iterations per chain
-  warmup = 500,         # Number of warmup iterations per chain
-  cores = 4             # Number of cores to use for computation
-)
-
-summary(model)
-  
- ----
-
-
-# Q4: Variation across tasks ----------------------------------------------
-model <- brm(
-  formula = introspect_rating ~ factor + (1 | subject) + (1 + factor | task_name),
-  data = data %>% filter(introspect_rating != ''),
-  family = gaussian(),
-  prior = c(
-    prior(normal(0, 10), class = "Intercept"),
-    prior(exponential(1), class = "sd")
-  ),
-  chains = 4,           # Number of MCMC chains
-  iter = 2000,          # Number of iterations per chain
-  warmup = 500,         # Number of warmup iterations per chain
-  cores = 4             # Number of cores to use for computation
-)
-
-summary(model)
-hdi(model, effects = 'all')
-
-model2 <- brm(
-  formula = introspect_rating ~ task_name + factor * task_name + (1 | subject), #+ (1 + factor | task_name),
-  data = data %>% filter(introspect_rating != ''),
-  family = gaussian(),
-  prior = c(
-    prior(normal(0, 10), class = "Intercept"),
-    prior(exponential(1), class = "sd")
-  ),
-  chains = 4,           # Number of MCMC chains
-  iter = 2000,          # Number of iterations per chain
-  warmup = 500,         # Number of warmup iterations per chain
-  cores = 4             # Number of cores to use for computation
-)
-summary(model2)
-
-  # Knittr ----
-
-if (!requireNamespace("knitr", quietly = TRUE)) {
-  install.packages("knitr")
+all_data_introspection_experience = all_list_introspection_experience[[1]] %>% 
+  select(subject, task_name, introspect_rating, effect_size, effect_size_std, effect_size_range, showed_effect)
+for (i in 2:length(all_list_introspection_experience)) {
+  all_data_introspection_experience = all_data_introspection_experience %>% 
+    rbind(all_list_introspection_experience[[i]] %>% 
+            select(subject, task_name, introspect_rating, effect_size, effect_size_std, effect_size_range, showed_effect))
 }
-library(knitr)
 
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# dichotomous
+all_summary_introspection_experience = all_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating),
+            se_introspect_rating = se(introspect_rating))
 
-knitr::opts_chunk$set(dev = 'svg')
+ggplot(all_summary_introspection_experience,
+       aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "", x = "Showed effect?", y = "Influence rating") +
+  theme_custom() +
+  scale_fill_manual(values = effect_no) +
+  guides(fill = "none")
 
-# Use the stitch function
-knitr::spin("analysis2024.R")
+all_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
+                                                     all_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                     save_pars = save_pars(group = F))
+summary(all_analysis_introspection_experience_midpoint)
+hdi(all_analysis_introspection_experience_midpoint)
+
+all_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect + (showed_effect | subject) + (showed_effect | task_name),
+                                                        all_data_introspection_experience,
+                                                        save_pars = save_pars(group = F))
+summary(all_analysis_introspection_experience_dichotomous)
+hdi(all_analysis_introspection_experience_dichotomous)
+
+# continuous
+ggplot(all_data_introspection_experience,
+       aes(x = effect_size_std, y = introspect_rating)) +
+  geom_point(alpha=0.8) +
+  geom_smooth(method='lm') +
+  theme_custom()
+
+all_analysis_introspection_experience_continuous_std = brm(introspect_rating ~ effect_size_std + (effect_size_std | subject) + (effect_size_std | task_name),
+                                                        all_data_introspection_experience,
+                                                        save_pars = save_pars(group = F))
+summary(all_analysis_introspection_experience_continuous_std)
+hdi(all_analysis_introspection_experience_continuous_std)
+
+ggplot(all_data_introspection_experience,
+       aes(x = effect_size_range, y = introspect_rating)) +
+  geom_point(alpha=0.8) +
+  geom_smooth(method='lm') +
+  theme_custom()
+
+## across conditions
+all_list_introspection_both = list(halo_data_introspection,
+                                   omission_data_introspection,
+                                   recognition_data_introspection,
+                                   reference_data_introspection,
+                                   representativeness_data_introspection,
+                                   sunkcost_data_introspection)
+
+all_data_introspection_both = all_list_introspection_both[[1]] %>% 
+  select(subject, task_name, factor, introspect_rating)
+for (i in 2:length(all_list_introspection_both)) {
+  all_data_introspection_both = all_data_introspection_both %>% 
+    rbind(all_list_introspection_both[[i]] %>% 
+            select(subject, task_name, factor, introspect_rating))
+}
+
+all_summary_introspection_both = all_data_introspection_both %>% 
+  group_by(factor) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating),
+            se_introspect_rating = se(introspect_rating))
+
+ggplot(all_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "", x = "Condition", y = "Influence rating") +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))
+
+all_analysis_introspection_both = brm(introspect_rating ~ factor + (1 | subject) + (factor | task_name),
+                                      all_data_introspection_both,
+                                      save_pars = save_pars(group = F))
+summary(all_analysis_introspection_both)
+hdi(all_analysis_introspection_both)
+
+all_bytask_introspection_both = all_data_introspection_both %>% 
+  group_by(task_name, factor) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating),
+            se_introspect_rating = se(introspect_rating))
+
+ggplot(all_bytask_introspection_both, aes(x = task_name, y = mean_introspect_rating, color = factor)) +
+  geom_point(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "", x = "Condition", y = "Influence rating") +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = "none")+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
+  scale_y_continuous(limits = c(0, 100))+
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.7))
+
+# Knittr ----
+# knitr::opts_chunk$set(dev = 'svg')
+# 
+# # Use the stitch function
+# knitr::spin("analysis2024.R")
 
 
 # Save image --------------------------------------------------------------
