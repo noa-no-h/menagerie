@@ -16,6 +16,80 @@ of the outcomes listed.</p>
     show_clickable_nav: true
 }
 
+var passed = false;
+
+var comprehension_questions = {
+    type: jsPsychSurvey,
+    survey_json: {
+        showQuestionNumbers: false,
+        pages: [
+            {
+                name: "comprehension",
+                elements: [
+                    {
+                        type: "html",
+                        name: "event_description",
+                        html: function () {
+                            if (condition[0] === "Factor-Included") {
+                                return `
+                                    <p><b>Please consider the following event:</b></p>
+                                    <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
+                                    <p><u>The result was a British victory.</u></p>
+                                    `;
+                            } else {
+                                return `
+                                    <p><b>Please consider the following event:</b></p>
+                                    <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
+                                    `;
+                            }
+                        }
+                    },
+                    {
+                        type: "radiogroup",
+                        name: "To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?",
+                        choices: ["British victory", "Gurka victory", "Military stalemate with no peace settlement", "Military stalemate with a peace settlement", "The case did not indicate the outcome"],
+                        isRequired: true
+                    }
+                ]
+            }
+        ]
+    },
+    on_finish: function (data) {
+        // Extract response index and verify if the answer is correct
+        console.log("response", data.response); // data.response
+        const response = data.response["To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?"] ;
+        passed = false;
+
+        if (response !== null) {
+            if (condition[0] === "Factor-Included") {
+                passed = response === "British victory"; // British victory
+            } else {
+                passed = response === "The case did not indicate the outcome"; // The case did not indicate the outcome
+            }
+        }
+        console.log("passed", passed);
+
+
+        const s1_data = {
+            subject: data.subject,
+            version: data.version,
+            factor: condition[0],
+            task_name: "hindsight effect",
+            condition: condition[0] === "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
+            choice: passed.toString(),
+            auxiliary_info1: response,
+            openq_response: null,
+            introspect_rating: null,
+            introspect_open: null,
+            familiarity: null,
+            rt: data.rt
+        };
+
+        console.log(s1_data);
+        save_data(s1_data, 'introspection');
+    }
+};
+
 var probBritish = null;
 var probGurka = null;
 var probStalemate = null;
@@ -92,57 +166,6 @@ var hindsight_question = {
 
 var passed = null;
 
-var comprehension_questions = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: function () {
-        if (condition[0] === "Factor-Included") {
-            return `
-                <p><b>Please consider the following event:</b></p>
-                <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
-                <p><u>The result was a British victory.</u></p>
-                <br>
-                <p>To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?</p>`;
-        } else {
-            return `
-                <p><b>Please consider the following event:</b></p>
-                <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
-                <br>
-                <p>To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?</p>`;
-        }
-    },
-    choices: ["British victory", "Gurka victory", "Military stalemate with no peace settlement", "Military stalemate with a peace settlement", "The case did not indicate the outcome"],
-    on_finish: function (data) {
-        console.log(data.response)
-        if (condition[0] === "Factor-Included") {
-            passed = data.response == 0;
-            console.log(passed)
-        }
-        else{
-            passed = data.response == 4;
-            console.log(passed)
-        }
-        choices= ["British victory", "Gurka victory", "Military stalemate with no peace settlement", "Military stalemate with a peace settlement", "The case did not indicate the outcome"]
-        comprehension_choice = choices[data.response];
-            s1_data = {
-                subject: data.subject,
-                version: data.version,
-                factor: data.condition,
-                task_name: "hindsight effect",
-                condition: condition[0] == "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
-                choice: passed.toString(),
-                auxiliary_info1: comprehension_choice,
-                openq_response: null,
-                introspect_rating: null,
-                introspect_open: null,
-                familiarity: null,
-                rt: data.rt
-            }
-            console.log(s1_data)
-            save_data(s1_data, 'introspection')
-    
-}
-};
-
 
 function comprehension_loop() {
     return {
@@ -154,7 +177,7 @@ function comprehension_loop() {
                     if (passed) {
                         return "Correct!";
                     } else {
-                        return "You answered the comprehension question incorrectly. Please try again.";
+                        return "You answered the comprehension question incorrectly. Please click 'retry' to try the question again.";
                     }
                 },
                 choices: function () {

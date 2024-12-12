@@ -58,8 +58,8 @@ var status_quo_trial = {
             questions: [
                 {
                     prompt: condition[0] === 'Factor-Included' 
-                        ? "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br><span style='color:grey;'>Reminder of the scenario:<br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?"
-                        : "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br><span style='color:grey;'>Reminder of the scenario:<br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?",
+                        ? "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?"
+                        : "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?",
                     name: "StatusQuoAnswer",
 options: function(){
 if (condition[0] == 'Factor-Included') {
@@ -293,10 +293,11 @@ function formatFailedQuestions(failedQuestions) {
 
     // Format the list based on the number of failed questions
     if (questions.length === 1) {
-        return `You answered comprehension question ${questions[0]} wrong.`;
+        return `You answered comprehension question ${questions[0]} wrong. Please click 'retry' to try the questions again.";
+`;
     } else if (questions.length > 1) {
         const lastQuestion = questions.pop();
-        return `You answered comprehension questions ${questions.join(', ')}, and ${lastQuestion} wrong.`;
+        return `You answered comprehension questions ${questions.join(', ')}, and ${lastQuestion} wrong. Please click 'retry' to try the questions again.`;
     } else {
         return "You answered all comprehension questions correctly.";
     }
@@ -424,7 +425,7 @@ on_finish: function (data) {
         condition: condition[0],
         stimulus: stimulus,
         choice: choice,
-        auxiliary_info1: which_option,
+        auxiliary_info1: which_option + " status quo: 50/50",
         openq_response: status_quo_openQ_response,
         introspect_rating: status_quo_intro_response1,
         introspect_open: status_quo_intro_confidence_response,
