@@ -275,7 +275,7 @@ ggplot(halo_summary_introspection_both, aes(x = factor, y = mean_introspect_rati
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(-50, 50))
 
 halo_analysis_introspection_both = brm(introspect_rating ~ factor,
                                   data = halo_data_introspection,
@@ -386,7 +386,7 @@ ggplot(omission_summary_introspection_both, aes(x = factor, y = mean_introspect_
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(-50, 50))
 
 omission_analysis_introspection_both = brm(introspect_rating ~ factor,
                                            data = omission_data_introspection,
@@ -500,7 +500,7 @@ ggplot(recognition_summary_introspection_both, aes(x = factor, y = mean_introspe
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(-50, 50))
 
 recognition_analysis_introspection_both = brm(introspect_rating ~ factor,
                                            data = recognition_data_introspection,
@@ -615,7 +615,8 @@ ggplot(reference_summary_introspection_both, aes(x = condition, y = mean_introsp
   theme_custom()+
   scale_fill_manual(values = in_and_ex)+
   guides(fill = "none")+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+
+  scale_y_continuous(limits = c(-50, 50))
 
 reference_analysis_introspection_both = brm(introspect_rating ~ condition,
                                             reference_data,
@@ -798,7 +799,7 @@ ggplot(statusquo_summary_introspection_experience, aes(x = showed_effect, y = me
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(-50, 50))
 
 statusquo_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
                                                            statusquo_data_introspection_experience %>% filter(showed_effect == 'Effect'),
@@ -830,7 +831,7 @@ ggplot(statusquo_summary_introspection_both, aes(x = condition, y = mean_introsp
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(-50, 50))
 
 statusquo_analysis_introspection_both = brm(introspect_rating ~ condition,
                                             statusquo_data,
@@ -930,12 +931,12 @@ sunkcost_summary_introspection_both <- sunkcost_data_introspection %>%
 ggplot(sunkcost_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Status Quo Introspection Ratings", x = "Condition", y = "Introspection rating") +
+  labs(title = "Sunk Cost Introspection Ratings", x = "Condition", y = "Introspection rating") +
   theme_custom() +
   scale_fill_manual(values = in_and_ex)+
   guides(fill = FALSE)+
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(-50, 50))
 
 sunkcost_analysis_introspection_both = brm(introspect_rating ~ condition,
                                            sunkcost_data,
@@ -996,7 +997,7 @@ ggplot(all_data_introspection_experience,
   geom_smooth(method='lm') +
   theme_custom()
 
-all_analysis_introspection_experience_continuous_std = brm(introspect_rating ~ effect_size_std + (effect_size_std | subject) + (effect_size_std | task_name),
+all_analysis_introspection_experience_continuous_std = brm(introspect_rating ~ effect_size_std + (effect_size_std | subject) + (1 | task_name),
                                                         all_data_introspection_experience,
                                                         save_pars = save_pars(group = F))
 summary(all_analysis_introspection_experience_continuous_std)
@@ -1008,6 +1009,25 @@ ggplot(all_data_introspection_experience,
   geom_smooth(method='lm') +
   theme_custom()
 
+all_analysis_introspection_experience_continuous_range = brm(introspect_rating ~ effect_size_range + (effect_size_range | subject) + (1 | task_name),
+                                                           all_data_introspection_experience,
+                                                           save_pars = save_pars(group = F))
+summary(all_analysis_introspection_experience_continuous_range)
+hdi(all_analysis_introspection_experience_continuous_range)
+
+all_data_introspection_experience = all_data_introspection_experience %>% 
+  group_by(subject) %>% 
+  mutate(effect_size_std_within = scale(effect_size_std),
+         effect_size_range_within = scale(effect_size_range),
+         introspect_rating_within = scale(introspect_rating)) %>% 
+  ungroup()
+
+ggplot(all_data_introspection_experience,
+       aes(x = effect_size_range_within, y = introspect_rating_within)) +
+  geom_point(alpha=0.8) +
+  geom_smooth(method='lm') +
+  theme_custom()
+ 
 ## across conditions
 all_list_introspection_both = list(halo_data_introspection,
                                    omission_data_introspection,
@@ -1037,7 +1057,7 @@ ggplot(all_summary_introspection_both, aes(x = factor, y = mean_introspect_ratin
   scale_fill_manual(values = in_and_ex)+
   guides(fill = "none")+
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))
+  scale_y_continuous(limits = c(-50, 50))
 
 all_analysis_introspection_both = brm(introspect_rating ~ factor + (1 | subject) + (factor | task_name),
                                       all_data_introspection_both,
