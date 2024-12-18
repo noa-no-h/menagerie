@@ -28,7 +28,7 @@ var simulation_question = {
         {
             prompt: prompt,
             name: "upset",
-            ticks: ["Not upset", "Slightly upset", "Medium upset", "Very upset", "Extremely upset"],
+            ticks: ["Not upset", "", "Somewhat upset", "", "Extremely upset"],
             required: true,
             min: 0,
             slider_start: 2,
