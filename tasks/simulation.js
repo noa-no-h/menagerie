@@ -56,8 +56,8 @@ var simulation_openQ = {
     }
 };
 
-var introspection_q_labels_simulation1 = [`<strong>It made me likely to judge ${person} as <u>MORE</u> upset</strong>`, "", "<strong>It did not affected my response</strong>", "", `<strong>It made me likely to judge ${person} as <u>LESS</u> upset</strong>`];
-var introspection_q_labels_simulation2 = [`<strong>It would have made me likely to judge ${person} as <u>MORE</u> upset</strong>`, "", "<strong>It did not affected my response</strong>", "", `<strong>It upset have made me likely to judge ${person} as <u>LESS</u> upset</strong>`];
+var introspection_q_labels_simulation1 = [`<strong>It made me likely to judge ${person} as <u>MORE</u> upset</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me likely to judge ${person} as <u>LESS</u> upset</strong>`];
+var introspection_q_labels_simulation2 = [`<strong>It would have made me likely to judge ${person} as <u>MORE</u> upset</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It upset have made me likely to judge ${person} as <u>LESS</u> upset</strong>`];
 
 var simulation_intro_response1 = null;
 var simulation_introspect1 = {
