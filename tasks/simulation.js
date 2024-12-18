@@ -28,12 +28,13 @@ var simulation_question = {
         {
             prompt: prompt,
             name: "upset",
-            ticks: ["Not upset (0)", "slightly upset (1)", "medium upset (2)", "very upset (3)", "extremely upset (4)"],
+            ticks: ["Not upset", "Slightly upset", "Medium upset", "Very upset", "Extremely upset"],
             required: true,
             min: 0,
-            slider_start: 0.5,
-            max: 1,
-            step: 0.01
+            slider_start: 2,
+            max: 4,
+            step: 1,
+            slider_width: 1500
         }
     ],
     on_finish: function (data) {
