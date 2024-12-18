@@ -13,6 +13,7 @@ setwd(here())
 
 se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
 se.prop = function(x) {return(sqrt(mean(x, na.rm = T) * (1-mean(x, na.rm = T)) / sum(!is.na(x))))}
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 dodge <- position_dodge(width=0.9)
 
 # color palettes: hot for included, cool for excluded
@@ -85,8 +86,8 @@ wrong.trial.num = df %>% group_by(subject) %>%
 df <- df %>%
   filter(subject %in% demo$subject,
          !(subject %in% glitched),
+         !(subject %in% failed.attn1),
          !(subject %in% failed.attn2),
-         !(subject %in% failed.attn3),
          !(subject %in% wrong.trial.num)) 
 
 length(unique(df$subject)) #518 Participants
@@ -94,231 +95,236 @@ length(unique(df$subject)) #518 Participants
 df$effect.size = NA
 df$effect.size.fac = NA
 
-# TASKS -------------------------------------------------
-# Between-Subjects Tasks -------------------------------------------------
 #* 1 Anchoring (between-subjects) ----------------------------------------------------
 
 #** data preparation ----
-df.anchor = df %>% filter(task_name == 'anchoring') %>% mutate(condition = factor(condition))
-anc.unfamiliar <- df.anchor %>% filter(familiarity == "No")
-length(unique(anc.unfamiliar$subject))
-df.anchor2 <- df.anchor %>% filter(subject %in% anc.unfamiliar$subject) %>%
-  mutate(choice = as.numeric(choice)) %>%
-  filter(!is.na(choice)) %>%
-  filter(stimulus == 'Antarctic Temperature' | choice < 10000)
+df.anchor = df %>%
+  filter(task_name == 'anchoring',
+         condition != 'High Anchor') %>% # we only ended up using the low anchor version of the antarctic question for the final study
+  mutate(condition = factor(condition),
+         choice = as.numeric(choice),
+         distance.from.anchor = abs(-45 - choice)) #%>% 
+  #group_by(subject) %>% filter(any(familiarity == 'No'))
+
+df.anchor.choices = df.anchor %>% 
+  filter(!is.na(choice),
+         stimulus == 'Antarctic Temperature')
 
 #** data visualization ----
-df.ant = df.anchor2 %>% filter(stimulus == "Antarctic Temperature") %>%
-  group_by(condition) %>%
-  summarize(choice.m = mean(choice), choice.se = se(choice))
+ggplot(df.anchor.choices, aes(x = choice)) +
+  geom_histogram() +
+  facet_wrap(~condition)
 
-ggplot(df.ant, aes(x = condition, y = choice.m)) +
+summary.anchor = df.anchor.choices %>%
+  group_by(condition) %>%
+  summarize(choice.m = mean(choice), choice.se = se(choice),
+            distance.from.anchor.m = mean(distance.from.anchor),
+            distance.from.anchor.se = se(distance.from.anchor))
+
+ggplot(summary.anchor, aes(x = condition, y = choice.m)) +
   geom_col(fill = "lightblue") + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition")
+  labs(x = "Condition") +
+  theme_custom()
 
-df.whale = df.anchor2 %>% filter(stimulus == "Whale Length") %>%
-  group_by(condition) %>%
-  summarize(choice.m = mean(choice), choice.se = se(choice))
-
-ggplot(df.whale, aes(x = condition, y = choice.m)) +
+ggplot(summary.anchor, aes(x = condition, y = distance.from.anchor.m)) +
   geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
+  geom_errorbar(aes(ymin = distance.from.anchor.m - distance.from.anchor.se,
+                    ymax = distance.from.anchor.m + distance.from.anchor.se),
+                width = .2) +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition")
-ggplot(df.whale %>% filter(condition != 'High Anchor'), aes(x = condition, y = choice.m)) +
-  geom_col(fill = "lightblue", color = 'white') + 
-  geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), color = 'white', width = .2, size = 2) +
-  labs(x = "Condition", y = 'Average Response') +
-  theme_black()
+  labs(x = "Condition") +
+  theme_custom()
 
-df.anchor.graph = df.anchor2 %>%
-  group_by(condition) %>%
-  summarize(choice.m = mean(choice), choice.se = se(choice))
+analysis.anchor = brm(choice ~ condition,
+                      data = df.anchor.choices %>%
+                       mutate(choice = scale(choice),
+                              condition = relevel(condition, ref = "No Anchor")),
+                      save_pars = save_pars(group = F))
+summary(analysis.anchor)
+hdi(analysis.anchor) # key comparison is low anchor vs. no anchor; we dropped the high anchor for the real study
 
-ggplot(df.anchor.graph, aes(x = condition, y = choice.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition")
-
-#** inferential statistics ----
-anc.model = lm(choice ~ condition, data = df.anchor2 %>%mutate(choice = scale(choice), condition = relevel(condition, ref = "No Anchor")))
-summary(anc.model)
+analysis.anchor2 = brm(distance.from.anchor ~ condition,
+                       data = df.anchor.choices %>%
+                         mutate(distance.from.low.anchor = scale(distance.from.low.anchor),
+                               condition = relevel(condition, ref = "No Anchor")),
+                       save_pars = save_pars(group = F))
+summary(analysis.anchor2)
+hdi(analysis.anchor2)
 
 #** introspection ratings ----
-df.anchor.intro <- df.anchor %>% filter(!is.na(introspect_rating) & familiarity == 'No')
+df.anchor.intro <- df.anchor %>% filter(!is.na(introspect_rating))
 
-df.anchor.intro.graph <- df.anchor.intro %>% group_by(factor) %>%
+## in experience condition
+df.anchor.intro.experience = df.anchor.intro %>% 
+  filter(factor == 'experience')
+
+anchor.mean.prediction.response = mean(df.anchor.choices$choice[df.anchor.choices$factor == 'prediction'])
+df.anchor.effectsizes = df.anchor.choices %>% 
+  filter(factor == 'experience') %>% 
+  mutate(effect_size = -choice,
+         effect_size2 = -distance.from.anchor,
+         effect_size_range = range01(effect_size),
+         showed_effect = factor(choice < anchor.mean.prediction.response, c(T,F), c('Effect', 'No effect'))) %>% 
+  select(subject, effect_size, effect_size2, effect_size_range, showed_effect)
+
+df.anchor.intro.experience = df.anchor.intro.experience %>% 
+  left_join(df.anchor.effectsizes, by = 'subject')
+
+# dichotomous
+summary.anchor.intro.experience = df.anchor.intro.experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating, na.rm = T),
+            se_introspect_rating = se(introspect_rating),
+  )
+
+ggplot(summary.anchor.intro.experience,
+       aes(x = showed_effect, y = mean_introspect_rating)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(x = "Showed effect?", y = "Introspection rating") +
+  theme_custom()
+
+analysis.anchor.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect, df.anchor.intro.experience,
+                                                          save_pars = save_pars(group = F))
+summary(analysis.anchor.intro.experience.dichotomized)
+hdi(analysis.anchor.intro.experience.dichotomized)
+
+# continuous
+ggplot(df.anchor.intro.experience, aes(x = effect_size, y = introspect_rating)) +
+  geom_point() +
+  geom_smooth(method='lm') +
+  theme_custom()+
+  labs(x = "Effect size", y = "Introspection rating")
+
+analysis.anchor.intro.experience.continuous = brm(introspect_rating ~ effect_size, df.anchor.intro.experience,
+                                                        save_pars = save_pars(group = F))
+summary(analysis.anchor.intro.experience.continuous)
+hdi(analysis.anchor.intro.experience.continuous)
+
+## across conditions
+summary.anchor.intro.both <- df.anchor.intro %>% group_by(factor) %>%
   summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
 
-ggplot(df.anchor.intro.graph, aes(x = factor, y = introspect.m)) +
+ggplot(summary.anchor.intro.both, aes(x = factor, y = introspect.m)) +
   geom_col(fill = "lightblue") + 
   geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
+  labs(x = "Condition", y = "Influence rating")
 
-anchor_intro.t <- t.test(df.anchor.intro$introspect_rating ~ df.anchor.intro$factor)
-anchor_intro.t
-p.vals = c(p.vals, anchor_intro.t$p.value)
-
-#** AM: splitting by whether they made choices suggesting that they showed the effect or not ----
-
-# in high anchor, we want high choices
-# in low anchor, we want low choices
-# and in factor-excluded, irrelevant
-median.ant = median(df.anchor2$choice[df.anchor2$stimulus == 'Antarctic Temperature'])
-median.whale = median(df.anchor2$choice[df.anchor2$stimulus == 'Whale Length'])
-df.anchor3 = df.anchor2 %>%
-  mutate(choice.high = ifelse(stimulus == 'Antarctic Temperature',
-                choice > median.ant,
-                choice > median.whale)) %>%
-  group_by(subject) %>%
-  summarize(choice.high = mean(choice.high))
-df.anchor.intro$choice.high = NA
-for (i in 1:nrow(df.anchor.intro)) {
-  which.row = df.anchor3$subject == df.anchor.intro$subject[i]
-  if (any(which.row)) {
-    df.anchor.intro$choice.high[i] = df.anchor3$choice.high[which.row]
-  }
-}
-
-df.anchor.intro = df.anchor.intro %>%
-  mutate(choice.high.fac = factor(choice.high, c(0, .5, 1), c('Low', 'Mixed', 'High')),
-         choice.matches.condition = ifelse(factor == 'Factor-Included',
-                                            ifelse(condition == 'High Anchor',
-                                              ifelse(choice.high.fac == 'High', T,
-                                                     ifelse(choice.high.fac == 'Low', F, NA)),
-                                              ifelse(choice.high.fac == 'High', F,
-                                                     ifelse(choice.high.fac == 'Low', T, NA))),
-                                            NA))
-
-df.anchor.intro.graph2 <- df.anchor.intro %>%
-  filter(factor == 'Factor-Included') %>%
-  group_by(choice.matches.condition) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.anchor.intro.graph2, aes(x = choice.matches.condition, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-# transfer to main df for later analyses
-for (i in 1:nrow(df)) {
-  if (df$task_name[i] == 'anchoring' & !is.na(df$introspect_rating[i])) {
-    which.row = df.anchor.intro$subject == df$subject[i]
-    if (any(which.row)) {
-      df$effect.size.fac[i] = df.anchor.intro$choice.matches.condition[which.row]
-    }
-  }
-}
-
-anchor_intro2.t = df.anchor.intro %>% filter(factor == 'Factor-Included') %$%
-  t.test(introspect_rating ~ choice.matches.condition)
+analysis.anchor.intro.both = brm(introspect_rating ~ factor,
+                                       data = df.anchor.intro,
+                                       save_pars = save_pars(group = F))
+summary(analysis.anchor.intro.both)
+hdi(analysis.anchor.intro.both)
 
 #* 2 Availability (between-subjects) -------------------------------------------------
 #** data preparation ----
-df.avail = df %>% filter(task_name == 'availability', familiarity == "No")
-length(unique(df.avail$subject))
+df.avail = df %>%
+  filter(task_name == 'availability'#,
+         #familiarity == 'No'
+         ) %>% 
+  mutate(choice.binary = choice == 'List 1')
 
 #** data visualization ----
-ggplot(df.avail, aes(x = condition, fill = choice)) +
+ggplot(df.avail, aes(x = condition, fill = choice.binary)) +
   geom_bar(position = "dodge") + 
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20))
+  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
+  theme_custom()
 
-#** inferential statistics ----
-avail <- table(df.avail$choice, df.avail$condition)
-avail
-availChi <- chisq.test(avail)
-availChi$expected >= 5
-availChi
+analysis.avail = brm(choice.binary ~ condition,
+                     data = df.avail,
+                     family = 'bernoulli',
+                     save_pars = save_pars(group = F))
+summary(analysis.avail)
+hdi(analysis.avail)
 
 #** introspection ratings ----
 
-df.avail.intro = df.avail %>%
+## in experience condition
+df.avail.intro.experience = df.avail %>% 
+  filter(factor == 'experience') %>% 
+  mutate(effect_size = choice.binary,
+         effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
+         showed_effect = factor(choice.binary, c(T,F), c('Effect', 'No effect')))
+
+# dichotomized
+summary.avail.intro.experience <- df.avail.intro.experience %>% 
+  group_by(showed_effect) %>% 
+  summarize(
+    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
+    se_introspect_rating = se(introspect_rating)
+  )
+
+ggplot(summary.avail.intro.experience, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(x = "Showed effect", y = "introspection rating") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+analysis.avail.intro.experience = brm(introspect_rating ~ showed_effect,
+                                     df.avail.intro.experience,
+                                     save_pars = save_pars(group = F))
+summary(analysis.avail.intro.experience)
+hdi(analysis.avail.intro.experience)
+
+## across conditions
+summary.avail.intro.both = df.avail %>%
   group_by(factor) %>%
   summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
 
-ggplot(df.avail.intro, aes(x = factor, y = introspect.m)) +
+ggplot(summary.avail.intro.both, aes(x = factor, y = introspect.m)) +
   geom_col(fill = "lightblue") + 
   geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
   labs(x = "Test Version")
 
-avail_intro.t <- t.test(df.avail$introspect_rating ~ df.avail$factor)
-avail_intro.t
-p.vals = c(p.vals, avail_intro.t$p.value)
-
-#** AM: splitting by whether they made choices suggesting that they showed the effect or not ----
-
-df.avail = df.avail %>%
-  mutate(choice.matches.condition = ifelse(condition == 'Famous',
-                                           choice == 'List 1',
-                                           choice == 'List 2'))
-df.avail.intro2 = df.avail %>%
-  group_by(factor, choice.matches.condition) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.avail.intro2, aes(x = factor, y = introspect.m, fill = choice.matches.condition)) +
-  geom_col(position = dodge) + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2, position = dodge) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-avail_intro2 = lm(introspect_rating ~ factor * choice.matches.condition, df.avail)
-summary(avail_intro2)
-
-# transfer to main df for later analyses
-for (i in 1:nrow(df)) {
-  if (df$task_name[i] == 'availability' & !is.na(df$introspect_rating[i])) {
-    which.row = df.avail$subject == df$subject[i]
-    if (any(which.row)) {
-      df$effect.size.fac[i] = df.avail$choice.matches.condition[which.row]
-    }
-  }
-}
-
-avail_intro2.t = df.avail %>% filter(factor == 'Factor-Included') %$%
-  t.test(introspect_rating ~ choice.matches.condition)
+analysis.avail.intro.both = brm(introspect_rating ~ factor,
+                                data = df.avail,
+                                save_pars = save_pars(group = F))
+summary(analysis.avail.intro.both)
+hdi(analysis.avail.intro.both)
 
 #* 3 Causal Inference (between-subjects) -------------------------------------------------------------
 #** data preparation ----
 df.cause = df %>% filter(task_name == 'causal inference') %>%
-  mutate(choice = as.numeric(choice)) %>%
-  filter(familiarity == "No")
+  mutate(choice = as.numeric(choice))
 
 #** data visualization ----
-df.cause.graph = df.cause %>%
+summary.cause = df.cause %>%
   group_by(condition) %>%
   summarize(choice.m = mean(choice), choice.se = se(choice))
 
-ggplot(df.cause.graph, aes(x = condition, y = choice.m)) +
+ggplot(summary.cause, aes(x = condition, y = choice.m)) +
   geom_col(fill = "lightblue") + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
   labs(x = "Condition")
 
-#** inferential statistics ----
-cause.t <- t.test(df.cause$choice ~ df.cause$condition)
-cause.t
+analysis.cause = brm(choice ~ condition,
+                     df.cause,
+                     save_pars = save_pars(group = F))
+hdi(analysis.cause)
 
 #** introspection ratings ----
 df.cause.intro <- df.cause %>% filter(!is.na(introspect_rating))
 
-df.cause.intro.graph <- df.cause.intro %>% group_by(factor) %>%
+## in experience condition
+
+## across conditions
+
+summary.cause.intro.both <- df.cause.intro %>% group_by(factor) %>%
   summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
 
-ggplot(df.cause.intro.graph, aes(x = factor, y = introspect.m)) +
+ggplot(summary.cause.intro.both, aes(x = factor, y = introspect.m)) +
   geom_col(fill = "lightblue") + 
   geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
   labs(x = "Test Version")
-
-cause_intro.t <- t.test(df.cause$introspect_rating ~ df.cause$factor)
-cause_intro.t
-p.vals = c(p.vals, cause.t$p.value)
 
 #** AM: splitting by whether they made choices suggesting that they showed the effect or not ----
 
@@ -352,143 +358,6 @@ for (i in 1:nrow(df)) {
 
 cause_intro2.t = df.cause %>% filter(factor == 'Factor-Included') %$%
   t.test(introspect_rating ~ choice.matches.condition)
-
-#* 4 Contact Principle (between-subjects) -------------------------------------------------------------
-#** data preparation ----
-df.contact = df %>% filter(task_name == 'contact principle') %>%
-  filter(familiarity == "No") %>%
-  mutate(condition = factor(condition, c('No Contact', 'Contact')))
-#** data visualization ----
-ggplot(df.contact, aes(x = condition, fill = choice)) +
-geom_bar(position = "dodge", color = 'white') + 
-  theme_black()
-df.contact.graph = df.contact %>% group_by(condition) %>%
-  summarize(choice.m = mean(choice == 'Impermissible'),
-            choice.se = se.prop(choice == 'Impermissible'))
-ggplot(df.contact.graph, aes(x = condition, y = choice.m, fill = condition)) +
-  geom_col(color = 'white') + 
-  theme_black() +
-  labs(x = 'Condition', y = '% saying the action\nwas morally wrong') +
-  geom_errorbar(aes(ymin = choice.m - choice.se,
-                    ymax = choice.m + choice.se),
-                color = 'white', width = .2) +
-  scale_fill_manual(values = c("Contact" = "#4FADEA", "No Contact" = "#FFC000")) +
-  theme(legend.position = 'none')
-
-#** inferential statistics ----
-contact <- table(df.contact$choice, df.contact$condition)
-contact
-contactChi <- chisq.test(contact)
-contactChi$expected >= 5
-contactChi
-
-#** introspection ratings ----
-df.contact.intro <- df.contact %>% filter(!is.na(introspect_rating))
-
-df.contact.intro.graph <- df.contact.intro %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.contact.intro.graph, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-contact_intro.t <- t.test(df.contact$introspect_rating ~ df.contact$factor)
-contact_intro.t
-
-#** AM: splitting by whether they made choices suggesting that they showed the effect or not ----
-
-df.contact = df.contact %>%
-  mutate(choice.matches.condition = ifelse(condition == 'Contact',
-                                           choice == 'Impermissible',
-                                           choice == 'Permissible'))
-df.contact.intro.graph2 <- df.contact %>%
-  group_by(factor, choice.matches.condition) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.contact.intro.graph2, aes(x = factor, y = introspect.m, fill = choice.matches.condition)) +
-  geom_col(position = dodge) + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2, position = dodge) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-contact_intro2 = lm(introspect_rating ~ factor * choice.matches.condition, df.contact)
-summary(contact_intro2)
-
-for (i in 1:nrow(df)) {
-  if (df$task_name[i] == 'contact principle' & !is.na(df$introspect_rating[i])) {
-    which.row = df.contact$subject == df$subject[i]
-    if (any(which.row)) {
-      df$effect.size.fac[i] = df.contact$choice.matches.condition[which.row]
-    }
-  }
-}
-
-contact_intro2.t = df.contact %>% filter(factor == 'Factor-Included') %$%
-  t.test(introspect_rating ~ choice.matches.condition)
-
-
-#* 5 Double Effect (between-subjects)-------------------------------------------------------------
-#** data preparation ----
-df.double = df %>% filter(task_name == 'double effect') %>% filter(familiarity == "No")
-length(unique(df.double$subject))
-#** data visualization ----
-ggplot(df.double, aes(x = condition, fill = choice)) +
-  geom_bar(position = "dodge") + 
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20))
-
-#** inferential statistics ----
-double <- table(df.double$choice, df.double$condition)
-double
-doubleChi <- chisq.test(double)
-doubleChi$expected >= 5
-doubleChi
-
-#** introspection ratings ----
-df.double.intro <- df.double %>% filter(!is.na(introspect_rating))
-
-df.double.intro.graph <- df.double.intro %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.double.intro.graph, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-double_intro.t <- t.test(df.double$introspect_rating ~ df.double$factor)
-double_intro.t
-p.vals = c(p.vals, double_intro.t$p.value)
-
-#** AM: splitting by whether they made choices suggesting that they showed the effect or not ----
-
-df.double = df.double %>%
-  mutate(choice.matches.condition = ifelse(condition == 'Means',
-                                           choice == 'Impermissible',
-                                           choice == 'Permissible'))
-df.double.intro.graph2 <- df.double %>%
-  group_by(factor, choice.matches.condition) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.double.intro.graph2, aes(x = factor, y = introspect.m, fill = choice.matches.condition)) +
-  geom_col(position = dodge) + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2, position = dodge) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-for (i in 1:nrow(df)) {
-  if (df$task_name[i] == 'double effect' & !is.na(df$introspect_rating[i])) {
-    which.row = df.double$subject == df$subject[i]
-    if (any(which.row)) {
-      df$effect.size.fac[i] = df.double$choice.matches.condition[which.row]
-    }
-  }
-}
-
-double_intro2.t = df.double %>% filter(factor == 'Factor-Included') %$%
-  t.test(introspect_rating ~ choice.matches.condition)
-
 
 #* 6 Decoy Effect -------------------------------------------------------------
 #** data preparation ----
@@ -554,7 +423,6 @@ for (i in 1:nrow(df)) {
 decoy_intro2.t = df.decoy %>% filter(factor == 'Factor-Included') %$%
   t.test(introspect_rating ~ choice.matches.condition)
 
-# Within-Subjects Tasks -------------------------------------------------
 #* 7 Associative memory (within-subjects) ------------------------------------------------------
 #** data preparation ----
 df.mem = df %>% filter(task_name == 'associative memory') %>%
@@ -887,259 +755,8 @@ for (i in 1:nrow(df)) {
   }
 }
 
+# INTROSPECTION RATINGS (ALL) -----------------------------------------------------------
 
-#* 10 Number Distance Effect (within-subjects)-------------------------------------------------------------
-#** data preparation ----
-df.numb = df %>% filter(task_name == "numerical distance effect") 
-num.unfamiliar <- df.numb %>% filter(familiarity == "No")
-df.numb <- df.numb %>% filter(subject %in% num.unfamiliar$subject) 
-
-df.numb.include <- df.numb %>% filter(factor == "Factor-Included") %>%
-  filter(!is.na(choice)) %>%
-  mutate(logrt = log(rt))
-
-rt.mean = mean(df.numb.include$logrt)
-rt.sd = sd(df.numb.include$logrt)
-df.numb.filt = df.numb.include %>% filter(logrt < rt.mean + 3*rt.sd, logrt > rt.mean - 3*rt.sd)
-
-hist(df.numb.filt$logrt)
-
-#** data visualization (general) ----
-df.numb.graph = df.numb.filt %>%
-  group_by(condition) %>%
-  summarize(rt.m = mean(rt), rt.se = se(rt))
-
-ggplot(df.numb.graph, aes(x = condition, y = rt.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = rt.m - rt.se, ymax = rt.m + rt.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition")
-
-#** data visualization (by-subject) ----
-df.numb.graph = df.numb.filt %>%
-  group_by(subject, condition) %>%
-  summarize(rt.m = mean(rt), rt.se = se(rt))
-
-ggplot(df.numb.graph, aes(x = condition, y = rt.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = rt.m - rt.se, ymax = rt.m + rt.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition") + facet_wrap(~subject)
-
-#** inferential statistics ----
-
-num.model = lmer(logrt ~ condition + (1 + condition | subject), data = df.numb.filt %>% mutate(logrt = scale(logrt)))
-summary(num.model)
-hist(coef(num.model)$subject[,2])
-
-#** familiarity ratings ----
-df.numb.familiar= df %>% filter(task_name == 'numerical distance effect') %>%
-  mutate_all(na_if, "") %>%
-  filter(!is.na(familiarity)) 
-
-ggplot(df.numb.familiar, aes(familiarity)) + geom_bar()
-numb.familiar <- df.numb.familiar %>% filter(familiarity == "Yes")
-length(unique(numb.familiar$subject)) #1
-length(unique(df.numb.familiar$subject)) #94
-
-#**introspection ratings ----
-df.numb.intro <- df.numb %>% filter(!is.na(introspect_rating))
-
-length(unique(df.numb$subject))
-
-df.numb.intro.graph <- df.numb.intro %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.numb.intro.graph, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-numb_intro.t <- t.test(df.numb$introspect_rating ~ df.numb$factor)
-numb_intro.t
-p.vals = c(p.vals, numb_intro.t$p.value)
-
-
-#** AM: splitting by whether people showed the effect or not ----
-#numb.subj.estimates = coef(num.model)$subject
-
-numb.subj = df.numb.filt %>% group_by(subject, condition) %>%
-  summarize(rt.m = mean(rt)) %>%
-  mutate(rt.diff = rt.m - lag(rt.m)) %>%
-  filter(!is.na(rt.diff)) %>%
-  select(-c(condition, rt.m))
-
-df.numb.intro2 = df.numb %>%
-  filter(!is.na(introspect_rating)) %>%
-  filter(subject %in% bel.unfamiliar$subject)
-df.numb.intro2$subj.effect = NA
-for (i in 1:nrow(df.numb.intro2)) {
-  which.row = numb.subj$subject == df.numb.intro2$subject[i]
-  if (any(which.row)) {
-    df.numb.intro2$subj.effect[i] = numb.subj$rt.diff[which.row]
-  }
-}
-df.numb.intro2$subj.effect.fac = df.numb.intro2$subj.effect < 0
-
-numb_intro2.t = t.test(df.numb.intro2$introspect_rating ~ df.numb.intro2$subj.effect.fac)
-
-
-df.numb.intro.graph2 = df.numb.intro2 %>%
-  group_by(factor, subj.effect.fac) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.numb.intro.graph2, aes(x = factor, y = introspect.m, fill = subj.effect.fac)) +
-  geom_col(position = dodge) + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2, position = dodge) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-ggplot(df.numb.intro2, aes(x = subj.effect, y = introspect_rating)) +
-  geom_point() +
-  geom_smooth(method='lm')
-
-for (i in 1:nrow(df)) {
-  if (df$task_name[i] == 'numerical distance effect' & !is.na(df$introspect_rating[i])) {
-    which.row = df.numb.intro2$subject == df$subject[i]
-    if (any(which.row)) {
-      df$effect.size[i] = df.numb.intro2$subj.effect[which.row]
-      df$effect.size.fac[i] = df.numb.intro2$subj.effect.fac[which.row]
-    }
-  }
-}
-
-#* 11 Simon Task (within-subjects) -------------------------------------------------------
-{#** data preparation ----
-df.simon = df %>% filter(task_name == 'simon task') 
-sim.unfamiliar <- df.simon %>% filter(familiarity == "No")
-df.simon = df.simon %>% filter(subject %in% sim.unfamiliar$subject) 
-df.simon.choice <- df.simon %>% 
-  filter(factor == 'Factor-Included') %>%
-  filter(!is.na(condition))
-df.simon.include <- df.simon %>% 
-  filter(factor == 'Factor-Included') %>%
-  filter(!is.na(condition)) %>%
-  filter(auxiliary_info1 == 'Correct') %>%
-  mutate(logrt = log(rt))
-
-hist(df.simon.include$logrt)
-
-rt.mean = mean(df.simon.include$logrt)
-rt.sd = sd(df.simon.include$logrt)
-df.simon.filt = df.simon.include %>% filter(logrt < rt.mean + 3*rt.sd, logrt > rt.mean - 3*rt.sd) %>%
-  filter(!(subject %in% c('A1FH0Y12VSXUMK', 'A3O2D2BUS92BCA', 'A1T0ND039EWAVV')))
-
-hist(df.simon.filt$logrt)
-
-#** data visualization (general) ----
-df.simon.graph = df.simon.filt %>%
-  group_by(condition) %>%
-  summarize(rt.m = mean(rt), rt.se = se(rt))
-
-ggplot(df.simon.graph, aes(x = condition, y = rt.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = rt.m - rt.se, ymax = rt.m + rt.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition")
-
-# checking accuracy of participants
-ggplot(df.simon.choice, aes(x = condition, fill = auxiliary_info1)) +
-  geom_bar(position = "dodge") + 
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20))
-
-#** data visualization (by-subject) ----
-
-df.simon.graph = df.simon.filt %>%
-  group_by(subject, condition) %>%
-  summarize(rt.m = mean(rt), rt.se = se(rt))
-
-ggplot(df.simon.graph, aes(x = condition, y = rt.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = rt.m - rt.se, ymax = rt.m + rt.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition") +
-  facet_wrap(~subject)
-
-#** inferential statistics ----
-sim.model = lmer(logrt ~ condition + (1 + condition | subject), data = df.simon.filt %>% mutate(logrt = scale(logrt)))
-summary(sim.model)
-coef(sim.model)
-hist(coef(sim.model)$subject[,2])
-
-# 1 + condition indicates that we are also including a random slope; we only do this for within-subjects -- it estimates how much each condition affects a given subject
-# sometimes, introducing a random slope makes it fail to converge
-
-#p-value = 2e-16
-
-#** introspection ratings ----
-df.simon.intro <- df.simon %>% filter(!is.na(introspect_rating))
-
-length(unique(df.simon.intro$subject))
-
-df.simon.intro.graph <- df.simon.intro %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.simon.intro.graph, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-simon_intro.t <- t.test(df.simon$introspect_rating ~ df.simon$factor)
-simon_intro.t
-p.vals = c(p.vals, simon_intro.t$p.value)
-
-
-#** AM: splitting by whether people showed the effect or not ----
-#simon.subj.estimates = coef(sim.model)$subject
-
-simon.subj = df.simon.filt %>% group_by(subject, condition) %>%
-  summarize(rt.m = mean(rt)) %>%
-  mutate(rt.diff = rt.m - lag(rt.m)) %>%
-  filter(!is.na(rt.diff)) %>%
-  select(-c(condition, rt.m))
-
-df.simon.intro2 = df.simon %>%
-  filter(!is.na(introspect_rating)) %>%
-  filter(subject %in% bel.unfamiliar$subject) %>%
-  filter(!(subject %in% c('A1FH0Y12VSXUMK', 'A3O2D2BUS92BCA', 'A1T0ND039EWAVV')))
-df.simon.intro2$subj.effect = NA
-for (i in 1:nrow(df.simon.intro2)) {
-  which.row = simon.subj$subject == df.simon.intro2$subject[i]
-  if (any(which.row)) {
-    #df.simon.intro2$subj.effect[i] = simon.subj.estimates$conditionIncongruent[which.row]
-    df.simon.intro2$subj.effect[i] = simon.subj$rt.diff[which.row]
-  }
-}
-df.simon.intro2$subj.effect.fac = df.simon.intro2$subj.effect > 0
-
-simon_intro2.t = t.test(df.simon.intro2$introspect_rating ~ df.simon.intro2$subj.effect.fac)
-
-df.simon.intro.graph2 = df.simon.intro2 %>%
-  group_by(factor, subj.effect.fac) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(df.simon.intro.graph2, aes(x = factor, y = introspect.m, fill = subj.effect.fac)) +
-  geom_col(position = dodge) + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2, position = dodge) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-ggplot(df.simon.intro2, aes(x = subj.effect, y = introspect_rating)) +
-  geom_point() +
-  geom_smooth(method='lm')
-
-for (i in 1:nrow(df)) {
-  if (df$task_name[i] == 'simon task' & !is.na(df$introspect_rating[i])) {
-    which.row = df.simon.intro2$subject == df$subject[i]
-    if (any(which.row)) {
-      df$effect.size[i] = df.simon.intro2$subj.effect[which.row]
-      df$effect.size.fac[i] = df.simon.intro2$subj.effect.fac[which.row]
-    }
-  }
-}
-}
 
 ## get introspection p values for each task & correct
 p.vals = numeric(11)
@@ -1177,8 +794,6 @@ p.vals2 = c(
 p.vals2.corrected = p.adjust(p.vals2, method = 'holm')
 p.vals2.corrected < .05
 
-
-# INTROSPECTION RATINGS (ALL) -----------------------------------------------------------
 
 df.introspection = df %>%
   group_by(factor, task_name) %>%

@@ -258,7 +258,7 @@ halo_analysis_introspection_experience_continuous = brm(introspect_rating ~ effe
 summary(halo_analysis_introspection_experience_continuous)
 hdi(halo_analysis_introspection_experience_continuous)
 
-# across conditions
+## across conditions
 halo_summary_introspection_both <- halo_data_introspection %>% 
   group_by(factor) %>%
   summarize(
@@ -1082,4 +1082,4 @@ ggplot(all_bytask_introspection_both, aes(x = task_name, y = mean_introspect_rat
 
 # Save image --------------------------------------------------------------
 
-save.image('novemberAnalysis_AM_output.rdata')
+save.image('pilot2_output.rdata')
