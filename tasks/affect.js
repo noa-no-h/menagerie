@@ -9,12 +9,12 @@ var affect_instructions = {
     pages: function () {
         if (condition[0] == 'Factor-Included') {
             return [
-                `<p>We are interested in the ways people think about the risks and benefits associated with several technologies (specifically natural gas, food preservatives, and nuclear power). Therefore, in this task, you will be asked to give judgments about the benefits, the risks, and the controllability associated with each technology.</p>
+                `<p>We are interested in the ways people think about the risks and benefits associated with natural gas. Therefore, in this task, you will be asked to give judgments about the benefits, the risks, and the controllability associated with this technology.</p>
                 <p><i>Please click the button below to read a passage about natural gas.</i></p>`
             ];
         } else {
             return [
-                `<p>We are interested in the ways people think about the risks and benefits associated with several technologies (specifically natural gas, food preservatives, and nuclear power). Therefore, in this task, you will be asked to give judgments about the benefits, the risks, and the controllability associated with each technology.</p>
+                `<p>We are interested in the ways people think about the risks and benefits associated with several technologies natural gas. Therefore, in this task, you will be asked to give judgments about the benefits, the risks, and the controllability associated with this technology.</p>
                 <p><i>Please click the button below to see the first question.</i></p>`
             ];
         }
@@ -37,44 +37,12 @@ var affect_question = {
             slider_start: 0.5,
             max: 1,
             step: 0.01
-        },
-        {
-            prompt: `<p>In general, how risky do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
-            name: "risk",
-            ticks: ["Not at all risky", "Moderate risk", "Very risky"],
-            required: true,
-            min: 0,
-            slider_start: 0.5,
-            max: 1,
-            step: 0.01
-        },
-        {
-            prompt: `<p>How likely do you think it is that there will be a major accident or problem (and consequently serious harm to people) within the next 5 years as a result of using natural gas?</p>`,
-            name: "accident",
-            ticks: ["Very unlikely", "Moderate likelihood", "Very likely"],
-            required: true,
-            min: 0,
-            slider_start: 0.5,
-            max: 1,
-            step: 0.01
-        },
-        {
-            prompt: `<p>To what extent can the risks of using natural gas be controlled by those who are exposed to those risks?</p>`,
-            name: "control",
-            ticks: ["Very little control", "Moderate control", "Very much control"],
-            required: true,
-            slider_start: 0.5,
-            min: 0,
-            max: 1,
-            step: 0.01
         }
     ],
     on_finish: function (data) {
         var responseObject = JSON.parse(data.response);
         benefit = responseObject["benefit"];
-        risk = responseObject["risk"];
-        var accident = responseObject["accident"];
-        var control = responseObject["control"];
+
     }
 };
 
@@ -114,14 +82,14 @@ var affect_introspect1 = {
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `
-                <p>In this task, you judged how beneficial natural gas is to U.S. society after first reading a passage about the risks of natural gas.</p>
-                <p>The passage you read was:<br> <span style="color: grey;">${risk_passage}</span></p>
+                <p>In this task, before judging its benefits, you first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
+                
                 <p>Do you think <b>the presence of that passage</b> influenced your judgment of how beneficial natural gas is? If so, how?</p>
             `;
         } else {
             return `
-                <p>In this task, you judged how beneficial natural gas is to U.S. society. Now imagine that after first reading a passage about the risks of natural gas.</p>
-                <p>Specifically, imagine you had read the following passage: <br> <span style="color: grey;">${risk_passage}</span></p>
+                <p>In this task, you judged how beneficial natural gas is to U.S. society. Now imagine that before judging its benefits, you had first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
+                
                 <p>Do you think <b>the presence of that passage</b> would have influenced your judgment of how beneficial natural gas is? If so, how?</p>
             `;
         }
@@ -170,7 +138,7 @@ var affect_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
             choice: benefit,
             stimulus: null,
-            auxiliary_info1: risk,
+            auxiliary_info1: null,
             openq_response: affect_openQ_response,
             introspect_rating: affect_intro_response1,
             introspect_open: affect_intro_confidence_response,
