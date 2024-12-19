@@ -69,6 +69,9 @@ var comprehension_questions = {
         }
         console.log("passed", passed);
 
+        if (!passed) {
+            alert("You answered the question incorrectly. The correct answer is: " + (condition[0] == 'Factor-Included' ? "British victory" : "The case did not indicate the outcome") + ".\n\nPlease reread the scenario carefully and make sure you understand, and then re-answer the question.")
+        }
 
         const s1_data = {
             subject: data.subject,
@@ -76,6 +79,7 @@ var comprehension_questions = {
             factor: condition[0],
             task_name: "hindsight effect",
             condition: condition[0] === "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
+            stimulus: "comprehension",
             choice: passed.toString(),
             auxiliary_info1: response,
             openq_response: null,
@@ -93,6 +97,8 @@ var comprehension_questions = {
 var probBritish = null;
 var probGurka = null;
 var probStalemate = null;
+
+var sum_to_hundred = false;
 
 var hindsight_question = {
     type: jsPsychSurvey,
@@ -156,6 +162,14 @@ var hindsight_question = {
         probStalemateNoPeace = parseInt(data.response.StalemateNoPeace, 10);
         probStalematePeace = parseInt(data.response.StalematePeace, 10);
 
+        /*prob_sum = probBritish + probGurka + probStalemateNoPeace + probStalematePeace;
+        if (Math.abs(prob_sum - 100) < 5 | Math.abs(prob_sum - 1) < .05) {
+            sum_to_hundred = true;
+        } else {
+            sum_to_hundred = false;
+            alert("The values do not sum to 100.")
+        }*/
+
         if (only_main_question) {
             //console.log("only_main_question");
             s1_data = {
@@ -180,6 +194,13 @@ var hindsight_question = {
     } 
 }; 
 
+/*var hindsight_question_loop = {
+    timeline: [hindsight_question],
+    loop_function: function(data) {
+        return !sum_to_hundred;
+    }
+}*/
+
 
 var passed = null;
 
@@ -187,8 +208,8 @@ var passed = null;
 function comprehension_loop() {
     return {
         timeline: [
-            comprehension_questions,
-            {
+            comprehension_questions
+            /*{
                 type: jsPsychHtmlButtonResponse,
                 stimulus: function () {
                     if (passed) {
@@ -204,7 +225,7 @@ function comprehension_loop() {
                         return ["Retry"];
                     }
                 }
-            }
+            }*/
         ],
         loop_function: function () {
             return !passed; // Keep looping until comprehension is passed
