@@ -77,6 +77,11 @@ data <- read.csv('full_pilot.csv') %>%
   ))
 View(data)
 
+december_pilot = read_csv('v5pilot2.csv') %>%
+  arrange(subject, task_name) %>%
+  mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) 
+  
+
 subjects_all = data %>%
   pull(subject) %>%
   unique()
@@ -175,6 +180,36 @@ ggplot(familiarity_percentage, aes(x = fct_reorder(task_name, percentage_yes, .d
        y = "Percent Familiar") +
   theme_custom()+
   theme(axis.text.x = element_blank())
+
+## 1.1 Affect ----
+
+
+affect_data = december_pilot %>%
+  filter(task_name == "affect heuristic")%>%
+  mutate(choice = as.numeric(choice)) 
+
+
+summary_affect_data <- affect_data %>%
+  group_by(condition) %>%
+  mutate(condition = factor(condition, levels = c("With passage", "without passage"))) %>%
+  summarize(
+    mean_choice = mean(choice),
+    se_choice = se(choice),
+    count = n()
+  )
+
+ggplot(summary_affect_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Affect", x = "Condition", y = "How beneficial is natural gas") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+t.test(choice ~ factor, data = affect_data)
 
 #7. Halo Effect  ✅ ----
 ##7.1 do we see the effect? ----
@@ -656,6 +691,37 @@ t_test_result <- t.test(
 print(t_test_result)
 
 
+## 8.1.1 new hindsight ----
+
+new_hindsight_data = december_pilot %>%
+  filter(task_name == "hindsight effect")%>%
+  filter(is.na(stimulus)) %>%
+  mutate(choice = as.numeric(choice)) 
+
+
+summary_new_hindsight_data <- new_hindsight_data %>%
+  group_by(condition) %>%
+  mutate(condition = factor(condition, levels = c("knowledge of outcome", "no knowledge of outcome"))) %>%
+  summarize(
+    mean_choice = mean(choice),
+    se_choice = se(choice),
+    count = n()
+  )
+
+ggplot(summary_new_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+t.test(choice ~ factor, data = new_hindsight_data)
+
+
 ##8.2 introspection----
 
 #Did factor included give lower introspection numbers than factor excluded?
@@ -747,6 +813,45 @@ ggplot(summary_hindsight, aes(x = factor, y = mean_introspect_rating, fill = aff
 ##9.1 do we see the effect? ----
 
 illusory_truth_data <- data %>%
+  filter(task_name == "illusion of truth pt2") %>%
+  filter(stimulus != "")
+
+false_positive_counts <- illusory_truth_data %>%
+  filter(auxiliary_info1 == "false positive") %>%
+  group_by(subject, factor) %>%
+  summarize(false_positive_count = n()) %>%
+  ungroup()
+
+# Step 2: Calculate the average and standard error of false positives per subject for each factor
+average_false_positives <- false_positive_counts %>%
+  group_by(factor) %>%
+  summarize(
+    avg_false_positive = mean(false_positive_count),
+    se_false_positive = se(false_positive_count),
+    count = n()
+  )
+
+
+ggplot(average_false_positives, aes(x = factor, y = avg_false_positive, fill = factor)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = avg_false_positive - se_false_positive, ymax = avg_false_positive + se_false_positive), width = 0.2) +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  labs(title = "Illusory Truth", x = "Condition", y = "Average False Positive Count") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+t_test_result <- t.test(
+  false_positive_count ~ factor,  # Compare false positives between factors
+  data = false_positive_counts,   # Use the data frame with counts per subject
+)
+print(t_test_result)
+
+#9.11 new illusory ----
+
+illusory_truth_data <- december_pilot %>%
   filter(task_name == "illusion of truth pt2") %>%
   filter(stimulus != "")
 
@@ -1116,6 +1221,55 @@ print(test_result)
 
 summary(glm(choice_binary ~ condition, data = status_quo_data, family = 'binomial'))
 
+## 16.1.1 new status quo
+
+status_quo_data <- december_pilot %>%
+  filter(task_name == "status_quo") %>%
+  filter(is.na(stimulus)) %>%
+  mutate(choice_binary = as.numeric(choice == "status quo"))%>%
+  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
+
+summary_status_quo_data <- status_quo_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_binary),
+    se_choice = se.prop(choice_binary),
+    count = n()
+  )
+
+ggplot(summary_status_quo_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Choices to continue the status quo", x = "Condition", y = "Percent subjects who recommended the status quo") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+
+
+status_quo_choices_ex <- status_quo_data %>%
+  filter(factor == "Factor-Excluded") %>%
+  pull(choice_binary)
+
+status_quo_choices_in <- status_quo_data %>%
+  filter(factor == "Factor-Included") %>%
+  pull(choice_binary)
+
+#analysis -- is there a better way to do this?
+prop_ex <- sum(status_quo_choices_ex) / length(status_quo_choices_ex)
+prop_in <- sum(status_quo_choices_in) / length(status_quo_choices_in)
+
+successes <- c(sum(status_quo_choices_ex), sum(status_quo_choices_in))
+trials <- c(length(status_quo_choices_ex), length(status_quo_choices_in))
+
+test_result <- prop.test(successes, trials, alternative = "less")
+print(test_result)
+
+summary(glm(choice_binary ~ condition, data = status_quo_data, family = 'binomial'))
+
+
 
 ##16.2 introspection----
 
@@ -1264,6 +1418,78 @@ print(prop_test_result)
 summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
 
 test = brm(switched.num ~ condition, data = sunk_cost_data, family = 'binomial')
+
+##17.1.1 new sunk cost
+
+sunk_cost_data <- december_pilot %>%
+  filter(task_name == "sunk_cost2 effect") %>% 
+  mutate(switched = choice == "Don't Continue Investing",
+         switched.num = as.numeric(switched))
+
+
+percentage_sunk_cost_data <- sunk_cost_data %>%
+  group_by(condition) %>%
+  mutate(condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost"))) %>%
+  summarize(
+    total_in_condition = n(),  # Total number of subjects in each condition
+    switched_count = sum(choice == "Don't Continue Investing")  # Count who chose "Solar-powered pump"
+  ) %>%
+  mutate(percentage_switched = (switched_count / total_in_condition) * 100)
+
+summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
+
+ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_switched, fill = condition)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Percentage Who Stopped Investing", x = "Condition", y = "Percentage of Choices to Stop Investing") +
+  geom_text(aes(label = paste0("n=", total_in_condition)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+solar_powered_counts <- percentage_sunk_cost_data$solar_powered_count
+total_counts <- percentage_sunk_cost_data$total_in_condition
+prop_test_result <- prop.test(solar_powered_counts, total_counts)
+print(prop_test_result)
+
+summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
+
+test = brm(switched.num ~ condition, data = sunk_cost_data, family = 'binomial')
+
+
+
+## 18.1 Simulation ----
+
+
+simulation_data = december_pilot %>%
+  filter(task_name == "simulation")%>%
+  filter(is.na(stimulus)) %>%
+  mutate(choice = as.numeric(choice)) 
+
+
+summary_simulation_data <- simulation_data %>%
+  group_by(condition) %>%
+  mutate(condition = factor(condition, levels = c("barely missed", "missed"))) %>%
+  summarize(
+    mean_choice = mean(choice),
+    se_choice = se(choice),
+    count = n()
+  )
+
+ggplot(summary_simulation_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Simulation", x = "Condition", y = "How upset would he feel") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom()+
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+t.test(choice ~ factor, data = simulation_data)
+
 
 # Q1: Aggregating across tasks, are participants aware that they are being influenced by the heuristics or biases? ----
 
