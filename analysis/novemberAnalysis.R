@@ -201,7 +201,7 @@ summary_affect_data <- affect_data %>%
 ggplot(summary_affect_data, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Simulation", x = "Condition", y = "How beneficial is natural gas") +
+  labs(title = "Affect", x = "Condition", y = "How beneficial is natural gas") +
   geom_text(aes(label = paste0("n=", count)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
