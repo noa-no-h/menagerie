@@ -32,6 +32,24 @@ var sunk_cost2_question = {
     on_finish: function (data) {
         choice = data.response["response"]
         console.log(choice)
+        if (only_main_question) {
+                s1_data = {
+                    subject: data.subject,
+                    version: data.version,
+                    factor: data.condition,
+                    task_name: "sunk_cost2 effect",
+                    condition: condition[0] == "Factor-Included" ? "Sunk Cost" : "No Sunk Cost",
+                    choice: choice == "Yes" ? "Continue Investing" : "Don't Continue Investing",
+                    stimulus: null,
+                    openq_response: null,
+                    introspect_rating: null,
+                    introspect_open: null,
+                    familiarity: null,
+                    rt: data.rt
+                }
+                save_data(s1_data, 'introspection')
+            
+        }
     }
 }
 

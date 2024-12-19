@@ -156,13 +156,30 @@ var hindsight_question = {
         probStalemateNoPeace = parseInt(data.response.StalemateNoPeace, 10);
         probStalematePeace = parseInt(data.response.StalematePeace, 10);
 
-        console.log("Saved probabilities:");
-        console.log("British Victory:", probBritish);
-        console.log("Gurka Victory:", probGurka);
-        console.log("Stalemate No Peace:", probStalemateNoPeace);
-        console.log("Stalemate Peace:", probStalematePeace);
-    }
-};
+        if (only_main_question) {
+            //console.log("only_main_question");
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                factor: data.condition,
+                task_name: "hindsight effect",
+                condition: condition[0] === "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
+                choice: probBritish,
+                auxiliary_info1: probBritish + "," + probGurka + "," + probStalemateNoPeace + "," + probStalematePeace,
+                stimulus: null,
+                openq_response: null,
+                introspect_rating: null,
+                introspect_open: null,
+                familiarity: null,
+                rt: data.rt
+            };
+            //console.log(s1_data);
+            save_data(s1_data, 'introspection');
+
+        }
+    } 
+}; 
+
 
 var passed = null;
 

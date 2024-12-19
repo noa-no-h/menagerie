@@ -53,6 +53,24 @@ var affect_question = {
         var responseObject = JSON.parse(data.response);
         benefit = responseObject["benefit"];
         risk = responseObject["risk"];
+        if (only_main_question) {
+        s1_data = {
+            subject: data.subject,
+            version: data.version,
+            factor: data.condition,
+            task_name: "affect heuristic",
+            condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
+            choice: benefit,
+            stimulus: null,
+            auxiliary_info1: risk,
+            openq_response: null,
+            introspect_rating: null,
+            introspect_open: null,
+            familiarity: null,
+            rt: data.rt
+        }
+        save_data(s1_data, 'introspection')
+    }
     },
     randomize_question_order: true
 };

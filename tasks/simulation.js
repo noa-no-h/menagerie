@@ -40,6 +40,25 @@ var simulation_question = {
     on_finish: function (data) {
         var responseObject = JSON.parse(data.response);
         upset = responseObject["upset"];
+        if (only_main_question) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                factor: data.condition,
+                task_name: "simulation",
+                condition: condition[0] == "Factor-Included" ? "barely missed" : "missed",
+                choice: upset,
+                stimulus: null,
+                auxiliary_info1: null,
+                openq_response: null,
+                introspect_rating: null,
+                introspect_open: null,
+                familiarity: null,
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+        
     }
 };
 
