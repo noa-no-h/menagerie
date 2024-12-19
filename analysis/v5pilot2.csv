@@ -1,0 +1,458 @@
+﻿subject,subject_prolific,version,factor,task_name,condition,stimulus,choice,auxiliary_info1,openq_response,introspect_rating,introspect_open,familiarity,rt,timestamp,id
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,49,false positive,,,,,,2024-12-19 20:16:15,96143
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Moose may dive underwater while feeding,19,not false positive,,,,,,2024-12-19 20:16:10,96142
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,49,not false positive,,,,,,2024-12-19 20:16:00,96141
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The mouth of a sea urchin is on its top,90,not false positive,,,,,,2024-12-19 20:15:55,96140
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,Bike riding is the first event in a triathlon,90,not false positive,,,,,,2024-12-19 20:15:53,96139
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Snakes lack moveable eyelids,79,not false positive,,,,,,2024-12-19 20:15:50,96138
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,60,not false positive,,,,,,2024-12-19 20:15:44,96137
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Female turkeys generally weigh half as much as males,90,not false positive,,,,,,2024-12-19 20:15:36,96136
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Most limes have more acid than lemon,90,not false positive,,,,,,2024-12-19 20:15:32,96135
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,50,not false positive,,,,,,2024-12-19 20:15:29,96134
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Domesticated goats are descended from the pasang,80,not false positive,,,,,,2024-12-19 20:15:21,96133
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The Nile river flows southward,10,false positive,,,,,,2024-12-19 20:15:12,96132
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,simulation,barely missed,,83,,,,,,21327,2024-12-19 20:15:02,96131
+66d375043d9de95a440447e6,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,29355,2024-12-19 20:14:38,96130
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,25,"25,25,50,0",,,,,59349,2024-12-19 20:14:08,96129
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,3356,2024-12-19 20:13:09,96128
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,false,The case did not indicate the outcome,,,,,67130,2024-12-19 20:13:06,96127
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,not status quo,Decrease auto program by 20% and raise highway program by like amount status quo: 50/50,,,,,37788,2024-12-19 20:11:44,96126
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,42247,2024-12-19 20:11:06,96125
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.79,0.27,,,,,10648,2024-12-19 20:10:21,96124
+66d375043d9de95a440447e6,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,42703,2024-12-19 20:09:10,96123
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Continue Investing,,,,,,27599,2024-12-19 20:08:26,96122
+66d375043d9de95a440447e6,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car2,,,,,,2215,2024-12-19 20:07:56,96121
+67593335dee749db683beb3c,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car1,,,,,,5258,2024-12-19 19:49:13,96120
+67593335dee749db683beb3c,,v5_pilot2,,attention check 2,,,cheese green of made is moon The,Failure,,,,,32374,2024-12-19 19:47:31,96119
+67593335dee749db683beb3c,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.57,0.55,,,,,15771,2024-12-19 19:46:56,96118
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,71,not false positive,,,,,,2024-12-19 19:46:11,96117
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,80,not false positive,,,,,,2024-12-19 19:45:57,96116
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,70,not false positive,,,,,,2024-12-19 19:45:48,96115
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,80,not false positive,,,,,,2024-12-19 19:45:33,96114
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,80,not false positive,,,,,,2024-12-19 19:45:24,96113
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The sun constitutes more than 99 percent of the entire mass of the solar system,10,not false positive,,,,,,2024-12-19 19:45:16,96112
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,28,not false positive,,,,,,2024-12-19 19:45:10,96111
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",80,not false positive,,,,,,2024-12-19 19:45:09,96110
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,51,not false positive,,,,,,2024-12-19 19:45:05,96109
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,90,not false positive,,,,,,2024-12-19 19:45:00,96108
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,90,not false positive,,,,,,2024-12-19 19:44:56,96107
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,90,not false positive,,,,,,2024-12-19 19:44:54,96106
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,90,not false positive,,,,,,2024-12-19 19:44:52,96105
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,19,not false positive,,,,,,2024-12-19 19:44:48,96104
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,90,not false positive,,,,,,2024-12-19 19:44:43,96103
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,20,false positive,,,,,,2024-12-19 19:44:42,96102
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,90,not false positive,,,,,,2024-12-19 19:44:36,96100
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,10,false positive,,,,,,2024-12-19 19:44:36,96101
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,90,not false positive,,,,,,2024-12-19 19:44:30,96099
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,88,not false positive,,,,,,2024-12-19 19:44:26,96098
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,13,false positive,,,,,,2024-12-19 19:44:25,96097
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Giraffes have terrible eyesight,32,false positive,,,,,,2024-12-19 19:44:22,96096
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Xylem is the water-transporting tissue in plants,89,not false positive,,,,,,2024-12-19 19:44:18,96095
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,75,not false positive,,,,,,2024-12-19 19:44:17,96094
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Giraffes have terrible eyesight,52,not false positive,,,,,,2024-12-19 19:44:16,96093
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,83,not false positive,,,,,,2024-12-19 19:44:12,96092
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,80,not false positive,,,,,,2024-12-19 19:44:08,96091
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,30,false positive,,,,,,2024-12-19 19:44:07,96090
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,50,not false positive,,,,,,2024-12-19 19:44:05,96088
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,32,not false positive,,,,,,2024-12-19 19:44:05,96089
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The corn was first domesticated by native peoples in Argentina,85,not false positive,,,,,,2024-12-19 19:44:00,96087
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,85,not false positive,,,,,,2024-12-19 19:43:57,96086
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,80,not false positive,,,,,,2024-12-19 19:43:54,96085
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The sun constitutes more than 99 percent of the entire mass of the solar system,30,not false positive,,,,,,2024-12-19 19:43:53,96084
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,83,not false positive,,,,,,2024-12-19 19:43:49,96083
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,simulation,missed,,87,,,,,,11352,2024-12-19 19:43:46,96082
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",81,not false positive,,,,,,2024-12-19 19:43:42,96081
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,83,not false positive,,,,,,2024-12-19 19:43:37,96080
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,22,not false positive,,,,,,2024-12-19 19:43:32,96079
+663a5c69296e5ab16fa30d00,,v5_pilot2,,attention check 3,,,"3,4,1,5,2",Incorrect,,,,,40932,2024-12-19 19:43:28,96078
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The corn was first domesticated by native peoples in Argentina,78,not false positive,,,,,,2024-12-19 19:43:27,96077
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,79,not false positive,,,,,,2024-12-19 19:43:20,96076
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.92,0.38,,,,,8206,2024-12-19 19:43:18,96075
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,40,not false positive,,,,,,2024-12-19 19:43:12,96074
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,17,not false positive,,,,,,2024-12-19 19:43:09,96073
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,40,not false positive,,,,,,2024-12-19 19:43:06,96072
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,69,not false positive,,,,,,2024-12-19 19:43:05,96071
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Giraffes have terrible eyesight,40,false positive,,,,,,2024-12-19 19:43:02,96070
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,43,not false positive,,,,,,2024-12-19 19:42:59,96068
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The sun constitutes more than 99 percent of the entire mass of the solar system,40,not false positive,,,,,,2024-12-19 19:42:59,96069
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,60,not false positive,,,,,,2024-12-19 19:42:56,96067
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,10,false positive,,,,,,2024-12-19 19:42:55,96066
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,24,not false positive,,,,,,2024-12-19 19:42:52,96065
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The sun constitutes more than 99 percent of the entire mass of the solar system,78,not false positive,,,,,,2024-12-19 19:42:49,96064
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,25,"25,75,0,0",,,,,30888,2024-12-19 19:42:47,96062
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,40,false positive,,,,,,2024-12-19 19:42:47,96063
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,43,false positive,,,,,,2024-12-19 19:42:43,96060
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",79,not false positive,,,,,,2024-12-19 19:42:43,96061
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,40,false positive,,,,,,2024-12-19 19:42:41,96059
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The sun constitutes more than 99 percent of the entire mass of the solar system,42,not false positive,,,,,,2024-12-19 19:42:39,96058
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,30,"30,70,5,5",,,,,94553,2024-12-19 19:42:35,96056
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The corn was first domesticated by native peoples in Argentina,60,not false positive,,,,,,2024-12-19 19:42:35,96057
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",46,false positive,,,,,,2024-12-19 19:42:32,96055
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Xylem is the water-transporting tissue in plants,60,not false positive,,,,,,2024-12-19 19:42:31,96054
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,37,not false positive,,,,,,2024-12-19 19:42:23,96053
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,70,not false positive,,,,,,2024-12-19 19:42:22,96052
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,6664,2024-12-19 19:42:15,96051
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,78,not false positive,,,,,,2024-12-19 19:42:13,96050
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,Gurka victory,,,,,70593,2024-12-19 19:42:10,96049
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Xylem is the water-transporting tissue in plants,68,not false positive,,,,,,2024-12-19 19:42:01,96048
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,60,not false positive,,,,,,2024-12-19 19:41:59,96047
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,74,not false positive,,,,,,2024-12-19 19:41:57,96046
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,55,"55,45,0,0",,,,,47221,2024-12-19 19:41:55,96045
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,10,not false positive,,,,,,2024-12-19 19:41:52,96044
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,28,not false positive,,,,,,2024-12-19 19:41:51,96043
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,59,not false positive,,,,,,2024-12-19 19:41:46,96042
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The corn was first domesticated by native peoples in Argentina,70,not false positive,,,,,,2024-12-19 19:41:42,96041
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,10,false positive,,,,,,2024-12-19 19:41:41,96040
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,11,false positive,,,,,,2024-12-19 19:41:36,96039
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Taboga Island is in Panama,49,not false positive,,,,,,2024-12-19 19:41:32,96036
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,90,not false positive,,,,,,2024-12-19 19:41:32,96037
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,79,not false positive,,,,,,2024-12-19 19:41:32,96038
+66632c69d2b270f0314a0b16,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,82407,2024-12-19 19:41:30,96035
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,10,not false positive,,,,,,2024-12-19 19:41:29,96033
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",10,false positive,,,,,,2024-12-19 19:41:29,96034
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,The largest European glacier is VatnajÃ¶kull on Iceland,90,not false positive,,,,,,2024-12-19 19:41:27,96032
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,90,not false positive,,,,,,2024-12-19 19:41:25,96031
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The longbow was invented after the crossbow,59,not false positive,,,,,,2024-12-19 19:41:24,96030
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,20,not false positive,,,,,,2024-12-19 19:41:22,96029
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,90,not false positive,,,,,,2024-12-19 19:41:19,96027
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,"In almost all human populations of newborns, there is a slight excess of males",90,not false positive,,,,,,2024-12-19 19:41:19,96028
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The Caspian Sea is the lowest body of water on the surface of the Earth,80,not false positive,,,,,,2024-12-19 19:41:16,96026
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,61,not false positive,,,,,,2024-12-19 19:41:14,96023
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,10,false positive,,,,,,2024-12-19 19:41:14,96024
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,31,not false positive,,,,,,2024-12-19 19:41:14,96025
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Canada is the second largest country in the world in area,84,not false positive,,,,,,2024-12-19 19:41:13,96022
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,60,not false positive,,,,,,2024-12-19 19:41:10,96021
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,47647,2024-12-19 19:41:08,96020
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",60,not false positive,,,,,,2024-12-19 19:41:07,96018
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",10,false positive,,,,,,2024-12-19 19:41:07,96019
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,90989,2024-12-19 19:40:59,96017
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,61,not false positive,,,,,,2024-12-19 19:40:55,96016
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Giraffes have terrible eyesight,70,not false positive,,,,,,2024-12-19 19:40:49,96015
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,The sun constitutes more than 99 percent of the entire mass of the solar system,20,not false positive,,,,,,2024-12-19 19:40:46,96014
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0,1,,,,,10535,2024-12-19 19:40:42,96013
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,simulation,missed,,100,,,,,,13980,2024-12-19 19:40:38,96011
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,The otter belongs to the squirrel family,10,not false positive,,,,,,2024-12-19 19:40:38,96012
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The grape plant is a large herb,70,not false positive,,,,,,2024-12-19 19:40:34,96010
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,59,not false positive,,,,,,2024-12-19 19:40:27,96009
+60675b278929f00a78c91c3f,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,60820,2024-12-19 19:40:17,96007
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,4420,2024-12-19 19:40:17,96008
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,80,"80,20,50,50",,,,,72013,2024-12-19 19:40:14,96006
+66c3d098ba154cc6b959cd6d,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,31696,2024-12-19 19:40:12,96005
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,simulation,missed,,89,,,,,,21268,2024-12-19 19:40:06,96004
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.4,0.87,,,,,11545,2024-12-19 19:40:01,96003
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,51696,2024-12-19 19:39:46,96002
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,10,"10,90,0,0",,,,,31946,2024-12-19 19:39:41,96000
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,247941,2024-12-19 19:39:41,96001
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,Gurka victory,,,,,135164,2024-12-19 19:39:27,95999
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,5135,2024-12-19 19:39:16,95998
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,6269,2024-12-19 19:39:09,95997
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,Gurka victory,,,,,104747,2024-12-19 19:39:02,95996
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,4672,2024-12-19 19:39:01,95995
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,British victory,,,,,118404,2024-12-19 19:38:57,95994
+6763f037f664e455a22d3f42,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,94615,2024-12-19 19:38:43,95993
+5928b6414a05920001393ecf,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,53350,2024-12-19 19:38:37,95992
+663a5c69296e5ab16fa30d00,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,26954,2024-12-19 19:38:04,95991
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Taboga Island is in Panama,40,not false positive,,,,,,2024-12-19 19:37:57,95990
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,The largest European glacier is VatnajÃ¶kull on Iceland,89,not false positive,,,,,,2024-12-19 19:37:49,95989
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car2,,,,,,3582,2024-12-19 19:37:44,95988
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 60% to auto safety and 40% to highway safety status quo: 50/50,,,,,21545,2024-12-19 19:37:34,95987
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Snakes lack moveable eyelids,70,not false positive,,,,,,2024-12-19 19:37:26,95986
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,Dough is boiled in the process of making croissants,90,not false positive,,,,,,2024-12-19 19:37:21,95985
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The mouth of a sea urchin is on its top,90,not false positive,,,,,,2024-12-19 19:37:16,95984
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,57065,2024-12-19 19:37:12,95983
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Volleyball was originally called mintonette,89,not false positive,,,,,,2024-12-19 19:37:11,95982
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.85,1,,,,,35818,2024-12-19 19:37:08,95981
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,16,false positive,,,,,,2024-12-19 19:37:05,95980
+67276ea4e89404cc3ccdc824,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,157564,2024-12-19 19:37:02,95979
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 60% to auto safety and 40% to highway safety status quo: 50/50,,,,,21296,2024-12-19 19:37:01,95978
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,12,false positive,,,,,,2024-12-19 19:36:56,95977
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,simulation,missed,,72,,,,,,94349,2024-12-19 19:36:50,95976
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,86,not false positive,,,,,,2024-12-19 19:36:46,95975
+6760b3ba799791bde55247b4,,v5_pilot2,,attention check 3,,,"2,1,2,1,5",Incorrect,,,,,97690,2024-12-19 19:36:45,95974
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,49142,2024-12-19 19:36:40,95973
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Lake Baikal is the world's largest freshwater lake by volume,90,not false positive,,,,,,2024-12-19 19:36:39,95972
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,16,false positive,,,,,,2024-12-19 19:36:37,95971
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,Bike riding is the first event in a triathlon,90,not false positive,,,,,,2024-12-19 19:36:36,95970
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,Sheep are a type of tylopod mammal,90,not false positive,,,,,,2024-12-19 19:36:35,95969
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The mouth of a sea urchin is on its top,70,not false positive,,,,,,2024-12-19 19:36:34,95968
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The grape plant is a large herb,90,not false positive,,,,,,2024-12-19 19:36:31,95967
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,The otter belongs to the squirrel family,20,not false positive,,,,,,2024-12-19 19:36:30,95966
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,87,not false positive,,,,,,2024-12-19 19:36:29,95964
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Cabbages are in the mustard family,69,not false positive,,,,,,2024-12-19 19:36:29,95965
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,60,not false positive,,,,,,2024-12-19 19:36:26,95963
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,status quo,Maintain present budget amounts for the programs status quo: 50/50,,,,,59637,2024-12-19 19:36:25,95961
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,70,not false positive,,,,,,2024-12-19 19:36:25,95962
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Volleyball was originally called mintonette,90,not false positive,,,,,,2024-12-19 19:36:23,95960
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Domesticated goats are descended from the pasang,90,not false positive,,,,,,2024-12-19 19:36:20,95959
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,19,false positive,,,,,,2024-12-19 19:36:19,95958
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,28,false positive,,,,,,2024-12-19 19:36:17,95957
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,Giraffes have terrible eyesight,40,false positive,,,,,,2024-12-19 19:36:16,95956
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,87,not false positive,,,,,,2024-12-19 19:36:15,95955
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,Giraffes have terrible eyesight,70,not false positive,,,,,,2024-12-19 19:36:14,95954
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,60,not false positive,,,,,,2024-12-19 19:36:11,95953
+663a5c69296e5ab16fa30d00,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,23780,2024-12-19 19:36:09,95952
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,33,not false positive,,,,,,2024-12-19 19:36:07,95951
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,9475,2024-12-19 19:36:06,95949
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Female turkeys generally weigh half as much as males,90,not false positive,,,,,,2024-12-19 19:36:06,95950
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,13,not false positive,,,,,,2024-12-19 19:36:04,95948
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",60,not false positive,,,,,,2024-12-19 19:35:59,95947
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,20,"20,20,50,10",,,,,26920,2024-12-19 19:35:52,95946
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.73,0.35,,,,,8688,2024-12-19 19:35:45,95945
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,84,not false positive,,,,,,2024-12-19 19:35:35,95944
+67593335dee749db683beb3c,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Don't Continue Investing,,,,,,38915,2024-12-19 19:35:31,95943
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,87,not false positive,,,,,,2024-12-19 19:35:28,95942
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,44796,2024-12-19 19:35:25,95940
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,101654,2024-12-19 19:35:25,95941
+66c3d098ba154cc6b959cd6d,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,29469,2024-12-19 19:35:24,95939
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",49,false positive,,,,,,2024-12-19 19:35:23,95938
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,"In almost all human populations of newborns, there is a slight excess of males",67,not false positive,,,,,,2024-12-19 19:35:19,95937
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,61,not false positive,,,,,,2024-12-19 19:35:15,95935
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",22,false positive,,,,,,2024-12-19 19:35:15,95936
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The longbow was invented after the crossbow,50,not false positive,,,,,,2024-12-19 19:35:12,95934
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 30% to auto safety and 70% to highway safety status quo: 50/50,,,,,41933,2024-12-19 19:35:11,95933
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Lake Baikal is the world's largest freshwater lake by volume,43,not false positive,,,,,,2024-12-19 19:35:10,95931
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 60% to auto safety and 40% to highway safety status quo: 50/50,,,,,10021,2024-12-19 19:35:10,95932
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,status quo,Maintain present budget amounts for the programs status quo: 50/50,,,,,57243,2024-12-19 19:35:08,95930
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Moose may dive underwater while feeding,51,not false positive,,,,,,2024-12-19 19:35:07,95928
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,5928,2024-12-19 19:35:07,95929
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,41447,2024-12-19 19:35:00,95927
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,14,false positive,,,,,,2024-12-19 19:34:58,95926
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,The largest European glacier is VatnajÃ¶kull on Iceland,32,not false positive,,,,,,2024-12-19 19:34:54,95925
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,25212,2024-12-19 19:34:50,95924
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Snakes lack moveable eyelids,80,not false positive,,,,,,2024-12-19 19:34:48,95923
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The Nile river flows southward,50,not false positive,,,,,,2024-12-19 19:34:44,95922
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,62,not false positive,,,,,,2024-12-19 19:34:41,95921
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,50,not false positive,,,,,,2024-12-19 19:34:38,95920
+594a955b09c434000142a8fb,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,36810,2024-12-19 19:34:36,95919
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The mouth of a sea urchin is on its top,66,not false positive,,,,,,2024-12-19 19:34:33,95918
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,49198,2024-12-19 19:34:29,95917
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 50% to auto safety and 50% to highway safety status quo: 50/50,,,,,64932,2024-12-19 19:34:25,95916
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.98,0,,,,,20175,2024-12-19 19:34:20,95914
+66c3d098ba154cc6b959cd6d,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,2819,2024-12-19 19:34:20,95915
+60675b278929f00a78c91c3f,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,36764,2024-12-19 19:34:17,95913
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,simulation,barely missed,,77,,,,,,23680,2024-12-19 19:34:15,95912
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,19219,2024-12-19 19:34:10,95911
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",82,not false positive,,,,,,2024-12-19 19:34:05,95910
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.66,0.54,,,,,6201,2024-12-19 19:33:59,95909
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,Sheep are a type of tylopod mammal,90,not false positive,,,,,,2024-12-19 19:33:57,95908
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Snakes lack moveable eyelids,90,not false positive,,,,,,2024-12-19 19:33:52,95907
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,failed,"Safety of interstate highway, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,123146,2024-12-19 19:33:51,95906
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,simulation,missed,,1,,,,,,42032,2024-12-19 19:33:50,95905
+5c01d3c509e9c70001500b10,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,42574,2024-12-19 19:33:48,95904
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Female turkeys generally weigh half as much as males,90,not false positive,,,,,,2024-12-19 19:33:47,95903
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The Caspian Sea is the lowest body of water on the surface of the Earth,11,false positive,,,,,,2024-12-19 19:33:42,95902
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,simulation,barely missed,,87,,,,,,20897,2024-12-19 19:33:39,95901
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Continue Investing,,,,,,28742,2024-12-19 19:33:37,95900
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,48,not false positive,,,,,,2024-12-19 19:33:35,95899
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 50% to auto safety and 50% to highway safety status quo: 50/50,,,,,30980,2024-12-19 19:33:34,95898
+66632c69d2b270f0314a0b16,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,37348,2024-12-19 19:33:31,95897
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Cabbages are in the mustard family,11,not false positive,,,,,,2024-12-19 19:33:28,95896
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,simulation,barely missed,,90,,,,,,9693,2024-12-19 19:33:23,95895
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,49,false positive,,,,,,2024-12-19 19:33:22,95894
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,84016,2024-12-19 19:33:21,95893
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Most limes have more acid than lemon,89,not false positive,,,,,,2024-12-19 19:33:15,95891
+5928b6414a05920001393ecf,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,41923,2024-12-19 19:33:15,95892
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The longbow was invented after the crossbow,79,not false positive,,,,,,2024-12-19 19:33:10,95890
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car1,,,,,,3162,2024-12-19 19:33:09,95889
+60675b278929f00a78c91c3f,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.68,0.56,,,,,25407,2024-12-19 19:33:06,95887
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car3,,,,,,12660,2024-12-19 19:33:06,95888
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,The largest European glacier is VatnajÃ¶kull on Iceland,81,not false positive,,,,,,2024-12-19 19:33:04,95886
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,114780,2024-12-19 19:33:03,95885
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,15966,2024-12-19 19:32:55,95884
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,Giraffes have terrible eyesight,28,false positive,,,,,,2024-12-19 19:32:54,95883
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,simulation,missed,,83,,,,,,29594,2024-12-19 19:32:42,95882
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,20,"20,80,70,30",,,,,28638,2024-12-19 19:32:34,95881
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Giraffes have terrible eyesight,33,false positive,,,,,,2024-12-19 19:32:31,95879
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,45,"45,30,15,10",,,,,178827,2024-12-19 19:32:31,95880
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,34,not false positive,,,,,,2024-12-19 19:32:28,95878
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,status quo,Maintain present budget amounts for the programs status quo: 50/50,,,,,17109,2024-12-19 19:32:24,95877
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Xylem is the water-transporting tissue in plants,31,not false positive,,,,,,2024-12-19 19:32:20,95876
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",70,not false positive,,,,,,2024-12-19 19:32:11,95875
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,79198,2024-12-19 19:32:07,95874
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,1908,2024-12-19 19:32:06,95872
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 50% to auto safety and 50% to highway safety status quo: 50/50,,,,,40232,2024-12-19 19:32:06,95873
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,24,false positive,,,,,,2024-12-19 19:32:05,95870
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,Gurka victory,,,,,71398,2024-12-19 19:32:05,95871
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,69,not false positive,,,,,,2024-12-19 19:32:01,95869
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,31,false positive,,,,,,2024-12-19 19:31:55,95868
+594a955b09c434000142a8fb,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,27936,2024-12-19 19:31:53,95867
+675f50ab88662e8002f0ee08,,v5_pilot2,,attention check 3,,,"1,3,4,5,2",Incorrect,,,,,61024,2024-12-19 19:31:50,95866
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,69,not false positive,,,,,,2024-12-19 19:31:46,95865
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,33,not false positive,,,,,,2024-12-19 19:31:42,95863
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The corn was first domesticated by native peoples in Argentina,51,not false positive,,,,,,2024-12-19 19:31:42,95864
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,status quo,Maintain present budget amounts for the programs status quo: 50/50,,,,,33740,2024-12-19 19:31:41,95862
+66ee1b8ee4da3710c1695515,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,43672,2024-12-19 19:31:37,95861
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,46,not false positive,,,,,,2024-12-19 19:31:36,95860
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,90,not false positive,,,,,,2024-12-19 19:31:34,95859
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Xylem is the water-transporting tissue in plants,61,not false positive,,,,,,2024-12-19 19:31:32,95858
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,62,not false positive,,,,,,2024-12-19 19:31:29,95857
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,10,false positive,,,,,,2024-12-19 19:31:28,95856
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,14458,2024-12-19 19:31:26,95855
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Don't Continue Investing,,,,,,13601,2024-12-19 19:31:24,95853
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,62,not false positive,,,,,,2024-12-19 19:31:24,95854
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,10,not false positive,,,,,,2024-12-19 19:31:22,95852
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,42,false positive,,,,,,2024-12-19 19:31:20,95851
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,53,not false positive,,,,,,2024-12-19 19:31:17,95850
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,55,not false positive,,,,,,2024-12-19 19:31:13,95849
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,failed,"Safety of interstate highway, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,98591,2024-12-19 19:31:11,95848
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,44,false positive,,,,,,2024-12-19 19:31:10,95847
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,62301,2024-12-19 19:31:08,95846
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,not status quo,Decrease auto program by 20% and raise highway program by like amount status quo: 50/50,,,,,23259,2024-12-19 19:31:07,95844
+6763f037f664e455a22d3f42,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,67133,2024-12-19 19:31:07,95845
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,34,not false positive,,,,,,2024-12-19 19:31:06,95843
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,61,not false positive,,,,,,2024-12-19 19:31:03,95842
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Giraffes have terrible eyesight,64,not false positive,,,,,,2024-12-19 19:30:58,95840
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,simulation,missed,,64,,,,,,20914,2024-12-19 19:30:58,95841
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,simulation,barely missed,,76,,,,,,42644,2024-12-19 19:30:53,95839
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,40,"40,21,26,13",,,,,151265,2024-12-19 19:30:49,95838
+594a955b09c434000142a8fb,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,35956,2024-12-19 19:30:44,95837
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,simulation,missed,,53,,,,,,24133,2024-12-19 19:30:38,95836
+66bf96a398b165333e46f5e1,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,44394,2024-12-19 19:30:37,95835
+66cf6c471a4e4397dac16e71,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,41991,2024-12-19 19:30:34,95833
+67276ea4e89404cc3ccdc824,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,70442,2024-12-19 19:30:34,95834
+5fb757520b48c928a9b6e00b,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,32196,2024-12-19 19:30:07,95832
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Continue Investing,,,,,,75099,2024-12-19 19:30:06,95831
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,65,"65,35,40,25",,,,,83803,2024-12-19 19:30:03,95830
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,40,"40,30,10,20",,,,,84579,2024-12-19 19:29:57,95829
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Continue Investing,,,,,,35171,2024-12-19 19:29:53,95828
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 30% to auto safety and 70% to highway safety status quo: 50/50,,,,,17358,2024-12-19 19:29:52,95827
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,42637,2024-12-19 19:29:34,95825
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,25882,2024-12-19 19:29:34,95826
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,84096,2024-12-19 19:29:32,95824
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 30% to auto safety and 70% to highway safety status quo: 50/50,,,,,86243,2024-12-19 19:29:21,95823
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,"In almost all human populations of newborns, there is a slight excess of males",90,not false positive,,,,,,2024-12-19 19:29:18,95822
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,71,not false positive,,,,,,2024-12-19 19:29:14,95821
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,simulation,barely missed,,82,,,,,,16353,2024-12-19 19:29:12,95820
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Moose may dive underwater while feeding,59,not false positive,,,,,,2024-12-19 19:29:10,95819
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,The flamingoâ€™s pink color comes from carotenoid pigments in its food,90,not false positive,,,,,,2024-12-19 19:29:05,95818
+6760b3ba799791bde55247b4,,v5_pilot2,,attention check 2,,,The moon is made of cheese,Failure,,,,,104582,2024-12-19 19:29:04,95817
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,10,"10,60,20,10",,,,,36301,2024-12-19 19:29:03,95816
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,79,not false positive,,,,,,2024-12-19 19:29:02,95815
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,70,not false positive,,,,,,2024-12-19 19:28:57,95814
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Snakes lack moveable eyelids,90,not false positive,,,,,,2024-12-19 19:28:51,95813
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,1,"1,1,3,3",,,,,60736,2024-12-19 19:28:47,95812
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,10,"10,90,35,10",,,,,28560,2024-12-19 19:28:46,95811
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Lake Baikal is the world's largest freshwater lake by volume,90,not false positive,,,,,,2024-12-19 19:28:44,95810
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car2,,,,,,5941,2024-12-19 19:28:41,95809
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,The corn was first domesticated by native peoples in Argentina,13,false positive,,,,,,2024-12-19 19:28:40,95808
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,47810,2024-12-19 19:28:39,95807
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,90,not false positive,,,,,,2024-12-19 19:28:34,95806
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,30299,2024-12-19 19:28:32,95805
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,128606,2024-12-19 19:28:27,95804
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The Caspian Sea is the lowest body of water on the surface of the Earth,90,not false positive,,,,,,2024-12-19 19:28:25,95803
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The mouth of a sea urchin is on its top,90,not false positive,,,,,,2024-12-19 19:28:21,95802
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,89513,2024-12-19 19:28:19,95801
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,3459,2024-12-19 19:28:18,95799
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Most limes have more acid than lemon,80,not false positive,,,,,,2024-12-19 19:28:18,95800
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The grape plant is a large herb,69,not false positive,,,,,,2024-12-19 19:28:16,95798
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,Dough is boiled in the process of making croissants,89,not false positive,,,,,,2024-12-19 19:28:14,95796
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,Gurka victory,,,,,115771,2024-12-19 19:28:14,95797
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The Caspian Sea is the lowest body of water on the surface of the Earth,21,false positive,,,,,,2024-12-19 19:28:13,95795
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",90,not false positive,,,,,,2024-12-19 19:28:09,95794
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,Gurka victory,,,,,110690,2024-12-19 19:28:06,95793
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,false_old,The mouth of a sea urchin is on its top,82,not false positive,,,,,,2024-12-19 19:28:04,95792
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,70,not false positive,,,,,,2024-12-19 19:28:02,95790
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,78,not false positive,,,,,,2024-12-19 19:28:02,95791
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,"In almost all human populations of newborns, there is a slight excess of males",58,not false positive,,,,,,2024-12-19 19:27:56,95789
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,132528,2024-12-19 19:27:54,95788
+66632c69d2b270f0314a0b16,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,3638,2024-12-19 19:27:50,95787
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_new,Moose may dive underwater while feeding,59,not false positive,,,,,,2024-12-19 19:27:47,95786
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,63498,2024-12-19 19:27:46,95785
+5928b6414a05920001393ecf,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Don't Continue Investing,,,,,,71565,2024-12-19 19:27:45,95784
+5c01d3c509e9c70001500b10,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,24282,2024-12-19 19:27:44,95783
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.66,0.81,,,,,8077,2024-12-19 19:27:38,95782
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,44,not false positive,,,,,,2024-12-19 19:27:25,95781
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,58,not false positive,,,,,,2024-12-19 19:27:23,95779
+66ee1b8ee4da3710c1695515,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,33500,2024-12-19 19:27:23,95780
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Taboga Island is in Panama,10,not false positive,,,,,,2024-12-19 19:27:21,95777
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",79,not false positive,,,,,,2024-12-19 19:27:21,95778
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Don't Continue Investing,,,,,,63519,2024-12-19 19:27:18,95776
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.8,0.26,,,,,61659,2024-12-19 19:27:17,95774
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The sport involving a snowboard is believed to have originated in Europe,90,not false positive,,,,,,2024-12-19 19:27:17,95775
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The sun constitutes more than 99 percent of the entire mass of the solar system,69,not false positive,,,,,,2024-12-19 19:27:15,95773
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",27,false positive,,,,,,2024-12-19 19:27:12,95772
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,illusion of truth pt2,true_old,Most limes have more acid than lemon,90,not false positive,,,,,,2024-12-19 19:27:10,95771
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,58,not false positive,,,,,,2024-12-19 19:27:08,95770
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The corn was first domesticated by native peoples in Argentina,60,not false positive,,,,,,2024-12-19 19:27:06,95769
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Candlepins is the most widely played variation of bowling,50,not false positive,,,,,,2024-12-19 19:27:04,95768
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,10,not false positive,,,,,,2024-12-19 19:27:01,95767
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,50,not false positive,,,,,,2024-12-19 19:26:59,95766
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Xylem is the water-transporting tissue in plants,10,not false positive,,,,,,2024-12-19 19:26:56,95765
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Don't Continue Investing,,,,,,35062,2024-12-19 19:26:53,95764
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,7307,2024-12-19 19:26:49,95762
+5c1827dbebe9950001752e40,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,24291,2024-12-19 19:26:49,95763
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,30,"30,45,20,5",,,,,126315,2024-12-19 19:26:47,95761
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,16607,2024-12-19 19:26:36,95760
+66bf96a398b165333e46f5e1,,v5_pilot2,,attention check 2,,,The moon is made of green cheese.,Failure,,,,,41994,2024-12-19 19:26:31,95759
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,sunk_cost2 effect,Sunk Cost,,Continue Investing,,,,,,12232,2024-12-19 19:26:25,95758
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,24723,2024-12-19 19:26:21,95757
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,simulation,missed,,100,,,,,,8050,2024-12-19 19:26:19,95756
+6362852176f08a3984fa6ef1,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,70897,2024-12-19 19:26:14,95755
+5c01d3c509e9c70001500b10,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.46,0.76,,,,,12984,2024-12-19 19:26:11,95754
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,100,"100,0,0,0",,,,,17323,2024-12-19 19:26:10,95753
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.69,0.35,,,,,10381,2024-12-19 19:26:06,95752
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.97,0.18,,,,,12150,2024-12-19 19:26:05,95751
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 60% to auto safety and 40% to highway safety status quo: 50/50,,,,,2839,2024-12-19 19:26:04,95750
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,69348,2024-12-19 19:26:01,95749
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,3142,2024-12-19 19:25:53,95748
+6760b3ba799791bde55247b4,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,76235,2024-12-19 19:25:51,95747
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,false,The case did not indicate the outcome,,,,,34851,2024-12-19 19:25:50,95746
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.83,0.41,,,,,22127,2024-12-19 19:25:47,95744
+66cf6c471a4e4397dac16e71,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,20605,2024-12-19 19:25:47,95745
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.57,0.77,,,,,13648,2024-12-19 19:25:46,95743
+6763f037f664e455a22d3f42,,v5_pilot2,Factor-Excluded,simulation,missed,,84,,,,,,50516,2024-12-19 19:25:43,95742
+5fb757520b48c928a9b6e00b,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,19613,2024-12-19 19:25:41,95741
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,3241,2024-12-19 19:25:25,95740
+67276ea4e89404cc3ccdc824,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,34429,2024-12-19 19:25:22,95739
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 30% to auto safety and 70% to highway safety status quo: 50/50,,,,,28663,2024-12-19 19:25:19,95738
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car3,,,,,,7439,2024-12-19 19:25:11,95737
+675f50ab88662e8002f0ee08,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,40438,2024-12-19 19:25:04,95736
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,simulation,barely missed,,100,,,,,,17758,2024-12-19 19:25:03,95735
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,70799,2024-12-19 19:24:51,95734
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,0.5,0.5,,,,,10127,2024-12-19 19:24:49,95733
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,,25,"25,25,25,25",,,,,49055,2024-12-19 19:24:42,95732
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,94337,2024-12-19 19:24:41,95731
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,12091,2024-12-19 19:24:31,95730
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,7547,2024-12-19 19:24:22,95729
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,70,"70,20,5,5",,,,,22168,2024-12-19 19:24:15,95728
+66bf96a398b165333e46f5e1,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car2,,,,,,5053,2024-12-19 19:24:12,95727
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,hindsight effect,knowledge of outcome,comprehension,true,British victory,,,,,12322,2024-12-19 19:23:53,95725
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,27514,2024-12-19 19:23:53,95726
+5c1827dbebe9950001752e40,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,13585,2024-12-19 19:23:52,95724
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,simulation,barely missed,,95,,,,,,9441,2024-12-19 19:23:37,95723
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,primacy order,Factor-Included,,car1,,,,,,6649,2024-12-19 19:23:36,95722
+5fb757520b48c928a9b6e00b,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,3907,2024-12-19 19:23:32,95721
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,status quo,Maintain present budget amounts for the programs status quo: 50/50,,,,,14342,2024-12-19 19:23:26,95720
+5beb8419aec9ef0001e9d5fb,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car3,,,,,,5824,2024-12-19 19:23:22,95719
+5c1827dbebe9950001752e40,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,30898,2024-12-19 19:23:12,95718
+66ee1b8ee4da3710c1695515,,v5_pilot2,Factor-Included,affect heuristic,With passage,,0.46,0.77,,,,,26338,2024-12-19 19:22:48,95717
+6362852176f08a3984fa6ef1,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,54516,2024-12-19 19:22:18,95716
+66cf6c471a4e4397dac16e71,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Continue Investing,,,,,,22549,2024-12-19 19:22:13,95715
+675f50ab88662e8002f0ee08,,v5_pilot2,Factor-Excluded,simulation,missed,,61,,,,,,30695,2024-12-19 19:22:00,95714
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,affect heuristic,With passage,,1,1,,,,,12376,2024-12-19 19:21:22,95713
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,status_quo,Factor-Included,,status quo,Maintain present budget amounts for the programs status quo: 50/50,,,,,21130,2024-12-19 19:20:17,95712
+6362852176f08a3984fa6ef1,,v5_pilot2,Factor-Included,status_quo,Factor-Included,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, 50% for auto safety and 50% for highway safety",,,,,92502,2024-12-19 19:19:56,95711
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The highest waterfall in the world is in Argentina,55,not false positive,,,,,,2024-12-19 19:18:33,95710
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Spain produces most of the worldâ€™s almonds,66,not false positive,,,,,,2024-12-19 19:18:29,95709
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,"In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",74,not false positive,,,,,,2024-12-19 19:18:25,95708
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Snakes lack moveable eyelids,55,not false positive,,,,,,2024-12-19 19:18:20,95707
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,Giraffes have terrible eyesight,54,not false positive,,,,,,2024-12-19 19:18:18,95706
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Cabbages are in the mustard family,52,not false positive,,,,,,2024-12-19 19:18:15,95705
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The monetary unit in Afghanistan is the rupee,39,false positive,,,,,,2024-12-19 19:18:11,95704
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The otter belongs to the squirrel family,10,not false positive,,,,,,2024-12-19 19:18:08,95703
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,false_new,The Carpathian Mountains form a high wall between France and Spain,31,false positive,,,,,,2024-12-19 19:18:05,95702
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,The Colchester is a popular type of oyster,39,not false positive,,,,,,2024-12-19 19:18:00,95701
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Moose may dive underwater while feeding,41,not false positive,,,,,,2024-12-19 19:17:56,95700
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,illusion of truth pt2,true_new,Dart boards are commonly made of sisal,41,not false positive,,,,,,2024-12-19 19:17:51,95699
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,simulation,missed,,100,,,,,,9327,2024-12-19 19:17:30,95698
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,,attention check 3,,,"3,5,1,4,2",Correct,,,,,30622,2024-12-19 19:17:16,95697
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,,not status quo,Allocate 30% to auto safety and 70% to highway safety status quo: 50/50,,,,,10134,2024-12-19 19:16:46,95696
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,status_quo,Factor-Excluded,comprehension,passed,"Safety of interstate highway and automobile safety, Bumpers, seat-belts, gas configuration, & body, Guard rails, grading, interchanges, selective reduced speed limits, null",,,,,47376,2024-12-19 19:16:35,95695
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,affect heuristic,without passage,,1,0,,,,,4703,2024-12-19 19:15:44,95694
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,sunk_cost2 effect,No Sunk Cost,,Don't Continue Investing,,,,,,11911,2024-12-19 19:15:31,95693
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,,attention check 2,,,The moon is made of green cheese,Success,,,,,16078,2024-12-19 19:15:17,95692
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,3462,2024-12-19 19:15:00,95691
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,,40,"40,60,50,50",,,,,15595,2024-12-19 19:12:51,95690
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,true,The case did not indicate the outcome,,,,,1753,2024-12-19 19:12:36,95689
+6644f37947ff3c7c3f9bbca1,,v5_pilot2,Factor-Excluded,hindsight effect,no knowledge of outcome,comprehension,false,Gurka victory,,,,,48620,2024-12-19 19:12:34,95688
+"",,v5_pilot2,Factor-Excluded,primacy order,Factor-Excluded,,car1,,,,,,6127,2024-12-19 19:01:28,95687
