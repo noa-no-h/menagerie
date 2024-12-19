@@ -14,10 +14,11 @@ var car4 = car_names_shuffled[3]
  var car1_positive_attributes = [
      `<p style = "font-size:30px">The ${car1} has good mileage</p>`,
      `<p style = "font-size:30px">The ${car1} has good handling</p>`,
-     `<p style = "font-size:30px">The ${car1} is relatively good for the environment</p>`,
+     `<p style = "font-size:30px">The ${car1} is good for the environment</p>`,
      `<p style = "font-size:30px">The ${car1} has a good sound system</p>`,
      `<p style = "font-size:30px">With the ${car1} it is easy to shift gears</p>`,
-     `<p style = "font-size:30px">The ${car1} has a large trunk</p>`
+     `<p style = "font-size:30px">The ${car1} has a large trunk</p>`,
+     `<p style = "font-size:30px">For the ${car1}, service is good</p>`
     ]
 
 var shuffled_car1_positive_attributes = _.shuffle(car1_positive_attributes)
@@ -39,7 +40,8 @@ var car1_negative_attributes = [
     `<p style = "font-size:30px">The ${car2} is relatively good for the environment</p>`,
     `<p style = "font-size:30px">The ${car2} has a good sound system</p>`,
     `<p style = "font-size:30px">With the ${car2} it is easy to shift gears</p>`,
-    `<p style = "font-size:30px">The ${car2} has a large trunk</p>`
+    `<p style = "font-size:30px">The ${car2} has a large trunk</p>`,
+    `<p style = "font-size:30px">For the ${car1}, service is good</p>`
     ]
 
 var shuffled_car2_positive_attributes = _.shuffle(car2_positive_attributes)
@@ -54,17 +56,34 @@ var car2_negative_attributes = [
 
 var shuffled_car2_negative_attributes = _.shuffle(car2_negative_attributes)
 
-var shuffled_car1_positive_car_two_negative = _.shuffle(shuffled_car1_positive_attributes.concat(shuffled_car2_negative_attributes))
-var shuffled_car1_negative_car_two_positive = _.shuffle(shuffled_car1_negative_attributes.concat(shuffled_car2_positive_attributes))
+var car3_attributes = [
+    `<p style = "font-size:30px">The ${car3} has plenty of legroom</p>`,
+    `<p style = "font-size:30px">The ${car3} is new</p>`,
+    `<p style = "font-size:30px">For the ${car3}, service is good</p>`,
+    `<p style = "font-size:30px">With the ${car3} it is easy to change gears</p>`,
+    `<p style = "font-size:30px">The ${car3} has a small trunk</p>`,
+    `<p style = "font-size:30px">The ${car3} has no sunroof</p>`,
+    `<p style = "font-size:30px">The ${car3} has no cup holders</p>`,
+    `<p style = "font-size:30px">The ${car3} has poor mileage</p>`,
+    `<p style = "font-size:30px">The ${car3} has a poor sound system</p>`,
+    `<p style = "font-size:30px">The ${car3} has poor handling</p>`,
+    `<p style = "font-size:30px">The ${car3} is not very good for the environment</p>`,
+    `<p style = "font-size:30px">The ${car3} is available in very few different colors</p>`
+]
+
+var shuffled_car3_attributes = _.shuffle(car3_attributes);
+
+var shuffled_car1_positive_car2_negative = _.shuffle(shuffled_car1_positive_attributes.concat(shuffled_car2_negative_attributes).concat(shuffled_car3_attributes.slice(0,5)))
+var shuffled_car1_negative_car2_positive = _.shuffle(shuffled_car1_negative_attributes.concat(shuffled_car2_positive_attributes).concat(shuffled_car3_attributes.slice(0,5)))
 var bad_1_first = [];
-var random = _.shuffle(car1_positive_attributes.concat(car1_positive_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes));
+var random = _.shuffle(car1_positive_attributes.concat(car1_positive_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes).concat(car3_attributes));
 
 for (var i = 0; i < 11; i++) {
-    bad_1_first.push(shuffled_car1_positive_car_two_negative[i]);
+    bad_1_first.push(shuffled_car1_positive_car2_negative[i]);
 }
 
 for (var i = 0; i < 11; i++) {
-    bad_1_first.push(shuffled_car1_negative_car_two_positive[i]);
+    bad_1_first.push(shuffled_car1_negative_car2_positive[i]);
 }
 
 console.log(bad_1_first)
@@ -90,8 +109,9 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
  var primacy_order_instructions1 = {
      type: jsPsychInstructions,
      pages: [
-         `<p> In this task, you will see 22 facts about two cars with each fact shown for 3 seconds each. Then you will choose the car you think is best.</p>
- <p><i>Please click the "Next" button when you are ready to see the descriptions of the cars.</i></p>`,
+         `<p> In this task, you will see a series of facts about three different cars. Each fact will be shown on the screen for 3 seconds. There will be 36 facts total.</p>
+         <p>Afterward, you will choose the car you think is best.</p>
+        <p><i>Please click the "Next" button when you are ready to see the facts about the cars.</i></p>`,
      ],
      show_clickable_nav: true
  };
@@ -104,13 +124,18 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
 
  var choice = null;
  var primacy_order_question = {
-     type: jsPsychHtmlButtonResponse,
-     stimulus: "Choose the car you think is best",
-     choices: [car1, car2],
+     type: jsPsychSurveyMultiChoice,
+     questions: [
+        {
+          prompt: "Which car do you think is best?", 
+          name: 'choice', 
+          options: [car1, car2], 
+          required: true,
+          horizontal: false
+        }, 
+    ],
      on_finish: function (data) {
-        choice = data.response == 0 ? "car1" : "car2"
- 
-         
+        choice = data.response.choice == car1 ? "car1" : "car2";
      }
  }
  
@@ -118,7 +143,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
  var primacy_order_openQ = {
      type: jsPsychSurveyText,
      questions: [{
-         prompt: `<p>In this exercise, you were shown a series of facts about each car and then asked to choose the car you thought was best.</p>
+         prompt: `<p>In this exercise, you were shown a series of facts about different cars and asked to choose the car you thought was best.</p>
  <p>Describe your thought process during this exercise. How did you come to your eventual choice about which car was best?</p>`,
          required: required_general, rows: 5, columns: 80
      }],
@@ -127,19 +152,23 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
      }
  };
  
- var introspection_q_labels_mee1 = [`<strong>The fact that all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list, made me think the ${car1} was <u>THE BETTER</u> car</strong>`, "", "<strong>The order of the facts did not affect my response</strong>", "", `<strong>The fact that all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list, made me think the ${car1} was <u>THE WORSE</u>car</strong>`];
- var introspection_q_labels_mee2 = [`<strong>If all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list, that would have made me think the ${car1} was <u>THE BETTER</u> car</strong>`, "", "<strong>The order of the facts would not have affected my response</strong>", "", `<strong>If all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list, that would have made me think the ${car1} was <u>THE WORSE</u> car</strong>`];
+ var introspection_q_labels_mee1 = [`<strong>This ordering made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts did not affect my response</strong>", "", `<strong>This ordering made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`];
+ var introspection_q_labels_mee2 = [`<strong>This ordering would have made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts would not have affected my response</strong>", "", `<strong>This ordering would have made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`];
  
  var primacy_order_intro_response1 = null;
  var primacy_order_introspect1 = {
      type: jsPsychHtmlSliderResponse,
      stimulus: function () {
          if (condition[0] == "Factor-Included") {
-             return `During this exercise, you were initially shown a series of facts about each car. Then, you were asked to choose the car you liked best. In the facts about each car, all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list and all the positive facts about the ${car2} and the negative facts about the ${car1} showed up towards the end of the list.
-             <p>Do you think the <b>fact that all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list</b> about each car affected your choice about which car you liked best? If so, how?`
+             return `During this exercise, you were shown a series of facts about each car and asked to choose the car you liked best.<br><br>
+             It turns out these facts were presented in a specific ordering. <b>We showed you all the positive info about the ${car1} at the beginning, and all the negative info about it at the end.</b> The order for the ${car2} was flipped: <b>We showed you all the negative info about the ${car2} at the beginning, and all the positive info about it at the end.</b><br><br>
+             In other words, for the ${car1} it was "positive first, negative last", and for the ${car2} it was "negative first, positive last".
+             <p>Do you think this ordering affected your choice about which car you liked best? If so, how?`
          } else {
-             return `During this exercise, you were initially shown a series of facts about each car. Then, you were asked to choose the car you liked best. Now imagine that the facts about each car were presented in a specific order: Imagine that all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list and all the positive facts about the ${car2} and the negative facts about the ${car1} showed up towards the end of the list.
-             <p>Do you think the <b>fact that all the positive facts about the ${car1} and the negative facts about the ${car2} showed up towards the beginning of the list</b> about each car would have affected your choice about which car you liked best? If so, how?`
+             return `During this exercise, you were shown a series of facts about each car and asked to choose the car you liked best.<br><br>
+             Now imagine that the facts about each car had been presented in a specific ordering. <b>Imagine that we had showed you all the positive info about the ${car1} at the beginning, and all the negative info about it at the end.</b> In contrast, imagine that the order for the ${car2} had been flipped: <b>Imagine we'd shown you all the negative info about the ${car2} at the beginning, and all the positive info about it at the end.</b><br><br>
+             In other words, imagine that for the ${car1} it had been "positive first, negative last", and for the ${car2} it had been "negative first, positive last".
+             <p>Do you think this ordering would have affected your choice about which car you liked best? If so, how?`
          }
      },
      labels: condition[0] == 'Factor-Included' ? introspection_q_labels_mee1 : introspection_q_labels_mee2,

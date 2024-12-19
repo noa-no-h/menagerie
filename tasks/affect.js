@@ -29,9 +29,19 @@ var affect_question = {
     type: jsPsychSurveySlider,
     questions: [
         {
-            prompt: `<p>In general, how beneficial do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
+            prompt: `<p>In general, how <b>beneficial</b> do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
             name: "benefit",
-            ticks: ["Not at all beneficial", "Moderate benefit", "Very beneficial"],
+            ticks: ["Not at all beneficial", "Moderately beneficial", "Very beneficial"],
+            required: true,
+            min: 0,
+            slider_start: 0.5,
+            max: 1,
+            step: 0.01
+        },
+        {
+            prompt: `<p>In general, how <b>risky</b> do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
+            name: "risk",
+            ticks: ["Not at all risky", "Moderately risky", "Very risky"],
             required: true,
             min: 0,
             slider_start: 0.5,
@@ -42,8 +52,9 @@ var affect_question = {
     on_finish: function (data) {
         var responseObject = JSON.parse(data.response);
         benefit = responseObject["benefit"];
-
-    }
+        risk = responseObject["risk"];
+    },
+    randomize_question_order: true
 };
 
 var risk_passage = `
@@ -65,7 +76,7 @@ var affect_openQ_response = null;
 var affect_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked to judge how beneficial the use of natural gas is to U.S. society as a whole.</p><p>Describe your thought process while judging how beneficial it is. How did you come to your eventual judgment?</p>`,
+        prompt: `<p>In this exercise, you were asked to judge how beneficial the use of natural gas is to U.S. society as a whole, and how risky it is. <b>Focus now just on the judgment you made about how <u>beneficial</u> it is.</b></p><p>Describe your thought process while judging how beneficial it is. How did you come to your eventual judgment?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -82,15 +93,17 @@ var affect_introspect1 = {
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `
-                <p>In this task, before judging its benefits, you first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
+                <p>In this task, you judged how beneficial natural gas is to U.S. society, and how risky it is. <b>Again, focus just on the judgment you made about how <u>beneficial</u> it is.</b></p>
+                <p>Before judging its benefits, you first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
                 
-                <p>Do you think <b>the presence of that passage</b> influenced your judgment of how beneficial natural gas is? If so, how?</p>
+                <p>Do you think <b>the presence of that passage</b> influenced your judgment of how <u>beneficial</u> natural gas is? If so, how?</p>
             `;
         } else {
             return `
-                <p>In this task, you judged how beneficial natural gas is to U.S. society. Now imagine that before judging its benefits, you had first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
+                <p>In this task, you judged how beneficial natural gas is to U.S. society, and how risky it is. <b>Again, focus just on the judgment you made about how <u>beneficial</u> it is.</b></p>
+                <p>Imagine that before judging its benefits, you had first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
                 
-                <p>Do you think <b>the presence of that passage</b> would have influenced your judgment of how beneficial natural gas is? If so, how?</p>
+                <p>Do you think <b>the presence of that passage</b> would have influenced your judgment of how <u>beneficial</u> natural gas is? If so, how?</p>
             `;
         }
     },

@@ -1,9 +1,5 @@
 //#region 5. simulation Effect - BETWEEN
 
-var confidence_q = condition[0] == 'Factor-Included' ? 
-    `<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the <b>fact that ${person} barely missed his flight</b>?)</p>` : 
-    `<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the <b>fact that ${person} barely missed his flight</b>?)</p>`;
-
 var simulation_instructions = {
     type: jsPsychInstructions,
     pages: [
@@ -18,6 +14,10 @@ var risk = null;
 var benefit = null;
 var person = condition[0] == 'Factor-Included' ? "Mr. C" : "Mr. D";
 
+var confidence_q = condition[0] == 'Factor-Included' ? 
+    `<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the <b>fact that ${person} barely missed his flight</b>?)</p>` : 
+    `<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the <b>fact that ${person} barely missed his flight</b>?)</p>`;
+
 var prompt = condition[0] == 'Factor-Included' ?
     `Mr. C traveled to the airport from town in a limousine, was caught in a traffic jam, and arrived at the airport 30 minutes after the scheduled departure of his flight. Mr. C is told that his flight was delayed, and only left 5 minutes ago. <br><br> On the following scale, how upset do you expect Mr. C to be over this episode?` :
     `Mr. D traveled to the airport from town in a limousine, was caught in a traffic jam, and arrived at the airport 30 minutes after the scheduled departure of his flight. Mr. D is told that his flight left on time. <br><br> On the following scale, how upset do you expect Mr. D to be over this episode?`;
@@ -30,9 +30,9 @@ var simulation_question = {
             name: "upset",
             ticks: ["Not upset", "", "Somewhat upset", "", "Extremely upset"],
             required: true,
-            min: 0,
-            slider_start: 2,
-            max: 4,
+            min: 1,
+            slider_start: 50,
+            max: 100,
             step: 1,
             slider_width: 1500
         }
@@ -56,8 +56,8 @@ var simulation_openQ = {
     }
 };
 
-var introspection_q_labels_simulation1 = [`<strong>It made me likely to judge ${person} as <u>MORE</u> upset</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me likely to judge ${person} as <u>LESS</u> upset</strong>`];
-var introspection_q_labels_simulation2 = [`<strong>It would have made me likely to judge ${person} as <u>MORE</u> upset</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It upset have made me likely to judge ${person} as <u>LESS</u> upset</strong>`];
+var introspection_q_labels_simulation1 = [`<strong>It made me think ${person} would be <u>MORE</u> upset</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me think ${person} would be <u>LESS</u> upset</strong>`];
+var introspection_q_labels_simulation2 = [`<strong>It would have made me think ${person} would be <u>MORE</u> upset</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me think ${person} would be <u>LESS</u> upset</strong>`];
 
 var simulation_intro_response1 = null;
 var simulation_introspect1 = {
@@ -66,14 +66,14 @@ var simulation_introspect1 = {
         if (condition[0] == "Factor-Included") {
             return `
                 <p>In this task, you judged how upset you expected ${person} to be after missing his plane.</p>
-                <p>You were first told that ${person} barely missed his flight.</p>
+                <p>You were first told that ${person} barely missed his flight (his plane left 5 minutes before he arrived).</p>
                 <p>Do you think <b>the fact that ${person} barely missed his flight</b> influenced your judgment of how upset he was? If so, how?</p>
             `;
         } else {
             return `
                 <p>In this task, you judged how much upset you expected ${person} to be after missing his plane.</p>
-                <p>Imagine you were first told that ${person} barely missed his flight.</p>
-                <p>Do you think <b>the fact that ${person} barely missed his flight</b> would have influenced your judgment of how upset he was? If so, how?</p>
+                <p>Imagine you were first told that ${person} had barely missed his flight (his plane had left 5 minutes before he arrived).</p>
+                <p>Do you think <b>the fact that ${person} had barely missed his flight</b> would have influenced your judgment of how upset he was? If so, how?</p>
             `;
         }
     },

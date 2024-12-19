@@ -1,7 +1,7 @@
 //#region 5. sunk_cost2 Effect - BETWEEN
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that you had already invested 10 million dollars)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that you had already invested 10 million dollars)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that you had already spent 9 million dollars)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that you had already spent 9 million dollars)?</p>";
 
 var sunk_cost2_instructions = {
     type: jsPsychInstructions,
@@ -14,10 +14,10 @@ var sunk_cost2_instructions = {
 
 var stimulus = function(){if (condition[0] == "Factor-Included") {
     return `<p><b>Please consider the following scenario:</b></p>
-<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed, another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>The question is: should you invest the last million dollars of your research fund to finish the radar-blank plane?</p>`
+<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed (and 9 million dollars have already been spent), another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>The question is: should you spend the last million dollars of your research fund to finish the radar-blank plane?</p>`
 } else {
     return `<p><b>Please consider the following scenario:</b></p>
-<p>As president of an airline company, you have received a suggestion from one of your employees. The suggestion is to use the last 1 million dollars of your research fund to develop a plane that would not be detected by conventional radar, in other words, a radar-blank plane. However, another firm has just begun marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company could build. <br><br>The question is: should you invest the last million dollars of your research fund to build the radar-blank plane?</p>`
+<p>As president of an airline company, you have received a suggestion from one of your employees. The suggestion is to use the last 1 million dollars of your research fund to develop a plane that would not be detected by conventional radar, in other words, a radar-blank plane. However, another firm has just begun marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company could build. <br><br>The question is: should you spend the last million dollars of your research fund to build the radar-blank plane?</p>`
 }}
 
 
@@ -47,21 +47,21 @@ var sunk_cost2_openQ = {
     }
 };
 
-var introspection_q_labels_sunk_cost21 = [`<strong>It made me <u>MORE</u> likely to invest the last million dollars`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to invest the last million dollars`];
-var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>MORE</u> likely to invest the last million dollars`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to invest the last million dollars`];
+var introspection_q_labels_sunk_cost21 = [`<strong>It made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
+var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
 
 var sunk_cost2_intro_response1 = null;
 var sunk_cost2_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this task, you were asked whether you would invest the last million dollars of your research fund to finish the radar-blank plane given that another firm is marketing a faster and more economical radar-blank plane </p>
-                <p>We also told you that you had already invested 10 million dollars into this research project.</p>
-                <p>Do you think <b>the fact that you had already invested 10 million dollars</b> affected your response? If so, how?</p>`;
+            return `<p>In this task, you were asked whether you would spend the last million dollars of your research fund to finish the radar-blank plane.</p>
+                <p>You were told that you had already spent 9 million dollars on this research project.</p>
+                <p>Do you think <b>the fact that you had already spent 9 million dollars on the project</b> affected your response? If so, how?</p>`;
          } else {
-            return `<p>In this task, you were asked whether you would invest the last million dollars of your research fund to finish the radar-blank plane given that another firm is marketing a faster and more economical radar-blank plane </p>
-                <p>Now imagine that you had already invested 10 million dollars into this research project.</p></p>
-                <p>Do you think <b>the fact that you had already invested 10 million dollars</b> would have affected your response? If so, how?</p>`;
+            return `<p>In this task, you were asked whether you would spend the last million dollars of your research fund to build the radar-blank plane.</p>
+                <p>Now imagine that you had already spent 9 million dollars on this research project.</p></p>
+                <p>Do you think <b>the fact that you had already spent 9 million dollars on the project</b> would have affected your response? If so, how?</p>`;
          }
     },
     labels: condition[0] == 'Factor-Included' ? introspection_q_labels_sunk_cost21 : introspection_q_labels_sunk_cost22,
