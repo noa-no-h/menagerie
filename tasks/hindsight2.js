@@ -157,6 +157,7 @@ var hindsight_question = {
         probStalematePeace = parseInt(data.response.StalematePeace, 10);
 
         if (only_main_question) {
+            //console.log("only_main_question");
             s1_data = {
                 subject: data.subject,
                 version: data.version,
@@ -172,6 +173,9 @@ var hindsight_question = {
                 familiarity: null,
                 rt: data.rt
             };
+            //console.log(s1_data);
+            save_data(s1_data, 'introspection');
+
         }
     } 
 }; 

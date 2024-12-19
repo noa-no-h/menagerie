@@ -40,7 +40,7 @@ var simulation_question = {
     on_finish: function (data) {
         var responseObject = JSON.parse(data.response);
         upset = responseObject["upset"];
-        if (only_main_questions) {
+        if (only_main_question) {
             s1_data = {
                 subject: data.subject,
                 version: data.version,
