@@ -88,6 +88,26 @@ required: true}],
                 }
             }
             console.log(data.response)
+
+            if(only_main_question){
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                factor: data.condition,
+                task_name: "status_quo",
+                condition: condition[0],
+                stimulus: stimulus,
+                choice: choice,
+                auxiliary_info1: which_option + " status quo: 50/50",
+                openq_response: null,
+                introspect_rating: null,
+                introspect_open: null,
+                familiarity: null,
+                rt: data.rt
+            };
+            console.log(s1_data);
+            save_data(s1_data, 'introspection');
+        }
         }
     },
 ],
