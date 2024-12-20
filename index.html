@@ -107,7 +107,7 @@
 
         var trivia_question_already = false;
         var only_main_question = true;
-        var time_needed = "20";
+        var time_needed = "15";
 
         //#endregion
 
@@ -579,8 +579,8 @@ var next_task = {
         console.log("task_list: ", task_list);
 
         var task_list_shuffled_no_in_between = _.shuffle(task_list);
-        task_list_shuffled_no_in_between.unshift(illusion_of_truth_pt1);
-        task_list_shuffled_no_in_between.push(illusion_of_truth_pt2);
+        //task_list_shuffled_no_in_between.unshift(illusion_of_truth_pt1);
+        //task_list_shuffled_no_in_between.push(illusion_of_truth_pt2);
 
         var task_list_shuffled = [];
         for (let i = 0; i < task_list_shuffled_no_in_between.length; i++) {
