@@ -854,9 +854,18 @@ print(t_test_result)
 illusory_truth_data <- december_pilot %>%
   filter(task_name == "illusion of truth pt2") %>%
   filter(stimulus != "")%>%
-  mutate(auxiliary_info1 = ifelse(choice > 50 & (condition == "false_new" | condition == "false_old"), 
+  mutate(choice = as.numeric(choice),
+        auxiliary_info1 = ifelse(choice > 50 & (condition == "false_new" | condition == "false_old"), 
                                   "false positive", 
-                                  "not false positive"))
+                                  "not false positive"),
+         seen_before = condition %in% c('true_old', 'false_old'),
+         response_over_midpoint = choice > 50)
+
+illusory_truth_summary = illusory_truth_data %>% 
+  filter(factor == 'Factor-Included') %>% 
+  group_by(seen_before) %>% 
+  summarize(mean_choice = mean(choice),
+            mean_response_over_midpoint = mean(response_over_midpoint))
 
 false_positive_counts <- illusory_truth_data %>%
   filter(auxiliary_info1 == "false positive") %>%
