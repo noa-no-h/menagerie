@@ -814,7 +814,10 @@ ggplot(summary_hindsight, aes(x = factor, y = mean_introspect_rating, fill = aff
 
 illusory_truth_data <- data %>%
   filter(task_name == "illusion of truth pt2") %>%
-  filter(stimulus != "")
+  filter(stimulus != "")%>%
+  mutate(auxiliary_info1 = ifelse(choice > 50 & (condition == "false_new" | condition == "false_old"), 
+                                  "false positive", 
+                                  "not false positive"))
 
 false_positive_counts <- illusory_truth_data %>%
   filter(auxiliary_info1 == "false positive") %>%
