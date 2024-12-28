@@ -65,7 +65,7 @@ var status_quo_trial = {
                         if (condition[0] == 'Factor-Included') {
                             return ["Maintain present budget amounts for the programs", "Increase auto program by 10% and lower highway program by like amount", "Increase auto program by 20% and lower highway program by like amount", "Decrease auto program by 20% and raise highway program by like amount"]
                         } else {
-                            return ['Allocate 70% to auto safety and 30% to highway safety', 'Allocate 30% to auto safety and 70% to highway safety', 'Allocate 60% to auto safety and 40% to highway safety', 'Allocate 50% to auto safety and 50% to highway safety']
+                            return ["Allocate 70% to auto safety and 30% to highway safety", "Allocate 30% to auto safety and 70% to highway safety", "Allocate 60% to auto safety and 40% to highway safety", "Allocate 50% to auto safety and 50% to highway safety"]
                         }
                     },
                     required: true
@@ -82,7 +82,7 @@ var status_quo_trial = {
                     }
                 }
                 else {
-                    if (data.response == "Allocate 50% to auto safety and 50% to highway safety") {
+                    if (which_option == "Allocate 50% to auto safety and 50% to highway safety") {
                         choice = "status quo"
                     } else {
                         choice = "not status quo"
