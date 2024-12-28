@@ -1236,11 +1236,14 @@ print(test_result)
 
 summary(glm(choice_binary ~ condition, data = status_quo_data, family = 'binomial'))
 
-## 16.1.1 new status quo
+## 16.1.1 new status quo ----
 
 status_quo_data <- december_pilot %>%
   filter(task_name == "status_quo") %>%
   filter(is.na(stimulus)) %>%
+  mutate(choice = ifelse(auxiliary_info1 == "Allocate 50% to auto safety and 50% to highway safety status quo: 50/50", 
+                         "status quo", 
+                         choice)) %>%
   mutate(choice_binary = as.numeric(choice == "status quo"))%>%
   mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
 
