@@ -177,6 +177,48 @@ hindsight_analysis = brm(choice ~ factor,
 summary(hindsight_analysis)
 hdi(hindsight_analysis)
 
+# 13 primacy effect ----
+
+
+## 13.1 Do we see the effect? ----
+
+primacy_data <- data %>%
+  filter(task_name == "primacy order") %>%
+  filter(choice != "")%>%
+  mutate(choice = ifelse(choice == "car1", 
+                         "chose primacy car", 
+                         "chose other car")) %>%
+  mutate(choice_binary = as.numeric(choice == "chose primacy car"))%>%
+  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
+
+
+summary_primacy_data <- primacy_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_binary),
+    se_choice = se.prop(choice_binary),
+    count = n()
+  )
+
+ggplot(summary_primacy_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Choices of the primacy car", x = "Condition", y = "Percent who chose primacy car") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+
+primacy_analysis = brm(choice_binary ~ condition,
+                       data = primacy_data,
+                       family = 'bernoulli',
+                       save_pars = save_pars(group = F))
+summary(primacy_analysis)
+hdi(primacy_analysis, effects = 'all')
+
+
 
 # Simulation ----
 
@@ -215,9 +257,9 @@ summary(simulation_analysis)
 hdi(simulation_analysis)
 
 
-#16 status quo ----
+#17 status quo ----
 
-##16.1 do we see the effect? ----
+##17.1 do we see the effect? ----
 
 #When subjects were told the status quo, 
 #were they more likely to recommend the 70/30 allocation?
@@ -259,8 +301,8 @@ summary(status_quo_analysis)
 hdi(status_quo_analysis, effects = 'all')
 
 
-#17 sunk cost ----
-##17.1 do we see the effect? ----
+#18 sunk cost ----
+##18.1 do we see the effect? ----
 
 sunk_cost_data <- data %>%
   filter(task_name == "sunk_cost2 effect") %>% 

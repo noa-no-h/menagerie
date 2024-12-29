@@ -160,6 +160,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
             familiarity: null,
             rt: data.rt
         }
+        console.log("data to save: " + JSON.stringify(s1_data));
         save_data(s1_data, 'introspection')
     }
     }
