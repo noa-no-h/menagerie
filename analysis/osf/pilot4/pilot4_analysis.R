@@ -164,6 +164,43 @@ mean(df.bysubject$prediction.range)
 mean(df.bysubject$mean.prediction > 4)
 mean(df.bysubject$any.above.midpoint, na.rm = T)
 
+
+# Compare to results of pilots 1 & 2 --------------------------------------
+
+load('../pilot1/pilot1_alltasks.rdata')
+load('../pilot2/pilot2_alltasks.rdata')
+
+all_data_introspection_experience = all_data_introspection_experience_pilot1 %>% 
+  rbind(all_data_introspection_experience_pilot2)
+all_data_introspection_both = all_data_introspection_both_pilot1 %>% 
+  rbind(all_data_introspection_both_pilot2)
+
+all_bytask_introspection_experience = all_data_introspection_experience %>% 
+  group_by(task_name) %>% 
+  summarize(task_cor = cor(introspect_rating, effect_size_range))
+
+all_bytask_introspection_both = all_data_introspection_both %>% 
+  group_by(task_name, factor) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating)) %>% 
+  group_by(task_name) %>% 
+  mutate(task_diff = mean_introspect_rating - lead(mean_introspect_rating)) %>% 
+  filter(!is.na(task_diff))
+
+df.byheuristic.filt = df.byheuristic %>%
+  filter(!(heuristic_name %in% c('DRM effect', 'Hindsight bias', 'Status quo bias', 'Sunk cost bias')))
+df.byheuristic.filt$actual_cor = all_bytask_introspection_experience$task_cor
+df.byheuristic.filt$actual_diff = all_bytask_introspection_both$task_diff
+
+ggplot(df.byheuristic.filt, aes(x = actual_cor, y = mean_prediction)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+analysis.byheuristic.1 = brm(mean_prediction ~ actual_cor,
+                            df.byheuristic.filt)
+hdi(analysis.byheuristic.1)
+ggplot(df.byheuristic.filt, aes(x = actual_diff, y = mean_prediction)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+
 # Save output --------------------------------------------------------------
 
 save.image('pilot4_analysis.rdata')
