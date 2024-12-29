@@ -5,10 +5,11 @@ if (!require('pacman')) {
 }
 
 pkg.names = c('ggplot2', 'tidyverse', 'RColorBrewer', 'extrafont',
-              'this.path', 'brms', 'bayestestR')
+              'this.path', 'brms', 'bayestestR', 'rstan', 'posterior')
 p_load(char = pkg.names)
 
 setwd(here())
+set.seed(123)
 
 # color palettes: hot for included, cool for excluded
 
@@ -48,6 +49,8 @@ se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
 se.prop = function(x) {return(sqrt(mean(x, na.rm = T) * (1-mean(x, na.rm = T)) / sum(!is.na(x))))}
 range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 dodge <- position_dodge(width=0.9)
+
+default_priors <- set_prior("normal(0,1)", class = 'b')
 
 # Load data ---------------------------------------------------------------
 
@@ -116,8 +119,8 @@ data <- data %>%
 #font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
 
-#7. Halo effect ----
-##7.1 do we see the effect? ----
+# Halo effect ----
+## do we see the effect? ----
 
 #Did subjects who were shown some attractive and 
 #some attractive faces think the attractive were more persuasive, with the subjects who only saw neutral faces calling in the middle?
@@ -175,36 +178,22 @@ ggplot(halo_summary, aes(x = condition, y = mean_choice, fill = condition)) +
 
 # bayesian analysis
 halo_analysis = brm(choice ~ condition + (1 | subject),
-                    data = halo_data_choices,
-                    save_pars = save_pars(group = F))
+                    data = halo_data_choices %>% mutate(choice = scale(choice)),
+                    prior = default_priors,
+                    save_pars = save_pars(group = F),
+                    cores = 4,
+                    control = list(adapt_delta = 0.95))
+summarise_draws(halo_analysis)
+check_divergences(halo_analysis$fit)
 summary(halo_analysis)
 hdi(halo_analysis, effects = 'all')
 
-# 
-# ggplot(halo_bar_data, aes(x = auxiliary_info1, y = choice)) +
-#   geom_jitter(color = "black", width = 0.1, height = 0.1) +
-#   labs(title = "Persuasiveness vs. Attractiveness Ratings", x = "Attractiveness Rating", y = "Persuasiveness Rating") +
-#   #scale_y_continuous(limits = c(1, 6), breaks = seq(1, 6, by = 1)) +
-#   #scale_x_continuous(limits = c(1, 5), breaks = seq(1, 5, by = 1)) +
-#   theme_custom()
-# 
-# 
-# correlation_test <- cor.test(halo_bar_data$choice, halo_bar_data$auxiliary_info1)
-# print(correlation_test)
-
-##7.2 are people aware of the effect? ----
+## are people aware of the effect? ----
 
 halo_data_introspection = halo_data %>% 
   filter(stimulus == "")
 
 ## in experience condition
-
-# halo_effect_analysis_factorincluded = brm(choice ~ condition + (condition | subject),
-#                            data = halo_bar_data %>% filter(factor == 'experience'))
-# summary(halo_effect_analysis_factorincluded)
-# hdi(halo_effect_analysis, effects = 'all')
-# halo_effect_sizes = ranef(halo_effect_analysis_factorincluded)$subject[,1,2]
-# hist(halo_effect_sizes)
 
 halo_data_introspection_experience = halo_data_introspection %>% 
   filter(factor == 'experience')
@@ -237,15 +226,21 @@ ggplot(halo_summary_introspection_experience,
   theme_custom()
 
 halo_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
-                                                      halo_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                      halo_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
                                                       save_pars = save_pars(group = F))
 summary(halo_analysis_introspection_experience_midpoint)
 hdi(halo_analysis_introspection_experience_midpoint)
+summarise_draws(halo_analysis_introspection_experience_midpoint)
+check_divergences(halo_analysis_introspection_experience_midpoint$fit)
 
-halo_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect, halo_data_introspection_experience,
+halo_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                          halo_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                          prior = default_priors,
                                                           save_pars = save_pars(group = F))
 summary(halo_analysis_introspection_experience_dichotomized)
 hdi(halo_analysis_introspection_experience_dichotomized)
+summarise_draws(halo_analysis_introspection_experience_dichotomized)
+check_divergences(halo_analysis_introspection_experience_dichotomized$fit)
 
 # continuous
 ggplot(halo_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
@@ -254,10 +249,15 @@ ggplot(halo_data_introspection_experience, aes(x = effect_size, y = introspect_r
   theme_custom()+
   labs(title = "Halo Introspection ratings", x = "Effect size", y = "Introspection rating")
 
-halo_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size, halo_data_introspection_experience,
+halo_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
+                                                        halo_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                      effect_size = scale(effect_size)),
+                                                        prior = default_priors,
                                                         save_pars = save_pars(group = F))
 summary(halo_analysis_introspection_experience_continuous)
 hdi(halo_analysis_introspection_experience_continuous)
+summarise_draws(halo_analysis_introspection_experience_continuous)
+check_divergences(halo_analysis_introspection_experience_continuous$fit)
 
 ## across conditions
 halo_summary_introspection_both <- halo_data_introspection %>% 
@@ -278,14 +278,16 @@ ggplot(halo_summary_introspection_both, aes(x = factor, y = mean_introspect_rati
   scale_y_continuous(limits = c(-50, 50))
 
 halo_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                  data = halo_data_introspection,
-                                  save_pars = save_pars(group = F))
+                                      data = halo_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
+                                      prior = default_priors,
+                                      save_pars = save_pars(group = F))
 summary(halo_analysis_introspection_both)
 hdi(halo_analysis_introspection_both, effects = 'all')
+summarise_draws(halo_analysis_introspection_both)
+check_divergences(halo_analysis_introspection_both$fit)
 
-
-#8. Illusory truth effect ---------------------------------------------------
-##8.1 do we see the effect? ----
+# Illusory truth effect ---------------------------------------------------
+## do we see the effect? ----
 
 illusory_data <- data %>%
   filter(task_name == "illusion of truth pt2") %>% 
@@ -311,11 +313,18 @@ ggplot(illusory_summary, aes(x = seen_before, y = mean_choice)) +
                 width = 0.2) +
   theme_custom()
 
-illusory_analysis = brm(choice ~ seen_before,
-                        illusory_data_choices)
+illusory_analysis = brm(choice ~ seen_before + (1 | subject),
+                        prior = default_priors,
+                        illusory_data_choices %>% mutate(choice = scale(choice)),
+                        save_pars = save_pars(group = F),
+                        cores = 4,
+                        control = list(adapt_delta = 0.95))
+summarise_draws(illusory_analysis)
+check_divergences(illusory_analysis$fit)
+summary(illusory_analysis)
 hdi(illusory_analysis)
 
-##8.2 are people aware of the effect? ----
+## are people aware of the effect? ----
 
 illusory_data_introspection = illusory_data %>% 
   filter(stimulus == "")
@@ -353,15 +362,21 @@ ggplot(illusory_summary_introspection_experience,
   theme_custom()
 
 illusory_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
-                                                      illusory_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                      illusory_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
                                                       save_pars = save_pars(group = F))
 summary(illusory_analysis_introspection_experience_midpoint)
 hdi(illusory_analysis_introspection_experience_midpoint)
+summarise_draws(illusory_analysis_introspection_experience_midpoint)
+check_divergences(illusory_analysis_introspection_experience_midpoint$fit)
 
-illusory_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect, illusory_data_introspection_experience,
-                                                          save_pars = save_pars(group = F))
+illusory_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                              illusory_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                              prior = default_priors,
+                                                              save_pars = save_pars(group = F))
 summary(illusory_analysis_introspection_experience_dichotomized)
 hdi(illusory_analysis_introspection_experience_dichotomized)
+summarise_draws(illusory_analysis_introspection_experience_dichotomized)
+check_divergences(illusory_analysis_introspection_experience_dichotomized$fit)
 
 # continuous
 ggplot(illusory_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
@@ -370,10 +385,15 @@ ggplot(illusory_data_introspection_experience, aes(x = effect_size, y = introspe
   theme_custom()+
   labs(title = "illusory Introspection ratings", x = "Effect size", y = "Introspection rating")
 
-illusory_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size, illusory_data_introspection_experience,
-                                                        save_pars = save_pars(group = F))
+illusory_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
+                                                            illusory_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                              effect_size = scale(effect_size)),
+                                                            prior = default_priors,
+                                                            save_pars = save_pars(group = F))
 summary(illusory_analysis_introspection_experience_continuous)
 hdi(illusory_analysis_introspection_experience_continuous)
+summarise_draws(illusory_analysis_introspection_experience_continuous)
+check_divergences(illusory_analysis_introspection_experience_continuous$fit)
 
 ## across conditions
 illusory_summary_introspection_both <- illusory_data_introspection %>% 
@@ -394,14 +414,17 @@ ggplot(illusory_summary_introspection_both, aes(x = factor, y = mean_introspect_
   scale_y_continuous(limits = c(-50, 50))
 
 illusory_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                       data = illusory_data_introspection,
+                                       data = illusory_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
+                                       prior = default_priors,
                                        save_pars = save_pars(group = F))
 summary(illusory_analysis_introspection_both)
 hdi(illusory_analysis_introspection_both, effects = 'all')
+summarise_draws(illusory_analysis_introspection_both)
+check_divergences(illusory_analysis_introspection_both$fit)
 
 
-#12 Omission effect ----
-##12.1 do we see the effect? ----
+# Omission effect ----
+## do we see the effect? ----
 
 omission_data <- data %>%
   filter(task_name == "omission principle") %>%
@@ -428,12 +451,16 @@ ggplot(omission_summary, aes(x = condition, y = mean_choice, fill = condition)) 
   guides(fill = "none")+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
-omission_analysis = brm(choice ~ condition, omission_data,
+omission_analysis = brm(choice ~ condition,
+                        omission_data %>% mutate(choice = scale(choice)),
+                        prior = default_priors,
                         save_pars = save_pars(group = F))
 summary(omission_analysis)
 hdi(omission_analysis)
+summarise_draws(omission_analysis)
+check_divergences(omission_analysis$fit)
 
-##12.2 are people aware of the effect? -----------------------------------------
+## are people aware of the effect? -----------------------------------------
 
 omission_data_introspection = omission_data %>% 
   filter(stimulus == "")
@@ -464,15 +491,21 @@ ggplot(omission_summary_introspection_experience, aes(x = showed_effect, y = mea
   scale_y_continuous(limits = c(-50, 50))
 
 omission_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
-                                                          omission_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                          omission_data_introspection_experience%>% mutate(introspect_rating = scale(introspect_rating, center = F)),
                                                           save_pars = save_pars(group = F))
 summary(omission_analysis_introspection_experience_midpoint)
 hdi(omission_analysis_introspection_experience_midpoint)
+summarise_draws(omission_analysis_introspection_experience_midpoint)
+check_divergences(omission_analysis_introspection_experience_midpoint$fit)
 
-omission_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect, omission_data_introspection_experience,
+omission_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                              omission_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                              prior = default_priors,
                                                               save_pars = save_pars(group = F))
 summary(omission_analysis_introspection_experience_dichotomized)
 hdi(omission_analysis_introspection_experience_dichotomized)
+summarise_draws(omission_analysis_introspection_experience_dichotomized)
+check_divergences(omission_analysis_introspection_experience_dichotomized$fit)
 
 # continuous
 ggplot(omission_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
@@ -481,10 +514,15 @@ ggplot(omission_data_introspection_experience, aes(x = effect_size, y = introspe
   theme_custom() +
   labs(x = 'Choice', y = 'Influence rating')
 
-omission_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size, omission_data_introspection_experience,
+omission_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
+                                                            omission_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                              effect_size = scale(effect_size)),
+                                                            prior = default_priors,
                                                             save_pars = save_pars(group = F))
 summary(omission_analysis_introspection_experience_continuous)
 hdi(omission_analysis_introspection_experience_continuous)
+summarise_draws(omission_analysis_introspection_experience_continuous)
+check_divergences(omission_analysis_introspection_experience_continuous$fit)
 
 # across conditions
 
@@ -506,13 +544,16 @@ ggplot(omission_summary_introspection_both, aes(x = factor, y = mean_introspect_
   scale_y_continuous(limits = c(-50, 50))
 
 omission_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                           data = omission_data_introspection,
+                                           data = omission_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
+                                           prior = default_priors,
                                            save_pars = save_pars(group = F))
 summary(omission_analysis_introspection_both)
 hdi(omission_analysis_introspection_both, effects = 'all')
+summarise_draws(omission_analysis_introspection_both)
+check_divergences(omission_analysis_introspection_both$fit)
 
-#13 Recognition heuristic ----
-##13.1 do we see the effect? ----
+# Recognition heuristic ----
+## do we see the effect? ----
 
 recognition_data <- data %>%
   filter(task_name == "recognition: city") %>%
@@ -540,8 +581,10 @@ recognition_analysis = brm(chose_recognizable_num ~ 1 + (1 | subject),
                            save_pars = save_pars(group = F))
 summary(recognition_analysis)
 hdi(recognition_analysis)
+summarise_draws(recognition_analysis)
+check_divergences(recognition_analysis$fit)
 
-##13.2 are people aware of the effect? -----------------------------------------
+## are people aware of the effect? -----------------------------------------
 recognition_data_introspection <- data %>%
   filter(task_name == "recognition")
 
@@ -575,18 +618,22 @@ ggplot(recognition_summary_introspection_experience, aes(x = showed_effect, y = 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
   scale_y_continuous(limits = c(0, 100))
 
-
 recognition_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
-                                                                recognition_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                             recognition_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
                                                              save_pars = save_pars(group = F))
 summary(recognition_analysis_introspection_experience_midpoint)
 hdi(recognition_analysis_introspection_experience_midpoint)
+summarise_draws(recognition_analysis_introspection_experience_midpoint)
+check_divergences(recognition_analysis_introspection_experience_midpoint$fit)
 
 recognition_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect,
-                                                                recognition_data_introspection_experience,
+                                                                recognition_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                                prior = default_priors,
                                                                 save_pars = save_pars(group = F))
 summary(recognition_analysis_introspection_experience_dichotomous)
 hdi(recognition_analysis_introspection_experience_dichotomous)
+summarise_draws(recognition_analysis_introspection_experience_dichotomous)
+check_divergences(recognition_analysis_introspection_experience_dichotomous$fit)
 
 # continuous
 ggplot(recognition_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
@@ -596,10 +643,14 @@ ggplot(recognition_data_introspection_experience, aes(x = effect_size, y = intro
   labs(x = 'Choice', y = 'Influence rating')
 
 recognition_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
-                                                               recognition_data_introspection_experience,
+                                                               recognition_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                    effect_size = scale(effect_size)),
+                                                               prior = default_priors,
                                                                save_pars = save_pars(group = F))
 summary(recognition_analysis_introspection_experience_continuous)
 hdi(recognition_analysis_introspection_experience_continuous)
+summarise_draws(recognition_analysis_introspection_experience_continuous)
+check_divergences(recognition_analysis_introspection_experience_continuous$fit)
 
 # across conditions
 recognition_summary_introspection_both <- recognition_data_introspection %>% 
@@ -620,13 +671,16 @@ ggplot(recognition_summary_introspection_both, aes(x = factor, y = mean_introspe
   scale_y_continuous(limits = c(-50, 50))
 
 recognition_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                           data = recognition_data_introspection,
+                                           data = recognition_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
+                                           prior = default_priors,
                                            save_pars = save_pars(group = F))
 summary(recognition_analysis_introspection_both)
 hdi(recognition_analysis_introspection_both, effects = 'all')
+summarise_draws(recognition_analysis_introspection_both)
+check_divergences(recognition_analysis_introspection_both$fit)
 
-#14 Reference price ----
-##14.1 do we see the effect? ----
+# Reference price ----
+## do we see the effect? ----
 
 #When subjects were told the hotel was fancy, were 
 #they more likely to give a higher price they'd be willing to pay?
@@ -658,12 +712,15 @@ ggplot(reference_summary, aes(x = condition, y = mean_choice, fill = condition))
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 reference_analysis = brm(choice_parsed ~ condition,
-                         reference_data,
+                         reference_data %>% mutate(choice_parsed = scale(choice_parsed)),
+                         prior = default_priors,
                          save_pars = save_pars(group = F))
 summary(reference_analysis)
 hdi(reference_analysis)
+summarise_draws(reference_analysis)
+check_divergences(reference_analysis$fit)
 
-##14.2 are people aware of the effect?----
+## are people aware of the effect?----
 reference_data_introspection = reference_data
 
 # in experience condition
@@ -693,16 +750,21 @@ ggplot(reference_summary_introspection_experience, aes(x = showed_effect, y = me
   scale_y_continuous(limits = c(0, 100))
 
 reference_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
-                                                           reference_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                           reference_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
                                                            save_pars = save_pars(group = F))
 summary(reference_analysis_introspection_experience_midpoint)
 hdi(reference_analysis_introspection_experience_midpoint)
+summarise_draws(reference_analysis_introspection_experience_midpoint)
+check_divergences(reference_analysis_introspection_experience_midpoint$fit)
 
 reference_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
-                                                               reference_data_introspection_experience,
+                                                               reference_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                               prior = default_priors,
                                                                save_pars = save_pars(group = F))
 summary(reference_analysis_introspection_experience_dichotomized)
 hdi(reference_analysis_introspection_experience_dichotomized)
+summarise_draws(reference_analysis_introspection_experience_dichotomized)
+check_divergences(reference_analysis_introspection_experience_dichotomized$fit)
 
 # continuous
 ggplot(reference_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
@@ -712,10 +774,14 @@ ggplot(reference_data_introspection_experience, aes(x = effect_size, y = introsp
   labs(x = 'Choice', y = 'Influence rating')
 
 reference_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
-                                                             reference_data_introspection_experience,
+                                                             reference_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                effect_size = scale(effect_size)),
+                                                             prior = default_priors,
                                                              save_pars = save_pars(group = F))
 summary(reference_analysis_introspection_experience_continuous)
 hdi(reference_analysis_introspection_experience_continuous)
+summarise_draws(reference_analysis_introspection_experience_continuous)
+check_divergences(reference_analysis_introspection_experience_continuous$fit)
 
 # across conditions
 reference_summary_introspection_both <- reference_data %>%
@@ -736,13 +802,16 @@ ggplot(reference_summary_introspection_both, aes(x = condition, y = mean_introsp
   scale_y_continuous(limits = c(-50, 50))
 
 reference_analysis_introspection_both = brm(introspect_rating ~ condition,
-                                            reference_data,
+                                            reference_data %>% mutate(introspect_rating = scale(introspect_rating)),
+                                            prior = default_priors,
                                             save_pars = save_pars(group = F))
 summary(reference_analysis_introspection_both)
 hdi(reference_analysis_introspection_both)
+summarise_draws(reference_analysis_introspection_both)
+check_divergences(reference_analysis_introspection_both$fit)
 
-#15 Representativeness ----
-##15.1 do we see the effect? ----
+# Representativeness ----
+## do we see the effect? ----
 
 representativeness_data <- data %>%
   filter(task_name == "rep") %>%
@@ -770,12 +839,15 @@ ggplot(representativeness_summary, aes(x = condition, y = mean_choice, fill = co
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 representativeness_analysis = brm(choice ~ condition,
-                                  representativeness_data,
+                                  representativeness_data %>% mutate(choice = scale(choice)),
+                                  prior = default_priors,
                                   save_pars = save_pars(group = F))
 summary(representativeness_analysis)
 hdi(representativeness_analysis)
+summarise_draws(representativeness_analysis)
+check_divergences(representativeness_analysis$fit)
 
-##15.2 are people aware of the effect? -----------------------------------------
+## are people aware of the effect? -----------------------------------------
 representativeness_data_introspection = representativeness_data
 
 # in experience condition
@@ -805,16 +877,21 @@ ggplot(representativeness_summary_introspection_experience, aes(x = showed_effec
   scale_y_continuous(limits = c(0, 100))
 
 representativeness_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
-                                                                    representativeness_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                                    representativeness_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
                                                                     save_pars = save_pars(group = F))
 summary(representativeness_analysis_introspection_experience_midpoint)
 hdi(representativeness_analysis_introspection_experience_midpoint)
+summarise_draws(representativeness_analysis_introspection_experience_midpoint)
+check_divergences(representativeness_analysis_introspection_experience_midpoint$fit)
 
 representativeness_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
-                                                                        representativeness_data_introspection_experience,
+                                                                        representativeness_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                                        prior = default_priors,
                                                                         save_pars = save_pars(group = F))
 summary(representativeness_analysis_introspection_experience_dichotomized)
 hdi(representativeness_analysis_introspection_experience_dichotomized)
+summarise_draws(representativeness_analysis_introspection_experience_dichotomized)
+check_divergences(representativeness_analysis_introspection_experience_dichotomized$fit)
 
 # continuous
 ggplot(representativeness_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
@@ -824,10 +901,14 @@ ggplot(representativeness_data_introspection_experience, aes(x = effect_size, y 
   labs(x = 'Choice', y = 'Influence rating')
 
 representativeness_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size,
-                                                                      representativeness_data_introspection_experience,
+                                                                      representativeness_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                                  effect_size = scale(effect_size)),
+                                                                      prior = default_priors,
                                                                       save_pars = save_pars(group = F))
 summary(representativeness_analysis_introspection_experience_continuous)
 hdi(representativeness_analysis_introspection_experience_continuous)
+summarise_draws(representativeness_analysis_introspection_experience_continuous)
+check_divergences(representativeness_analysis_introspection_experience_continuous$fit)
 
 # across conditions
 representativeness_summary_introspection_both <- representativeness_data_introspection %>%
@@ -847,12 +928,15 @@ ggplot(representativeness_summary_introspection_both, aes(x = condition, y = mea
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
 
 representativeness_analysis_introspection_both = brm(introspect_rating ~ condition,
-                                                     representativeness_data,
+                                                     representativeness_data %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                     prior = default_priors,
                                                      save_pars = save_pars(group = F))
 summary(representativeness_analysis_introspection_both)
 hdi(representativeness_analysis_introspection_both)
+summarise_draws(representativeness_analysis_introspection_both)
+check_divergences(representativeness_analysis_introspection_both$fit)
 
-# all tasks ---------------------------------------------------------------
+# All tasks ---------------------------------------------------------------
 
 ## in experience condition
 all_list_introspection_experience = list(halo_data_introspection_experience,
@@ -888,14 +972,22 @@ ggplot(all_summary_introspection_experience,
   scale_y_continuous(limits = c(-40, 40))
 
 all_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
-                                                     all_data_introspection_experience %>% filter(showed_effect == 'Effect'),
+                                                     all_data_introspection_experience,
                                                      save_pars = save_pars(group = F))
+summarise_draws(all_analysis_introspection_experience_midpoint)
+check_divergences(all_analysis_introspection_experience_midpoint$fit)
 summary(all_analysis_introspection_experience_midpoint)
 hdi(all_analysis_introspection_experience_midpoint)
 
-all_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect + (showed_effect | subject) + (showed_effect | task_name),
-                                                        all_data_introspection_experience,
-                                                        save_pars = save_pars(group = F))
+all_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect + (1 | subject) + (1 | task_name),
+                                                        all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                     showed_effect = relevel(showed_effect, ref = 'No effect')),
+                                                        prior = default_priors,
+                                                        save_pars = save_pars(group = F),
+                                                        cores = 4,
+                                                        control = list(adapt_delta = 0.95))
+summarise_draws(all_analysis_introspection_experience_dichotomous)
+check_divergences(all_analysis_introspection_experience_dichotomous$fit)
 summary(all_analysis_introspection_experience_dichotomous)
 hdi(all_analysis_introspection_experience_dichotomous)
 
@@ -908,18 +1000,19 @@ ggplot(all_data_introspection_experience,
   labs(x = 'Influence magnitude', 
        y = 'Influence rating')
 
-all_analysis_introspection_experience_continuous_std = brm(introspect_rating ~ effect_size_std + (effect_size_std | subject) + (1 | task_name),
-                                                        all_data_introspection_experience,
-                                                        save_pars = save_pars(group = F))
-summary(all_analysis_introspection_experience_continuous_std)
-hdi(all_analysis_introspection_experience_continuous_std)
+all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size_range + (effect_size_range | subject) + (1 | task_name),
+                                                       all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                    effect_size_range = scale(effect_size_range)),
+                                                       prior = default_priors,
+                                                       save_pars = save_pars(group = F),
+                                                       cores = 4,
+                                                       control = list(adapt_delta = 0.95))
+summarise_draws(all_analysis_introspection_experience_continuous)
+check_divergences(all_analysis_introspection_experience_continuous$fit)
+summary(all_analysis_introspection_experience_continuous)
+hdi(all_analysis_introspection_experience_continuous)
 
-all_analysis_introspection_experience_continuous_range = brm(introspect_rating ~ effect_size_range + (effect_size_range | subject) + (1 | task_name),
-                                                           all_data_introspection_experience,
-                                                           save_pars = save_pars(group = F))
-summary(all_analysis_introspection_experience_continuous_range)
-hdi(all_analysis_introspection_experience_continuous_range)
-
+# continuous, standardized within
 all_data_introspection_experience = all_data_introspection_experience %>% 
   group_by(subject) %>% 
   mutate(effect_size_std_within = scale(effect_size_std),
@@ -985,11 +1078,16 @@ ggplot(all_summary_introspection_both, aes(x = factor, y = mean_introspect_ratin
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
   scale_y_continuous(limits = c(-50, 50))
 
-contrasts(all_data_introspection_both$factor) = c(1,0)
-all_analysis_introspection_both = brm(introspect_rating ~ factor + (1 | subject) + (1 | task_name),
-                                      all_data_introspection_both %>% mutate(introspect_rating = scale(introspect_rating)),
-                                      prior = set_prior("normal(0,1)", class = 'b'),
-                                      save_pars = save_pars(group = F))
+# All random effects caused convergence issues for this model.
+all_analysis_introspection_both = brm(introspect_rating ~ factor,
+                                      all_data_introspection_both %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                             factor = relevel(factor, ref = 'prediction')),
+                                      prior = default_priors,
+                                      save_pars = save_pars(group = F),
+                                      cores = 4,
+                                      control = list(adapt_delta = 0.95))
+summarise_draws(all_analysis_introspection_both)
+check_divergences(all_analysis_introspection_both$fit)
 summary(all_analysis_introspection_both)
 hdi(all_analysis_introspection_both)
 
@@ -1030,14 +1128,20 @@ ggplot(all_summary_introspection_split, aes(x = showed_effect, y = mean_introspe
   scale_y_continuous(limits = c(-10,30)) +
   geom_hline(yintercept = 0)
 
-all_analysis_introspection_split = brm(introspect_rating ~ showed_effect + (1 | subject) + (1 | task_name),
-                                       all_data_introspection_both,
-                                       save_pars = save_pars(group = F))
+all_analysis_introspection_split = brm(introspect_rating ~ showed_effect + (1 | task_name),
+                                       all_data_introspection_both %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                              showed_effect = relevel(showed_effect, ref = 'Prediction')),
+                                       prior = default_priors,
+                                       save_pars = save_pars(group = F),
+                                       cores = 4,
+                                       control = list(adapt_delta = 0.95))
+summarise_draws(all_analysis_introspection_split)
+check_divergences(all_analysis_introspection_split$fit)
 summary(all_analysis_introspection_split)
 hdi(all_analysis_introspection_split)
 
 # Save image --------------------------------------------------------------
-# for use in pilot 4
+# for use in combined analysis
 all_data_introspection_experience_pilot2 = all_data_introspection_experience %>% 
   select(!c(effect_size_std, effect_size_std_within))
 all_data_introspection_both_pilot2 = all_data_introspection_both
