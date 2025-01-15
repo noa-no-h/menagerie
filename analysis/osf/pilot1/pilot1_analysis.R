@@ -133,14 +133,17 @@ ggplot(summary.anchor, aes(x = condition, y = choice.m)) +
   labs(x = "Condition") +
   theme_custom()
 
-ggplot(summary.anchor, aes(x = condition, y = distance.from.anchor.m)) +
-  geom_col(fill = "lightblue") + 
+ggplot(summary.anchor, aes(x = condition, y = distance.from.anchor.m, fill = condition)) +
+  geom_col() + 
   geom_errorbar(aes(ymin = distance.from.anchor.m - distance.from.anchor.se,
                     ymax = distance.from.anchor.m + distance.from.anchor.se),
                 width = .2) +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition") +
-  theme_custom()
+  labs(x = "Condition", y = "distance from anchor") +
+   theme_custom()+
+  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
 
 analysis.anchor = brm(distance.from.anchor ~ condition,
                        data = df.anchor.choices %>%
@@ -212,24 +215,6 @@ check_divergences(analysis.anchor.intro.experience.continuous$fit)
 summary(analysis.anchor.intro.experience.continuous)
 hdi(analysis.anchor.intro.experience.continuous)
 
-## across conditions
-summary.anchor.intro.both <- df.anchor.intro %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(summary.anchor.intro.both, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition", y = "Influence rating")
-
-analysis.anchor.intro.both = brm(introspect_rating ~ factor,
-                                 data = df.anchor.intro,
-                                 prior = default_priors,
-                                 save_pars = save_pars(group = F))
-summarise_draws(analysis.anchor.intro.both)
-check_divergences(analysis.anchor.intro.both$fit)
-summary(analysis.anchor.intro.both)
-hdi(analysis.anchor.intro.both)
 
 #* 2 Availability (between-subjects) -------------------------------------------------
 #** data preparation ----
@@ -240,10 +225,25 @@ df.avail = df %>%
   mutate(choice.binary = choice == 'List 1')
 
 #** data visualization ----
-ggplot(df.avail, aes(x = condition, fill = choice.binary)) +
-  geom_bar(position = "dodge") + 
+ggplot(df.avail, aes(x = condition, fill = choice)) +
+  geom_bar(position = "dodge", stat = "count") + 
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  theme_custom()
+  theme_custom() +
+  scale_fill_manual(
+    values = c("List 1" = "#F37121", "List 2" = "#4793AF")
+  ) +
+  guides(fill = FALSE) +   
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
+  geom_text(
+    stat = "count", 
+    aes(label = choice, group = choice), 
+    position = position_dodge(width = 0.9), 
+    y = 10, 
+    hjust = 0.5,
+    size = 6,
+    family = "Optima",
+    color = "white"
+  )
 
 analysis.avail = brm(choice.binary ~ condition,
                      data = df.avail,
@@ -291,25 +291,7 @@ check_divergences(analysis.avail.intro.experience$fit)
 summary(analysis.avail.intro.experience)
 hdi(analysis.avail.intro.experience)
 
-## across conditions
-summary.avail.intro.both = df.avail.intro %>%
-  group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
 
-ggplot(summary.avail.intro.both, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Test Version")
-
-analysis.avail.intro.both = brm(introspect_rating ~ factor,
-                                data = df.avail %>% mutate(introspect_rating = scale(introspect_rating)),
-                                prior = default_priors,
-                                save_pars = save_pars(group = F))
-summarise_draws(analysis.avail.intro.both)
-check_divergences(analysis.avail.intro.both$fit)
-summary(analysis.avail.intro.both)
-hdi(analysis.avail.intro.both)
 
 #* 3 Causal Inference (between-subjects) -------------------------------------------------------------
 #** data preparation ----
@@ -321,11 +303,13 @@ summary.cause = df.cause %>%
   group_by(condition) %>%
   summarize(choice.m = mean(choice), choice.se = se(choice))
 
-ggplot(summary.cause, aes(x = condition, y = choice.m)) +
-  geom_col(fill = "lightblue") + 
+ggplot(summary.cause, aes(x = condition, y = choice.m, fill = condition)) +
+  geom_col() + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
-  labs(x = "Condition") +
-  theme_custom()
+  labs(x = "Condition", y = "average causality rating") +
+  theme_custom() +
+  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  guides(fill = FALSE)
 
 analysis.cause = brm(choice ~ condition,
                      df.cause,
@@ -387,25 +371,7 @@ analysis.cause.intro.experience.continuous = brm(introspect_rating ~ effect_size
 summary(analysis.cause.intro.experience.continuous)
 hdi(analysis.cause.intro.experience.continuous)
 
-## across conditions
 
-summary.cause.intro.both <- df.cause.intro %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(summary.cause.intro.both, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  labs(x = "Test Version") +
-  theme_custom()
-
-analysis.cause.intro.both = brm(introspect_rating ~ factor,
-                                data = df.cause %>% mutate(introspect_rating = scale(introspect_rating)),
-                                prior = default_priors,
-                                save_pars = save_pars(group = F))
-summarise_draws(analysis.cause.intro.both)
-check_divergences(analysis.cause.intro.both$fit)
-summary(analysis.cause.intro.both)
-hdi(analysis.cause.intro.both)
 
 #* 6 Decoy Effect -------------------------------------------------------------
 #** data preparation ----
@@ -418,12 +384,16 @@ summary.decoy = df.decoy %>%
   group_by(factor) %>% 
   summarize(choice.target.m = mean(choice.target),
             choice.target.se = se.prop(choice.target))
-ggplot(summary.decoy, aes(x = factor, y = choice.target.m)) +
+ggplot(summary.decoy, aes(x = factor, y = choice.target.m, fill=factor)) +
   geom_col() +
   geom_errorbar(aes(ymin = choice.target.m - choice.target.se,
                     ymax = choice.target.m + choice.target.se),
                 width = 0.2) +
-  theme_custom()
+  theme_custom()+ 
+  labs(x = "Condition", y = "Proportion Chose Brand N (Target)")+
+  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  guides(fill = FALSE)
+
 
 #** inferential statistics ----
 analysis.decoy = brm(choice.target ~ condition,
@@ -473,25 +443,7 @@ check_divergences(analysis.decoy.intro.experience.dichotomized$fit)
 summary(analysis.decoy.intro.experience.dichotomized)
 hdi(analysis.decoy.intro.experience.dichotomized)
 
-## across conditions
 
-summary.decoy.intro.both <- df.decoy.intro %>% group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(summary.decoy.intro.both, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  labs(x = "Test Version") +
-  theme_custom()
-
-analysis.decoy.intro.both = brm(introspect_rating ~ factor,
-                                data = df.decoy,
-                                prior = default_priors,
-                                save_pars = save_pars(group = F))
-summarise_draws(analysis.decoy.intro.both)
-check_divergences(analysis.decoy.intro.both$fit)
-summary(analysis.decoy.intro.both)
-hdi(analysis.decoy.intro.both)
 
 #* 8 Belief (within-subjects) ------------------------------------------------------------------
 #** data preparation ----
@@ -507,12 +459,15 @@ summary.belief <- df.belief.choices %>%
   summarize(choice.yes.m = mean(choice.yes),
             choice.yes.se = se.prop(choice.yes))
 
-ggplot(summary.belief, aes(x = condition, y = choice.yes.m)) +
+ggplot(summary.belief, aes(x = condition, y = choice.yes.m, fill = condition)) +
   geom_col() +
   geom_errorbar(aes(ymin = choice.yes.m - choice.yes.se,
                     ymax = choice.yes.m + choice.yes.se),
                 width = 0.2) +
-  theme_custom()
+  theme_custom() +
+  labs(x = "Condition", y = "Proportion Chose Yes, Valid")+
+  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  guides(fill = FALSE)
 
 #** inferential statistics ----
 analysis.belief = brm(choice.yes ~ condition,
@@ -586,24 +541,7 @@ check_divergences(analysis.belief.intro.experience.continuous$fit)
 summary(analysis.belief.intro.experience.continuous)
 hdi(analysis.belief.intro.experience.continuous)
 
-## across conditions
-summary.belief.intro.both = df.belief.intro %>% 
-  group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
 
-ggplot(summary.belief.intro.both, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme_custom()
-
-analysis.belief.intro.both = brm(introspect_rating ~ factor,
-                                 df.belief.intro %>% mutate(introspect_rating = scale(introspect_rating)),
-                                 prior = default_priors,
-                                 save_pars = save_pars(group = F))
-summarise_draws(analysis.belief.intro.both)
-check_divergences(analysis.belief.intro.both$fit)
-summary(analysis.belief.intro.both)
-hdi(analysis.belief.intro.both)
 
 #* 9 Mere exposure (within-subjects) ------------------------------------------------------
 #** data preparation ----
@@ -621,11 +559,13 @@ summary.mee = df.mee.choices %>%
   group_by(condition) %>%
   summarize(choice.m = mean(choice), choice.se = se(choice))
 
-ggplot(summary.mee, aes(x = condition, y = choice.m)) +
-  geom_col(fill = "lightblue") + 
+ggplot(summary.mee, aes(x = condition, y = choice.m, fill = condition)) +
+  geom_col() + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
   theme_custom() +
-  labs(x = "Condition", y = "Mean Liking Rating")
+  labs(x = "Number of repeats", y = "Mean Liking Rating")+
+  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  guides(fill = FALSE)
 
 #** inferential statistics ----
 
@@ -702,25 +642,7 @@ check_divergences(analysis.mee.intro.experience.continuous$fit)
 summary(analysis.mee.intro.experience.continuous)
 hdi(analysis.mee.intro.experience.continuous)
 
-## across conditions
 
-summary.mee.intro.both <- df.mee.intro %>%
-  group_by(factor) %>%
-  summarize(introspect.m = mean(introspect_rating), introspect.se = se(introspect_rating))
-
-ggplot(summary.mee.intro.both, aes(x = factor, y = introspect.m)) +
-  geom_col(fill = "lightblue") + 
-  geom_errorbar(aes(ymin = introspect.m - introspect.se, ymax = introspect.m + introspect.se), width = .2) +
-  theme_custom()
-
-analysis.mee.intro.both = brm(introspect_rating ~ factor,
-                              df.mee.intro %>% mutate(introspect_rating = scale(introspect_rating)),
-                              prior = default_priors,
-                              save_pars = save_pars(group = F))
-summarise_draws(analysis.mee.intro.both)
-check_divergences(analysis.mee.intro.both$fit)
-summary(analysis.mee.intro.both)
-hdi(analysis.mee.intro.both)
 
 # All tasks -----------------------------------------------------------
 
@@ -834,102 +756,7 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
-## across conditions
-all_list_introspection_both = list(df.anchor.intro,
-                                   df.avail.intro,
-                                   df.cause.intro,
-                                   df.decoy.intro,
-                                   df.belief.intro,
-                                   df.mee.intro)
 
-all_data_introspection_both = all_list_introspection_both[[1]] %>% 
-  left_join(all_list_introspection_experience[[1]] %>% select(subject, factor, showed_effect), by = c('subject', 'factor')) %>% 
-  select(subject, task_name, factor, introspect_rating, showed_effect)
-for (i in 2:length(all_list_introspection_both)) {
-  all_data_introspection_both = all_data_introspection_both %>% 
-    rbind(all_list_introspection_both[[i]] %>% 
-            left_join(all_list_introspection_experience[[i]] %>% select(subject, factor, showed_effect), by = c('subject', 'factor')) %>% 
-            select(subject, task_name, factor, introspect_rating, showed_effect))
-}
-
-all_data_introspection_both = all_data_introspection_both %>% 
-  mutate(showed_effect = as.character(showed_effect),
-         showed_effect = ifelse(factor == 'prediction', 'Prediction', showed_effect),
-         showed_effect = factor(showed_effect, c('Effect', 'No effect', 'Prediction')),
-         introspect_rating = introspect_rating - 10)
-
-all_summary_introspection_both = all_data_introspection_both %>% 
-  group_by(factor) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating),
-            se_introspect_rating = se(introspect_rating))
-
-ggplot(all_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
-  geom_point(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "", x = "Condition", y = "Influence rating") +
-  theme_custom() +
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = "none")+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-all_analysis_introspection_both = brm(introspect_rating ~ factor + (1 | subject) + (1 | task_name),
-                                      all_data_introspection_both %>%
-                                        mutate(introspect_rating = scale(introspect_rating),
-                                               factor = relevel(factor, ref = 'prediction')),
-                                      prior = default_priors,
-                                      save_pars = save_pars(group = F),
-                                      cores = 4,
-                                      control = list(adapt_delta = 0.95))
-summarise_draws(all_analysis_introspection_both)
-check_divergences(all_analysis_introspection_both$fit)
-summary(all_analysis_introspection_both)
-hdi(all_analysis_introspection_both)
-
-all_bytask_introspection_both = all_data_introspection_both %>% 
-  group_by(task_name, factor) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating),
-            se_introspect_rating = se(introspect_rating))
-
-ggplot(all_bytask_introspection_both, aes(x = task_name, y = mean_introspect_rating, color = factor)) +
-  geom_point(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "", x = "Condition", y = "Influence rating") +
-  theme_custom() +
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = "none")+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(0, 100))+
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.7))
-
-# split showed vs didn't show effect
-
-all_summary_introspection_split = all_data_introspection_both %>% 
-  filter(!is.na(showed_effect)) %>% 
-  group_by(showed_effect) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating),
-            se_introspect_rating = se(introspect_rating))
-
-ggplot(all_summary_introspection_split, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "", x = "", y = "Influence rating") +
-  theme_custom() +
-  scale_fill_manual(values = effect_no_prediction)+
-  guides(fill = "none")+
-  scale_x_discrete(labels = c('Influenced', 'Not\ninfluenced', 'Prediction'))+
-  scale_y_continuous(limits = c(0,50))
-
-all_analysis_introspection_split = brm(introspect_rating ~ showed_effect + (1 | subject) + (1 | task_name),
-                                      all_data_introspection_both %>% mutate(introspect_rating = scale(introspect_rating),
-                                                                             showed_effect = relevel(showed_effect, ref = 'Prediction')),
-                                      prior = default_priors,
-                                      save_pars = save_pars(group = F),
-                                      cores = 4,
-                                      control = list(adapt_delta = 0.95))
-summarise_draws(all_analysis_introspection_split)
-check_divergences(all_analysis_introspection_split$fit)
-summary(all_analysis_introspection_split)
-hdi(all_analysis_introspection_split)
 
 # Save image --------------------------------------------------------------
 # for use in pilot 4

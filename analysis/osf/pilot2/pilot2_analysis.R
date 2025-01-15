@@ -158,7 +158,7 @@ ggplot(halo_summary, aes(x = condition, y = mean_attractiveness, fill = conditio
   geom_text(aes(label = paste0("n=", count)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
-  labs(title = "Average Attractiveness by Condition", x = "Condition", y = "Average Attractiveness") +
+  labs(title = "Average Persuasiveness by Condition", x = "Condition", y = "Average Persuasiveness") +
   theme_custom()+
   scale_fill_manual(values = in_neutral_ex)+
   guides(fill = FALSE)
@@ -259,32 +259,6 @@ hdi(halo_analysis_introspection_experience_continuous)
 summarise_draws(halo_analysis_introspection_experience_continuous)
 check_divergences(halo_analysis_introspection_experience_continuous$fit)
 
-## across conditions
-halo_summary_introspection_both <- halo_data_introspection %>% 
-  group_by(factor) %>%
-  summarize(
-    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(halo_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Halo Introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(-50, 50))
-
-halo_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                      data = halo_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
-                                      prior = default_priors,
-                                      save_pars = save_pars(group = F))
-summary(halo_analysis_introspection_both)
-hdi(halo_analysis_introspection_both, effects = 'all')
-summarise_draws(halo_analysis_introspection_both)
-check_divergences(halo_analysis_introspection_both$fit)
 
 # Illusory truth effect ---------------------------------------------------
 ## do we see the effect? ----
@@ -306,12 +280,15 @@ illusory_summary = illusory_data_choices %>%
             mean_response_over_midpoint = mean(response_over_midpoint),
             se_response_over_midpoint = se.prop(response_over_midpoint))
 
-ggplot(illusory_summary, aes(x = seen_before, y = mean_choice)) +
+ggplot(illusory_summary, aes(x = seen_before, y = mean_choice, fill = seen_before)) +
   geom_col() +
   geom_errorbar(aes(ymin = mean_choice - se_choice,
                     ymax = mean_choice + se_choice),
                 width = 0.2) +
-  theme_custom()
+  theme_custom() +
+  labs(title = "Illusory Truth Effect", x = "Seen Before?", y = "Truth Rating") +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)
 
 illusory_analysis = brm(choice ~ seen_before + (1 | subject),
                         prior = default_priors,
@@ -394,33 +371,6 @@ summary(illusory_analysis_introspection_experience_continuous)
 hdi(illusory_analysis_introspection_experience_continuous)
 summarise_draws(illusory_analysis_introspection_experience_continuous)
 check_divergences(illusory_analysis_introspection_experience_continuous$fit)
-
-## across conditions
-illusory_summary_introspection_both <- illusory_data_introspection %>% 
-  group_by(factor) %>%
-  summarize(
-    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(illusory_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "illusory Introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(-50, 50))
-
-illusory_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                       data = illusory_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
-                                       prior = default_priors,
-                                       save_pars = save_pars(group = F))
-summary(illusory_analysis_introspection_both)
-hdi(illusory_analysis_introspection_both, effects = 'all')
-summarise_draws(illusory_analysis_introspection_both)
-check_divergences(illusory_analysis_introspection_both$fit)
 
 
 # Omission effect ----
@@ -524,34 +474,6 @@ hdi(omission_analysis_introspection_experience_continuous)
 summarise_draws(omission_analysis_introspection_experience_continuous)
 check_divergences(omission_analysis_introspection_experience_continuous$fit)
 
-# across conditions
-
-omission_summary_introspection_both <- omission_data_introspection %>% 
-  group_by(factor) %>%
-  summarize(
-    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(omission_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Omission introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(-50, 50))
-
-omission_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                           data = omission_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
-                                           prior = default_priors,
-                                           save_pars = save_pars(group = F))
-summary(omission_analysis_introspection_both)
-hdi(omission_analysis_introspection_both, effects = 'all')
-summarise_draws(omission_analysis_introspection_both)
-check_divergences(omission_analysis_introspection_both$fit)
-
 # Recognition heuristic ----
 ## do we see the effect? ----
 
@@ -652,32 +574,6 @@ hdi(recognition_analysis_introspection_experience_continuous)
 summarise_draws(recognition_analysis_introspection_experience_continuous)
 check_divergences(recognition_analysis_introspection_experience_continuous$fit)
 
-# across conditions
-recognition_summary_introspection_both <- recognition_data_introspection %>% 
-  group_by(factor) %>%
-  summarize(
-    mean_introspect_rating = mean(as.numeric(introspect_rating), na.rm = TRUE),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(recognition_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "recognition introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(-50, 50))
-
-recognition_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                           data = recognition_data_introspection %>% mutate(introspect_rating = scale(introspect_rating)),
-                                           prior = default_priors,
-                                           save_pars = save_pars(group = F))
-summary(recognition_analysis_introspection_both)
-hdi(recognition_analysis_introspection_both, effects = 'all')
-summarise_draws(recognition_analysis_introspection_both)
-check_divergences(recognition_analysis_introspection_both$fit)
 
 # Reference price ----
 ## do we see the effect? ----
@@ -783,32 +679,6 @@ hdi(reference_analysis_introspection_experience_continuous)
 summarise_draws(reference_analysis_introspection_experience_continuous)
 check_divergences(reference_analysis_introspection_experience_continuous$fit)
 
-# across conditions
-reference_summary_introspection_both <- reference_data %>%
-  group_by(condition) %>%
-  summarize(
-    mean_introspect_rating = mean(introspect_rating),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(reference_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "Reference Price Introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = "none")+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+
-  scale_y_continuous(limits = c(-50, 50))
-
-reference_analysis_introspection_both = brm(introspect_rating ~ condition,
-                                            reference_data %>% mutate(introspect_rating = scale(introspect_rating)),
-                                            prior = default_priors,
-                                            save_pars = save_pars(group = F))
-summary(reference_analysis_introspection_both)
-hdi(reference_analysis_introspection_both)
-summarise_draws(reference_analysis_introspection_both)
-check_divergences(reference_analysis_introspection_both$fit)
 
 # Representativeness ----
 ## do we see the effect? ----
@@ -910,31 +780,6 @@ hdi(representativeness_analysis_introspection_experience_continuous)
 summarise_draws(representativeness_analysis_introspection_experience_continuous)
 check_divergences(representativeness_analysis_introspection_experience_continuous$fit)
 
-# across conditions
-representativeness_summary_introspection_both <- representativeness_data_introspection %>%
-  group_by(condition) %>%
-  summarize(
-    mean_introspect_rating = mean(introspect_rating),
-    se_introspect_rating = se(introspect_rating)
-  )
-
-ggplot(representativeness_summary_introspection_both, aes(x = condition, y = mean_introspect_rating, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "representativeness Price Introspection ratings", x = "Condition", y = "introspection rating") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = "none")+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+   scale_y_continuous(limits = c(0, 100))
-
-representativeness_analysis_introspection_both = brm(introspect_rating ~ condition,
-                                                     representativeness_data %>% mutate(introspect_rating = scale(introspect_rating)),
-                                                     prior = default_priors,
-                                                     save_pars = save_pars(group = F))
-summary(representativeness_analysis_introspection_both)
-hdi(representativeness_analysis_introspection_both)
-summarise_draws(representativeness_analysis_introspection_both)
-check_divergences(representativeness_analysis_introspection_both$fit)
 
 # All tasks ---------------------------------------------------------------
 
@@ -1040,105 +885,6 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
  
-## across conditions
-all_list_introspection_both = list(halo_data_introspection,
-                                   illusory_data_introspection,
-                                   omission_data_introspection,
-                                   recognition_data_introspection,
-                                   reference_data_introspection,
-                                   representativeness_data_introspection)
-
-all_data_introspection_both = all_list_introspection_both[[1]] %>% 
-  left_join(all_list_introspection_experience[[1]] %>% select(subject, factor, showed_effect), by = c('subject', 'factor')) %>% 
-  select(subject, task_name, factor, introspect_rating, showed_effect)
-for (i in 2:length(all_list_introspection_both)) {
-  all_data_introspection_both = all_data_introspection_both %>% 
-    rbind(all_list_introspection_both[[i]] %>% 
-            left_join(all_list_introspection_experience[[i]] %>% select(subject, factor, showed_effect), by = c('subject', 'factor')) %>% 
-            select(subject, task_name, factor, introspect_rating, showed_effect))
-}
-
-all_data_introspection_both = all_data_introspection_both %>% 
-  mutate(showed_effect = as.character(showed_effect),
-         showed_effect = ifelse(factor == 'prediction', 'Prediction', showed_effect),
-         showed_effect = factor(showed_effect, c('Effect', 'No effect', 'Prediction')))
-
-all_summary_introspection_both = all_data_introspection_both %>% 
-  group_by(factor) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating),
-            se_introspect_rating = se(introspect_rating))
-
-ggplot(all_summary_introspection_both, aes(x = factor, y = mean_introspect_rating, fill = factor)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "", x = "Condition", y = "Influence rating") +
-  theme_custom() +
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = "none")+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(-50, 50))
-
-# All random effects caused convergence issues for this model.
-all_analysis_introspection_both = brm(introspect_rating ~ factor,
-                                      all_data_introspection_both %>% mutate(introspect_rating = scale(introspect_rating),
-                                                                             factor = relevel(factor, ref = 'prediction')),
-                                      prior = default_priors,
-                                      save_pars = save_pars(group = F),
-                                      cores = 4,
-                                      control = list(adapt_delta = 0.95))
-summarise_draws(all_analysis_introspection_both)
-check_divergences(all_analysis_introspection_both$fit)
-summary(all_analysis_introspection_both)
-hdi(all_analysis_introspection_both)
-
-all_bytask_introspection_both = all_data_introspection_both %>% 
-  group_by(task_name, factor) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating),
-            se_introspect_rating = se(introspect_rating))
-
-ggplot(all_bytask_introspection_both, aes(x = task_name, y = mean_introspect_rating, color = factor)) +
-  geom_point(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "", x = "Condition", y = "Influence rating") +
-  theme_custom() +
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = "none")+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))+ 
-  scale_y_continuous(limits = c(-50, 50))+
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.7))
-
-# split showed vs didn't show effect
-
-all_summary_introspection_split = all_data_introspection_both %>% 
-  filter(!is.na(showed_effect)) %>% 
-  group_by(showed_effect) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating),
-            se_introspect_rating = se(introspect_rating))
-
-ggplot(all_summary_introspection_split, aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
-  geom_bar(stat = "identity") +
-  #geom_jitter(data = all_data_introspection_both, aes(y = introspect_rating),
-  #           alpha = 0.5, height = 0, width = .1) +
-  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "", x = "", y = "Influence rating") +
-  theme_custom() +
-  scale_fill_manual(values = effect_no_prediction)+
-  guides(fill = "none")+
-  scale_x_discrete(labels = c('Influenced', 'Not\ninfluenced', 'Prediction')) +
-  scale_y_continuous(limits = c(-10,30)) +
-  geom_hline(yintercept = 0)
-
-all_analysis_introspection_split = brm(introspect_rating ~ showed_effect + (1 | task_name),
-                                       all_data_introspection_both %>% mutate(introspect_rating = scale(introspect_rating),
-                                                                              showed_effect = relevel(showed_effect, ref = 'Prediction')),
-                                       prior = default_priors,
-                                       save_pars = save_pars(group = F),
-                                       cores = 4,
-                                       control = list(adapt_delta = 0.95))
-summarise_draws(all_analysis_introspection_split)
-check_divergences(all_analysis_introspection_split$fit)
-summary(all_analysis_introspection_split)
-hdi(all_analysis_introspection_split)
 
 # Save image --------------------------------------------------------------
 # for use in combined analysis
