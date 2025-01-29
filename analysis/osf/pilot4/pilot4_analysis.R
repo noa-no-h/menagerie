@@ -8,6 +8,7 @@ pkg.names = c('ggplot2', 'lme4', 'lmerTest', 'tidyverse', 'RColorBrewer', 'afex'
 p_load(char = pkg.names)
 
 setwd(here())
+set.seed(123)
 
 theme_update(strip.background = element_blank(),
              panel.grid.major = element_blank(),
@@ -172,45 +173,25 @@ load('../pilot2/pilot2_alltasks.rdata')
 
 all_data_introspection_experience = all_data_introspection_experience_pilot1 %>% 
   rbind(all_data_introspection_experience_pilot2)
-all_data_introspection_both = all_data_introspection_both_pilot1 %>% 
-  rbind(all_data_introspection_both_pilot2)
 
 all_bytask_introspection_experience = all_data_introspection_experience %>% 
   group_by(task_name) %>% 
   summarize(task_cor = cor(introspect_rating, effect_size_range))
 
-all_bytask_introspection_both = all_data_introspection_both %>% 
-  group_by(task_name, factor) %>% 
-  summarize(mean_introspect_rating = mean(introspect_rating)) %>% 
-  group_by(task_name) %>% 
-  mutate(task_diff = mean_introspect_rating - lead(mean_introspect_rating)) %>% 
-  filter(!is.na(task_diff))
-
 df.byheuristic.filt = df.byheuristic %>%
   filter(!(heuristic_name %in% c('DRM effect', 'Hindsight bias', 'Status quo bias', 'Sunk cost bias')))
 df.byheuristic.filt$actual_cor = all_bytask_introspection_experience$task_cor
-df.byheuristic.filt$actual_diff = all_bytask_introspection_both$task_diff
 
 ggplot(df.byheuristic.filt, aes(x = actual_cor, y = mean_prediction)) +
   geom_point() +
   geom_smooth(method = 'lm')
-analysis.byheuristic.1 = brm(mean_prediction ~ actual_cor,
+analysis.byheuristic = brm(mean_prediction ~ actual_cor,
                             df.byheuristic.filt %>% mutate(mean_prediction = scale(mean_prediction),
                                                            actual_cor = scale(actual_cor)),
                             prior = set_prior("normal(0,1)", class = 'b'),
                             save_pars = save_pars(group = F))
-summary(analysis.byheuristic.1)
-hdi(analysis.byheuristic.1)
-ggplot(df.byheuristic.filt, aes(x = actual_diff, y = mean_prediction)) +
-  geom_point() +
-  geom_smooth(method = 'lm')
-analysis.byheuristic.2 = brm(mean_prediction ~ actual_diff,
-                             df.byheuristic.filt %>% mutate(mean_prediction = scale(mean_prediction),
-                                                            actual_diff = scale(actual_diff)),
-                             prior = set_prior("normal(0,1)", class = 'b'),
-                             save_pars = save_pars(group = F))
-summary(analysis.byheuristic.2)
-hdi(analysis.byheuristic.2)
+summary(analysis.byheuristic)
+hdi(analysis.byheuristic)
 
 # Save output --------------------------------------------------------------
 

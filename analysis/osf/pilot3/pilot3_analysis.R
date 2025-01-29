@@ -10,21 +10,13 @@ p_load(char = pkg.names)
 
 setwd(here())
 
-# color palettes: hot for included, cool for excluded
+set.seed(123)
 
-#Included vs. Excluded
-in_and_ex <- c("#F37121", "#4793AF")
-in_neutral_ex <- c("#F37121", "#D3D3D3", "#4793AF")
+# color palettes
+
+exp_control <- c("#F37121", "#4793AF")
+exp_neutral_control <- c("#F37121", "#D3D3D3", "#4793AF")
 effect_no <- c("#e74c3c", "#D3D3D3")
-
-#In&Effect, In&NoEffect, Ex&Effect, Ex&NoEffect
-four_colors <- c("#f1c40f", "#e74c3c","#9b59b6", "#1abc9c")
-
-#In&Effect, In&NoEffect, Ex
-three_colors <- c("#f1c40f", "#e74c3c","#4793AF")
-
-#In&Effect, Ex
-two_colors <- c("#f1c40f", "#e74c3c")
 
 theme_custom <- function() {
   theme_minimal(base_family = "Optima") +
@@ -47,13 +39,14 @@ se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
 se.prop = function(x) {return(sqrt(mean(x, na.rm = T) * (1-mean(x, na.rm = T)) / sum(!is.na(x))))}
 range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 dodge <- position_dodge(width=0.9)
+default_priors <- set_prior("normal(0,1)", class = 'b')
 
 # Load data ---------------------------------------------------------------
 
 data <- read.csv('pilot3_data.csv') %>%
   filter(subject != "") %>%
   arrange(subject, task_name) %>%
-  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "prediction")))
+  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
 
 subjects_all = data %>%
   pull(subject) %>%
@@ -105,9 +98,7 @@ data <- data %>%
 #font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
 
-# 1 Affect Heuristic ----
-
-## 1.1 do we see the effect? ----
+# Affect heuristic ----
 
 affect_data = data %>%
   filter(task_name == "affect heuristic")%>%
@@ -131,19 +122,20 @@ ggplot(summary_affect_data, aes(x = condition, y = mean_choice, fill = condition
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 affect_analysis = brm(choice ~ factor,
-                         data = affect_data,
-                         save_pars = save_pars(group = F))
+                      data = affect_data,
+                      save_pars = save_pars(group = F),
+                      prior = default_priors)
+summarise_draws(affect_analysis)
+check_divergences(affect_analysis$fit)
 summary(affect_analysis)
 hdi(affect_analysis)
 
+# Hindsight ----
 
-# 8 Hindsight ----
-
-## 8.1 do we see the effect? ----
 
 hindsight_data = data %>%
   filter(task_name == "hindsight effect")%>%
@@ -168,19 +160,17 @@ ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condit
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 hindsight_analysis = brm(choice ~ factor,
                          data = hindsight_data,
-                         save_pars = save_pars(group = F))
+                         save_pars = save_pars(group = F),
+                         prior = default_priors)
 summary(hindsight_analysis)
 hdi(hindsight_analysis)
 
-# 13 primacy effect ----
-
-
-## 13.1 Do we see the effect? ----
+# Order effect ----
 
 primacy_data <- data %>%
   filter(task_name == "primacy order") %>%
@@ -189,7 +179,7 @@ primacy_data <- data %>%
                          "chose primacy car", 
                          "chose other car")) %>%
   mutate(choice_binary = as.numeric(choice == "chose primacy car"))%>%
-  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
+  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"), labels = c('experience', 'control'))) 
 
 
 summary_primacy_data <- primacy_data %>%
@@ -207,59 +197,19 @@ ggplot(summary_primacy_data, aes(x = condition, y = mean_choice, fill = conditio
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   theme_custom() +
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 
 primacy_analysis = brm(choice_binary ~ condition,
                        data = primacy_data,
                        family = 'bernoulli',
-                       save_pars = save_pars(group = F))
+                       save_pars = save_pars(group = F),
+                       prior = default_priors)
 summary(primacy_analysis)
 hdi(primacy_analysis, effects = 'all')
 
-
-
-# Simulation ----
-
-## do we see the effect? ----
-
-simulation_data = data %>%
-  filter(task_name == "simulation")%>%
-  mutate(choice = as.numeric(choice)) 
-
-
-summary_simulation_data <- simulation_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("barely missed", "missed"))) %>%
-  summarize(
-    mean_choice = mean(choice),
-    se_choice = se(choice),
-    count = n()
-  )
-
-ggplot(summary_simulation_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Simulation", x = "Condition", y = "How upset would he feel") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-
-simulation_analysis = brm(choice ~ factor,
-                         data = simulation_data,
-                         save_pars = save_pars(group = F))
-summary(simulation_analysis)
-hdi(simulation_analysis)
-
-
-#17 status quo ----
-
-##17.1 do we see the effect? ----
+# Status quo ----
 
 #When subjects were told the status quo, 
 #were they more likely to recommend the 70/30 allocation?
@@ -289,20 +239,20 @@ ggplot(summary_status_quo_data, aes(x = condition, y = mean_choice, fill = condi
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   theme_custom() +
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 
 status_quo_analysis = brm(choice_binary ~ condition,
                         data = status_quo_data,
                         family = 'bernoulli',
-                        save_pars = save_pars(group = F))
+                        save_pars = save_pars(group = F),
+                        prior = default_priors)
 summary(status_quo_analysis)
 hdi(status_quo_analysis, effects = 'all')
 
 
-#18 sunk cost ----
-##18.1 do we see the effect? ----
+# Sunk cost ----
 
 sunk_cost_data <- data %>%
   filter(task_name == "sunk_cost2 effect") %>% 
@@ -319,8 +269,6 @@ percentage_sunk_cost_data <- sunk_cost_data %>%
   ) %>%
   mutate(percentage_switched = (switched_count / total_in_condition) * 100)
 
-summary(glm(switched ~ condition, data = sunk_cost_data, family = 'binomial'))
-
 ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_switched, fill = condition)) +
   geom_bar(stat = "identity") +
   labs(title = "Percentage Who Stopped Investing", x = "Condition", y = "Percentage of Choices to Stop Investing") +
@@ -328,17 +276,16 @@ ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_switched, fi
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 sunk_cost_analysis = brm(switched.num ~ condition,
                         data = sunk_cost_data,
                         family = 'bernoulli',
-                        save_pars = save_pars(group = F))
+                        save_pars = save_pars(group = F),
+                        prior = default_priors)
 summary(sunk_cost_analysis)
 hdi(sunk_cost_analysis, effects = 'all')
-
-
 
 # Save image --------------------------------------------------------------
 

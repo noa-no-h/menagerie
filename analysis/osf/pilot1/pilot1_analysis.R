@@ -20,22 +20,10 @@ dodge <- position_dodge(width=0.9)
 
 default_priors <- set_prior("normal(0,1)", class = 'b')
 
-# color palettes: hot for included, cool for excluded
+# color palettes
 
-#Included vs. Excluded
-in_and_ex <- c("#F37121", "#4793AF")
-in_neutral_ex <- c("#F37121", "#D3D3D3", "#4793AF")
+exp_control <- c("#F37121", "#4793AF")
 effect_no <- c("#e74c3c", "#D3D3D3")
-effect_no_prediction <- c("#e74c3c", "#D3D3D3", "#4793AF")
-
-#In&Effect, In&NoEffect, Ex&Effect, Ex&NoEffect
-four_colors <- c("#f1c40f", "#e74c3c","#9b59b6", "#1abc9c")
-
-#In&Effect, In&NoEffect, Ex
-three_colors <- c("#f1c40f", "#e74c3c","#4793AF")
-
-#In&Effect, Ex
-two_colors <- c("#f1c40f", "#e74c3c")
 
 theme_custom <- function() {
   theme_minimal(base_family = "Optima") +
@@ -58,7 +46,7 @@ theme_custom <- function() {
 
 df <- read.csv('pilot1_data.csv') %>%
   arrange(subject, task_name) %>% 
-  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "prediction")))
+  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
 
 demo <- read.csv('pilot1_demographics.csv') %>%
   arrange(subject) %>% 
@@ -100,22 +88,20 @@ length(unique(df$subject)) #518 Participants
 df$effect.size = NA
 df$effect.size.fac = NA
 
-#* 1 Anchoring (between-subjects) ----------------------------------------------------
+# Anchoring ----------------------------------------------------
 
-#** data preparation ----
+## do people show the effect?----
 df.anchor = df %>%
   filter(task_name == 'anchoring',
          condition != 'High Anchor') %>% # we only ended up using the low anchor version of the antarctic question for the final study
   mutate(condition = factor(condition),
          choice = as.numeric(choice),
-         distance.from.anchor = abs(-45 - choice)) #%>% 
-  #group_by(subject) %>% filter(any(familiarity == 'No'))
+         distance.from.anchor = abs(-45 - choice))
 
 df.anchor.choices = df.anchor %>% 
   filter(!is.na(choice),
          stimulus == 'Antarctic Temperature')
 
-#** data visualization ----
 ggplot(df.anchor.choices, aes(x = choice)) +
   geom_histogram() +
   facet_wrap(~condition)
@@ -141,9 +127,9 @@ ggplot(summary.anchor, aes(x = condition, y = distance.from.anchor.m, fill = con
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
   labs(x = "Condition", y = "distance from anchor") +
    theme_custom()+
-  scale_fill_manual(values = c("#F37121", "#4793AF"))+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
+  scale_fill_manual(values = exp_control)+
+  guides(fill = FALSE)+ 
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 analysis.anchor = brm(distance.from.anchor ~ condition,
                        data = df.anchor.choices %>%
@@ -156,20 +142,19 @@ check_divergences(analysis.anchor$fit)
 summary(analysis.anchor)
 hdi(analysis.anchor)
 
-#** introspection ratings ----
+## are people aware of the effect? ----
 df.anchor.intro <- df.anchor %>% filter(!is.na(introspect_rating))
 
-## in experience condition
 df.anchor.intro.experience = df.anchor.intro %>% 
   filter(factor == 'experience')
 
-anchor.mean.prediction.response = mean(df.anchor.choices$distance.from.anchor[df.anchor.choices$factor == 'prediction'])
+anchor.mean.control.response = mean(df.anchor.choices$distance.from.anchor[df.anchor.choices$factor == 'control'])
 
 df.anchor.effectsizes = df.anchor.choices %>% 
   filter(factor == 'experience') %>% 
   mutate(effect_size = -distance.from.anchor,
          effect_size_range = range01(effect_size),
-         showed_effect = factor(distance.from.anchor < anchor.mean.prediction.response, c(T,F), c('Effect', 'No effect'))) %>% 
+         showed_effect = factor(distance.from.anchor < anchor.mean.control.response, c(T,F), c('Effect', 'No effect'))) %>% 
   select(subject, effect_size, effect_size_range, showed_effect)
 
 df.anchor.intro.experience = df.anchor.intro.experience %>% 
@@ -180,14 +165,17 @@ summary.anchor.intro.experience = df.anchor.intro.experience %>%
   group_by(showed_effect) %>% 
   summarize(mean_introspect_rating = mean(introspect_rating, na.rm = T),
             se_introspect_rating = se(introspect_rating),
-  )
+  ) %>% 
+  filter(!is.na(showed_effect))
 
 ggplot(summary.anchor.intro.experience,
-       aes(x = showed_effect, y = mean_introspect_rating)) +
+       aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(x = "Showed effect?", y = "Introspection rating") +
-  theme_custom()
+  theme_custom() +
+  scale_fill_manual(values = effect_no)+
+  guides(fill=F)
 
 analysis.anchor.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
                                                     df.anchor.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
@@ -215,16 +203,14 @@ check_divergences(analysis.anchor.intro.experience.continuous$fit)
 summary(analysis.anchor.intro.experience.continuous)
 hdi(analysis.anchor.intro.experience.continuous)
 
-
-#* 2 Availability (between-subjects) -------------------------------------------------
-#** data preparation ----
+# Availability -------------------------------------------------
+## do people show the effect? ----
 df.avail = df %>%
   filter(task_name == 'availability'#,
          #familiarity == 'No'
          ) %>% 
   mutate(choice.binary = choice == 'List 1')
 
-#** data visualization ----
 ggplot(df.avail, aes(x = condition, fill = choice)) +
   geom_bar(position = "dodge", stat = "count") + 
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
@@ -255,10 +241,9 @@ check_divergences(analysis.avail$fit)
 summary(analysis.avail)
 hdi(analysis.avail)
 
-#** introspection ratings ----
+## are people aware of the effect? ----
 df.avail.intro = df.avail
 
-## in experience condition
 df.avail.intro.experience = df.avail.intro %>% 
   filter(factor == 'experience') %>% 
   mutate(effect_size = choice.binary,
@@ -278,7 +263,7 @@ ggplot(summary.avail.intro.experience, aes(x = showed_effect, y = mean_introspec
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(x = "Showed effect", y = "introspection rating") +
   theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = effect_no)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
@@ -293,12 +278,11 @@ hdi(analysis.avail.intro.experience)
 
 
 
-#* 3 Causal Inference (between-subjects) -------------------------------------------------------------
-#** data preparation ----
+# Abnormal selection in causal inference -------------------------------------------------------------
+## do people show the effect? ----
 df.cause = df %>% filter(task_name == 'causal inference') %>%
   mutate(choice = as.numeric(choice))
 
-#** data visualization ----
 summary.cause = df.cause %>%
   group_by(condition) %>%
   summarize(choice.m = mean(choice), choice.se = se(choice))
@@ -308,7 +292,7 @@ ggplot(summary.cause, aes(x = condition, y = choice.m, fill = condition)) +
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
   labs(x = "Condition", y = "average causality rating") +
   theme_custom() +
-  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 
 analysis.cause = brm(choice ~ condition,
@@ -320,10 +304,9 @@ check_divergences(analysis.cause$fit)
 summary(analysis.cause)
 hdi(analysis.cause)
 
-#** introspection ratings ----
+## are people aware of the effect? ----
 df.cause.intro <- df.cause %>% filter(!is.na(introspect_rating))
 
-## in experience condition
 df.cause.intro.experience = df.cause %>% 
   filter(factor == 'experience') %>% 
   mutate(effect_size = choice,
@@ -343,7 +326,7 @@ ggplot(summary.cause.intro.experience, aes(x = showed_effect, y = mean_introspec
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(x = "Showed effect", y = "introspection rating") +
   theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = effect_no)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
@@ -371,15 +354,12 @@ analysis.cause.intro.experience.continuous = brm(introspect_rating ~ effect_size
 summary(analysis.cause.intro.experience.continuous)
 hdi(analysis.cause.intro.experience.continuous)
 
-
-
-#* 6 Decoy Effect -------------------------------------------------------------
-#** data preparation ----
+# Decoy Effect -------------------------------------------------------------
+## do people show the effect? ----
 df.decoy = df %>%
   filter(task_name == 'decoy effect') %>% 
   mutate(choice.target = choice == 'Brand N (Target)')
 
-#** data visualization ----
 summary.decoy = df.decoy %>% 
   group_by(factor) %>% 
   summarize(choice.target.m = mean(choice.target),
@@ -391,11 +371,9 @@ ggplot(summary.decoy, aes(x = factor, y = choice.target.m, fill=factor)) +
                 width = 0.2) +
   theme_custom()+ 
   labs(x = "Condition", y = "Proportion Chose Brand N (Target)")+
-  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 
-
-#** inferential statistics ----
 analysis.decoy = brm(choice.target ~ condition,
                      df.decoy,
                      prior = default_priors,
@@ -405,11 +383,9 @@ check_divergences(analysis.decoy$fit)
 summary(analysis.decoy)
 hdi(analysis.decoy)
 
-#** introspection ratings ----
+## are people aware of the effect? ----
 df.decoy.intro <- df.decoy %>%
   filter(!is.na(introspect_rating))
-
-## in experience condition
 
 df.decoy.intro.experience = df.decoy %>% 
   filter(factor == 'experience') %>% 
@@ -430,7 +406,7 @@ ggplot(summary.decoy.intro.experience, aes(x = showed_effect, y = mean_introspec
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(x = "Showed effect", y = "introspection rating") +
   theme_custom()+
-  scale_fill_manual(values = in_and_ex)+
+  scale_fill_manual(values = effect_no)+
   guides(fill = FALSE)+ 
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
@@ -443,17 +419,14 @@ check_divergences(analysis.decoy.intro.experience.dichotomized$fit)
 summary(analysis.decoy.intro.experience.dichotomized)
 hdi(analysis.decoy.intro.experience.dichotomized)
 
-
-
-#* 8 Belief (within-subjects) ------------------------------------------------------------------
-#** data preparation ----
+# Belief ------------------------------------------------------------------
+## do people show the effect? ----
 df.belief <- df %>%
   filter(task_name == 'belief') %>% 
   mutate(choice.yes = choice == 'Yes')
 df.belief.choices = df.belief %>%
   filter(factor == "experience", !is.na(choice), !is.na(condition))
   
-#** data visualization ----
 summary.belief <- df.belief.choices %>%
   group_by(condition) %>% 
   summarize(choice.yes.m = mean(choice.yes),
@@ -466,10 +439,9 @@ ggplot(summary.belief, aes(x = condition, y = choice.yes.m, fill = condition)) +
                 width = 0.2) +
   theme_custom() +
   labs(x = "Condition", y = "Proportion Chose Yes, Valid")+
-  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 
-#** inferential statistics ----
 analysis.belief = brm(choice.yes ~ condition,
                       df.belief.choices,
                       prior = default_priors,
@@ -479,12 +451,11 @@ check_divergences(analysis.belief$fit)
 summary(analysis.belief)
 hdi(analysis.belief)
 
-#** introspection ratings ----
+## are people aware of the effect? ----
 
 df.belief.intro = df.belief %>%
   filter(!is.na(introspect_rating))
 
-## in experience condition
 df.belief.intro.experience = df.belief.intro %>% 
   filter(factor == 'experience')
 
@@ -509,11 +480,13 @@ summary.belief.intro.experience = df.belief.intro.experience %>%
   )
 
 ggplot(summary.belief.intro.experience,
-       aes(x = showed_effect, y = mean_introspect_rating)) +
+       aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(x = "Showed effect?", y = "Introspection rating") +
-  theme_custom()
+  theme_custom() +
+  scale_fill_manual(values = effect_no) +
+  guides(fill = F)
 
 analysis.belief.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
                                                  df.belief.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
@@ -541,10 +514,8 @@ check_divergences(analysis.belief.intro.experience.continuous$fit)
 summary(analysis.belief.intro.experience.continuous)
 hdi(analysis.belief.intro.experience.continuous)
 
-
-
-#* 9 Mere exposure (within-subjects) ------------------------------------------------------
-#** data preparation ----
+# Mere exposure ------------------------------------------------------
+## do people show the effect? ----
 df.mee = df %>%
   filter(task_name == 'mere exposure') %>%
   mutate(choice = as.numeric(choice))
@@ -552,8 +523,6 @@ df.mee = df %>%
 df.mee.choices <- df.mee %>%
   filter(factor == "experience", !is.na(choice)) %>% 
   mutate(condition = factor(condition, c(1,25), c('low', 'high')))
-
-#** data visualization (general) ----
 
 summary.mee = df.mee.choices %>%
   group_by(condition) %>%
@@ -564,10 +533,8 @@ ggplot(summary.mee, aes(x = condition, y = choice.m, fill = condition)) +
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
   theme_custom() +
   labs(x = "Number of repeats", y = "Mean Liking Rating")+
-  scale_fill_manual(values = c("#F37121", "#4793AF"))+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
-
-#** inferential statistics ----
 
 analysis.mee = brm(choice ~ condition + (condition | subject),
                    df.mee.choices %>% mutate(choice = scale(choice)),
@@ -580,11 +547,9 @@ check_divergences(analysis.mee$fit)
 summary(analysis.mee)
 hdi(analysis.mee)
 
-#** introspection ratings ---------------------------------------------------
+## are people aware of the effect? ---------------------------------------------------
 
 df.mee.intro <- df.mee %>% filter(!is.na(introspect_rating))
-
-## in experience condition
 
 df.mee.intro.experience = df.mee.intro %>% 
   filter(factor == 'experience')
@@ -610,11 +575,13 @@ summary.mee.intro.experience = df.mee.intro.experience %>%
   )
 
 ggplot(summary.mee.intro.experience,
-       aes(x = showed_effect, y = mean_introspect_rating)) +
+       aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(x = "Showed effect?", y = "Introspection rating") +
-  theme_custom()
+  theme_custom() +
+  scale_fill_manual(values = effect_no) +
+  guides(fill = F)
 
 analysis.mee.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
                                                  df.mee.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
@@ -642,11 +609,8 @@ check_divergences(analysis.mee.intro.experience.continuous$fit)
 summary(analysis.mee.intro.experience.continuous)
 hdi(analysis.mee.intro.experience.continuous)
 
+# Aggregating across all tasks -----------------------------------------------------------
 
-
-# All tasks -----------------------------------------------------------
-
-## in experience condition
 all_list_introspection_experience = list(df.anchor.intro.experience,
                                          df.avail.intro.experience,
                                          df.cause.intro.experience,
@@ -662,7 +626,7 @@ for (i in 2:length(all_list_introspection_experience)) {
             select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect))
 }
 
-# dichotomous
+## dichotomous
 all_summary_introspection_experience = all_data_introspection_experience %>% 
   filter(!is.na(showed_effect)) %>% 
   group_by(showed_effect) %>% 
@@ -691,13 +655,7 @@ check_divergences(all_analysis_introspection_experience_dichotomous$fit)
 summary(all_analysis_introspection_experience_dichotomous)
 hdi(all_analysis_introspection_experience_dichotomous)
 
-# continuous
-ggplot(all_data_introspection_experience,
-       aes(x = effect_size_range, y = introspect_rating)) +
-  geom_point(alpha=0.8) +
-  geom_smooth(method='lm') +
-  theme_custom()
-
+## continuous
 ggplot(all_data_introspection_experience,
        aes(x = effect_size_range, y = introspect_rating)) +
   geom_point(alpha=0.5) +
@@ -705,7 +663,7 @@ ggplot(all_data_introspection_experience,
   theme_custom() +
   labs(x = 'Influence magnitude', y = 'Influence rating')
 
-all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size_range + (effect_size_range | subject) + (1 | task_name),
+all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size_range + (1 | subject) + (effect_size_range | task_name),
                                                              all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                                           effect_size_range = scale(effect_size_range)),
                                                              prior = default_priors,
@@ -715,9 +673,9 @@ all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effec
 summarise_draws(all_analysis_introspection_experience_continuous)
 check_divergences(all_analysis_introspection_experience_dichotomous$fit)
 summary(all_analysis_introspection_experience_continuous)
-hdi(all_analysis_introspection_experience_continuous, effects = 'all')
+hdi(all_analysis_introspection_experience_continuous)
 
-# continuous, standardized within
+## continuous, standardized within
 all_data_introspection_experience = all_data_introspection_experience %>% 
   group_by(subject) %>% 
   mutate(effect_size_range_within = scale(effect_size_range),
@@ -730,8 +688,7 @@ ggplot(all_data_introspection_experience,
   geom_smooth(method='lm') +
   theme_custom()
 
-# Had to remove subject-level random effects to get it to converge.
-all_analysis_introspection_experience_continuous_within = brm(introspect_rating_within ~ effect_size_range_within + (1 | subject) + (1 | task_name),
+all_analysis_introspection_experience_continuous_within = brm(introspect_rating_within ~ effect_size_range_within + (1 | subject) + (effect_size_range_within | task_name),
                                                              all_data_introspection_experience %>% mutate(introspect_rating_within = scale(introspect_rating_within),
                                                                                                           effect_size_range_within = scale(effect_size_range_within)),
                                                              prior = default_priors,
@@ -743,6 +700,7 @@ check_divergences(all_analysis_introspection_experience_continuous_within$fit)
 summary(all_analysis_introspection_experience_continuous_within)
 hdi(all_analysis_introspection_experience_continuous_within)
 
+## By subject
 all_bysubject_introspection_experience = all_data_introspection_experience %>%
   group_by(subject) %>% 
   summarize(subject_cor = cor(effect_size_range, introspect_rating))
@@ -756,13 +714,10 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
-
-
 # Save image --------------------------------------------------------------
-# for use in pilot 4
+# for use in pilot 4 analysis
 all_data_introspection_experience_pilot1 = all_data_introspection_experience
-all_data_introspection_both_pilot1 = all_data_introspection_both
-save(all_data_introspection_experience_pilot1, all_data_introspection_both_pilot1, file = 'pilot1_alltasks.rdata')
+save(all_data_introspection_experience_pilot1, file = 'pilot1_alltasks.rdata')
 
 # save all analyses
 save.image("pilot1_output.rdata")
