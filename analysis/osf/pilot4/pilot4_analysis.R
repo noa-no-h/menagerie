@@ -195,12 +195,23 @@ ggplot(df.byheuristic.filt, aes(x = actual_cor, y = mean_prediction)) +
   geom_point() +
   geom_smooth(method = 'lm')
 analysis.byheuristic.1 = brm(mean_prediction ~ actual_cor,
-                            df.byheuristic.filt)
+                            df.byheuristic.filt %>% mutate(mean_prediction = scale(mean_prediction),
+                                                           actual_cor = scale(actual_cor)),
+                            prior = set_prior("normal(0,1)", class = 'b'),
+                            save_pars = save_pars(group = F))
+summary(analysis.byheuristic.1)
 hdi(analysis.byheuristic.1)
 ggplot(df.byheuristic.filt, aes(x = actual_diff, y = mean_prediction)) +
   geom_point() +
   geom_smooth(method = 'lm')
+analysis.byheuristic.2 = brm(mean_prediction ~ actual_diff,
+                             df.byheuristic.filt %>% mutate(mean_prediction = scale(mean_prediction),
+                                                            actual_diff = scale(actual_diff)),
+                             prior = set_prior("normal(0,1)", class = 'b'),
+                             save_pars = save_pars(group = F))
+summary(analysis.byheuristic.2)
+hdi(analysis.byheuristic.2)
 
 # Save output --------------------------------------------------------------
 
-save.image('pilot4_analysis.rdata')
+save.image('pilot4_output.rdata')

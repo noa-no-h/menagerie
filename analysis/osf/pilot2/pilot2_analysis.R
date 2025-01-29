@@ -1015,8 +1015,7 @@ hdi(all_analysis_introspection_experience_continuous)
 # continuous, standardized within
 all_data_introspection_experience = all_data_introspection_experience %>% 
   group_by(subject) %>% 
-  mutate(effect_size_std_within = scale(effect_size_std),
-         effect_size_range_within = scale(effect_size_range),
+  mutate(effect_size_range_within = scale(effect_size_range),
          introspect_rating_within = scale(introspect_rating)) %>% 
   ungroup()
 
@@ -1143,9 +1142,166 @@ hdi(all_analysis_introspection_split)
 # Save image --------------------------------------------------------------
 # for use in combined analysis
 all_data_introspection_experience_pilot2 = all_data_introspection_experience %>% 
-  select(!c(effect_size_std, effect_size_std_within))
+  select(!c(effect_size_std))
 all_data_introspection_both_pilot2 = all_data_introspection_both
 save(all_data_introspection_experience_pilot2, all_data_introspection_both_pilot2, file = 'pilot2_alltasks.rdata')
 
 # save all analyses
 save.image('pilot2_output.rdata')
+
+
+# Combined analysis with pilot1 -------------------------------------------
+
+## load data
+load('../pilot1/pilot1_alltasks.rdata')
+
+combined_data_introspection_experience = all_data_introspection_experience_pilot1 %>% 
+  rbind(all_data_introspection_experience_pilot2)
+combined_data_introspection_both = all_data_introspection_both_pilot1 %>% 
+  rbind(all_data_introspection_both_pilot2)
+
+## run combined analyses
+
+combined_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect + (1 | subject) + (showed_effect || task_name),
+                                                             combined_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                     showed_effect = relevel(showed_effect, ref = 'No effect')),
+                                                            prior = default_priors,
+                                                            save_pars = save_pars(group = F),
+                                                            cores = 4,
+                                                            control = list(adapt_delta = 0.95))
+summarise_draws(combined_analysis_introspection_experience_dichotomous)
+check_divergences(combined_analysis_introspection_experience_dichotomous$fit)
+summary(combined_analysis_introspection_experience_dichotomous)
+hdi(combined_analysis_introspection_experience_dichotomous)
+
+# continuous
+ggplot(combined_data_introspection_experience,
+       aes(x = effect_size_range, y = introspect_rating)) +
+  geom_point(alpha=0.5) +
+  geom_smooth(method='lm') +
+  theme_custom() +
+  labs(x = 'Influence magnitude', 
+       y = 'Influence rating')
+
+combined_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size_range + (effect_size_range || subject) + (effect_size_range | task_name),
+                                                       combined_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                    effect_size_range = scale(effect_size_range)),
+                                                       prior = default_priors,
+                                                       #save_pars = save_pars(group = F),
+                                                       cores = 4,
+                                                       control = list(adapt_delta = 0.95))
+summarise_draws(combined_analysis_introspection_experience_continuous)
+check_divergences(combined_analysis_introspection_experience_continuous$fit)
+summary(combined_analysis_introspection_experience_continuous)
+hdi(combined_analysis_introspection_experience_continuous)
+
+combined_data_introspection_experience = combined_data_introspection_experience %>% 
+  group_by(subject) %>% 
+  mutate(effect_size_range_within = scale(effect_size_range),
+         introspect_rating_within = scale(introspect_rating)) %>% 
+  ungroup()
+
+ggplot(combined_data_introspection_experience,
+       aes(x = effect_size_range_within, y = introspect_rating_within)) +
+  geom_point(alpha=0.8) +
+  geom_smooth(method='lm') +
+  theme_custom()
+
+combined_analysis_introspection_experience_continuous_within = brm(introspect_rating_within ~ effect_size_range_within + (effect_size_range_within || subject) + (effect_size_range_within || task_name),
+                                                            combined_data_introspection_experience %>% mutate(introspect_rating_within = scale(introspect_rating_within),
+                                                                                                              effect_size_range_within = scale(effect_size_range_within)),
+                                                            prior = default_priors,
+                                                            save_pars = save_pars(group = F),
+                                                            cores = 4,
+                                                            control = list(adapt_delta = 0.95))
+summarise_draws(combined_analysis_introspection_experience_continuous_within)
+check_divergences(combined_analysis_introspection_experience_continuous_within$fit)
+summary(combined_analysis_introspection_experience_continuous_within)
+hdi(combined_analysis_introspection_experience_continuous_within)
+
+combined_analysis_introspection_both = brm(introspect_rating ~ factor + (1 | subject) + (1 | task_name),
+                                      all_data_introspection_both %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                             factor = relevel(factor, ref = 'prediction')),
+                                      prior = default_priors,
+                                      #save_pars = save_pars(group = F),
+                                      cores = 4,
+                                      control = list(adapt_delta = 0.95))
+summarise_draws(combined_analysis_introspection_both)
+check_divergences(combined_analysis_introspection_both$fit)
+summary(combined_analysis_introspection_both)
+hdi(combined_analysis_introspection_both)
+
+# run power analysis
+
+analysis_to_use = combined_analysis_introspection_both
+data_to_use = combined_data_introspection_both
+
+task_list = c(unique(combined_data_introspection_both$task_name), paste0("newtask_",1:5))
+num_tasks = length(task_list)
+
+sample_sizes = c(1000, 1500)
+num_runs_per = 20
+hdi_lows = matrix(nrow = length(sample_sizes), ncol = num_runs_per)
+hdi_highs = matrix(nrow = length(sample_sizes), ncol = num_runs_per)
+hdi_estimates = matrix(nrow = length(sample_sizes), ncol = num_runs_per)
+hdi_widths = matrix(nrow = length(sample_sizes), ncol = num_runs_per)
+hdi_above_rope = matrix(nrow = length(sample_sizes), ncol = num_runs_per)
+
+hdi_avg_width = numeric(length(sample_sizes))
+hdi_avg_above = numeric(length(sample_sizes))
+
+for (i in 1:length(sample_sizes)) {
+  sample_size = sample_sizes[i]
+  
+  new_data_template = data.frame(
+    subject = rep(1:sample_size, each = num_tasks),
+    task_name = rep(task_list, sample_size),
+    factor = rep(c('prediction', 'experience'), each = num_tasks, sample_size / 2)
+  )
+  
+  # new_data_template = combined_data_introspection_experience %>%
+  #   distinct(subject) %>%
+  #   slice_sample(n = sample_size, replace = T) %>%
+  #   group_by(subject) %>%
+  #   mutate(instance = row_number()) %>%
+  #   ungroup() %>%
+  #   left_join(combined_data_introspection_experience, by = 'subject') %>% 
+  #   mutate(subject = str_c(subject, instance, sep = "_")) %>% 
+  #   select(!c(introspect_rating, instance))
+  
+  post_draws = posterior_predict(analysis_to_use,
+                                newdata = new_data_template,
+                                ndraws = num_runs_per,
+                                allow_new_levels = T)
+  
+  for (j in 1:num_runs_per) {
+    new_data = new_data_template
+    new_data$introspect_rating = t(post_draws)[,j]
+    
+    power_analysis = brm(introspect_rating ~ factor + (1 | subject) + (1 | task_name),
+                         new_data %>% mutate(introspect_rating = scale(introspect_rating),
+                                             factor = factor(factor, levels = c('prediction', 'experience'))),
+                         prior = default_priors,
+                         save_pars = save_pars(group = F),
+                         cores = 4)
+    # power_analysis = brm(introspect_rating ~ effect_size_range + (effect_size_range || subject) + (effect_size_range || task_name),
+    #                                                               combined_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+    #                                                                                                                 effect_size_range = scale(effect_size_range)),
+    #                                                               prior = default_priors,
+    #                                                               save_pars = save_pars(group = F),
+    #                                                               cores = 4,
+    #                                                               control = list(adapt_delta = 0.95))
+    
+    power_analysis_hdi = bayestestR::hdi(power_analysis)
+    hdi_estimates[i,j] = summary(power_analysis)$fixed$Estimate[2]
+    hdi_lows[i,j] = power_analysis_hdi$CI_low[2]
+    hdi_highs[i,j] = power_analysis_hdi$CI_high[2]
+    hdi_widths[i,j] = hdi_highs[i,j] - hdi_lows[i,j]
+    hdi_above_rope[i,j] = hdi_lows[i,j] > 0.05
+  }
+  
+  hdi_avg_width[i] = mean(hdi_widths[i,])
+  hdi_avg_above[i] = mean(hdi_above_rope[i,])
+}
+
+save.image('power_analysis.rdata')
