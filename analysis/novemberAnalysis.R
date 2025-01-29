@@ -15,6 +15,15 @@ library(tidyr)
 library(brms)
 library(forcats)  
 
+if (!require('pacman')) {
+  install.packages('pacman')
+  require('pacman')
+}
+
+pkg.names = c('ggplot2', 'tidyverse', 'RColorBrewer', 'extrafont',
+              'this.path', 'brms', 'bayestestR')
+p_load(char = pkg.names)
+
 
 # color palettes: hot for included, cool for excluded
 
@@ -61,9 +70,9 @@ dodge <- position_dodge(width=0.9)
 
 #data <- read.csv('November_2024_pilot.csv') %>%
 data <- read.csv('full_pilot.csv') %>%
+#data <- read.csv('v5pilot2.csv') %>%
   filter(subject != "") %>%
   arrange(subject, task_name) %>%
-  filter(familiarity != "Yes") %>%
   mutate(factor = factor(factor, levels = c("Factor-Included", "Factor-Excluded"))) %>%
   mutate(introspect_rating = as.numeric(introspect_rating)) %>%
   mutate(introspect_rating = as.numeric(introspect_rating))%>%
@@ -1001,6 +1010,49 @@ count_data <- table(recognition_data$auxiliary_info1)
 chisq_test <- chisq.test(count_data)
 print(chisq_test)
 
+# 13 primacy effect ----
+
+
+## 13.1 Do we see the effect? ----
+
+primacy_data <- december_pilot %>%
+  filter(task_name == "primacy order") %>%
+  filter(is.na(stimulus)) %>%
+  filter(choice != "")%>%
+  mutate(choice = ifelse(choice == "car1", 
+                         "chose primacy car", 
+                         "chose other car")) %>%
+  mutate(choice_binary = as.numeric(choice == "chose primacy car"))%>%
+  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
+
+
+summary_primacy_data <- primacy_data %>%
+  group_by(condition) %>%
+  summarize(
+    mean_choice = mean(choice_binary),
+    se_choice = se.prop(choice_binary),
+    count = n()
+  )
+
+ggplot(summary_primacy_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Choices of the primacy car", x = "Condition", y = "Percent who chose primacy car") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom() +
+  scale_fill_manual(values = in_and_ex)+
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+
+primacy_analysis = brm(choice_binary ~ condition,
+                        data = primacy_data,
+                        family = 'bernoulli',
+                        save_pars = save_pars(group = F))
+summary(primacy_analysis)
+hdi(primacy_analysis, effects = 'all')
+
+
 #14 reference price ✅ ----
 ##14.1 do we see the effect? ----
 
@@ -1037,6 +1089,7 @@ ggplot(summary_reference_price_data, aes(x = condition, y = mean_choice, fill = 
 
 
 t.test(choice_parsed ~ factor, data = reference_price_data)
+
 
 
 ##14.2 introspection----
@@ -1477,7 +1530,7 @@ test = brm(switched.num ~ condition, data = sunk_cost_data, family = 'binomial')
 
 
 
-## 18.1 Simulation ----
+# 18.1 Simulation ----
 
 
 simulation_data = december_pilot %>%

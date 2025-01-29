@@ -160,6 +160,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
             familiarity: null,
             rt: data.rt
         }
+        console.log("data to save: " + JSON.stringify(s1_data));
         save_data(s1_data, 'introspection')
     }
     }
@@ -275,6 +276,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
          timeline: [primacy_order_instructions1, primacy_order_exposure, primacy_order_question, primacy_order_familiar, primacy_order_openQ, primacy_order_introspect1, primacy_order_intro_confidence]
      };
  }
+ 
  
  //#endregion
  //timeline.push(mee)
