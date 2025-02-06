@@ -73,19 +73,20 @@ var car3_attributes = [
 
 var shuffled_car3_attributes = _.shuffle(car3_attributes);
 
-var shuffled_car1_positive_car2_negative = _.shuffle(shuffled_car1_positive_attributes.concat(shuffled_car2_negative_attributes).concat(shuffled_car3_attributes.slice(0,5)))
-var shuffled_car1_negative_car2_positive = _.shuffle(shuffled_car1_negative_attributes.concat(shuffled_car2_positive_attributes).concat(shuffled_car3_attributes.slice(6,11)))
+var shuffled_car1_positive_car2_negative = _.shuffle(shuffled_car1_positive_attributes.concat(shuffled_car2_negative_attributes).concat(shuffled_car3_attributes.slice(0,6)))
+var shuffled_car1_negative_car2_positive = _.shuffle(shuffled_car1_negative_attributes.concat(shuffled_car2_positive_attributes).concat(shuffled_car3_attributes.slice(6,12)))
 var bad_1_first = [];
-var random = _.shuffle(car1_positive_attributes.concat(car1_positive_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes).concat(car3_attributes));
+var random = _.shuffle(car1_positive_attributes.concat(car1_negative_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes).concat(car3_attributes));
 
-for (var i = 0; i < 11; i++) {
+for (var i = 0; i < shuffled_car1_positive_car2_negative.length; i++) {
     bad_1_first.push(shuffled_car1_positive_car2_negative[i]);
 }
 
-for (var i = 0; i < 11; i++) {
+for (var i = 0; i < shuffled_car1_negative_car2_positive.length; i++) {
     bad_1_first.push(shuffled_car1_negative_car2_positive[i]);
 }
 
+console.log(bad_1_first)
 
 stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
 
@@ -128,7 +129,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
         {
           prompt: "Which car do you think is best?", 
           name: 'choice', 
-          options: [car1, car2, car3], 
+          options: _.shuffle([car1, car2, car3]), 
           required: true,
           horizontal: false
         }, 
@@ -274,7 +275,6 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
          timeline: [primacy_order_instructions1, primacy_order_exposure, primacy_order_question, primacy_order_familiar, primacy_order_openQ, primacy_order_introspect1, primacy_order_intro_confidence]
      };
  }
- 
  
  //#endregion
  //timeline.push(mee)

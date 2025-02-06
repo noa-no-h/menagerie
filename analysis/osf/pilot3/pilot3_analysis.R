@@ -175,10 +175,10 @@ hdi(hindsight_analysis)
 primacy_data <- data %>%
   filter(task_name == "primacy order") %>%
   filter(choice != "")%>%
-  mutate(choice = ifelse(choice == "car1", 
+  mutate(choice_fac = ifelse(choice == "car1", 
                          "chose primacy car", 
                          "chose other car")) %>%
-  mutate(choice_binary = as.numeric(choice == "chose primacy car"))%>%
+  mutate(choice_binary = as.numeric(choice_fac == "chose primacy car"))%>%
   mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"), labels = c('experience', 'control'))) 
 
 
@@ -188,6 +188,13 @@ summary_primacy_data <- primacy_data %>%
     mean_choice = mean(choice_binary),
     se_choice = se.prop(choice_binary),
     count = n()
+  )
+
+summary_primacy_data2 <- primacy_data %>%
+  group_by(condition, choice) %>%
+  summarize(
+    count = n(),
+    .groups = 'drop'
   )
 
 ggplot(summary_primacy_data, aes(x = condition, y = mean_choice, fill = condition)) +
