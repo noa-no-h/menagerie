@@ -41,7 +41,7 @@ var car1_negative_attributes = [
     `<p style = "font-size:30px">The ${car2} has a good sound system</p>`,
     `<p style = "font-size:30px">With the ${car2} it is easy to shift gears</p>`,
     `<p style = "font-size:30px">The ${car2} has a large trunk</p>`,
-    `<p style = "font-size:30px">For the ${car1}, service is good</p>`
+    `<p style = "font-size:30px">For the ${car2}, service is good</p>`
     ]
 
 var shuffled_car2_positive_attributes = _.shuffle(car2_positive_attributes)
@@ -73,22 +73,23 @@ var car3_attributes = [
 
 var shuffled_car3_attributes = _.shuffle(car3_attributes);
 
-var shuffled_car1_positive_car2_negative = _.shuffle(shuffled_car1_positive_attributes.concat(shuffled_car2_negative_attributes).concat(shuffled_car3_attributes.slice(0,5)))
-var shuffled_car1_negative_car2_positive = _.shuffle(shuffled_car1_negative_attributes.concat(shuffled_car2_positive_attributes).concat(shuffled_car3_attributes.slice(6,11)))
-var bad_1_first = [];
-var random = _.shuffle(car1_positive_attributes.concat(car1_positive_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes).concat(car3_attributes));
+var shuffled_car1_positive_car2_negative = _.shuffle(shuffled_car1_positive_attributes.concat(shuffled_car2_negative_attributes).concat(shuffled_car3_attributes.slice(0,6)))
+var shuffled_car1_negative_car2_positive = _.shuffle(shuffled_car1_negative_attributes.concat(shuffled_car2_positive_attributes).concat(shuffled_car3_attributes.slice(6,13)))
+var good_1_first = [];
+var thirty_eight_random = _.shuffle(car1_positive_attributes.concat(car1_negative_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes).concat(car3_attributes));
+var random = thirty_eight_random.slice(0, 22);
 
 for (var i = 0; i < 11; i++) {
-    bad_1_first.push(shuffled_car1_positive_car2_negative[i]);
+    good_1_first.push(shuffled_car1_positive_car2_negative[i]);
 }
 
 for (var i = 0; i < 11; i++) {
-    bad_1_first.push(shuffled_car1_negative_car2_positive[i]);
+    good_1_first.push(shuffled_car1_negative_car2_positive[i]);
 }
 
-console.log(bad_1_first)
+console.log(good_1_first)
 
-stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
+stimulus_array = condition[0] == "Factor-Included" ? good_1_first : random
 
  var primacy_order_trials = [];
  for (var i = 0; i < stimulus_array.length; i++) {
@@ -129,7 +130,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
         {
           prompt: "Which car do you think is best?", 
           name: 'choice', 
-          options: [car1, car2, car3], 
+          options: _.shuffle([car1, car2, car3]), 
           required: true,
           horizontal: false
         }, 
