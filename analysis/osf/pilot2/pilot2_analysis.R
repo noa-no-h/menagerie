@@ -95,6 +95,9 @@ ggplot(demographics, aes(x = total_time)) +
   labs(title = "Time Histogram", x = "Minutes", y = "Count") +
   theme_custom()
 
+print(median(demographics$total_time))
+
+
 to_exclude <- union(attention_exclude, tab_away_exclude)
 
 number_subjects <- n_distinct(data$subject)

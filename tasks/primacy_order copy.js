@@ -76,7 +76,7 @@ var shuffled_car3_attributes = _.shuffle(car3_attributes);
 var shuffled_car1_positive_car2_negative = _.shuffle(shuffled_car1_positive_attributes.concat(shuffled_car2_negative_attributes).concat(shuffled_car3_attributes.slice(0,5)))
 var shuffled_car1_negative_car2_positive = _.shuffle(shuffled_car1_negative_attributes.concat(shuffled_car2_positive_attributes).concat(shuffled_car3_attributes.slice(0,5)))
 var good_1_first = [];
-var random = _.shuffle(car1_positive_attributes.concat(car1_positive_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes).concat(car3_attributes));
+var random = _.shuffle(car1_positive_attributes.concat(car1_negative_attributes).concat(car2_positive_attributes).concat(car2_negative_attributes).concat(car3_attributes));
 
 for (var i = 0; i < 11; i++) {
     good_1_first.push(shuffled_car1_positive_car2_negative[i]);
