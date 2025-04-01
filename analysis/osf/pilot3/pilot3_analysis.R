@@ -85,6 +85,8 @@ ggplot(demographics, aes(x = total_time)) +
   labs(title = "Time Histogram", x = "Minutes", y = "Count") +
   theme_custom()
 
+print(median(demographics$total_time))
+
 to_exclude <- union(attention_exclude, tab_away_exclude)
 
 number_subjects <- n_distinct(data$subject)
@@ -214,12 +216,67 @@ ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condit
   scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
+
+ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity", position = "dodge", alpha = 0.7) +  # Bar chart with transparency
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), 
+                width = 0.2) +  # Error bars
+  geom_jitter(data = hindsight_data, aes(x = condition, y = choice), 
+              width = 0.2, alpha = 0.6, color = "black", size = 2) +  # Individual data points
+  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom() +
+  scale_fill_manual(values = exp_control) +
+  guides(fill = FALSE) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+t_test_result <- t.test(choice ~ condition, data = hindsight_data, var.equal = TRUE)
+print(t_test_result$p.value)
+# p = 0.0108
+
 hindsight_analysis = brm(choice ~ factor,
                          data = hindsight_data %>% mutate(choice = scale(choice)),
                          save_pars = save_pars(group = F),
                          prior = default_priors)
 summary(hindsight_analysis)
 hdi(hindsight_analysis)
+
+# from github file history
+
+hindsight_data = data %>%
+  filter(task_name == "hindsight effect")%>%
+  filter(stimulus != "comprehension") %>%
+  mutate(choice = as.numeric(choice)) 
+
+
+summary_hindsight_data <- hindsight_data %>%
+  group_by(condition) %>%
+  mutate(condition = factor(condition, levels = c("knowledge of outcome", "no knowledge of outcome"))) %>%
+  summarize(
+    mean_choice = mean(choice),
+    se_choice = se(choice),
+    count = n()
+  )
+
+ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
+  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  theme_custom()+
+  scale_fill_manual(values = exp_control) +
+  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
+hindsight_analysis = brm(choice ~ factor,
+                         data = hindsight_data,
+                         save_pars = save_pars(group = F))
+summary(hindsight_analysis)
+hdi(hindsight_analysis)
+
 
 # # Order effect ----
 # 

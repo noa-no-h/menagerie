@@ -56,6 +56,7 @@ var simulation_question = {
                 familiarity: null,
                 rt: data.rt
             }
+            //console.log("data to save: " + JSON.stringify(s1_data));
             save_data(s1_data, 'introspection')
         }
         

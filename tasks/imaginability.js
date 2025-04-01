@@ -35,6 +35,21 @@ var imaginability_question = {
     prompt: "<br><br><br>",    
     on_finish: function (data) {
         choice = data.response
+        test_data = {
+            subject: data.subject,
+            version: data.version,
+            factor: data.condition,
+            task_name: "imaginability",
+            condition: condition[0] == "Factor-Included" ? "Easy to Imagine" : "Difficult to Imagine",
+            choice: choice,
+            stimulus: null,
+            openq_response: imaginability_openQ_response,
+            introspect_rating: imaginability_intro_response1,
+            introspect_open: imaginability_intro_confidence_response,
+            familiarity: familiarity,
+            rt: data.rt
+        }
+        //console.log("test_data: " + JSON.stringify(test_data))
     }
 }
 
