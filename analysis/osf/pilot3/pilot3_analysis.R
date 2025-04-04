@@ -278,6 +278,7 @@ summary(hindsight_analysis)
 hdi(hindsight_analysis)
 
 
+<<<<<<< Updated upstream
 # # Order effect ----
 # 
 # primacy_data <- data %>%
@@ -323,6 +324,8 @@ hdi(hindsight_analysis)
 #                        prior = default_priors)
 # summary(primacy_analysis)
 # hdi(primacy_analysis, effects = 'all')
+=======
+>>>>>>> Stashed changes
 
 # Status quo ----
 
