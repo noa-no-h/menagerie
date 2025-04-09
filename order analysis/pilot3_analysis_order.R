@@ -5,7 +5,7 @@ if (!require('pacman')) {
 }
 
 pkg.names = c('ggplot2', 'tidyverse', 'RColorBrewer', 'extrafont',
-              'this.path', 'brms', 'bayestestR', 'rstan', 'posterior', 'parallel', 'doParallel')
+              'this.path', 'brms', 'bayestestR', 'rstan', 'posterior', 'parallel', 'doParallel', 'emmeans')
 p_load(char = pkg.names)
 
 setwd(here())
@@ -60,7 +60,7 @@ attention_exclude <- data %>%
            (`task_name` == "attention check 3" & `auxiliary_info1` == "Incorrect")) %>%
   pull(subject)
 
-events <- read.csv('pilot3_browser_events.csv') %>%
+events <- read.csv('browser_events.csv') %>%
   arrange(subject)
 
 events_subj <- events %>%
@@ -101,185 +101,6 @@ data <- data %>%
 #font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
 
-# Affect heuristic ----
-
-affect_data = data %>%
-  filter(task_name == "affect heuristic")%>%
-  mutate(choice = as.numeric(choice)) 
-
-summary_affect_data <- affect_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("With passage", "without passage"))) %>%
-  summarize(
-    mean_choice = mean(choice),
-    se_choice = se(choice),
-    count = n()
-  )
-
-ggplot(summary_affect_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Affect", x = "Condition", y = "How beneficial is natural gas") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-affect_analysis = brm(choice ~ factor,
-                      data = affect_data %>% mutate(choice = scale(choice)),
-                      save_pars = save_pars(group = F),
-                      prior = default_priors)
-summarise_draws(affect_analysis)
-check_divergences(affect_analysis$fit)
-summary(affect_analysis)
-hdi(affect_analysis)
-
-# Power analysis (b/c affect heuristic is the smallest effect size)
-run_power_analysis = F # change this to T to run the power analysis yourself
-
-if (run_power_analysis) {
-  sample_sizes = c(150, 200)
-  num_runs_per = 100
-  numCores = 5
-  registerDoParallel(numCores)
-  results_all = vector(mode = 'list', length = length(sample_sizes))
-  
-  for (i in 1:length(sample_sizes)) {
-    sample_size = sample_sizes[i]
-  
-    new_data_template = affect_data %>%
-      distinct(subject) %>%
-      slice_sample(n = sample_size, replace = T) %>%
-      group_by(subject) %>%
-      mutate(instance = row_number()) %>%
-      ungroup() %>%
-      left_join(affect_data, by = 'subject') %>%
-      mutate(subject = str_c(subject, instance, sep = "_"))
-  
-    post_draws = posterior_predict(affect_analysis,
-                                   newdata = new_data_template,
-                                   ndraws = num_runs_per,
-                                   allow_new_levels = T)
-  
-    results = foreach(j = 1:num_runs_per, .combine = "rbind") %dopar% {
-      new_data = new_data_template
-      new_data$introspect_rating = t(post_draws)[,j]
-  
-      power_analysis = brm(choice ~ factor,
-                           data = new_data %>% mutate(choice = scale(choice)),
-                           save_pars = save_pars(group = F),
-                           prior = default_priors)
-  
-      power_analysis_hdi = bayestestR::hdi(power_analysis)
-      coef_estimate = summary(power_analysis)$fixed$Estimate[2]
-      hdi_high = power_analysis_hdi$CI_high[2]
-      hdi_low = power_analysis_hdi$CI_low[2]
-      list(coef_estimate, hdi_low, hdi_high)
-    }
-  
-    results_df <- as.data.frame(results)
-    results_df = data.frame(lapply(results_df, unlist))
-    colnames(results_df) <- c("coef_estimate", "hdi_low", "hdi_high")
-    rownames(results_df) <- paste0("Run_", 1:num_runs_per)
-    results_all[[i]] = results_df %>%
-      mutate(hdi_width = hdi_high - hdi_low,
-             hdi_significant = hdi_low > .05)
-  }
-}
-
-# Hindsight ----
-
-
-hindsight_data = data %>%
-  filter(task_name == "hindsight effect")%>%
-  filter(stimulus != "comprehension") %>%
-  mutate(choice = as.numeric(choice)) 
-
-summary_hindsight_data <- hindsight_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("knowledge of outcome", "no knowledge of outcome"))) %>%
-  summarize(
-    mean_choice = mean(choice),
-    se_choice = se(choice),
-    count = n()
-  )
-
-ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-
-ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity", position = "dodge", alpha = 0.7) +  # Bar chart with transparency
-  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), 
-                width = 0.2) +  # Error bars
-  geom_jitter(data = hindsight_data, aes(x = condition, y = choice), 
-              width = 0.2, alpha = 0.6, color = "black", size = 2) +  # Individual data points
-  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom() +
-  scale_fill_manual(values = exp_control) +
-  guides(fill = FALSE) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-t_test_result <- t.test(choice ~ condition, data = hindsight_data, var.equal = TRUE)
-print(t_test_result$p.value)
-# p = 0.0108
-
-hindsight_analysis = brm(choice ~ factor,
-                         data = hindsight_data %>% mutate(choice = scale(choice)),
-                         save_pars = save_pars(group = F),
-                         prior = default_priors)
-summary(hindsight_analysis)
-hdi(hindsight_analysis)
-
-# from github file history
-
-hindsight_data = data %>%
-  filter(task_name == "hindsight effect")%>%
-  filter(stimulus != "comprehension") %>%
-  mutate(choice = as.numeric(choice)) 
-
-
-summary_hindsight_data <- hindsight_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("knowledge of outcome", "no knowledge of outcome"))) %>%
-  summarize(
-    mean_choice = mean(choice),
-    se_choice = se(choice),
-    count = n()
-  )
-
-ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = exp_control) +
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-hindsight_analysis = brm(choice ~ factor,
-                         data = hindsight_data,
-                         save_pars = save_pars(group = F))
-summary(hindsight_analysis)
-hdi(hindsight_analysis)
-
-
-<<<<<<< Updated upstream
 # Order effect ----
 
 primacy_data <- data %>%
@@ -290,41 +111,39 @@ primacy_data <- data %>%
   mutate(choice_fac = ifelse(choice == "car1",
                          "chose primacy car",
                          "chose other car")) %>%
-  mutate(choice_binary = as.numeric(choice_fac == "chose primacy car"))
+  mutate(chose_primacy_car = as.numeric(choice_fac == "chose primacy car")) %>%
+  mutate(chose_car_2 = ifelse(choice == "car2",
+                         1,
+                         0)) %>%
+  mutate(chose_car_3 = ifelse(choice == "car3",
+                         1,
+                         0)) 
 
-summary_primacy_data <- primacy_data %>%
-  group_by(factor) %>%
-  summarize(
-    mean_choice = mean(choice_binary),
-    se_choice = se.prop(choice_binary),
-    count = n()
+primacy_graph_data <- primacy_data %>%
+  group_by(choice) %>%
+  summarise(count = n()) %>%
+  mutate(percent = (count / sum(count)) * 100)
+
+# Plot the data
+ggplot(primacy_graph_data, aes(x = choice, y = percent, fill = choice)) +
+  geom_bar(stat = "identity", color = "black") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  labs(
+    title = "Percentage of Choices for Each Car",
+    x = "Car Choice",
+    y = "Percentage",
+    fill = "Car"
+  ) +
+  theme_custom()+
+  guides(fill = FALSE)+
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14)
   )
 
-summary_primacy_data2 <- primacy_data %>%
-  group_by(condition, choice) %>%
-  summarize(
-    count = n(),
-    .groups = 'drop'
-  )
-
-ggplot(summary_primacy_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Choices of the primacy car", x = "Condition", y = "Percent who chose primacy car") +
-  geom_text(aes(label = paste0("n=", count)),
-            position = position_dodge(0.9), vjust = -0.5,
-            family = "Optima") +
-  theme_custom() +
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-
-primacy_analysis = brm(choice_binary ~ condition,
-                       data = primacy_data,
-                       family = 'bernoulli',
-                       save_pars = save_pars(group = F),
-                       prior = default_priors)
-summary(primacy_analysis)
-hdi(primacy_analysis, effects = 'all')
 
 # Prepare data for brms
 data <- data.frame(
@@ -344,87 +163,53 @@ fit <- brm(
 # Summary of the model
 summary(fit)
 
+long_data <- data %>%
+  uncount(count)
 
-=======
->>>>>>> Stashed changes
+# Step 2: Fit the multinomial model
+fit <- brm(
+  formula = choice ~ 1,
+  family = categorical(),
+  data = long_data,
+  chains = 4,
+  iter = 2000,
+  seed = 123
+)
 
-# Status quo ----
+# Step 3: Get posterior predicted probabilities
+posterior_probs <- posterior_epred(fit)  # rows = posterior draws, cols = car choices
 
-#When subjects were told the status quo, 
-#were they more likely to recommend the 70/30 allocation?
+# Step 4: Rename columns for clarity (in case they default to mu1, mu2, mu3)
+colnames(posterior_probs) <- levels(long_data$choice)
 
+# Step 5: Summary stats per car
+cat("Posterior mean and 95% CI for each car:\n")
+for (car in colnames(posterior_probs)) {
+  cat(car, ":\n")
+  print(c(
+    mean = mean(posterior_probs[, car]),
+    quantile(posterior_probs[, car], probs = c(0.025, 0.975))
+  ))
+  cat("\n")
+}
 
-status_quo_data <- data %>%
-  filter(task_name == "status_quo") %>%
-  filter(stimulus != "comprehension") %>%
-  mutate(choice = ifelse(auxiliary_info1 == "Allocate 50% to auto safety and 50% to highway safety status quo: 50/50", 
-                         "status quo", 
-                         choice)) %>%
-  mutate(choice_binary = as.numeric(choice == "status quo"))%>%
-  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
+# Step 6: Pairwise comparisons
+compare_pairs <- function(a, b) {
+  diff <- posterior_probs[, a] - posterior_probs[, b]
+  cat(paste0("\nComparison: ", a, " - ", b, "\n"))
+  print(c(
+    mean_diff = mean(diff),
+    ci_2.5 = quantile(diff, 0.025),
+    ci_97.5 = quantile(diff, 0.975),
+    prob_greater_0 = mean(diff > 0)
+  ))
+}
 
-summary_status_quo_data <- status_quo_data %>%
-  group_by(condition) %>%
-  summarize(
-    mean_choice = mean(choice_binary),
-    se_choice = se.prop(choice_binary),
-    count = n()
-  )
+# Run pairwise comparisons
+compare_pairs("car1", "car2")
+compare_pairs("car1", "car3")
+compare_pairs("car2", "car3")
 
-ggplot(summary_status_quo_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Choices to continue the status quo", x = "Condition", y = "Percent subjects who recommended the status quo") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom() +
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-
-status_quo_analysis = brm(choice_binary ~ condition,
-                        data = status_quo_data,
-                        family = 'bernoulli',
-                        save_pars = save_pars(group = F),
-                        prior = default_priors)
-summary(status_quo_analysis)
-hdi(status_quo_analysis)
-
-
-# Sunk cost ----
-
-sunk_cost_data <- data %>%
-  filter(task_name == "sunk_cost2 effect") %>% 
-  mutate(switched = choice == "Don't Continue Investing",
-         switched.num = as.numeric(switched))
-
-
-percentage_sunk_cost_data <- sunk_cost_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost"))) %>%
-  summarize(
-    total_in_condition = n(),  # Total number of subjects in each condition
-    switched_count = sum(choice == "Don't Continue Investing")  # Count who chose "Solar-powered pump"
-  ) %>%
-  mutate(percentage_switched = (switched_count / total_in_condition) * 100)
-
-ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_switched, fill = condition)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Percentage Who Stopped Investing", x = "Condition", y = "Percentage of Choices to Stop Investing") +
-  geom_text(aes(label = paste0("n=", total_in_condition)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-sunk_cost_analysis = brm(switched.num ~ condition,
-                        data = sunk_cost_data,
-                        family = 'bernoulli',
-                        save_pars = save_pars(group = F),
-                        prior = default_priors)
-summary(sunk_cost_analysis)
-hdi(sunk_cost_analysis)
 
 # Save image --------------------------------------------------------------
 
