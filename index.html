@@ -65,7 +65,9 @@
             }
         });
         var timeline = [];
-        var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
+        //var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
+        var condition = ["Factor-Included"];
+
         console.log(condition);
 
         jsPsych.data.addProperties({
@@ -309,8 +311,8 @@
         var begin = {
             type: jsPsychInstructions,
             pages: [
-                `<p>Thank you for beginning the study! You will be asked to complete a variety of short judgment/decision-making tasks.</p>`,
-                `<p>While you're completing the decision-making tasks, please <b>pay attention to how you're making your judgments/decisions</b>.</p>`,
+                `<p>Thank you for beginning the study! You will be asked to complete a short judgment/decision-making task.</p>`,
+                `<p>While you're completing the decision-making task, please <b>pay attention to how you're making your judgments/decisions</b>.</p>`,
                 `<p>The study will take around ${time_needed} minutes to complete.</p>
                 <p>Please click the button below to continue!</p>
             `],
@@ -1437,7 +1439,7 @@ var next_task = {
             };
         }
 
-        timeline.push(preload)
+        timeline.push(preload) 
 
 
         //timeline.push(illusion_of_truth_pt2)
@@ -1445,7 +1447,9 @@ var next_task = {
         //timeline.push(primacy_order)
 
         timeline.push(intro)
-        timeline.push(tasks)
+        timeline.push(primacy_order)
+
+        //timeline.push(tasks)
         //timeline.push(measures)
         timeline.push(ending)
 

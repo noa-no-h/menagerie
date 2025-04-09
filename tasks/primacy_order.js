@@ -2,13 +2,21 @@
 
 
  var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the order of the facts)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the order of the facts)?</p>";
+ console.log("condition[0]: ", condition[0])
+ console.log("condition :", condition)
  
 var car_names = ["Hatsdun", "Nabusi", "Kaiwa", "Dasuka"]
 var car_names_shuffled = _.shuffle(car_names)
+console.log("car_names_shuffled: ", car_names_shuffled)
+var car_names_shuffled_string = car_names_shuffled.join(",")
+console.log("car_names_shuffled_string: ", car_names_shuffled_string)
+
 var car1 = car_names_shuffled[0]
 var car2 = car_names_shuffled[1]
 var car3 = car_names_shuffled[2]
 var car4 = car_names_shuffled[3]
+
+console.log(car1, car2, car3, car4)
 
  //preparing stimuli
  var car1_positive_attributes = [
@@ -154,7 +162,7 @@ stimulus_array = condition[0] == "Factor-Included" ? good_1_first : random
             condition: condition[0],
             stimulus: null,
             choice: choice,
-            auxiliary_info1: null,
+            auxiliary_info1: car_names_shuffled_string,
             openq_response: null,
             introspect_rating: null,
             introspect_open: null,
@@ -234,6 +242,7 @@ stimulus_array = condition[0] == "Factor-Included" ? good_1_first : random
      slider_start: 50,
      require_movement: require_movement_general,
      on_finish: function (data) {
+
          primacy_order_intro_confidence_response = data.response; 
          s1_data = {
              subject: data.subject,
@@ -243,7 +252,7 @@ stimulus_array = condition[0] == "Factor-Included" ? good_1_first : random
              condition: condition[0],
              stimulus: null,
              choice: choice,
-             auxiliary_info1: null,
+             auxiliary_info1: car_names_shuffled_string,
              openq_response: primacy_order_openQ_response,
              introspect_rating: primacy_order_intro_response1,
              introspect_open: primacy_order_intro_confidence_response,
