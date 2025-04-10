@@ -136,6 +136,7 @@ halo_data_choices = halo_data %>%
 
 halo_summary <- halo_data_choices %>%
   group_by(condition) %>%
+  filter(condition != "average") %>%
   summarize(
     mean_choice = mean(choice),
     se_choice = se(choice),
@@ -165,7 +166,7 @@ ggplot(halo_summary, aes(x = condition, y = mean_choice, fill = condition)) +
             family = "Optima") +
   labs(title = "Average Persuasiveness by Attractiveness", x = "Condition", y = "Average Choice") +
   theme_custom()+
-  scale_fill_manual(values = exp_neutral_control)+
+  scale_fill_manual(values = exp_control)+
   guides(fill = "none")+
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 

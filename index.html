@@ -65,8 +65,8 @@
             }
         });
         var timeline = [];
-        //var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
-        var condition = ["Factor-Included"];
+        var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
+        //var condition = ["Factor-Included"];
 
         console.log(condition);
 
@@ -108,7 +108,7 @@
         var required_general = debug ? false : true;
 
         var trivia_question_already = false;
-        var only_main_question = true;
+        var only_main_question = false;
         var time_needed = "3";
 
         //#endregion
@@ -1445,9 +1445,9 @@ var next_task = {
         //timeline.push(illusion_of_truth_pt2)
         //timeline.push(hindsight2)
         //timeline.push(primacy_order)
+        timeline.push(sunk_cost2)
 
         timeline.push(intro)
-        timeline.push(primacy_order)
 
         //timeline.push(tasks)
         //timeline.push(measures)

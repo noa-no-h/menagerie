@@ -47,7 +47,8 @@ data <- read.csv('april_order_data.csv') %>%
   filter(subject != "") %>%
   arrange(subject, task_name) %>%
   mutate(factor = recode(factor, "F" = "Factor-Included"))%>%
-  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
+  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control"))) %>%
+  filter(version == "pilot3b") 
 
 subjects_all = data %>%
   pull(subject) %>%
@@ -65,6 +66,7 @@ events <- read.csv('browser_events.csv') %>%
 
 events_subj <- events %>%
   filter(browser_event == "blur") %>%
+  filter(version == "pilot3b") %>%
   group_by(subject) %>%
   summarize(blurs = n())
 
@@ -76,17 +78,6 @@ ggplot(events_subj, aes(x = blurs)) +
 tab_away_exclude <- events_subj %>% 
   filter(blurs > 20) %>%
   pull(subject)
-
-demographics <- read.csv('pilot3_demographics.csv') %>%
-  arrange(subject) %>% 
-  mutate(total_time = total_time/60000)
-
-ggplot(demographics, aes(x = total_time)) +
-  geom_histogram(fill = "skyblue", color = "black") +
-  labs(title = "Time Histogram", x = "Minutes", y = "Count") +
-  theme_custom()
-
-print(median(demographics$total_time))
 
 to_exclude <- union(attention_exclude, tab_away_exclude)
 
@@ -163,52 +154,30 @@ fit <- brm(
 # Summary of the model
 summary(fit)
 
-long_data <- data %>%
-  uncount(count)
 
-# Step 2: Fit the multinomial model
-fit <- brm(
-  formula = choice ~ 1,
-  family = categorical(),
-  data = long_data,
-  chains = 4,
-  iter = 2000,
-  seed = 123
+binary_primacy_data <- primacy_data %>%
+  filter(choice != "car3")
+  mutate(car_1_or_2 = ifelse(choice == "car1", 1, 0)) %>%
+  select(car_1_or_2) 
+  
+
+# Prepare data for brms
+data <- data.frame(
+  success = sum(primacy_data$car_1_or_2),    # Number of successes (1s)
+  trials = length(primacy_data$car_1_or_2)   # Total number of trials
 )
 
-# Step 3: Get posterior predicted probabilities
-posterior_probs <- posterior_epred(fit)  # rows = posterior draws, cols = car choices
+# Fit a Bayesian binomial model
+fit <- brm(
+  success | trials(trials) ~ 1,          # Model formula: proportion of successes
+  data = data,
+  family = binomial(link = "identity"), # Binomial likelihood with identity link
+  prior = prior(beta(1, 1), class = "Intercept"), # Uniform prior on proportion
+  iter = 2000, chains = 4               # Number of iterations and chains
+)
 
-# Step 4: Rename columns for clarity (in case they default to mu1, mu2, mu3)
-colnames(posterior_probs) <- levels(long_data$choice)
-
-# Step 5: Summary stats per car
-cat("Posterior mean and 95% CI for each car:\n")
-for (car in colnames(posterior_probs)) {
-  cat(car, ":\n")
-  print(c(
-    mean = mean(posterior_probs[, car]),
-    quantile(posterior_probs[, car], probs = c(0.025, 0.975))
-  ))
-  cat("\n")
-}
-
-# Step 6: Pairwise comparisons
-compare_pairs <- function(a, b) {
-  diff <- posterior_probs[, a] - posterior_probs[, b]
-  cat(paste0("\nComparison: ", a, " - ", b, "\n"))
-  print(c(
-    mean_diff = mean(diff),
-    ci_2.5 = quantile(diff, 0.025),
-    ci_97.5 = quantile(diff, 0.975),
-    prob_greater_0 = mean(diff > 0)
-  ))
-}
-
-# Run pairwise comparisons
-compare_pairs("car1", "car2")
-compare_pairs("car1", "car3")
-compare_pairs("car2", "car3")
+# Summary of the model
+summary(fit)
 
 
 # Save image --------------------------------------------------------------
