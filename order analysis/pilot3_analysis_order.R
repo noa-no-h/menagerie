@@ -113,6 +113,7 @@ primacy_data <- data %>%
 primacy_graph_data <- primacy_data %>%
   group_by(choice) %>%
   summarise(count = n()) %>%
+  filter(choice != "car3") %>%
   mutate(percent = (count / sum(count)) * 100)
 
 # Plot the data
@@ -127,6 +128,7 @@ ggplot(primacy_graph_data, aes(x = choice, y = percent, fill = choice)) +
   ) +
   theme_custom()+
   guides(fill = FALSE)+
+  scale_fill_manual(values = exp_control) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
     axis.text.x = element_text(size = 12),
@@ -136,48 +138,19 @@ ggplot(primacy_graph_data, aes(x = choice, y = percent, fill = choice)) +
   )
 
 
-# Prepare data for brms
-data <- data.frame(
-  success = sum(primacy_data$choice_binary),    # Number of successes (1s)
-  trials = length(primacy_data$choice_binary)   # Total number of trials
-)
-
-# Fit a Bayesian binomial model
-fit <- brm(
-  success | trials(trials) ~ 1,          # Model formula: proportion of successes
-  data = data,
-  family = binomial(link = "identity"), # Binomial likelihood with identity link
-  prior = prior(beta(1, 1), class = "Intercept"), # Uniform prior on proportion
-  iter = 2000, chains = 4               # Number of iterations and chains
-)
-
-# Summary of the model
-summary(fit)
-
-
 binary_primacy_data <- primacy_data %>%
-  filter(choice != "car3")
+  filter(choice != "car3")%>%
   mutate(car_1_or_2 = ifelse(choice == "car1", 1, 0)) %>%
-  select(car_1_or_2) 
+  select(subject, car_1_or_2) 
   
-
-# Prepare data for brms
-data <- data.frame(
-  success = sum(primacy_data$car_1_or_2),    # Number of successes (1s)
-  trials = length(primacy_data$car_1_or_2)   # Total number of trials
-)
-
-# Fit a Bayesian binomial model
-fit <- brm(
-  success | trials(trials) ~ 1,          # Model formula: proportion of successes
-  data = data,
-  family = binomial(link = "identity"), # Binomial likelihood with identity link
-  prior = prior(beta(1, 1), class = "Intercept"), # Uniform prior on proportion
-  iter = 2000, chains = 4               # Number of iterations and chains
-)
-
-# Summary of the model
-summary(fit)
+primacy_analysis = brm(  ~ 1 + (1 | subject), 
+                       binary_primacy_data,
+                           family = 'bernoulli',
+                           save_pars = save_pars(group = F))
+summary(primacy_analysis)
+hdi(primacy_analysis)
+summarise_draws(primacy_analysis)
+check_divergences(primacy_analysis$fit)
 
 
 # Save image --------------------------------------------------------------
