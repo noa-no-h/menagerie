@@ -43,7 +43,7 @@ default_priors <- set_prior("normal(0,1)", class = 'b')
 
 # Load data ---------------------------------------------------------------
 
-data <- read.csv('pilot3_data.csv') %>%
+data <- read.csv('1pilot3_data.csv') %>%
   filter(subject != "") %>%
   arrange(subject, task_name) %>%
   mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
@@ -59,7 +59,7 @@ attention_exclude <- data %>%
            (`task_name` == "attention check 3" & `auxiliary_info1` == "Incorrect")) %>%
   pull(subject)
 
-events <- read.csv('pilot3_browser_events.csv') %>%
+events <- read.csv('1pilot3_browser_events.csv') %>%
   arrange(subject)
 
 events_subj <- events %>%
@@ -243,51 +243,68 @@ hindsight_analysis = brm(choice ~ factor,
 summary(hindsight_analysis)
 hdi(hindsight_analysis)
 
+
+
 # # Order effect ----
-# 
-# primacy_data <- data %>%
-#   filter(task_name == "primacy order") %>%
-#   filter(choice != "")%>%
-#   mutate(choice_fac = ifelse(choice == "car1", 
-#                          "chose primacy car", 
-#                          "chose other car")) %>%
-#   mutate(choice_binary = as.numeric(choice_fac == "chose primacy car"))%>%
-#   mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"), labels = c('experience', 'control'))) 
-# 
-# 
-# summary_primacy_data <- primacy_data %>%
-#   group_by(condition) %>%
-#   summarize(
-#     mean_choice = mean(choice_binary),
-#     se_choice = se.prop(choice_binary),
-#     count = n()
-#   )
-# 
-# summary_primacy_data2 <- primacy_data %>%
-#   group_by(condition, choice) %>%
-#   summarize(
-#     count = n(),
-#     .groups = 'drop'
-#   )
-# 
-# ggplot(summary_primacy_data, aes(x = condition, y = mean_choice, fill = condition)) +
-#   geom_bar(stat = "identity") +
-#   labs(title = "Choices of the primacy car", x = "Condition", y = "Percent who chose primacy car") +
-#   geom_text(aes(label = paste0("n=", count)), 
-#             position = position_dodge(0.9), vjust = -0.5, 
-#             family = "Optima") +
-#   theme_custom() +
-#   scale_fill_manual(values = exp_control)+
-#   guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-# 
-# 
-# primacy_analysis = brm(choice_binary ~ condition,
-#                        data = primacy_data,
-#                        family = 'bernoulli',
-#                        save_pars = save_pars(group = F),
-#                        prior = default_priors)
-# summary(primacy_analysis)
-# hdi(primacy_analysis, effects = 'all')
+
+primacy_data <- data %>%
+  filter(task_name == "primacy order") %>%
+  filter(version == "pilot3b") %>%
+  filter(choice != "")%>%
+  mutate(factor = recode(factor, "F" = "Factor-Included"))%>%
+  mutate(choice_fac = ifelse(choice == "car1",
+                             "chose primacy car",
+                             "chose other car")) %>%
+  mutate(chose_primacy_car = as.numeric(choice_fac == "chose primacy car")) %>%
+  mutate(chose_car_2 = ifelse(choice == "car2",
+                              1,
+                              0)) %>%
+  mutate(chose_car_3 = ifelse(choice == "car3",
+                              1,
+                              0)) 
+
+primacy_graph_data <- primacy_data %>%
+  group_by(choice) %>%
+  summarise(count = n()) %>%
+  filter(choice != "car3") %>%
+  mutate(percent = (count / sum(count)) * 100)
+
+# Plot the data
+ggplot(primacy_graph_data, aes(x = choice, y = percent, fill = choice)) +
+  geom_bar(stat = "identity", color = "black") +
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  labs(
+    title = "Percentage of Choices for Each Car",
+    x = "Car Choice",
+    y = "Percentage",
+    fill = "Car"
+  ) +
+  theme_custom()+
+  guides(fill = FALSE)+
+  scale_fill_manual(values = exp_control) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14)
+  )
+
+
+binary_primacy_data <- primacy_data %>%
+  filter(choice != "car3")%>%
+  mutate(car_1_or_2 = ifelse(choice == "car1", 1, 0)) %>%
+  select(subject, car_1_or_2) 
+
+primacy_analysis = brm(car_1_or_2  ~ 1 + (1 | subject), 
+                         binary_primacy_data,
+                         family = 'bernoulli',
+                         save_pars = save_pars(group = F))
+summary(primacy_analysis)
+hdi(primacy_analysis)
+summarise_draws(primacy_analysis)
+check_divergences(primacy_analysis$fit)
+
 
 # Status quo ----
 
