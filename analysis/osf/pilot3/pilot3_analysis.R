@@ -243,41 +243,6 @@ hindsight_analysis = brm(choice ~ factor,
 summary(hindsight_analysis)
 hdi(hindsight_analysis)
 
-# from github file history
-
-hindsight_data = data %>%
-  filter(task_name == "hindsight effect")%>%
-  filter(stimulus != "comprehension") %>%
-  mutate(choice = as.numeric(choice)) 
-
-
-summary_hindsight_data <- hindsight_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("knowledge of outcome", "no knowledge of outcome"))) %>%
-  summarize(
-    mean_choice = mean(choice),
-    se_choice = se(choice),
-    count = n()
-  )
-
-ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = exp_control) +
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
-hindsight_analysis = brm(choice ~ factor,
-                         data = hindsight_data,
-                         save_pars = save_pars(group = F))
-summary(hindsight_analysis)
-hdi(hindsight_analysis)
-
-
 # # Order effect ----
 # 
 # primacy_data <- data %>%
