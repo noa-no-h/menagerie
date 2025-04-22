@@ -250,7 +250,7 @@ hdi(hindsight_analysis)
 primacy_data <- data %>%
   filter(version == 'pilot3b', task_name == "primacy order", choice %in% c('car1', 'car2')) %>%
   mutate(factor = recode(factor, "F" = "Factor-Included"),
-         car_1_or_2 = ifelse(choice == "car1", 1, -1))
+         car_1_or_2 = ifelse(choice == "car1", 1, 0))
 
 primacy_graph_data <- primacy_data %>%
   group_by(choice) %>%
