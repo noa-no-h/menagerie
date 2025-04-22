@@ -713,6 +713,15 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) - se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
+ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
+  geom_histogram(color = 'white') +
+  theme_black() +
+  labs(x = 'Participant-level correlation between\ninfluence ratings and influence magnitudes',
+       y = 'Number of subjects') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T), color = 'red') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) - se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
+  scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
 # Save image --------------------------------------------------------------
 # for use in pilot 4 analysis

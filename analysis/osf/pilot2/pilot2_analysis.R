@@ -878,7 +878,75 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
- 
+theme_update(strip.background = element_blank(),
+             panel.grid.major = element_blank(),
+             panel.grid.minor = element_blank(),
+             panel.background = element_blank(),
+             plot.background = element_blank(),
+             axis.text=element_text(size=18, colour = "black"),
+             axis.title=element_text(size=24, face = "bold"),
+             axis.title.x = element_text(vjust = 0),
+             legend.title = element_text(size = 24, face = "bold"),
+             legend.text = element_text(size = 18),
+             plot.title = element_text(size = 26, face = "bold", vjust = 1),
+             panel.margin = unit(1.0, "lines"), 
+             plot.margin = unit(c(0.5,  0.5, 0.5, 0.5), "lines"),
+             axis.line = element_line(colour = "black", size = 2),
+             axis.ticks = element_line(color = 'black', size = 3),
+             axis.ticks.length = unit(.25, 'cm')
+)
+theme_black = function(base_size = 12, base_family = "") {
+  theme_grey(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # Specify axis options
+      axis.line = element_blank(),  
+      axis.text.x = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.text.y = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.ticks = element_line(color = "white", size  =  0.2),  
+      axis.title.x = element_text(size = 18, color = "white", margin = margin(0, 10, 0, 0)),  
+      axis.title.y = element_text(size = 18, color = "white", angle = 90, margin = margin(0, 10, 0, 0)),  
+      axis.ticks.length = unit(0.3, "lines"),   
+      # Specify legend options
+      legend.background = element_rect(color = NA, fill = "black"),  
+      legend.key = element_rect(color = "white",  fill = "black"),  
+      legend.key.size = unit(1.2, "lines"),  
+      legend.key.height = NULL,  
+      legend.key.width = NULL,      
+      legend.text = element_text(size = base_size*0.8, color = "white"),  
+      legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
+      legend.position = "right",  
+      legend.text.align = NULL,  
+      legend.title.align = NULL,  
+      legend.direction = "vertical",  
+      legend.box = NULL, 
+      # Specify panel options
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank(),
+      panel.border = element_rect(fill = NA, color = "white"),  
+      # Specify facetting options
+      strip.background = element_rect(fill = "grey30", color = "grey10"),  
+      strip.text.x = element_text(size = base_size*0.8, color = "white"),  
+      strip.text.y = element_text(size = base_size*0.8, color = "white",angle = -90),  
+      # Specify plot options
+      plot.background = element_rect(color = "black", fill = "black"),  
+      plot.title = element_text(size = base_size*1.2, color = "white"),  
+      plot.margin = unit(rep(1, 4), "lines")
+    )
+}
+
+ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
+  geom_histogram(color = 'white') +
+  theme_black() +
+  labs(x = 'Participant-level correlation between\ninfluence ratings and influence magnitudes',
+       y = 'Number of subjects') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T), color = 'red') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) - se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
+  scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
+get.ci = function(x) {return(c(mean(x,na.rm = T) - 1.96*se(x), mean(x, na.rm = T), mean(x, na.rm = T) + 1.96*se(x)))}
+get.ci(all_bysubject_introspection_experience$subject_cor)
+
 # Save image --------------------------------------------------------------
 # for use in combined analysis
 all_data_introspection_experience_pilot2 = all_data_introspection_experience
