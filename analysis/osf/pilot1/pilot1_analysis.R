@@ -46,7 +46,8 @@ theme_custom <- function() {
 
 df <- read.csv('pilot1_data.csv') %>%
   arrange(subject, task_name) %>% 
-  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
+  mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")),
+         introspect_rating = introspect_rating - 10)
 
 demo <- read.csv('pilot1_demographics.csv') %>%
   arrange(subject) %>% 

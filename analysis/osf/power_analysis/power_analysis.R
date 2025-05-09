@@ -65,16 +65,16 @@ load('power_analysis_prereq.rdata')
 task_list = c(unique(combined_data_introspection_experience$task_name), paste0("newtask_",1:5))
 num_tasks = length(task_list)
 
-original_analysis = F
-observer_analysis = T
+original_analysis = T
+observer_analysis = F
 
 observer_coefficient_mean = -0.15
 observer_coefficient_sd = 0.10
 sigma_est <- mean(as_draws_df(combined_analysis_introspection_continuous)$sigma)
 
-sample_sizes = c(200, 250)
-num_runs_per = 100
-numCores = 32
+sample_sizes = c(400, 600, 800)
+num_runs_per = 20
+numCores = 20
 
 registerDoParallel(numCores)
 
@@ -177,7 +177,8 @@ for (i in 1:length(sample_sizes)) {
   }
 }
 
-save(sample_sizes, num_runs_per, observer_coefficient_mean, observer_coefficient_sd, results_all, results_all_obs, file='power_analysis_results.rdata')
+save(sample_sizes, num_runs_per, observer_coefficient_mean, observer_coefficient_sd, results_all, results_all_obs, file='power_analysis_results_original_null.rdata')
 
 # analyze
+lapply(results_all, colMeans)
 lapply(results_all_obs, colMeans)
