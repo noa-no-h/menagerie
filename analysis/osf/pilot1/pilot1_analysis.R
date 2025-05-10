@@ -6,7 +6,7 @@ if (!require('pacman')) {
 }
 
 pkg.names = c('ggplot2', 'tidyverse', 'RColorBrewer', 'extrafont',
-              'this.path', 'brms', 'bayestestR', 'posterior', 'rstan')
+              'this.path', 'brms', 'bayestestR', 'rstan', 'posterior')
 p_load(char = pkg.names)
 
 setwd(here())
@@ -111,6 +111,7 @@ summary.anchor = df.anchor.choices %>%
   group_by(condition) %>%
   summarize(choice.m = mean(choice), choice.se = se(choice),
             distance.from.anchor.m = mean(distance.from.anchor),
+            count = n(),
             distance.from.anchor.se = se(distance.from.anchor))
 
 ggplot(summary.anchor, aes(x = condition, y = choice.m)) +
@@ -125,8 +126,11 @@ ggplot(summary.anchor, aes(x = condition, y = distance.from.anchor.m, fill = con
   geom_errorbar(aes(ymin = distance.from.anchor.m - distance.from.anchor.se,
                     ymax = distance.from.anchor.m + distance.from.anchor.se),
                 width = .2) +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(x = "Condition", y = "distance from anchor") +
+  labs(title = "Anchor Effect",x = "Condition", y = "distance from anchor") +
    theme_custom()+
   scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)+ 
@@ -210,27 +214,40 @@ df.avail = df %>%
   filter(task_name == 'availability'#,
          #familiarity == 'No'
          ) %>% 
-  mutate(choice.binary = choice == 'List 1')
-
-ggplot(df.avail, aes(x = condition, fill = choice)) +
-  geom_bar(position = "dodge", stat = "count") + 
-  theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  theme_custom() +
-  scale_fill_manual(
-    values = c("List 1" = "#F37121", "List 2" = "#4793AF")
-  ) +
-  guides(fill = FALSE) +   
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
-  geom_text(
-    stat = "count", 
-    aes(label = choice, group = choice), 
-    position = position_dodge(width = 0.9), 
-    y = 10, 
-    hjust = 0.5,
-    size = 6,
-    family = "Optima",
-    color = "white"
+  mutate(choice.binary = choice == 'List 1') %>%
+  group_by(condition) %>%
+  summarize(
+    n = n(),
+    p = mean(choice.binary),
+    se = sqrt(p * (1 - p) / n),
+    lower = p - se,
+    upper = p + se,
+    percentage = p * 100,
+    percentageLower = lower * 100,
+    percentageUpper = upper * 100
   )
+
+ggplot(df.avail, aes(x = condition, y = percentage, fill = condition)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+  geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
+                position = position_dodge(width = 0.7),
+                width = 0.2) +
+  scale_fill_manual(
+    values = c("#F37121", "#4793AF"), # Assuming two conditions, adjust if needed
+    guide = "none"
+  ) +
+  geom_text(aes(label = paste0("n=", n)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
+  labs(
+    title = "Availability Heuristic",
+    y = "Percentage who Chose 'List 1'",
+    x = "Condition"
+  ) +
+  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
+  theme_custom() 
 
 analysis.avail = brm(choice.binary ~ condition,
                      data = df.avail,
@@ -286,13 +303,18 @@ df.cause = df %>% filter(task_name == 'causal inference') %>%
 
 summary.cause = df.cause %>%
   group_by(condition) %>%
-  summarize(choice.m = mean(choice), choice.se = se(choice))
+  summarize(choice.m = mean(choice),
+            choice.se = se(choice),
+            count = n())
 
 ggplot(summary.cause, aes(x = condition, y = choice.m, fill = condition)) +
   geom_col() + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
-  labs(x = "Condition", y = "average causality rating") +
+  labs(title = "Abnormal Selection in Causal Inference", x = "Condition", y = "average causality rating") +
   theme_custom() +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
   scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 
@@ -364,14 +386,20 @@ df.decoy = df %>%
 summary.decoy = df.decoy %>% 
   group_by(factor) %>% 
   summarize(choice.target.m = mean(choice.target),
-            choice.target.se = se.prop(choice.target))
+            choice.target.se = se.prop(choice.target),
+            count = n())
+
 ggplot(summary.decoy, aes(x = factor, y = choice.target.m, fill=factor)) +
   geom_col() +
   geom_errorbar(aes(ymin = choice.target.m - choice.target.se,
                     ymax = choice.target.m + choice.target.se),
                 width = 0.2) +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  
   theme_custom()+ 
-  labs(x = "Condition", y = "Proportion Chose Brand N (Target)")+
+  labs(title = "Decoy Effect", x = "Condition", y = "Proportion Chose Brand N (Target)")+
   scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 
@@ -431,15 +459,19 @@ df.belief.choices = df.belief %>%
 summary.belief <- df.belief.choices %>%
   group_by(condition) %>% 
   summarize(choice.yes.m = mean(choice.yes),
-            choice.yes.se = se.prop(choice.yes))
+            choice.yes.se = se.prop(choice.yes),
+            count = n())
 
 ggplot(summary.belief, aes(x = condition, y = choice.yes.m, fill = condition)) +
   geom_col() +
   geom_errorbar(aes(ymin = choice.yes.m - choice.yes.se,
                     ymax = choice.yes.m + choice.yes.se),
                 width = 0.2) +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
   theme_custom() +
-  labs(x = "Condition", y = "Proportion Chose Yes, Valid")+
+  labs(title = "Belief Effect",x = "Condition", y = "Proportion Chose Yes, Valid")+
   scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 
@@ -527,13 +559,18 @@ df.mee.choices <- df.mee %>%
 
 summary.mee = df.mee.choices %>%
   group_by(condition) %>%
-  summarize(choice.m = mean(choice), choice.se = se(choice))
+  summarize(choice.m = mean(choice),
+            choice.se = se(choice),
+            count = n())
 
 ggplot(summary.mee, aes(x = condition, y = choice.m, fill = condition)) +
   geom_col() + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
   theme_custom() +
-  labs(x = "Number of repeats", y = "Mean Liking Rating")+
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  labs(title = "Mere Exposure Effect",x = "Number of repeats", y = "Mean Liking Rating")+
   scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 

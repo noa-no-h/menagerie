@@ -154,7 +154,7 @@ ggplot(halo_summary, aes(x = condition, y = mean_attractiveness, fill = conditio
             family = "Optima") +
   labs(title = "Average Persuasiveness by Condition", x = "Condition", y = "Average Persuasiveness") +
   theme_custom()+
-  scale_fill_manual(values = exp_neutral_control)+
+  scale_fill_manual(values = exp_contro)+
   guides(fill = FALSE)
 
 # actual effect
@@ -469,25 +469,90 @@ check_divergences(omission_analysis_introspection_experience_continuous$fit)
 # Recognition heuristic ----
 ## do we see the effect? ----
 
-recognition_data <- data %>%
-  filter(task_name == "recognition: city") %>%
-  filter(factor == "experience") %>% 
-  mutate(chose_recognizable = auxiliary_info1 == 'chose recognizable',
-         chose_recognizable_num = as.numeric(chose_recognizable))
+df.recognition = data %>%
+  filter(task_name == 'recognition: city') %>% 
+  mutate(chose_recognizable = auxiliary_info1 == 'chose recognizable') %>%
+  group_by(factor) %>%
+  summarize(
+    n = n(),
+    p = mean(chose_recognizable),
+    se = sqrt(p * (1 - p) / n),
+    lower = p - se,
+    upper = p + se,
+    percentage = p * 100,
+    percentageLower = lower * 100,
+    percentageUpper = upper * 100
+  )
 
-recognition_count <- recognition_data %>%
-  count(auxiliary_info1)
-
-ggplot(recognition_count, aes(x = auxiliary_info1, y = n, fill = auxiliary_info1)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Recognition Effect for City Population", x = "Within experience", y = "Count") +
+ggplot(df.recognition, aes(x = factor, y = percentage, fill = factor)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+  geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
+                position = position_dodge(width = 0.7),
+                width = 0.2) +
+  scale_fill_manual(
+    values = c("#F37121", "#4793AF"), 
+    guide = "none"
+  ) +
   geom_text(aes(label = paste0("n=", n)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
+  labs(
+    title = "Recognition Heuristic",
+    y = "Percentage who Chose the Recognizable City",
+    x = "Condition"
+  ) +
+  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
+  theme_custom() 
+
+
+
+recognition_data <- data %>%
+  filter(task_name == "recognition: city")
+
+recognition_summary <- recognition_data %>%
+  count(auxiliary_info1, factor) %>%
+  pivot_wider(names_from = factor, values_from = n, values_fill = 0)
+
+
+total_n <- sum(recognition_summary$n)
+
+recognition_summary <- recognition_summary %>%
+  group_by(auxiliary_info1) %>%
+  summarize(
+    Proportion = sum(n) / total_n,
+    SE = sqrt((Proportion * (1 - Proportion)) / total_n),
+    count = n()
+  ) %>%
+  mutate(
+    recognition_count_labels = auxiliary_info1 
+  )
+
+ggplot(recognition_summary, aes(x = auxiliary_info1, y = Proportion, fill = auxiliary_info1)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin = Proportion-SE, ymax = Proportion+SE),
+    width = 0.2,
+    position = position_dodge(0.9)
+  ) +
+  labs(
+    title = "Recognition Effect for City Population",
+    x = "Within experience",
+    y = "Percentage"
+  ) +
+  geom_text(
+    aes(label = paste0("n=", count)),
+    position = position_dodge(0.9),
+    vjust = -0.5,
+    family = "Optima"
+  ) +
+  theme_custom() +
+  scale_fill_manual(values = exp_control) +
+  guides(fill = FALSE) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+
 
 recognition_analysis = brm(chose_recognizable_num ~ 1 + (1 | subject), 
                            recognition_data,
