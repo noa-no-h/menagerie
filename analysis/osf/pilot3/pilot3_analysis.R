@@ -247,6 +247,44 @@ hdi(hindsight_analysis)
 
 # Order effect ----
 
+order_data = data %>%
+  filter(version == 'pilot3b', task_name == "primacy order", choice %in% c('car1', 'car2')) %>%
+  mutate(factor = recode(factor, "F" = "Factor-Included"),
+         car_1_or_2 = ifelse(choice == "car1", 1, 0))%>%
+  group_by(factor) %>%
+  summarize(
+    n = n(),
+    p = mean(car_1_or_2),
+    se = sqrt(p * (1 - p) / n),
+    lower = p - se,
+    upper = p + se,
+    percentage = p * 100,
+    percentageLower = lower * 100,
+    percentageUpper = upper * 100
+  )
+
+ggplot(order_data, aes(x = factor, y = percentage, fill = factor)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+  geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
+                position = position_dodge(width = 0.7),
+                width = 0.2) +
+  scale_fill_manual(
+    values = c("#F37121", "#4793AF"), 
+    guide = "none"
+  ) +
+  geom_text(aes(label = paste0("n=", n)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
+  scale_x_discrete(labels = c("Order Effect", "No Order Effect")) + 
+  labs(
+    title = "Order Effect",
+    y = "Percentage who Chose Car 1",
+    x = "Condition"
+  ) +
+  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
+  theme_custom() 
+
 primacy_data <- data %>%
   filter(version == 'pilot3b', task_name == "primacy order", choice %in% c('car1', 'car2')) %>%
   mutate(factor = recode(factor, "F" = "Factor-Included"),
@@ -293,34 +331,46 @@ check_divergences(primacy_analysis$fit)
 #When subjects were told the status quo, 
 #were they more likely to recommend the 70/30 allocation?
 
-
-status_quo_data <- data %>%
+status_quo_data = data %>%
   filter(task_name == "status_quo") %>%
   filter(stimulus != "comprehension") %>%
   mutate(choice = ifelse(auxiliary_info1 == "Allocate 50% to auto safety and 50% to highway safety status quo: 50/50", 
                          "status quo", 
-                         choice)) %>%
+                         choice))%>%
   mutate(choice_binary = as.numeric(choice == "status quo"))%>%
-  mutate(condition = factor(condition, levels = c("Factor-Included", "Factor-Excluded"))) 
-
-summary_status_quo_data <- status_quo_data %>%
-  group_by(condition) %>%
+  group_by(factor) %>%
   summarize(
-    mean_choice = mean(choice_binary),
-    se_choice = se.prop(choice_binary),
-    count = n()
+    n = n(),
+    p = mean(choice_binary),
+    se = sqrt(p * (1 - p) / n),
+    lower = p - se,
+    upper = p + se,
+    percentage = p * 100,
+    percentageLower = lower * 100,
+    percentageUpper = upper * 100
   )
 
-ggplot(summary_status_quo_data, aes(x = condition, y = mean_choice, fill = condition)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Choices to continue the status quo", x = "Condition", y = "Percent subjects who recommended the status quo") +
-  geom_text(aes(label = paste0("n=", count)), 
+ggplot(status_quo_data, aes(x = factor, y = percentage, fill = factor)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+  geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
+                position = position_dodge(width = 0.7),
+                width = 0.2) +
+  scale_fill_manual(
+    values = c("#F37121", "#4793AF"), 
+    guide = "none"
+  ) +
+  geom_text(aes(label = paste0("n=", n)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
-  theme_custom() +
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
+  scale_x_discrete(labels = c("Status Quo Given", "Status Quo Not Given")) + # Changed the labels here
+  labs(
+    title = "Status Quo Bias",
+    y = "Percentage who Chose 50/50 Allocation",
+    x = "Condition"
+  ) +
+  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
+  theme_custom() 
 
 status_quo_analysis = brm(choice_binary ~ condition,
                         data = status_quo_data,
@@ -333,32 +383,44 @@ hdi(status_quo_analysis)
 
 # Sunk cost ----
 
-sunk_cost_data <- data %>%
+sunk_cost_data = data %>%
   filter(task_name == "sunk_cost2 effect") %>% 
-  mutate(switched = choice == "Don't Continue Investing",
-         switched.num = as.numeric(switched))
-
-
-percentage_sunk_cost_data <- sunk_cost_data %>%
-  group_by(condition) %>%
-  mutate(condition = factor(condition, levels = c("Sunk Cost", "No Sunk Cost"))) %>%
+  mutate(switched = choice == "Don't Continue Investing") %>%
+  group_by(factor) %>%
   summarize(
-    total_in_condition = n(),  # Total number of subjects in each condition
-    switched_count = sum(choice == "Don't Continue Investing")  # Count who chose "Solar-powered pump"
-  ) %>%
-  mutate(percentage_switched = (switched_count / total_in_condition) * 100)
+    n = n(),
+    p = mean(switched),
+    se = sqrt(p * (1 - p) / n),
+    lower = p - se,
+    upper = p + se,
+    percentage = p * 100,
+    percentageLower = lower * 100,
+    percentageUpper = upper * 100
+  )
 
-ggplot(percentage_sunk_cost_data, aes(x = condition, y = percentage_switched, fill = condition)) +
-  geom_bar(stat = "identity") +
-  labs(title = "Percentage Who Stopped Investing", x = "Condition", y = "Percentage of Choices to Stop Investing") +
-  geom_text(aes(label = paste0("n=", total_in_condition)), 
+ggplot(sunk_cost_data, aes(x = factor, y = percentage, fill = factor)) +
+  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
+  geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
+                position = position_dodge(width = 0.7),
+                width = 0.2) +
+  scale_fill_manual(
+    values = c("#F37121", "#4793AF"), 
+    guide = "none"
+  ) +
+  geom_text(aes(label = paste0("n=", n)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
-  theme_custom()+
-  scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
+  scale_x_discrete(labels = c("sunk cost", "no sunk cost")) + # Changed the labels here
+  labs(
+    title = "Sunk Cost Fallacy",
+    y = "Percentage who Chose to Switch Projects",
+    x = "Condition"
+  ) +
+  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
+  theme_custom() 
 
-sunk_cost_analysis = brm(switched.num ~ condition,
+sunk_cost_analysis = brm(switched ~ condition,
                         data = sunk_cost_data,
                         family = 'bernoulli',
                         save_pars = save_pars(group = F),
