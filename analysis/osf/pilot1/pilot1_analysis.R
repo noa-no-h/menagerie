@@ -329,11 +329,13 @@ hdi(analysis.cause)
 ## are people aware of the effect? ----
 df.cause.intro <- df.cause %>% filter(!is.na(introspect_rating))
 
+cause.mean.control.response = mean(df.cause$choice[df.cause$factor == 'control'])
+
 df.cause.intro.experience = df.cause %>% 
   filter(factor == 'experience') %>% 
   mutate(effect_size = choice,
          effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
-         showed_effect = factor(choice > 50, c(T,F), c('Effect', 'No effect')))
+         showed_effect = factor(choice > cause.mean.control.response, c(T,F), c('Effect', 'No effect')))
 
 # dichotomized
 summary.cause.intro.experience <- df.cause.intro.experience %>% 

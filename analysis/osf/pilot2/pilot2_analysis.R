@@ -414,11 +414,12 @@ check_divergences(omission_analysis$fit)
 omission_data_introspection = omission_data %>% 
   filter(stimulus == "")
 
+omission_mean = mean(omission_data$choice[omission_data$factor == 'control'])
 omission_data_introspection_experience <- omission_data_introspection %>% 
   filter(factor == 'experience') %>% 
   mutate(effect_size = -choice,
          effect_size_range = range01(effect_size),
-         showed_effect = factor(choice < 4, c(T,F), c('Effect', 'No effect')))
+         showed_effect = factor(choice < omission_mean, c(T,F), c('Effect', 'No effect')))
 
 # dichotomized
 omission_summary_introspection_experience <- omission_data_introspection_experience %>% 
@@ -987,14 +988,3 @@ save(all_data_introspection_experience_pilot2, file = 'pilot2_alltasks.rdata')
 
 # save all analyses
 save.image('pilot2_output.rdata')
-
-
-# For NIH -----------------------------------------------------------------
-
-demographics.report = demographics %>% 
-  mutate(gender = factor(gender, c('Woman', 'Man', 'Some other way', 'Prefer not to say'), c('Female', 'Male', 'Unknown', 'Unknown')),
-         race = 'Unknown',
-         age = '',
-         age.unit = 'Unknown') %>% 
-  select(Race = race, Ethnicity = race, Sex = gender, Age = age, "Age Unit" = age.unit)
-write.csv(demographics.report, file = 'nih_participant_data.csv', row.names = F)
