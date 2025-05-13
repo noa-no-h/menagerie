@@ -79,12 +79,48 @@ wrong.trial.num = df %>% group_by(subject) %>%
 
 df <- df %>%
   filter(subject %in% demo$subject,
+         !is.na(factor),
          !(subject %in% glitched),
          !(subject %in% failed.attn1),
          !(subject %in% failed.attn2),
          !(subject %in% wrong.trial.num)) 
 
-length(unique(df$subject)) #518 Participants
+length(unique(df$subject)) #518 Participants(
+length(unique(df$subject[df$factor == 'experience'])) # 277 experience)
+length(unique(df$subject[df$factor == 'control'])) # 241 control
+
+# Ensure df is in the state you expect
+# str(df) # To check structure
+# head(df) # To look at a few rows
+
+total_unique_subjects_val <- unique(df$subject)
+L_total <- length(total_unique_subjects_val)
+print(paste("Total unique subjects (L_total):", L_total)) # Should be 518
+
+exp_subjects_val <- unique(df$subject[df$factor == 'experience'])
+L_exp <- length(exp_subjects_val)
+print(paste("Experience unique subjects (L_exp):", L_exp)) # Should be 278
+
+ctrl_subjects_val <- unique(df$subject[df$factor == 'control'])
+L_ctrl <- length(ctrl_subjects_val)
+print(paste("Control unique subjects (L_ctrl):", L_ctrl)) # Should be 242
+
+intersect_subjects_val <- intersect(exp_subjects_val, ctrl_subjects_val)
+L_intersect <- length(intersect_subjects_val)
+V_intersect <- intersect_subjects_val
+print(paste("Intersect length (L_intersect):", L_intersect)) # Should be 1
+print("Intersect value (V_intersect):")
+print(V_intersect) # Should be NA
+
+print(paste("Number of rows with NA in df$factor:", sum(is.na(df$factor))))
+
+# See which subjects (from your 518) have an NA factor for at least one row
+# These are the subjects contributing to the "factor-induced NA" in the group lists
+subjects_with_na_factor <- unique(df$subject[is.na(df$factor)])
+print("Subjects (from your 518) that have NA in df$factor for at least one of their rows:")
+print(subjects_with_na_factor)
+print(paste("Count of such subjects:", length(subjects_with_na_factor)))
+
 
 df$effect.size = NA
 df$effect.size.fac = NA

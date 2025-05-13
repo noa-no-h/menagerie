@@ -62,6 +62,7 @@ subjects_all = data %>%
   pull(subject) %>%
   unique()
 
+
 #find subjects who need to be excluded
 
 attention_exclude <- data %>%
@@ -98,7 +99,8 @@ ggplot(demographics, aes(x = total_time)) +
 print(median(demographics$total_time))
 
 
-to_exclude <- union(attention_exclude, tab_away_exclude)
+all_potential_exclusions <- c(attention_exclude, tab_away_exclude)
+to_exclude <- unique(all_potential_exclusions)
 
 number_subjects <- n_distinct(data$subject)
 number_to_exclude <- length(to_exclude)
@@ -106,7 +108,14 @@ print(number_subjects)
 print(number_to_exclude)
 
 data <- data %>%
-  filter(!subject %in% to_exclude)
+  filter(!subject %in% to_exclude,
+         !is.na(factor),
+         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
+         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control"))
+
+length(unique(data$subject)) #206 Participants(
+length(unique(data$subject[data$factor == 'experience'])) # 100 experience)
+length(unique(data$subject[data$factor == 'control'])) # 106 control
 
 #font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
