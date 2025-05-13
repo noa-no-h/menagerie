@@ -268,7 +268,8 @@ illusory_data_choices = illusory_data %>%
 illusory_summary = illusory_data_choices %>% 
   filter(factor == 'experience') %>% 
   group_by(seen_before) %>% 
-  summarize(mean_choice = mean(choice),
+  summarize(count = n(),
+            mean_choice = mean(choice),
             se_choice = se(choice),
             mean_response_over_midpoint = mean(response_over_midpoint),
             se_response_over_midpoint = se.prop(response_over_midpoint))
@@ -279,6 +280,10 @@ ggplot(illusory_summary, aes(x = seen_before, y = mean_choice, fill = seen_befor
                     ymax = mean_choice + se_choice),
                 width = 0.2) +
   theme_custom() +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+
   labs(title = "Illusory Truth Effect", x = "Seen Before?", y = "Truth Rating") +
   scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
@@ -325,6 +330,7 @@ illusory_summary_introspection_experience = illusory_data_introspection_experien
 ggplot(illusory_summary_introspection_experience,
        aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
   geom_bar(stat = "identity") +
+  
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
   labs(title = "illusory Introspection ratings", x = "Showed effect?", y = "Introspection rating") +
   theme_custom() +
@@ -468,91 +474,53 @@ check_divergences(omission_analysis_introspection_experience_continuous$fit)
 
 # Recognition heuristic ----
 ## do we see the effect? ----
-
-df.recognition = data %>%
-  filter(task_name == 'recognition: city') %>% 
-  mutate(chose_recognizable = auxiliary_info1 == 'chose recognizable') %>%
-  group_by(factor) %>%
-  summarize(
-    n = n(),
-    p = mean(chose_recognizable),
-    se = sqrt(p * (1 - p) / n),
-    lower = p - se,
-    upper = p + se,
-    percentage = p * 100,
-    percentageLower = lower * 100,
-    percentageUpper = upper * 100
-  )
-
-ggplot(df.recognition, aes(x = factor, y = percentage, fill = factor)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-  geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
-                position = position_dodge(width = 0.7),
-                width = 0.2) +
-  scale_fill_manual(
-    values = c("#F37121", "#4793AF"), 
-    guide = "none"
-  ) +
-  geom_text(aes(label = paste0("n=", n)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
-  labs(
-    title = "Recognition Heuristic",
-    y = "Percentage who Chose the Recognizable City",
-    x = "Condition"
-  ) +
-  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
-  theme_custom() 
-
-
-
 recognition_data <- data %>%
-  filter(task_name == "recognition: city")
+  filter(task_name == "recognition: city") %>%
+  filter(factor == "experience") %>%
+  mutate(chose_recognizable = auxiliary_info1 == 'chose recognizable',
+         chose_recognizable_num = as.numeric(chose_recognizable))
 
 recognition_summary <- recognition_data %>%
-  count(auxiliary_info1, factor) %>%
-  pivot_wider(names_from = factor, values_from = n, values_fill = 0)
-
-
-total_n <- sum(recognition_summary$n)
-
-recognition_summary <- recognition_summary %>%
   group_by(auxiliary_info1) %>%
-  summarize(
-    Proportion = sum(n) / total_n,
-    SE = sqrt((Proportion * (1 - Proportion)) / total_n),
-    count = n()
-  ) %>%
+  summarise(n = n(), .groups = 'drop') %>%
   mutate(
-    recognition_count_labels = auxiliary_info1 
+    total_n = sum(n),
+    proportion = n / total_n,
+    percent = proportion * 100,
+    se_proportion = sqrt(proportion * (1 - proportion) / n),
+    se_percent = se_proportion * 100
   )
 
-ggplot(recognition_summary, aes(x = auxiliary_info1, y = Proportion, fill = auxiliary_info1)) +
+ggplot(recognition_summary, aes(x = auxiliary_info1, y = percent, fill = auxiliary_info1)) +
   geom_bar(stat = "identity") +
   geom_errorbar(
-    aes(ymin = Proportion-SE, ymax = Proportion+SE),
-    width = 0.2,
-    position = position_dodge(0.9)
+    aes(ymin = percent - se_percent, ymax = percent + se_percent),
+    width = 0.25,
+    color = "black",
+    linewidth = 0.5
   ) +
+  geom_text(aes(label = paste0("n=", n)),
+            position = position_dodge(0.9),
+            vjust = -0.5, # Adjust this if text overlaps with error bars too much
+            family = "Optima",
+            size = 3.5) +
+  scale_y_continuous(labels = scales::percent_format(scale = 1), limits = c(0, max(recognition_summary$percent + recognition_summary$se_percent, na.rm = TRUE) * 1.1), expand = c(0,0)) +
   labs(
     title = "Recognition Effect for City Population",
-    x = "Within experience",
+    x = "Chose the Recognizable City",
     y = "Percentage"
-  ) +
-  geom_text(
-    aes(label = paste0("n=", count)),
-    position = position_dodge(0.9),
-    vjust = -0.5,
-    family = "Optima"
   ) +
   theme_custom() +
   scale_fill_manual(values = exp_control) +
   guides(fill = FALSE) +
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
-
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16), # Added for completeness if theme_custom doesn't set it
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14)
+  )
 
 recognition_analysis = brm(chose_recognizable_num ~ 1 + (1 | subject), 
                            recognition_data,
@@ -749,7 +717,7 @@ representativeness_summary <- representativeness_data %>%
 ggplot(representativeness_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Is Jack an Engineer?", x = "Condition", y = "average likelihood of engineer") +
+  labs(title = "Representativeness Heuristic", x = "Condition", y = "average likelihood of engineer") +
   geom_text(aes(label = paste0("n=", count)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +

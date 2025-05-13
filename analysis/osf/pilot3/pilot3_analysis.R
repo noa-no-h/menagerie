@@ -118,7 +118,7 @@ summary_affect_data <- affect_data %>%
 ggplot(summary_affect_data, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Affect", x = "Condition", y = "How beneficial is natural gas") +
+  labs(title = "Affect Heuristic", x = "Condition", y = "How beneficial is natural gas") +
   geom_text(aes(label = paste0("n=", count)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
@@ -208,7 +208,7 @@ summary_hindsight_data <- hindsight_data %>%
 ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Hindsight", x = "Condition", y = "Percent Likelihood of British Victory") +
+  labs(title = "Hindsight Bias", x = "Condition", y = "Percent Likelihood of British Victory") +
   geom_text(aes(label = paste0("n=", count)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
@@ -247,43 +247,6 @@ hdi(hindsight_analysis)
 
 # Order effect ----
 
-order_data = data %>%
-  filter(version == 'pilot3b', task_name == "primacy order", choice %in% c('car1', 'car2')) %>%
-  mutate(factor = recode(factor, "F" = "Factor-Included"),
-         car_1_or_2 = ifelse(choice == "car1", 1, 0))%>%
-  group_by(factor) %>%
-  summarize(
-    n = n(),
-    p = mean(car_1_or_2),
-    se = sqrt(p * (1 - p) / n),
-    lower = p - se,
-    upper = p + se,
-    percentage = p * 100,
-    percentageLower = lower * 100,
-    percentageUpper = upper * 100
-  )
-
-ggplot(order_data, aes(x = factor, y = percentage, fill = factor)) +
-  geom_bar(stat = "identity", position = "dodge", width = 0.7) +
-  geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
-                position = position_dodge(width = 0.7),
-                width = 0.2) +
-  scale_fill_manual(
-    values = c("#F37121", "#4793AF"), 
-    guide = "none"
-  ) +
-  geom_text(aes(label = paste0("n=", n)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
-  scale_x_discrete(labels = c("Order Effect", "No Order Effect")) + 
-  labs(
-    title = "Order Effect",
-    y = "Percentage who Chose Car 1",
-    x = "Condition"
-  ) +
-  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
-  theme_custom() 
 
 primacy_data <- data %>%
   filter(version == 'pilot3b', task_name == "primacy order", choice %in% c('car1', 'car2')) %>%
@@ -293,20 +256,34 @@ primacy_data <- data %>%
 primacy_graph_data <- primacy_data %>%
   group_by(choice) %>%
   summarise(count = n()) %>%
-  mutate(percent = (count / sum(count)) * 100)
+  mutate(
+    total_count = sum(count),
+    proportion = count / total_count,
+    percent = proportion * 100,
+    se = sqrt(proportion * (1 - proportion) / count) * 100 
+  )
 
-# Plot the data
 ggplot(primacy_graph_data, aes(x = choice, y = percent, fill = choice)) +
-  geom_bar(stat = "identity", color = "black") +
-  scale_y_continuous(labels = scales::percent_format(scale = 1)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(
+    aes(ymin = percent - se, ymax = percent + se),
+    width = 0.2,
+    color = "black",
+    linewidth = 0.5 
+  ) +
+  geom_text(aes(label = paste0("n=", count)), 
+            position = position_dodge(0.9), vjust = -0.5, 
+            family = "Optima") +
+  scale_x_discrete(labels = c("car1" = "positive attributes first", "car2" = "negative attributes first"))+
+  scale_y_continuous(labels = scales::percent_format(scale = 1)) + 
   labs(
     title = "Percentage of Choices for Each Car",
     x = "Car Choice",
-    y = "Percentage",
+    y = "Percentage chosen",
     fill = "Car"
   ) +
-  theme_custom()+
-  guides(fill = FALSE)+
+  theme_custom() +
+  guides(fill = FALSE) +
   scale_fill_manual(values = exp_control) +
   theme(
     plot.title = element_text(hjust = 0.5, size = 16),
@@ -315,6 +292,7 @@ ggplot(primacy_graph_data, aes(x = choice, y = percent, fill = choice)) +
     axis.title.x = element_text(size = 14),
     axis.title.y = element_text(size = 14)
   )
+
 
 primacy_analysis = brm(car_1_or_2 ~ 1, 
                        primacy_data,

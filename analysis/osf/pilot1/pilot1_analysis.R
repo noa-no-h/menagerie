@@ -260,9 +260,8 @@ summary(analysis.avail)
 hdi(analysis.avail)
 
 ## are people aware of the effect? ----
-df.avail.intro = df.avail
 
-df.avail.intro.experience = df.avail.intro %>% 
+df.avail.intro.experience = df.avail %>% 
   filter(factor == 'experience') %>% 
   mutate(effect_size = choice.binary,
          effect_size_std = scale(effect_size), effect_size_range = range01(effect_size),
