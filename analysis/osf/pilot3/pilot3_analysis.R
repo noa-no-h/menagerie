@@ -44,7 +44,8 @@ default_priors <- set_prior("normal(0,1)", class = 'b')
 # Load data ---------------------------------------------------------------
 
 data <- read.csv('pilot3_data.csv') %>%
-  filter(subject != "") %>%
+  filter(subject != "",
+         version %in% c("v5_pilot2", "v5_pilot1")) %>%
   arrange(subject, task_name) %>%
   mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
 
@@ -95,78 +96,20 @@ print(number_subjects)
 print(number_to_exclude)
 
 data <- data %>%
-  filter(!subject %in% to_exclude)
+  filter(!subject %in% to_exclude,
+         !is.na(factor), 
+         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
+         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control"))
+
 
 number_subjects <- n_distinct(data$subject)
 number_to_exclude <- length(to_exclude)
 print(number_subjects)
 print(number_to_exclude)
 
-length(unique(data$subject)) #1663 Participants(
-length(unique(data$subject[data$factor == 'experience'])) # 723 experience)
-length(unique(data$subject[data$factor == 'control'])) # 486 control
-
-# Ensure 'data' is the version AFTER all filtering (including '!subject %in% to_exclude')
-
-# 1. Count NA values in the 'factor' column (by row)
-na_factor_rows <- sum(is.na(data$factor))
-print(paste("Number of rows in final 'data' where 'factor' is NA:", na_factor_rows))
-
-# 2. Count unique subjects whose 'factor' is NA
-subjects_with_na_as_factor <- unique(data$subject[is.na(data$factor)])
-N_NA_factor_subjects <- length(subjects_with_na_as_factor)
-print(paste("Number of unique subjects with NA as their factor (N_NA_factor_subjects):", N_NA_factor_subjects))
-# if (N_NA_factor_subjects > 0 && N_NA_factor_subjects < 10) { # Print a few if the list is short
-# print("Some subject IDs with NA factor:")
-#   print(head(subjects_with_na_as_factor))
-# }
-
-# 3. Find subjects common to both 'experience' and 'control' groups
-exp_subjects <- unique(data$subject[data$factor == 'experience'])
-# print(paste("Re-confirm L_exp:", length(exp_subjects))) # Should be 723
-
-ctrl_subjects <- unique(data$subject[data$factor == 'control'])
-# print(paste("Re-confirm L_ctrl:", length(ctrl_subjects))) # Should be 486
-
-common_subjects <- intersect(exp_subjects, ctrl_subjects)
-N_common <- length(common_subjects)
-print(paste("Number of subjects in BOTH 'experience' AND 'control' (N_common):", N_common))
-if (N_common > 0) {
-  print("Subject IDs common to both groups:")
-  print(common_subjects)
-}
-
-# 4. Verify the counts using the formula:
-# L_total = (L_exp - N_common) + (L_ctrl - N_common) + N_common + N_NA_factor_subjects
-# which simplifies to: L_total = L_exp + L_ctrl - N_common + N_NA_factor_subjects
-# So, N_NA_factor_subjects - N_common = L_total - (L_exp + L_ctrl)
-
-calculated_difference = N_NA_factor_subjects - N_common
-expected_difference = 1663 - (723 + 486) # This is 1663 - 1209 = 454
-
-print(paste("Calculated (N_NA_factor_subjects - N_common):", calculated_difference))
-print(paste("Expected based on total counts (should be 454):", expected_difference))
-
-if (calculated_difference == expected_difference) {
-  print("The numbers add up! The difference is explained by subjects with NA factor and any overlap.")
-} else {
-  print("There's still a discrepancy to investigate if these numbers don't match.")
-}
-
-# 5. Check for any other unexpected factor levels (should ideally be none after your mutate)
-all_factor_levels <- unique(data$factor)
-print("All unique values found in final data$factor column:")
-print(all_factor_levels)
-other_unexpected_levels <- setdiff(all_factor_levels, c("experience", "control", NA))
-if (length(other_unexpected_levels) > 0) {
-  print("WARNING: Found unexpected factor levels other than 'experience', 'control', or NA:")
-  print(other_unexpected_levels)
-} else {
-  print("Confirmed: The 'factor' column only contains 'experience', 'control', or NA values.")
-}
-
-#font_import(pattern = "Optima", prompt = FALSE)
-loadfonts(device = "pdf")
+length(unique(data$subject)) #312 Participants(
+length(unique(data$subject[data$factor == 'experience'])) # 166 experience)
+length(unique(data$subject[data$factor == 'control'])) # 146 control
 
 # Affect heuristic ----
 

@@ -85,6 +85,8 @@ df <- df %>%
          !(subject %in% failed.attn2),
          !(subject %in% wrong.trial.num)) 
 
+
+
 length(unique(df$subject)) #518 Participants(
 length(unique(df$subject[df$factor == 'experience'])) # 277 experience)
 length(unique(df$subject[df$factor == 'control'])) # 241 control
