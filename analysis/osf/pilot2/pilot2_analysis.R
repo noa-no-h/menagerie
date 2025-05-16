@@ -98,14 +98,36 @@ ggplot(demographics, aes(x = total_time)) +
 
 print(median(demographics$total_time))
 
+nofactor = df %>% 
+  filter(subject %in% demographics$subject,
+         is.na(factor)) %>% 
+  pull(subject)
+length(nofactor) #0
 
 all_potential_exclusions <- c(attention_exclude, tab_away_exclude)
 to_exclude <- unique(all_potential_exclusions)
 
 number_subjects <- n_distinct(data$subject)
 number_to_exclude <- length(to_exclude)
-print(number_subjects)
-print(number_to_exclude)
+print(number_subjects) #324
+print(number_to_exclude) #115
+#324-115 = 209
+
+subjects_after_main_exclusion <- data %>%
+  filter(!subject %in% to_exclude) %>%
+  pull(subject) %>%
+  unique()
+
+final_subjects <- data %>%
+  filter(!subject %in% to_exclude,
+         !is.na(factor),
+         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
+         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control")) %>%
+  pull(subject) %>%
+  unique()
+
+subjects_removed_by_subsequent_filters <- setdiff(subjects_after_main_exclusion, final_subjects)
+# 1 subject removed by subsequent filters
 
 data <- data %>%
   filter(!subject %in% to_exclude,
@@ -116,6 +138,7 @@ data <- data %>%
 length(unique(data$subject)) #206 Participants(
 length(unique(data$subject[data$factor == 'experience'])) # 100 experience)
 length(unique(data$subject[data$factor == 'control'])) # 106 control
+
 
 #font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")

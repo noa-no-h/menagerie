@@ -95,6 +95,10 @@ number_to_exclude <- length(to_exclude)
 print(number_subjects)
 print(number_to_exclude)
 
+subjectsPilot3a <- data %>%
+  filter(task_name == "affect heuristic")
+length(unique(subjectsPilot3a$subject)) # 104
+
 data <- data %>%
   filter(!subject %in% to_exclude,
          !is.na(factor), 

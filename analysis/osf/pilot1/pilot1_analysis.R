@@ -56,6 +56,8 @@ demo <- read.csv('pilot1_demographics.csv') %>%
 df <- df %>% mutate_if(is.character, ~na_if(., ""))
 demo <- demo %>% mutate_if(is.character, ~na_if(., ""))
 
+length(unique(demo$subject)) # 606 Participants
+
 ## Exclusion 
 
 # subjects that glitched
@@ -71,11 +73,24 @@ failed.attn2 <- df %>%
   filter(task_name == 'attention check 3', auxiliary_info1 == 'Incorrect') %>% 
   pull(subject)
 
+naExcluded <- df %>%
+  group_by(subject) %>%
+  summarize(all_factors_na = all(is.na(factor)))%>%
+  filter(all_factors_na)
+
 # exclude subjects who restarted & took it more than once
 wrong.trial.num = df %>% group_by(subject) %>%
   summarize(numTrials = n()) %>% 
   filter(numTrials > 76) %>% 
   pull(subject)
+
+length(unique(demo$subject)) # 606
+
+nofactor = df %>% 
+  filter(subject %in% demo$subject,
+        is.na(factor)) %>% 
+  pull(subject)
+
 
 df <- df %>%
   filter(subject %in% demo$subject,
@@ -85,7 +100,11 @@ df <- df %>%
          !(subject %in% failed.attn2),
          !(subject %in% wrong.trial.num)) 
 
-
+initial_subjects <- unique(demo$subject)
+excluded_subjects_list <- unique(c(glitched, failed.attn1, failed.attn2, wrong.trial.num, naExcluded))
+subjects_removed_from_initial_606 <- intersect(initial_subjects, excluded_subjects_list)
+num_subjects_removed_from_initial_606 <- length(subjects_removed_from_initial_606)
+print(num_subjects_removed_from_initial_606) #88 excluded
 
 length(unique(df$subject)) #518 Participants(
 length(unique(df$subject[df$factor == 'experience'])) # 277 experience)
