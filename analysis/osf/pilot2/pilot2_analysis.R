@@ -186,7 +186,7 @@ ggplot(halo_summary, aes(x = condition, y = mean_attractiveness, fill = conditio
             family = "Optima") +
   labs(title = "Average Persuasiveness by Condition", x = "Condition", y = "Average Persuasiveness") +
   theme_custom()+
-  scale_fill_manual(values = exp_contro)+
+  scale_fill_manual(values = exp_control)+
   guides(fill = FALSE)
 
 # actual effect

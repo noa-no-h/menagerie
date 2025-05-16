@@ -272,7 +272,9 @@ df.avail = df %>%
          #familiarity == 'No'
          ) %>% 
   mutate(choice.binary = choice == 'List 1') %>%
-  group_by(condition) %>%
+  group_by(condition)
+
+df.avail.summarized = df.avail %>%
   summarize(
     n = n(),
     p = mean(choice.binary),
@@ -284,7 +286,7 @@ df.avail = df %>%
     percentageUpper = upper * 100
   )
 
-ggplot(df.avail, aes(x = condition, y = percentage, fill = condition)) +
+ggplot(df.avail.summarized, aes(x = condition, y = percentage, fill = condition)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
                 position = position_dodge(width = 0.7),
@@ -722,6 +724,50 @@ for (i in 2:length(all_list_introspection_experience)) {
             select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect))
 }
 
+
+# Define the columns you expect to be in each data frame for your final select
+required_cols_for_final_select = c("subject", "task_name", "introspect_rating", "effect_size", "effect_size_range", "showed_effect")
+
+cat("--- Checking Data Frame Structures ---\n")
+
+for (i in 1:length(all_list_introspection_experience)) {
+  # Get the data frame and a name for printing
+  current_df = all_list_introspection_experience[[i]]
+  df_name = if (is.null(names(all_list_introspection_experience))) {
+    paste("Data frame", i) # If the list is unnamed, use index
+  } else {
+    names(all_list_introspection_experience)[i] # If named, use the name
+  }
+  
+  cat(paste0("\nChecking ", df_name, ":\n"))
+  
+  # --- Check for missing required columns ---
+  cols_in_df = colnames(current_df)
+  missing_cols_from_required = setdiff(required_cols_for_final_select, cols_in_df)
+  
+  if (length(missing_cols_from_required) > 0) {
+    cat(paste0("  - MISSING required columns: ", paste(missing_cols_from_required, collapse = ", "), "\n"))
+  } else {
+    cat("  - All required columns are present.\n")
+  }
+  
+  # --- Check type of the 'choice' column (source of bind_rows error) ---
+  if ("choice" %in% cols_in_df) {
+    cat(paste0("  - 'choice' column type: ", class(current_df$choice), "\n"))
+    # Optional: Check for non-standard types if class() returns 'list' or similar
+    if (!is.atomic(current_df$choice) && !inherits(current_df$choice, "factor")) {
+      cat("    WARNING: 'choice' column type is not atomic or factor - might cause issues.\n")
+    }
+    
+  } else {
+    cat("  - 'choice' column is NOT present.\n")
+  }
+  
+  # Optional: Add checks for other columns if needed
+  
+  cat("------------------------------------\n")
+}
+
 ## dichotomous
 all_summary_introspection_experience = all_data_introspection_experience %>% 
   filter(!is.na(showed_effect)) %>% 
@@ -825,4 +871,4 @@ all_data_introspection_experience_pilot1 = all_data_introspection_experience
 save(all_data_introspection_experience_pilot1, file = 'pilot1_alltasks.rdata')
 
 # save all analyses
-save.image("pilot1_output.rdata")
+save.image("pilot1_output1.rdata")
