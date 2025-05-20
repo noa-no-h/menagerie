@@ -1,0 +1,3212 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Research study on decision-making</title>
+    <script src="https://unpkg.com/jspsych@7.2.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey@1.0.1"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.3"></script>
+    <script src="utilities.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
+    <link href="https://unpkg.com/jspsych@7.2.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@0.2.0/css/survey.css">
+  </head>
+  <style>
+  </style>
+  <body>
+  <script>
+
+    debug = false;
+
+    /* create timeline */
+    var jsPsych = initJsPsych({
+      show_progress_bar: false,
+      on_interaction_data_update: function(data) {
+        if (id != '') {
+          var browser_event = {
+            subject: id,
+            version: version,
+            browser_event: data.event,
+            trial: data.trial,
+            time: data.time
+          }
+          save_data(browser_event, 'browser_events');
+        }
+      }
+    });
+    var timeline = [];
+    var version = "v3_post";
+
+    //#region variables & stimuli
+    var consentform =
+          `<p><b>Please consider this information carefully before deciding whether to participate in this research.</b></p>
+          <p>The purpose of this research is to examine which factors are associated with judgment and decision-making. You will be asked to make a series of decisions and then answer some questions about why you made them. Afterwards, you will also be asked to answer some questions about yourself. The study will take around 45 minutes to complete, and you will receive $5.40 on Amazon Mechanical Turk. The effects of participating should be comparable to those you would ordinarily experience from viewing a computer monitor and using a mouse or keyboard for a similar amount of time. At the end of the study, we will provide an explanation of the questions that motivate this line of research and will describe the potential implications.
+          Your participation in this study is completely voluntary and you may refuse to participate or you may choose to withdraw at any time without penalty or loss of benefits to which you are otherwise entitled.</p>
+          <p>Your participation in this study will remain confidential. No personally identifiable information will be associated with your data. Also, all analyses of the data will be averaged across all the participants, so your individual responses will never be specifically analyzed.</p>
+          <p>If you have questions or concerns about your participation or payment or want to request a summary of research findings, please contact the research manager: Isobel Munday, imunday@g.harvard.edu. For any other problems related to this study, you may also contact the faculty member supervising this work: Fiery Cushman, cushman@fas.harvard.edu. For questions, concerns, suggestions, or complaints that have not been or cannot be addressed by the researcher, or to report research-related harm, please contact the Committee on the Use of Human Subjects in Research at Harvard University, 1350 Massachusetts Avenue, Suite 935, Cambridge, MA 02138. Phone: 617-496- CUHS (2847). Email: cuhs@harvard.edu.</p>
+          <p><i>Please print or save a copy of this form for your records. Then, click the button below to continue.</i></p>`
+
+    var images = [
+        //simon
+        'img/redbox.png', 'img/bluebox.png',
+        //numerical distance effect
+        'img/12.png','img/13.png','img/14.png','img/21.png','img/23.png','img/24.png','img/26.png','img/31.png','img/32.png','img/34.png','img/36.png','img/37.png','img/41.png','img/42.png','img/43.png','img/46.png','img/47.png','img/48.png',
+        'img/62.png','img/63.png','img/64.png','img/67.png','img/68.png','img/69.png','img/73.png','img/74.png','img/76.png','img/78.png','img/79.png','img/84.png','img/86.png','img/87.png','img/89.png','img/96.png','img/97.png','img/98.png',
+        //double effect
+        'img/ned.png', 'img/Ned.png',
+        //causal inference
+        'img/oneball.png', 'img/nineballs.png',
+    ]
+
+    //#endregion
+
+    var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
+
+    //#region preload
+    var preload = {
+    type: jsPsychPreload,
+    images: images
+    }
+
+    //#region INTRODUCTION
+        // introduction
+        var welcome = {
+          type: jsPsychInstructions,
+          pages: [
+            `<p><b>Welcome to the experiment.</b></p> <p>Click next to begin.</p>`,
+            `<p>This study will take around 45 minutes to complete. You may be tempted
+            to visit other web pages. However, if you do this, your data will be unusable.
+            So, before you start, please make sure that you have 45 minutes to devote entirely
+            to this study. We appreciate your participation.</p>`,
+            consentform
+          ],
+          show_clickable_nav: true
+        }
+
+        var start_time = null;
+        var agreement = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: `
+            <p>The nature and purpose of this research have been sufficiently explained and I agree to participate in this study. I understand
+            that I am free to withdraw at any time without incurring any penalty.</p>
+            <p><i> Please consent by clicking the button below to continue. Otherwise, please exit the study at this time. </i></p>`,
+            choices: ["I agree"],
+        };
+
+        var MTurk_id = {
+            type: jsPsychSurveyText,
+            questions: [{prompt: "Your response", name: "worker_id"}],
+            preamble: [`Please enter your Amazon Mechanical Turk Worker ID below.<br>(When you're done, press 'Submit Answer'; don't hit Enter.)<br><br>If
+            you do not enter your ID accurately, we will not be able to pay you.`],
+            button_label: "Submit Answer"
+        };
+
+        var id = null;
+        var MTurk_id_loop = {
+            timeline: [MTurk_id],
+            loop_function: function(data) {
+              id = data.last(1).values()[0].response.worker_id;
+                  if(id){
+                      jsPsych.data.addProperties({
+                          subject: id,
+                          version: version,
+                          condition: condition[0]
+                      });
+                      start_time = Date.now();
+                      return false;
+                  } else {
+                      alert("You must enter your ID to continue.");
+                      return true;
+                  }
+              }
+          };
+
+        //attention checks
+
+         var attnCheck1 = {
+            type: jsPsychSurveyText,
+            questions: [{prompt: "Your response"}],
+            preamble: [`If you are certain you would like to participate, please type this <i>exact</i>
+            sentence into the box below: "I will complete this study with my full attention"
+            and then continue.`]
+        };
+
+        var attnCheck1_loop = {
+            timeline: [attnCheck1],
+            loop_function: function(data) {
+            var attnResponse1 = data.last(1).values()[0].response.Q0
+            if(attnResponse1 == "I will complete this study with my full attention"|| attnResponse1 == '"I will complete this study with my full attention"' ){
+                    return false;
+                } else {
+                    alert("Please read the instructions and try again");
+                    return true;
+                }
+            }
+        };
+
+        var attnCheck2 = {
+            type: jsPsychSurveyText,
+            questions: [{prompt: "Your response", required: debug ? false: true}],
+            preamble: [`
+            <p>Please read the bolded statement below and then type it in the box in reverse order. Please include any capitalizations in the words that have capital letters. Do not include any punctuation (e.g., periods, quotation marks, etc.).</p>
+            <p>For example, if the statement said "fun are trucks Red," you would type the following phrase: Red trucks are fun</p>
+            <p><b>cheese green of made is moon The<b></p>
+            `],
+            button_label: "Submit Answer",
+            on_finish: function(data) {
+                s1_data = {
+                    subject: data.subject,
+                    version: data.version,
+                    task_name: "attention check 2",
+                    choice: data.response.Q0,
+                    auxiliary_info1: data.response.Q0.replace(/\s+/g, '').toLowerCase() == "themoonismadeofgreencheese" ? "Success" : "Failure",
+                    rt: data.rt
+                }
+                save_data(s1_data, 'introspection');
+            }
+        };
+        //timeline.push(attnCheck2)
+
+        var movie = ''
+        var attnCheck3 = {
+            type: jsPsychSurveyText,
+            questions: [
+                {prompt: "My Blue Heaven", correct_response: "3", required: debug ? false: true},
+                {prompt: "Up", correct_response: "5", required: debug ? false: true},
+                {prompt: "Along Came Polly", correct_response: "1", required: debug ? false: true},
+                {prompt: "The Tale of Desperaux", correct_response: "4", required: debug ? false: true},
+                {prompt: "Jaws", correct_response: "2", required: debug ? false: true},
+            ],
+            preamble: `<p>Please order the following movie titles alphabetically (by the first letter of the movie titles) by numbering them from 1 to 5. 1 should be the movie title that appears earliest in the alphabet, while 5 should be the movie title that appears the latest in the alphabet.</p>
+            <p>Please only type in one number for each movie title. Do not include any punctuation, letters, symbols, or any numbers except for 1, 2 ,3, 4, and 5.</p>`,
+            button_label: "Submit Answer",
+            on_finish: function(data) {
+                movie = data.response.Q0 + "," + data.response.Q1 + "," + data.response.Q2 + "," + data.response.Q3 + "," + data.response.Q4,
+                s1_data = {
+                    subject: data.subject,
+                    version: data.version,
+                    task_name: "attention check 3",
+                    choice: movie,
+                    auxiliary_info1: movie == "3,5,1,4,2" ? "Correct" : "Incorrect",
+                    rt: data.rt
+                }
+                save_data(s1_data, 'introspection');
+            }
+        };
+        //timeline.push(attnCheck3)
+
+        //start page
+        var begin = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus:
+            `<p>Thank you for participating in our study! In the first phase of this study, you will be asked to complete a variety of short exercises. Then, in the second phase, you will be asked to answer a series of short questionnaires.</p>
+            <p>The first phase will take around 30 minutes to complete, while the second phase will take around 15 minutes to complete, for a total of 45 minutes.</p>
+            <p>We will now begin with the first phase of the study. Please click the button below to continue!</p>
+            `,
+            choices: ["Begin"]
+        };
+
+        var intro = {
+          timeline: [welcome, agreement, MTurk_id_loop, attnCheck1_loop, attnCheck2, attnCheck3, begin]
+        };
+
+        //#endregion
+    //timeline.push(intro)
+
+    //#region TASKS
+
+    //#region 1. Anchoring Trivia (Mussweiler & Strack, 1999) - BETWEEN
+    var anchor_instructions = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>In this exercise, you will be asked to answer a series of trivia questions. Some of these questions may be difficult, but please try your best answer each one.</p>
+            </p><i>Please click the button below to view the first question.</i></p>`,
+        ],
+        show_clickable_nav: true
+    }
+
+    var anchor_low = {
+        type: jsPsychSurvey,
+        pages: [
+        [
+            {
+                type: "multi-choice",
+                prompt: "Is the mean winter temperature in the Antarctic higher or lower than -45 degrees Fahrenheit?",
+                name: "AntarcticAnchor",
+                options: ['Higher', 'Lower'],
+                required: true
+            },
+            {
+                type: "text",
+                prompt: "What is the mean winter temperature in the Antarctic (in degrees Fahrenheit)?",
+                name: "AntarcticOpen",
+                required: true
+            }
+
+        ],
+        [
+            {
+                type: "multi-choice",
+                prompt: "Was the longest recorded blue whale shorter or longer than 68 feet?",
+                name: "WhaleAnchor",
+                options: ['Shorter', 'Longer'],
+                required: true
+            },
+            {
+                type: "text",
+                prompt: `How long was the longest recorded blue whale (in feet)?`,
+                name: "WhaleOpen",
+                required: true
+            }
+        ]
+        ],
+        show_question_numbers: "on",
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "anchoring",
+                condition: "Low Anchor",
+                factor: data.condition,
+                choice: data.response.AntarcticOpen,
+                auxiliary_info1: data.response.AntarcticAnchor,
+                stimulus: "Antarctic Temperature",
+                rt: data.rt,
+            }
+            save_data(s1_data, 'introspection');
+            s2_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "anchoring",
+                condition: "Low Anchor",
+                factor: data.condition,
+                choice: data.response.WhaleOpen,
+                auxiliary_info1: data.response.WhaleAnchor,
+                stimulus: "Whale Length",
+                rt: data.rt,
+            }
+            save_data(s2_data, 'introspection');
+        }
+    }
+
+    var anchor_high = {
+        type: jsPsychSurvey,
+        pages: [
+        [
+            {
+                type: "multi-choice",
+                prompt: "Is the mean winter temperature in the Antarctic higher or lower than 1 degree Fahrenheit?",
+                name: "AntarcticAnchor",
+                options: ['Higher', 'Lower'],
+                required: true
+            },
+            {
+                type: "text",
+                prompt: "What is the mean winter temperature in the Antarctic (in degrees Fahrenheit)?",
+                name: "AntarcticOpen",
+                required: true
+            }
+
+        ],
+        [
+            {
+                type: "multi-choice",
+                prompt: "Was the longest recorded blue whale shorter or longer than 160 feet?",
+                name: "WhaleAnchor",
+                options: ['Shorter', 'Longer'],
+                required: true
+            },
+            {
+                type: "text",
+                prompt: `How long was the longest recorded blue whale (in meters)?`,
+                name: "WhaleOpen",
+                required: true
+            }
+        ]
+        ],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "anchoring",
+                condition: "High Anchor",
+                choice: data.response.AntarcticOpen,
+                factor: data.condition,
+                auxiliary_info1: data.response.AntarcticAnchor,
+                stimulus: "Antarctic Temperature",
+                rt: data.rt,
+            }
+            save_data(s1_data, 'introspection');
+            s2_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "anchoring",
+                condition: "High Anchor",
+                choice: data.response.WhaleOpen,
+                factor: data.condition,
+                auxiliary_info1: data.response.WhaleAnchor,
+                stimulus: "Whale Length",
+                rt: data.rt,
+            }
+            save_data(s2_data, 'introspection');
+        }
+    }
+
+    var anchor_none = {
+        type: jsPsychSurvey,
+        pages: [
+        [
+            {
+                type: "text",
+                prompt: "What is the mean winter temperature in the Antarctic (in degrees Fahrenheit)?",
+                name: "AntarcticOpen",
+                required: true
+            }
+
+        ],
+        [
+            {
+                type: "text",
+                prompt: `How long was the longest recorded blue whale (in meters)?`,
+                name: "WhaleOpen",
+                required: true
+            }
+        ]
+        ],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "anchoring",
+                condition: "No Anchor",
+                choice: data.response.AntarcticOpen,
+                factor: data.condition,
+                auxiliary_info1: data.response.AntarcticAnchor,
+                stimulus: "Antarctic Temperature",
+                rt: data.rt,
+            }
+            save_data(s1_data, 'introspection');
+            s2_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "anchoring",
+                condition: "No Anchor",
+                choice: data.response.WhaleOpen,
+                factor: data.condition,
+                auxiliary_info1: data.response.WhaleAnchor,
+                stimulus: "Whale Length",
+                rt: data.rt,
+            }
+            save_data(s2_data, 'introspection');
+        }
+    }
+
+    anchor_sample = jsPsych.randomization.sampleWithoutReplacement([anchor_high, anchor_low], 1);
+
+    var anchor_trials = null;
+    if(condition[0] == "Factor-Included") {
+        anchor_trials = anchor_sample[0] }
+    else {
+        anchor_trials = anchor_none
+    }
+
+    var anchor_openQ_response = null;
+    var anchor_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were asked a series of trivia questions.</p><p>Describe your thought process while answering these questions. How did you come to your eventual answers for each question? Please try to describe how you answered each question individually.</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            anchor_openQ_response = data.response.Q0;
+        }
+    };
+
+    var anchor_intro_response1 = null;
+    var anchor_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if(condition[0] == "Factor-Included") {
+                return `<p>Both of the trivia questions you saw came in pairs, where the first question would ask you if the answer was greater or less than an <b>example value</b>.
+                <p>For example, in the blue whale question, we first asked you whether the longest recorded blue whale was shorter or longer than <b>X</b> feet. Then, we asked you to provide an estimate of how long the longest recorded blue whale was.
+                <p>On a scale from 1 to 9, how much do you think the <b>presence of these example values</b> in each question affected your responses?`
+            } else {
+                return `<p>Both of the trivia questions you saw asked you to estimate a specific value (e.g. “How long was the longest recorded blue whale in feet?”)
+                <p>Now, imagine if before we asked you to provide this estimate, we first asked you if you thought the value was greater or less than an <b>example value.</b>
+                <p>For example, in the blue whale question, imagine that we first asked you whether the longest recorded blue whale was shorter or longer than <b>X</b> feet. Then, we asked you to provide an estimate of how long the longest recorded blue whale was.
+                <p>On a scale from 1 to 9, how much do you think the <b>presence of such an example value</b> in each question would have affected your responses?`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            anchor_intro_response1 = data.response
+        }
+    };
+
+    var anchor_intro_response2 = null;
+    var anchor_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            anchor_intro_response2 = data.response.Q0
+        }
+    };
+
+    anchor_condition = null;
+    if(anchor_trials == anchor_none) {
+        anchor_condition = "No Anchor"
+    } else if (anchor_sample[0] == anchor_high) {
+        anchor_condition = "High Anchor"
+    } else {
+        anchor_condition = "Low Anchor"
+    }
+
+    var anchor_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "anchoring",
+                condition: anchor_condition,
+                factor: data.condition,
+                openq_response: anchor_openQ_response,
+                introspect_rating: anchor_intro_response1,
+                introspect_open: anchor_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var anchor = {
+        timeline: [anchor_instructions, anchor_trials, anchor_openQ, anchor_introspect1, anchor_introspect2, anchor_familiar]
+    }
+
+    //#endregion
+    //timeline.push(anchor)
+
+    //#region 2. Famous Names (Tversky & Kahneman, 1973) - BETWEEN
+
+    var avail_included_stimuli = [
+        {stimulus: //men are famous, fewer men (6 men, 9 women)
+        `<table style = "font-size:22px;border-collapse:separate;border-spacing:1.5em">
+            <tr>
+              <td>Ben Affleck</td>
+              <td>Nicole Sullivan</td>
+              <td>Caitlin Glass</td>
+            </tr>
+            <tr>
+                <td>Tom Hanks</td>
+                <td>Elizabeth Reaser</td>
+                <td>Daniel Craig</td>
+            </tr>
+            <tr>
+                <td>Lauren Tom</td>
+                <td>Annie Potts</td>
+                <td>June Foray</td>
+            </tr>
+            <tr>
+                <td>Ashley Johnson</td>
+                <td>George Clooney</td>
+                <td>Johnny Depp</td>
+            </tr>
+            <tr>
+                <td>Andrea Libman</td>
+                <td>Kath Soucie</td>
+                <td>Brad Pitt</td>
+            </tr>
+      </table>`
+    },
+        {stimulus: //women are famous, more men (9 men, 6 women)
+      `<table style = "font-size:22px;border-collapse:separate;border-spacing:1.5em">
+            <tr>
+                <td>Billy West</td>
+                <td>Emma Stone</td>
+                <td>Scarlett Johansson</td>
+            </tr>
+            <tr>
+                <td>Frank Welker</td>
+                <td>Carrie Fisher</td>
+                <td>Rob Paulsen</td>
+            </tr>
+            <tr>
+                <td>Vincent Martella</td>
+                <td>Scott Menville</td>
+                <td>Greg Cipes</td>
+            </tr>
+            <tr>
+                <td>Natalie Portman</td>
+                <td>Meryl Streep</td>
+                <td>Ron Perlman</td>
+            </tr>
+            <tr>
+                <td>Wallace Shawn</td>
+                <td>Nolan North</td>
+                <td>Anne Hathaway</td>
+            </tr>
+      </table>`
+            }
+    ];
+
+    var avail_excluded_stimuli = [
+        {stimulus: //fewer men (6 men, 9 women)
+          `<table style = "font-size:22px;border-collapse:separate;border-spacing:1.5em">
+              <tr>
+                  <td>Andrew Marks</td>
+                  <td>Nicole Sullivan</td>
+                  <td>Caitlin Glass</td>
+              </tr>
+              <tr>
+                  <td>Zach Aguilar</td>
+                  <td>Elizabeth Reaser</td>
+                  <td>Gary Cole</td>
+              </tr>
+              <tr>
+                  <td>Lauren Tom</td>
+                  <td>Annie Potts</td>
+                  <td>June Foray</td>
+              </tr>
+              <tr>
+                  <td>Ashley Johnson</td>
+                  <td>Jeff Bennett</td>
+                  <td>Michael Bell</td>
+              </tr>
+              <tr>
+                  <td>Andrea Libman</td>
+                  <td>Kath Soucie</td>
+                  <td>Darren Korb</td>
+              </tr>
+          </table>`
+      },
+        {stimulus: //more men (9 men, 6 women)
+          `<table style = "font-size:22px;border-collapse:separate;border-spacing:1.5em">
+              <tr>
+                  <td>Billy West</td>
+                  <td>Veronica Taylor</td>
+                  <td>Carolyn Lawrence</td>
+              </tr>
+              <tr>
+                  <td>Frank Welker</td>
+                  <td>Lydia Mackay</td>
+                  <td>Rob Paulsen</td>
+              </tr>
+              <tr>
+                  <td>Vincent Martella</td>
+                  <td>Scott Menville</td>
+                  <td>Greg Cipes</td>
+              </tr>
+              <tr>
+                  <td>Jill Talley</td>
+                  <td>April Stewart</td>
+                  <td>Ron Perlman</td>
+              </tr>
+              <tr>
+                  <td>Wallace Shawn</td>
+                  <td>Nolan North</td>
+                  <td>Stephanie Young</td>
+              </tr>
+          </table>`
+      }
+    ];
+
+    var avail_instructions = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p> In this exercise, you will be shown lists of people's names.<p>Your goal will be to <b>memorize as many names as possible</b> in a short amount of time.</p>`,
+            `<p>You will only be given <b>five seconds</b> to memorize each list. This is a very short amount of time, so just try your best to memorize as many names as you can.<p> You will be shown <b>two</b> lists in total, with a short break in between.</p>`,
+            `<p>You will now be shown the two lists of names. There will be no warning before the second list, so please remain attentive.</p>
+            <p><i>Please click the "Next" button when you are ready to see the lists.</i></p>`
+        ],
+      show_clickable_nav: true
+    }
+
+    var avail_trials = {
+        timeline: [
+        {//fixation
+          type: jsPsychHtmlKeyboardResponse,
+                stimulus: '<p style = "font-size:30px">+</p>',
+                choices: "NO_KEYS",
+                trial_duration: 1000
+            },
+        {//trials
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: jsPsych.timelineVariable('stimulus'),
+            choices: "NO_KEYS",
+            trial_duration: 5000
+        },
+        ],
+        timeline_variables: condition[0] == "Factor-Included" ? avail_included_stimuli : avail_excluded_stimuli,
+        randomize_order: false
+    };
+
+    var more_men = null;
+    var avail_question = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Now that you have seen both lists, please answer the question below to the best of your ability:</p><p><b>Which list contained more men?</b></p><br>`,
+        choices: ["List 1", "List 2"],
+        on_finish: function(data) {
+            more_men = data.response;
+        }
+    };
+
+    var avail_openQ_response = null;
+    var avail_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were shown two lists of names and asked to determine which list contained more men.</p><p>Describe your thought process behind your decision about which list contained more men. How did you come to your eventual decision?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            avail_openQ_response = data.response.Q0;
+        }
+    };
+
+    var avail_intro_response1 = null;
+    var avail_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if(condition[0]== "Factor-Included") {
+                return `<p>In this exercise, you were asked to memorize two lists of names. Some of the names on these lists belonged to very famous people, while others belonged to less famous people.</p>
+                <p>Specifically, in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were less famous. However, in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were less famous.</p>
+                <p>On a scale from 1 to 9, how much do you think the fame of the people in each list affected your response about which list contained more men?`
+            } else {
+                return `<p>In this exercise, you were asked to memorize two lists of names. None of the names on the list you saw belonged to very famous people.</p>
+                <p>Now, imagine if some of the names on each list had belonged to very famous people. For example, imagine that in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were less famous. And imagine that in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were less famous.</p>
+                <p>If this were the case, how much do you think the fame of the people in each list would have affected your response about which list contained more men?`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            avail_intro_response1 = data.response
+        }
+    };
+
+    var avail_intro_response2 = null;
+    var avail_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            avail_intro_response2 = data.response.Q0
+        }
+    };
+
+    var avail_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                factor: data.condition,
+                condition: condition[0] == "Factor-Included" ? "Famous" : "Unfamous" ,
+                task_name: "availability",
+                choice: more_men == 0 ? "List 1" : "List 2",
+                openq_response: avail_openQ_response,
+                introspect_rating: avail_intro_response1,
+                introspect_open: avail_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection');
+        }
+    }
+
+    var avail = {
+      timeline: [avail_instructions, avail_trials, avail_question, avail_openQ, avail_introspect1, avail_introspect2, avail_familiar]
+    }
+
+    /*var avail_excluded = {
+      timeline: [avail_instructions, avail_trials, avail_question, avail_openQ, avail_introspect1, avail_introspect2, avail_familiar]
+    }*/
+    //#endregion
+    //timeline.push(avail)
+
+    //#region 3. Causal Inference (Morris et al., 2019) - BETWEEN
+    var cause_instructions = {
+        type: jsPsychInstructions,
+        pages: [
+            `In this exercise, you will be given a description of a hypothetical event. After you read the description, you will then be asked a question about that event.
+            <p><i>Please click the button below to view the description.</i></p>`
+        ],
+        show_clickable_nav: true
+    }
+
+    var cause_one = {
+        type: jsPsychInstructions,
+        pages: [`<p><b>Please consider the following event:</b></p>
+            <p>Imagine a person, Joe, is playing a casino game where he is presented with two boxes, shown below:<p><img src = "img/oneball.png" style="width:700px;"><img><p>Without looking, Joe must reach into both boxes <i>simultaneously</i> and pull out a ball from each box.
+            <p>Joe wins a dollar if and only if he gets a <font color = "GREEN"><b>green ball</b></font> from the left box <b><u>AND</u></b> a <font color = "blue"><b>blue ball</b></font> from the right box.</p>`,
+            `<p>Imagine that Joe closes his eyes, reaches into both boxes at the same time, and randomly chooses a ball from each box.<p><img src = "img/oneball.png" style="width:700px;"><img></p>
+            <p>When he opens his eyes, he sees that he has drawn a <font color = "GREEN"><b>green ball</b></font> from the left box <b><u>AND</u></b> a <font color = "blue"><b>blue ball</b></font> from the right box. So, <b>Joe wins a dollar.</b></p>` ],
+        show_clickable_nav: true
+    }
+
+    var cause_nine = {
+        type: jsPsychInstructions,
+        pages: [
+        `<p><b>Please consider the following event:</b></p>
+            <p>Imagine a person, Joe, is playing a casino game where he is presented with two boxes, shown below:<p><img src = "img/nineballs.png" style="width:700px;"><img><p>Without looking, Joe must reach into both boxes <i>simultaneously</i> and pull out a ball from each box.
+            <p>Joe wins a dollar if and only if he gets a <font color = "GREEN"><b>green ball</b></font> from the left box <b><u>AND</u></b> a <font color = "blue"><b>blue ball</b></font> from the right box.</p>`,
+            `<p>Imagine that Joe closes his eyes, reaches into both boxes at the same time, and randomly chooses a ball from each box.<p><img src = "img/nineballs.png" style="width:700px;"><img></p>
+            <p>When he opens his eyes, he sees that he has drawn a <font color = "GREEN"><b>green ball</b></font> from the left box <b><u>AND</u></b> a <font color = "blue"><b>blue ball</b></font> from the right box. So, <b>Joe wins a dollar.</b></p>
+            <p><i>Once you have read and fully understood the event, please click the "Next" button below to continue.</i></p>`
+        ],
+        show_clickable_nav: true
+    }
+
+    var cause_condition = null;
+        if (condition[0] == "Factor-Included") {
+            cause_condition = cause_one
+        } else {
+            cause_condition = cause_nine}
+
+    var cause = null
+    var cause_question = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: `<b>Please tell us much you agree or disagree with the statement below. There are no right or wrong answers; we are simply interested in your opinion:</b>
+        <p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p>`,
+        labels: [`<strong>1<br>totally disagree</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>totally agree</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            cause = data.response
+        }
+    }
+
+    var cause_openQ_response = null;
+    var cause_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were asked to judge the extent to which Joe's choice from the left box (where he chose a green ball) caused him to win the dollar.</p><p>Describe your thought process while making this judgment. How did you come to your eventual judgment about how much the green ball caused the win?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            cause_openQ_response = data.response.Q0;
+        }
+    };
+
+    var cause_intro_response1 = null;
+    var cause_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if(condition[0] == "Factor-Included") {
+                return `<p>In the scenario you saw, these were the boxes that Joe chose from: <p><img src = "img/oneball.png" style="width:700px;"><img></p>
+                <p>As you can see, there was exactly <b>one</b> <font color = "GREEN">green</font> ball that Joe could have chosen.
+                <p>On a scale from 1 to 9, how much do you think the <b>number</b> of <font color = "GREEN">green</font> balls in the left box (i.e., the chance that Joe would have randomly chosen the green ball) affected your judgment about whether <b>Joe’s choice of a green ball from the left box</b> caused him to win?`
+            } else {
+                return `<p>In the scenario you saw, these were the boxes that Joe chose from: <p><img src = "img/nineballs.png" style="width:700px;"><img></p>
+                <p>As you can see, there were <b>nine</b> <font color = "GREEN">green</font> balls that Joe could have chosen.</b> Now, imagine if the boxes had looked like this: <p><img src = "img/oneball.png" style="width:700px;"><img></p>
+                <p>In this case, there would have only been <b>one</b> <font color = "GREEN">green</font> ball that Joe could have chosen.</p>
+                <p>If this were the case, how much do you think the <b>number</b> of <font color = "GREEN">green</font> balls in the left box (i.e., the chance that Joe would have randomly chosen the green ball) would have affected your judgment about whether <b>Joe’s choice of a green ball from the left box</b> caused him to win?</p>`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            cause_intro_response1 = data.response
+        }
+    };
+
+    var cause_intro_response2 = null;
+    var cause_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            cause_intro_response2 = data.response.Q0
+        }
+    };
+
+    var cause_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "causal inference",
+                choice: cause,
+                condition: condition[0] == "Factor-Included" ? "One" : "Nine",
+                factor: data.condition,
+                openq_response: cause_openQ_response,
+                introspect_rating: cause_intro_response1,
+                introspect_open: cause_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var cause = {
+        timeline: [cause_instructions, cause_condition, cause_question, cause_openQ, cause_introspect1, cause_introspect2, cause_familiar]
+    }
+
+    //#endregion
+    //timeline.push(cause)
+
+    //#region 4. Contact Principle - BETWEEN
+
+    var contact_instructions = {
+        type: jsPsychInstructions,
+        pages: [
+        `<p> In this exercise, you will be given a hypothetical scenario and then asked to judge the moral permissibility of the actions in that scenario.</p>
+        <p><i>Please click the button below to view the scenario.</i>`,
+        ],
+        show_clickable_nav: true
+    }
+
+    var push = null;
+    var contact_question = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function() {
+                if(condition[0] == "Factor-Included") {
+                    return `<p><b>Please consider the following scenario:</b></p>
+                    <p>Frank sees that an empty runaway boxcar is about to hit five people working on the track ahead. They are too far away to be warned. The only way to stop the boxcar is for it to hit something heavy.
+                    One person, unaware of the boxcar, is working on a side track. This person, if hit, will cause the boxcar to stop.  If Frank pushes the one person onto the main track, the boxcar will hit the one person, and therefore stop before it reaches the five people.
+                    If Frank does not push the one person, the boxcar will continue on the track and hit the five people and not the one person.
+                    <p>Based on on this scenario, please complete the following sentence by clicking one of the buttons below:
+                    <p><i>Pushing the person is...</i></p>`
+                } else {
+                    return  `<p><b>Please consider the following scenario:</b></p>
+                    <p>Frank sees that an empty runaway boxcar is about to hit five people working on the track ahead. They are too far away to be warned. The only way to stop the boxcar is for it to hit something heavy.
+                    Next to Frank is a switch that can be flipped to turn the boxcar away from the five people onto a side track that loops and then rejoins the main track. One person, unaware of the boxcar, is working on this looped side track.
+                    This person, if hit, will cause the boxcar to stop before it reaches the five people on the main track.  If Frank flips the switch, the boxcar will turn onto the side track, hit the one person and therefore stop before it reaches to the five people.
+                    If Frank does not flip the switch, the boxcar will continue on the main track and hit the five people and not the one person.</p>
+                    <p>Based on on this scenario, please complete the following sentence by clicking one of the buttons below:
+                    <p><i>Flipping the switch is...</i></p>`
+                }
+            },
+        choices: ["Morally Permissible", "Morally Impermissible"],
+        on_finish: function(data){
+            push = data.response
+        }
+    }
+
+    var contact_openQ_response = null;
+    var contact_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were asked to judge the moral permissibility of an action in a hypothetical scenario.</p><p>Describe your thought process while judging whether the action was morally permissible. How did you come to your eventual judgment?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            contact_openQ_response = data.response.Q0;
+        }
+    };
+
+    var contact_intro_response1 = null;
+    var contact_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if (condition[0] == "Factor-Included") {
+                return `<p>In the scenario you saw, Frank would have needed to make physical contact with the man (i.e. by pushing him onto the main track) in order to save the five people.</p>
+                <p>On a scale from 1 to 9, how much do you think the fact that Frank would have needed to make <b>physical contact</b> with the man affected your judgment about whether Frank's action would be morally permissible?`
+            } else {
+                return `<p>In the scenario you saw, Frank would not have needed to make physical contact with the man in order to save the five people on the main track; He would have only needed to flip a switch.
+                    <p>Now, imagine if Frank <i>had</i> needed to make physical contact with the man. For instance, imagine if Frank had to physically push the man onto the track.
+                    <p>If this were the case, how much do you think the fact that Frank would have needed to make <b>physical contact</b> with the man would have affected your judgment about whether Frank's action would be morally permissible?
+`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            contact_intro_response1 = data.response
+        }
+    };
+
+    var contact_intro_response2 = null;
+    var contact_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            contact_intro_response2 = data.response.Q0
+        }
+    };
+
+    var contact_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "contact principle",
+                choice: push == 0 ? "Permissible" : "Impermissible",
+                condition: condition[0] == "Factor-Included" ? "Contact" : "No Contact",
+                factor: data.condition,
+                openq_response: contact_openQ_response,
+                introspect_rating: contact_intro_response1,
+                introspect_open: contact_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+
+    var contact = {
+        timeline: [contact_instructions, contact_question, contact_openQ, contact_introspect1, contact_introspect2, contact_familiar]
+    }
+
+    //#endregion
+    //timeline.push(contact)
+
+    //#region 5. Double Effect - BETWEEN
+
+    var double_instructions = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p> In this exercise, you will be given a hypothetical scenario and then asked to judge the moral permissibility of the actions in that scenario.</p>
+            <p><i>Please click the button below to view the scenario.</i>`,
+        ],
+        show_clickable_nav: true
+    }
+
+    var moral = null;
+    var double_question = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function() {
+            if(condition[0] == "Factor-Included") {
+                return `<p><b>Please consider the following scenario:</b></p>
+            <p>Peter is a fireman trying to help five children out of a burning house.  There is only one window from which the children can be safely evacuated, and it is jammed shut.
+            Peter must immediately use an object to smash open this large, heavy window or else all five children will die.  The only sufficiently large object is a man on his way towards safely escaping the burning house.
+            If Peter pushes the man into the window and breaks it open, the man will fall out and die, but the five children will be safely evacuated.  If Peter does not push the man into the window the man will safely escape, but the five children will die.</p>
+            <p>Based on this scenario, please complete the following sentence by clicking one of the buttons below:</p>
+            <p><i>Pushing the man is...</i></p>`
+            } else {
+                return `<p><b>Please consider the following scenario:</b></p>
+            <p>Peter is a fireman trying to help five children out of a burning house.  There is only one window from which the children can be safely evacuated, and it is jammed shut.
+            Peter must immediately smash open this large, heavy window  or else all five children will die.  Outside the window, on the sill, is a man safely awaiting evacuation who Peter cannot help hitting with his fist if he breaks the window.
+            Peter knows that if he breaks open the window he will hit the man with his fist, the man will fall off and die, but the five children will be safely evacuated. If Peter does not break open the window the man will be safely evacuated, but the children will die.</p>
+            <p>Based on on this scenario, please complete the following sentence by clicking one of the buttons below:
+            <p><i>Breaking open the window is...</i></p>`
+            }
+        },
+        choices: ["Morally Permissible", "Morally Impermissible"],
+        on_finish: function(data){
+            moral = data.response
+        }
+    }
+
+    var double_openQ_response = null;
+    var double_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were asked to judge the moral permissibility of an action in a hypothetical scenario.</p><p>Describe your thought process while judging whether the action was morally permissible. How did you come to your eventual judgment?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            double_openQ_response = data.response.Q0;
+        }
+    };
+
+    var double_intro_response1 = null;
+    var double_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if (condition[0] == "Factor-Included") {
+                return `<p>Sometimes when someone kills other people, the deaths are "collateral damage" -- i.e., killing the other people wasn't <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on a gun manufacturing factory of an enemy country, and there happens to be a worker in the factory who gets killed. In this case, the worker's death was not necessary for the military strike to achieve its goal of blowing up the factory; the worker's death was just a side effect (i.e. "collateral damage") of the strike.
+                    <p>Other times when someone kills other people, killing them was <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on an enemy general in order to cripple the enemy's leadership team. In this case, killing the general was necessary in order to achieve the country's goal of crippling the enemy leadership.</p>
+                    <p>In the case you read, killing the man was necessary to achieve Peter's goal of breaking the window and saving the five children. Without killing the man, he wouldn't have been able to break the window and save the children; the man was used as a <b>means</b> to achieve Peter's goal.</p>
+                    <p>On a scale from 1-9, how much do you think this fact -- that the man's death was <b>necessary</b> in order to achieve Peter's goal (i.e. the man's death was used as a means to achieve the goal, rather than being a side effect/"collateral damage") -- influenced your judgment of whether Peter's actions were morally permissible or not?</p>`
+            } else {
+                return `<p>Sometimes when someone kills other people, the deaths are "collateral damage" -- i.e., killing the other people wasn't <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on a gun manufacturing factory of an enemy country, and there happens to be a worker in the factory who gets killed. In this case, the worker's death was not necessary for the military strike to achieve its goal of blowing up the factory; the worker's death was just a side effect (i.e. "collateral damage") of the strike.
+                    <p>Other times when someone kills other people, killing them was <i>necessary</i> to achieve the person's goal. For instance, imagine a country performs a military strike on an enemy general in order to cripple the enemy's leadership team. In this case, killing the general was necessary in order to achieve the country's goal of crippling the enemy leadership.</p>
+                    <p>In the case you read, killing the man was a <b>side effect</b> of achieving Peter's goal of breaking the window and saving the five children -- i.e., the man's death was "collateral damage". If the man hadn't happened to be there, Peter would still have been able to break the window and save the children.</p>
+                    <p>Now, imagine if killing the man <i>was</i> necessary to achieve Peter's goal of breaking the window and saving the five children. In other words, imagine if Peter would not have been able to save the five children without killing the man. In this case, the man would have been used as a <b>means</b> to achieve Peter’s goal.
+                    <p>If this were the case, how much do you think this fact -- that the man's death <b>would have been necessary</b> in order to achieve Peter's goal – would have influenced your judgment of whether Peter's actions were morally permissible or not?</p>`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            double_intro_response1 = data.response
+        }
+    };
+
+    var double_intro_response2 = null;
+    var double_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            double_intro_response2 = data.response.Q0
+        }
+    };
+
+    var double_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "double effect",
+                choice: moral == 0 ? "Permissible" : "Impermissible",
+                condition: condition[0] == "Factor-Included" ? "Means" : "Side Effect",
+                factor: data.condition,
+                openq_response: double_openQ_response,
+                introspect_rating: double_intro_response1,
+                introspect_open: double_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var double = {
+        timeline: [double_instructions, double_question, double_openQ, double_introspect1, double_introspect2, double_familiar]
+    }
+
+    //#endregion
+    //timeline.push(double)
+
+    //#region 6. Decoy Effect (Kaptein et al., 2016) - BETWEEN
+
+    var decoy_instructions = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>In this exercise, you will be presented with a scenario where you have to choose between several consumer products. These products will be similar to those you would see at a grocery store.<p> When choosing between these products, there are no right or wrong answers. We are simply looking for your opinion.</p>
+            <p><i>Please click the button below to continue.</i></p>`
+        ],
+        show_clickable_nav: true
+    }
+
+    var juice = null
+    var decoy_present = {
+        type: jsPsychSurveyMultiChoice,
+        questions: [
+            {
+                prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
+                options: [
+                    '<b>Brand W:</b> Price per can = $1.20; Quality rating = 30',
+                    '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
+                    '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
+                    ],
+                required: true,
+            }
+        ],
+        on_finish: function(data){
+                    if(data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
+                        juice = 'Brand N (Target)'
+                    } else if (data.response.Q0 == '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70') {
+                        juice = 'Brand J (Competitor)'
+                    } else {
+                        juice = 'Brand W (decoy)'
+                    }
+                }
+        };
+
+    var decoy_absent = {
+        type: jsPsychSurveyMultiChoice,
+        questions: [
+            {
+                prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
+                options: [
+                    '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
+                    '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
+                    ],
+                required: true,
+            }
+        ],
+        on_finish: function(data){
+                    if(data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
+                        juice = 'Brand N (Target)'
+                    } else {
+                        juice = 'Brand J (Competitor)'
+                    }
+                }
+    };
+
+    var decoy_question = null;
+    if(condition[0] == "Factor-Included") {
+        decoy_question = decoy_present
+    } else {
+        decoy_question = decoy_absent
+    }
+
+    var decoy_openQ_response = null;
+    var decoy_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were asked to choose between several brands of frozen orange juice concentrate.</p><p>Describe your thought process during this choice. How did you come to your eventual decision about which juice to purchase?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            decoy_openQ_response = data.response.Q0
+        }
+    };
+
+    var decoy_intro_response1 = null;
+    var decoy_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if (condition[0] == "Factor-Included") {
+                return `<p>Below are the options you were asked to choose from:</p>
+                <p><b>Brand W:</b> Price per can = $1.20; Quality rating = 30</p>
+                <p><b>Brand N:</b> Price per can = $1.20; Quality rating = 50</p>
+                <p><b>Brand J:</b> Price per can = $2.00; Quality rating = 70</p>
+                <p>On a scale from 1 to 9, how much do you think the <b>presence of Brand W</b> affected your preference <b>between Brand N and Brand J?</b></p>`
+            } else {
+                return `<p>Below are the options you were asked to choose from:</p>
+                <p><b>Brand N:</b> Price per can = $1.20; Quality rating = 50</p>
+                <p><b>Brand J:</b> Price per can = $2.00; Quality rating = 70</p>
+                <p>Now, imagine if you were given a <i>third option</i>, as follows:</p>
+                <p><b>Brand W:</b> Price per can = $1.20; Quality rating = 30</p>
+                <p>On a scale from 1 to 9, how much do you think the <b>presence of this option</b> would have affected your preference <b>between Brand N and Brand J?</b></p>`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            decoy_intro_response1 = data.response
+        }
+    };
+
+    var decoy_intro_response2 = null;
+    var decoy_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            decoy_intro_response2 = data.response.Q0
+        }
+    };
+
+    var decoy_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "decoy effect",
+                choice: juice,
+                condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
+                factor: data.condition,
+                openq_response: decoy_openQ_response,
+                introspect_rating: decoy_intro_response1,
+                introspect_open: decoy_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var decoy = {
+        timeline: [decoy_instructions, decoy_question, decoy_openQ, decoy_introspect1, decoy_introspect2, decoy_familiar]
+    }
+    //#endregion
+    //timeline.push(decoy)
+
+    //#region 7. Associative Memory (Roediger & McDermott, 1995) - WITHIN
+    var assoc_instructions = {
+            type: jsPsychInstructions,
+            pages: [
+                `<p>In this exercise, you will be shown a series of words in quick succession. Your goal is to <b>memorize as many words as you can</b>.</p>
+                <p>After all the words are shown, your memory will be tested through a series of questions.</p>`,
+                `<p>On the next screen, you will be shown the series of words. Each word will appear once in the center of the screen, for example:</p><br><br><br><br>
+                <p style = "font-size:30px">house</p>
+                <br><br><br>
+                <p>The words will appear relatively <b>quickly</b> so please pay attention to the screen at all times.</p>
+                <p><i>Please click the button below to begin viewing the words.</i></p>`
+            ],
+            show_clickable_nav: true
+        };
+
+    var assoc_list = [
+        {stimulus:`<p style = "font-size:30px">bed</p>`},
+        {stimulus:`<p style = "font-size:30px">rest</p>`},
+        {stimulus:`<p style = "font-size:30px">awake</p>`},
+        {stimulus:`<p style = "font-size:30px">tired</p>`},
+        {stimulus:`<p style = "font-size:30px">dream</p>`},
+        {stimulus:`<p style = "font-size:30px">wake</p>`},
+        {stimulus:`<p style = "font-size:30px">snooze</p>`},
+        {stimulus:`<p style = "font-size:30px">blanket</p>`},
+        {stimulus:`<p style = "font-size:30px">doze</p>`},
+        {stimulus:`<p style = "font-size:30px">slumber</p>`},
+        {stimulus:`<p style = "font-size:30px">snore</p>`},
+        {stimulus:`<p style = "font-size:30px">nap</p>`},
+        {stimulus:`<p style = "font-size:30px">yawn</p>`},
+        {stimulus:`<p style = "font-size:30px">drowsy</p>`},
+    ]
+
+    var assoc_listTrials = {
+        timeline: [
+        {//fixation
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '<p style = "font-size:30px">+</p>',
+            choices: "NO_KEYS",
+            trial_duration: 500
+        },
+        {//trials
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: jsPsych.timelineVariable('stimulus'),
+            choices: "NO_KEYS",
+            trial_duration: 1000
+        },
+        ],
+        timeline_variables: assoc_list,
+        randomize_order: true
+    };
+
+    var assoc_instructions2 = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>Now you will be asked a series of recall questions. In each question, you will be presented with a word and asked to determine whether it was present in the original list (<b>"original"</b>) or not present in the original list (<b>"new"</b>).</p>
+            <p><i>Please click the button below to continue.</i></p>`,
+        ],
+        show_clickable_nav: true
+    };
+
+    var assoc_practice= {
+        type: jsPsychHtmlButtonResponse,
+        stimulus:`<p><i>This is a practice question. Please read the word below and judge whether it was present in the original list. If so, click "Original." Otherwise, click "New."</i></p><br><br>
+        <p style = "font-size:30px">doze</p>`,
+        choices: ["Original", "New"],
+        prompt: `<br> Is this word original or new?`
+    };
+
+    var assoc_practice_feedback = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function(data) {
+            var original = jsPsych.data.get().last(1).values()[0].response
+            if(original == 0){
+                return `<p>Correct! This word is original.</p>
+                <p> Now you will begin the real trials. </p>
+                <p><i>Please click the button below to continue.</i></p>`
+            } else {
+                return `<p>Incorrect. This word is original.</p>
+                <p> Now you will begin the real trials. </p>
+                <p><i>Please click the button below to continue.</i></p>`
+            }
+        },
+        choices: ["Continue"]
+    };
+
+    var assoc_included_target = [
+        //original words
+        {stimulus:`<p style = "font-size:30px">bed</p>`,
+        name: "bed", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">rest</p>`,
+        name: "rest", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">awake</p>`,
+        name: "awake", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">snore</p>`,
+        name: "snore", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">slumber</p>`,
+        name: "slumber", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">nap</p>`,
+        name: "nap", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">dream</p>`,
+        name: "dream", category: "Original", topic: "Sleep"},
+        //new words
+        {stimulus:`<p style = "font-size:30px">sleep</p>`,
+        name: "sleep", category: "New", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">pillow</p>`,
+        name: "pillow", category: "New", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">sheet</p>`,
+        name: "sheet", category: "New", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">nurse</p>`,
+        name: "nurse", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">shade</p>`,
+        name: "shade", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">bitter</p>`,
+        name: "bitter", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">heart</p>`,
+        name: "heart", category: "New", topic: "NonSleep"},
+    ]
+
+    var assoc_excluded_target = [
+        //original words
+        {stimulus:`<p style = "font-size:30px">bed</p>`,
+        name: "bed", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">rest</p>`,
+        name: "rest", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">awake</p>`,
+        name: "awake", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">snore</p>`,
+        name: "snore", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">slumber</p>`,
+        name: "slumber", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">nap</p>`,
+        name: "nap", category: "Original", topic: "Sleep"},
+        {stimulus:`<p style = "font-size:30px">dream</p>`,
+        name: "dream", category: "Original", topic: "Sleep"},
+        //new words
+        {stimulus:`<p style = "font-size:30px">suit</p>`,
+        name: "suit", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">walk</p>`,
+        name: "walk", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">kneel</p>`,
+        name: "kneel", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">nurse</p>`,
+        name: "nurse", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">shade</p>`,
+        name: "shade", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">bitter</p>`,
+        name: "bitter", category: "New", topic: "NonSleep"},
+        {stimulus:`<p style = "font-size:30px">heart</p>`,
+        name: "heart", category: "New", topic: "NonSleep"},
+    ]
+
+    var assoc_targetTrials = {
+        timeline: [
+        {//fixation
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '<p style = "font-size:30px">+</p>',
+            choices: "NO_KEYS",
+            trial_duration: 500
+        },
+        {//trials
+            type:  jsPsychHtmlButtonResponse,
+            stimulus: jsPsych.timelineVariable('stimulus'),
+            choices: ["Original", "New"],
+            prompt: `<br> Is this word original or new?`,
+            data: {stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('category'), con: jsPsych.timelineVariable('topic')},
+            on_finish: function(data) {
+                s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "associative memory",
+                factor: data.condition,
+                condition: data.con,
+                choice: data.response == "0" ? "Original" : "New",
+                stimulus: data.stim,
+                auxiliary_info1: data.aux,
+                rt: data.rt,
+                }
+                save_data(s1_data, 'introspection');
+            }
+        },
+        ],
+        timeline_variables: condition[0] == "Factor-Included" ? assoc_included_target : assoc_excluded_target,
+        randomize_order: true
+    };
+
+    var assoc_openQ_response = null;
+    var assoc_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were asked to memorize a series of words. Then, you were shown another series of words and asked to determine if they were original (present in the original list) or new (not present in the original list).</p>
+        <p>Describe your thought process during this exercise. How did you come to your eventual decisions about which words were original versus new?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            assoc_openQ_response = data.response.Q0;
+        }
+    };
+
+    var assoc_intro_response1 = null;
+    var assoc_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if(condition[0] == "Factor-Included") {
+                return `Below are the lists of both the original and new words:<p>
+                <font color = "RED"><p style="font-size:17px"><b>Original Words:</b> bed, rest, awake, tired, dream, wake, snooze, blanket, doze, slumber, snore, nap, yawn, drowsy</font>
+                <font color = "BLUE"><p style="font-size:17px"><b>New Words:</b> suit, walk, kneel, nurse, shade, bitter, heart</font>
+                <p>While doing this exercise, you might have noticed that <i>all</i> of the words in the <b>original list</b> were <b><i>related to the topic of sleep</i></b> (for example, "bed" and "doze"), while only <i>some</i> of the words in the <b>new list</b> were related to sleep (for example, “pillow”).
+                <p>While you were determining whether each word was original or new, how much do you think your decision-making process was influenced by whether the word was <b>related to the topic of sleep?</b></p>`
+            } else {
+                return `Below are the lists of both the original and new words:<p>
+                <font color = "RED"><p style="font-size:17px"><b>Original Words:</b> bed, rest, awake, tired, dream, wake, snooze, blanket, doze, slumber, snore, nap, yawn, drowsy</font>
+                <font color = "BLUE"><p style="font-size:17px"><b>New Words:</b> suit, walk, kneel, nurse, shade, bitter, heart</font>
+                <p>While doing this exercise, you might have noticed that <i>all</i> of the words in the <b>original list</b> were <b><i>related to the topic of sleep</i></b> (for example, "bed" and "doze"), while <i>none</i> of the words in the <b>new list</b> were related to sleep.
+                <p>Now, imagine if some of the words in the new list <i>had</i> been related to sleep. For example, imagine if you were asked to decide if the word “pillow” was new or original.
+                <p>If this were the case, how much do you think your decision-making process would have been influenced by whether the word was <b>related to the topic of sleep?</b></p>`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            assoc_intro_response1 = data.response
+        }
+    }
+
+    var assoc_intro_response2 = null;
+    var assoc_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            assoc_intro_response2 = data.response.Q0
+        }
+    };
+
+    var assoc_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "associative memory",
+                factor: data.condition,
+                openq_response: assoc_openQ_response,
+                introspect_rating: assoc_intro_response1,
+                introspect_open: assoc_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var assoc = {
+        timeline: [assoc_instructions, assoc_listTrials, assoc_instructions2, assoc_practice, assoc_practice_feedback, assoc_targetTrials, assoc_openQ, assoc_introspect1, assoc_introspect2, assoc_familiar]
+    }
+    //#endregion
+    //timeline.push(assoc)
+
+    //#region 8. Belief Bias (Evans et al. 1983) - WITHIN
+    var belief_instructions1 = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>In this exercise, you will play a short logic game. Please try to play the game to the best of your ability.</p>
+            <p><i>Please click the button below to view the instructions for the game.</i></p>`,
+            `<p>The game you will be playing is called the <b>Alien Game</b>. In this game, imagine an alien from another planet has just landed on Earth. This alien's thought processes are very <b>logical</b>, but it knows nothing about Earth.</p>`,
+            `<p>In every round of the Alien Game, the alien will be told a number of things about Earth.</p>
+            <p>For example, the alien might be told the following statements:
+            <p><i>All elephants have big ears.</p>
+            <p>Some animals are elephants.</i></p>
+            <p>Then, you will then be given a <b>conclusion</b> that the alien could make based on those statements.</p>
+            <p>For example, a conclusion based on the above statements might be:
+            <p><b><i>Therefore, some animals have big ears.</i></b></p>
+            Your goal is to determine <b>whether the logical alien would be able to come to that conclusion based on what it was told before</b>. In this case, the conclusion logically follows the statements, so the alien would be <b>able</b> to make it.`,
+            `<p>In some rounds, the alien might be told <i>false</i> information. That is, information that is not true about Earth.</p>
+            <p>For example, the alien might be told the following statements:
+            <p><i>All houses have big ears.</p>
+            <p>Some places are houses.</i></p>
+            <p>Even though you know that these statements are false, the alien &#8212 who does not know anything about Earth &#8212 may still be <b>able</b> to draw a logical conclusion based on those statements.</p>
+            <p>For example, a conclusion based on the above statements might be:
+            <p><b><i>Therefore, some places have big ears.</i></b></p>
+            <p>In this case, even though the conclusion is <i>false</i>, it still logically follows from what the alien was told.</p>`,
+            `<p>Now that you know how to play the Alien game, you will be given a short practice round. Then, you will begin the actual game. Please ensure that you have read and understood the instructions before continuing (You can click the "Previous" button below to review them again).</p>
+            <p>During the practice round, you will receive feedback on your responses. However, you will not receive feedback during the actual game.</p>
+            <p><i>Once you are sure you know how to play the game, please click the "Next" button below to begin the practice round.</i></p>`
+        ],
+        show_clickable_nav: true
+    };
+
+    var belief_practice1= {
+        type: jsPsychHtmlButtonResponse,
+        stimulus:`<p><i>This is a practice question. Please answer the question using the buttons at the bottom of the screen. Click "Yes" if you think the alien would come to the conclusion. Otherwise, click "No".</i></p><br>
+        <p>Imagine the logical alien is told the following statements:</p>
+        <p><i>All dogs are animals.</p>
+        <p>All cats are animals.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><i><b>Therefore, all dogs are cats.</b></i></p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+                s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "belief",
+                factor: data.condition,
+                choice: data.response == 0 ? "Yes" : "No",
+                stimulus: "Practice 1",
+                auxiliary_info1: data.response == 1 ? "Correct" : "Incorrect",
+                rt: data.rt,
+                }
+                save_data(s1_data, 'introspection');
+            }
+    };
+
+    var belief_practice1_feedback = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function(data) {
+            var logic = jsPsych.data.get().last(1).values()[0].response
+            if(logic == 1){
+                return `<p>Correct! This conclusion is illogical, so the alien would be unable to make it.</p>
+                <p><i>Please click the button below to continue.</i></p>`
+            } else {
+                return `<p>Incorrect. This conclusion is illogical, so the alien would be unable to make it.</p>
+                <p><i>Please click the button below to continue.</i></p>`
+            }
+        },
+        choices: ["Continue"]
+    };
+
+    var belief_practice2= {
+        type: jsPsychHtmlButtonResponse,
+        stimulus:`<p><i>This is a practice question. Please answer the question using the buttons at the bottom of the screen. Click "Yes" if you think the alien would come to the conclusion. Otherwise, click "No".</i></p><br>
+        <p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No trees are buildings.</p>
+        <p>All tall things are trees.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, no tall things are buildings.</i></b></p><br>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+                s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "belief",
+                factor: data.condition,
+                choice: data.response == 0 ? "Yes" : "No",
+                stimulus: "Practice 2",
+                auxiliary_info1: data.response == 0 ? "Correct" : "Incorrect",
+                rt: data.rt,
+                }
+                save_data(s1_data, 'introspection');
+            }
+    };
+
+    var belief_practice2_feedback = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: function(data) {
+            var logic = jsPsych.data.get().last(1).values()[0].response
+            if(logic == 0){
+                return `<p>Correct! This conclusion is logical, so the alien would be able to make it.</p>
+                <p><i>Please click the button below to continue.</i></p>`
+            } else {
+                return `<p>Incorrect. This conclusion is logical, so the alien would be able to make it.</p>
+                <p><i>Please click the button below to continue.</i></p>`
+            }
+        },
+        choices: ["Continue"]
+    };
+
+    belief_instructions2 = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>Now you will begin the actual trials. Please note that for these trials, you will no longer receive feedback on your responses.</p>
+            <p><i>Please click the button below when you are ready to begin.</i></p>`
+        ],
+        show_clickable_nav: true
+    };
+
+    var belief_included_stimuli = [
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No police dogs are vicious.</p>
+        <p>Some highly trained dogs are vicious</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some highly trained dogs are not police dogs.</i></b></p><br>`, validity: "Valid", believability: "Believable",
+        name: "Therefore, some highly trained dogs are not police dogs."},
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No nutritional things are expensive.</p>
+        <p>Some vitamin tablets are expensive.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some vitamin tablets are not nutritional.</i></b></p><br>`, validity: "Valid", believability: "Unbelievable",
+        name: "Therefore, some vitamin tablets are not nutritional."},
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No addictive things are inexpensive.</p>
+        <p>Some cigarettes are inexpensive.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some addictive things are not cigarettes.</i></b></p><br>`, validity: "Invalid", believability: "Believable",
+        name: "Therefore, some addictive things are not cigarettes."},
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No millionaires are hard workers.</p>
+        <p>Some rich people are hard workers.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some millionaires are not rich people.</i></b></p><br>`, validity: "Invalid", believability: "Unbelievable",
+        name: "Therefore, some millionaires are not rich people."},
+    ]
+
+    var belief_excluded_stimuli = [
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No dogs are vicious.</p>
+        <p>Some rottweilers are vicious</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some rottweilers are not dogs.</i></b></p><br>`, validity: "Valid", believability: "Unbelievable",
+        name: "Therefore, some rottweilers are not dogs."},
+
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No nutritional things are expensive.</p>
+        <p>Some vitamin tablets are expensive.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some vitamin tablets are not nutritional.</i></b></p><br>`, validity: "Valid", believability: "Unbelievable",
+        name: "Therefore, some vitamin tablets are not nutritional."},
+
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No cigarettes are inexpensive.</p>
+        <p>Some addictive things are inexpensive.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some cigarettes are not addictive things.</i></b></p><br>`, validity: "Invalid", believability: "Unbelievable",
+        name: "Therefore, some cigarettes are not addictive things."},
+
+        {stimulus:`<p>Imagine the logical alien is told the following statements:</p>
+        <p><i>No millionaires are hard workers.</p>
+        <p>Some rich people are hard workers.</i></p>
+        <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
+        <p><b><i>Therefore, some millionaires are not rich people.</i></b></p><br>`, validity: "Invalid", believability: "Unbelievable",
+        name: "Therefore, some millionaires are not rich people."},
+
+    ]
+
+    var belief_stimuli = null;
+    if(condition[0]=="Factor-Included") {
+        belief_stimuli = belief_included_stimuli
+            } else {
+        belief_stimuli = belief_excluded_stimuli
+    }
+
+    var belief_trials = {
+        timeline: [
+        {//fixation
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '<p style = "font-size:30px">+</p>',
+            choices: "NO_KEYS",
+            trial_duration: 500
+        },
+        {//trials
+            type:  jsPsychHtmlButtonResponse,
+            stimulus: jsPsych.timelineVariable('stimulus'),
+            choices: ["Yes", "No"],
+            data: {stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('validity'), con: jsPsych.timelineVariable('believability'), },
+            on_finish: function(data) {
+                s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "belief",
+                factor: data.condition,
+                choice: data.response == 0 ? "Yes" : "No",
+                condition: data.con,
+                stimulus: data.stim,
+                auxiliary_info1: data.aux,
+                rt: data.rt,
+                }
+                save_data(s1_data, 'introspection');
+            }
+        },
+        ],
+        timeline_variables: belief_stimuli,
+        randomize_order: true
+    };
+
+    var belief_openQ_response = null;
+    var belief_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you played a short game where you were given a series of conclusions and asked to determine whether a "logical alien" would make those conclusions based on certain statements.</p>
+        <p>Describe your thought process while deciding whether the alien would be able or unable to make the given conclusions. How did you come to each decision about whether or not the alien would make that conclusion?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            belief_openQ_response = data.response.Q0;
+        }
+    };
+
+    var belief_intro_response1 = null;
+    var belief_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if(condition[0] == "Factor-Included") {
+                return `Some of the conclusions you saw in this game were <b>believable</b> based on your prior knowledge of how the world works (e.g. "some highly trained dogs are not police dogs”), while others were <b>unbelievable</b> based on your prior knowledge of how the world works (e.g. "some millionaires are not rich people").
+                <p>On a scale from 1 to 9, how much do you think the <b>believability</b> of each conclusion affected your decision about whether or not the alien would come to that conclusion?</p>`
+            } else {
+                return `You may have noticed that all of the conclusions you saw in this game were <b>not believable</b> based on your prior knowledge of how the world works. For example, it is unbelievable based on prior knowledge that "some millionaires are not rich people" or that “some cigarettes are not addictive things."
+                <p>Now, imagine that some of the conclusions <i>had</i> been believable, while others weren’t. For example, imagine if one series of statements ended with the <b>believable</b> conclusion that “some highly trained dogs are not police dogs.” while another series of statements ended with the <b>unbelievable</b> conclusion that “some millionaires are not rich people.”
+                <p>If this were the case, how much do you think the <b>believability</b> of each conclusion would have affected your decision about whether or not the alien would come to that conclusion?</p>`
+            }
+            },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            belief_intro_response1 = data.response
+        }
+    };
+
+    var belief_intro_response2 = null;
+    var belief_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            belief_intro_response2 = data.response.Q0
+        }
+    };
+
+    var belief_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before, where the conclusions differed on how believable they were?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "belief",
+                factor: data.condition,
+                openq_response: belief_openQ_response,
+                introspect_rating: belief_intro_response1,
+                introspect_open: belief_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var belief = {
+        timeline: [belief_instructions1, belief_practice1, belief_practice1_feedback, belief_practice2, belief_practice2_feedback, belief_instructions2, belief_trials, belief_openQ, belief_introspect1, belief_introspect2, belief_familiar]
+    };
+    //#endregion
+    //timeline.push(belief)
+
+    //#region 9. Mere Exposure (Stang (1974)
+
+    //preparing stimuli
+    var stimulus_id_array = [
+        `<p style = "font-size:30px">kitap</p>`,
+        `<p style = "font-size:30px">tatil</p>`,
+        `<p style = "font-size:30px">mimar</p>`,
+        `<p style = "font-size:30px">dudak</p>`,
+        `<p style = "font-size:30px">sokak</p>`,
+        `<p style = "font-size:30px">kulak</p>`,
+        `<p style = "font-size:30px">bacak</p>`,
+        `<p style = "font-size:30px">hafta</p>`,
+    ]
+    // [0, 1, 2, 3, 4, 5, 6, 7]
+    var stimulus_id_array_shuffled = _.shuffle(stimulus_id_array)
+
+    var one_array1 = Array(1).fill(stimulus_id_array_shuffled[0]);
+    var one_array2 = Array(1).fill(stimulus_id_array_shuffled[1]);
+    var one_array3 = Array(1).fill(stimulus_id_array_shuffled[2]);
+    var one_array4 = Array(1).fill(stimulus_id_array_shuffled[3]);
+
+    var one_array5 = Array(1).fill(stimulus_id_array_shuffled[4]);
+    var one_array6 = Array(1).fill(stimulus_id_array_shuffled[5]);
+    var one_array7 = Array(1).fill(stimulus_id_array_shuffled[6]);
+    var one_array8 = Array(1).fill(stimulus_id_array_shuffled[7]);
+
+    var twentyfive_array1 = Array(25).fill(stimulus_id_array_shuffled[4]);
+    var twentyfive_array2 = Array(25).fill(stimulus_id_array_shuffled[5]);
+    var twentyfive_array3 = Array(25).fill(stimulus_id_array_shuffled[6]);
+    var twentyfive_array4 = Array(25).fill(stimulus_id_array_shuffled[7]);
+
+    var included_stimulus_array = one_array1.concat(one_array2, one_array3, one_array4, twentyfive_array1, twentyfive_array2, twentyfive_array3, twentyfive_array4)
+    var included_stimulus_array = _.shuffle(included_stimulus_array)
+
+    var excluded_stimulus_array = one_array1.concat(one_array2, one_array3, one_array4, one_array5, one_array6, one_array7, one_array8)
+    var excluded_stimulus_array = _.shuffle(excluded_stimulus_array)
+
+    var stimulus_array = null;
+    if(condition[0] == "Factor-Included") {
+        stimulus_array = included_stimulus_array
+    } else {
+        stimulus_array = excluded_stimulus_array
+    }
+
+    function countInArray(array, what) {
+        var count = 0;
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] === what) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    var mee_trials = [];
+    for (var i = 0; i < stimulus_array.length; i++) {
+        mee_trials.push({
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: stimulus_array[i],
+            choices: "NO_KEYS",
+            trial_duration: 1000
+        },
+        {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '',
+            choices: "NO_KEYS",
+            trial_duration: 100
+        })
+    };
+
+    var mee_instructions1 = {
+        type: jsPsychInstructions,
+        pages: [
+        `<p>This exercise comes in two parts. In the first part of this exercise, you will be shown a series of Turkish words. Then, in the second part of this exercise, you will be asked to answer a few questions about the words you were shown.</p>`,
+        `<p>For the first part of this exercise, you will see a series of Turkish words. It is not expected that you be able to speak Turkish. We are simply interested in your impression of the words.<p>Each word will appear once in the center of the screen, as follows:</p><br><br><br><br>
+        <p style = "font-size:30px">kalem</p>
+        <br><br><br>
+        <p>The words will appear relatively <b>quickly</b>, so please pay attention to the screen throughout the exercise. Note that some of the words may appear more than once.</p>`,
+        `<p>You will now begin the first part of the exercise. The words will appear as soon as you press the "Next" button below.</p>
+        <p><i>Please click the "Next" button when you are ready to see the words.</i></p>`,
+        ],
+        show_clickable_nav: true
+    };
+
+    var mee_exposure = {
+        timeline: mee_trials
+    }
+
+    var mee_stimuli = [
+    {stimulus: `<p style = "font-size:30px">kitap</p>`, name: "kitap"},
+    {stimulus: `<p style = "font-size:30px">tatil</p>`, name: "tatil"},
+    {stimulus: `<p style = "font-size:30px">mimar</p>`, name: "mimar"},
+    {stimulus: `<p style = "font-size:30px">dudak</p>`, name: "dudak"},
+    {stimulus: `<p style = "font-size:30px">sokak</p>`, name: "sokak"},
+    {stimulus: `<p style = "font-size:30px">kulak</p>`, name: "kulak"},
+    {stimulus: `<p style = "font-size:30px">bacak</p>`, name: "bacak"},
+    {stimulus: `<p style = "font-size:30px">hafta</p>`, name: "hafta"}
+    ]
+
+    var mee_instructions2 = {
+        type: jsPsychInstructions,
+        pages: [`<p>You will now begin the second part of the exercise. For this part, you will be shown a series of words and be asked to rate how much you <b>like</b> each one. Note that several of these words may be ones that you have seen before. There are no right or wrong answers so try to be as honest as possible.</p>
+        <p><i>Please click the button below to continue.</i></p>`,],
+        show_clickable_nav: true
+    };
+
+    var mee_questions = {
+        timeline: [
+            {
+                type: jsPsychHtmlSliderResponse,
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                stimulus_height: 350,
+                labels: [`<strong>1<br>not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>very much</strong>`],
+                prompt: `On a scale from 1 (not at all) to 9 (very much), rate how much you <b>like</b> this word.<br><br>`,
+                slider_width: 750,
+                min: 10,
+                max: 90,
+                slider_start: 50,
+                require_movement: true,
+                data: {stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('stimulus')},
+                on_finish: function(data) {
+                    var s1_data = {
+                    subject: data.subject,
+                    version: data.version,
+                    factor: data.condition,
+                    task_name: "mere exposure",
+                    choice: data.response,
+                    stimulus: data.stim,
+                    condition: countInArray(stimulus_array, data.aux),
+                    }
+                    save_data(s1_data, 'introspection');
+                }
+            }
+        ],
+        timeline_variables: mee_stimuli,
+        randomize_order: true
+    };
+
+    var mee_openQ_response = null;
+    var mee_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were shown a series of words and asked to rate how much you liked them.</p>
+        <p>Describe your thought process during this exercise. How did you come to your eventual ratings for each word?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            mee_openQ_response = data.response.Q0;
+        }
+    };
+
+    var mee_intro_response1 = null;
+    var mee_introspect1 = {
+            type: jsPsychHtmlSliderResponse,
+            stimulus: function() {
+                if(condition[0] == "Factor-Included") {
+                    return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, you may have noticed that some of these words appeared many times, while others appeared only a few times or not at all.
+                    <p>On a scale from 1 to 9, how much do you think the <b>number of times</b> you saw each word affected how highly you rated them?`
+                } else {
+                    return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, you may have noticed that each word (e.g. “dudak”) appeared exactly <i>one</i> time.
+                    <p>Now, imagine if some of the words you saw appeared more often than others. For example, imagine if the word “mimar” had appeared twenty-five times while the word “dudak” only appeared once.
+                    <p>If this were the case, how much do you think the <b>number of times</b> you saw each word would have affected how highly you rated each word?
+`
+                }
+            },
+            labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+            slider_width: 750,
+            min: 10,
+            max: 90,
+            slider_start: 50,
+            require_movement: true,
+            on_finish: function(data) {
+                mee_intro_response1 = data.response
+        }
+    };
+
+    var mee_intro_response2 = null;
+    var mee_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            mee_intro_response2 = data.response.Q0
+        }
+    };
+
+    var mee_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "mere exposure",
+                factor: data.condition,
+                openq_response: mee_openQ_response,
+                introspect_rating: mee_intro_response1,
+                introspect_open: mee_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var mee = {
+        timeline: [mee_instructions1, mee_exposure, mee_instructions2, mee_questions, mee_openQ, mee_introspect1, mee_introspect2, mee_familiar]
+    }
+
+    //#endregion
+    //timeline.push(mee)
+
+   //#region 10. Numerical Distance Effect (Maloney et al., 2010),
+   var number_instructions1 = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>In this exercise, you will be given a series of trials where you will see a two numbers on either side of the screen. Your task is to determine which number is larger than the other.</p>
+            <p>If the <b>left number is larger</b> than the right number, press the <b>F key</b> on your keyboard as fast as you can.</p>
+            <p>If the <b>right number is larger</b> than the left number, press the <b>J key</b> on your keyboard as fast as you can.</p>`,
+            `<p>Below is an example of how the numbers will appear on your screen:</p>
+            <img src='img/14.png'; style='width:1000px'></img>
+            <p>In this case, the <b>right number (4) is larger</b> than the left number (1), so you would press the <b>J key</b> on your keyboard as fast as you can.</p>`,
+            `<p>You will now begin a practice round. Remember, if the <b>left number is larger</b> than the right number, press the <b>F key</b> on your keyboard as fast as you can.
+            If the <b>right number is larger</b> than the left number, press the <b>J key</b> on your keyboard as fast as you can.</p>
+            <p>For the practice round, you will recieve feedback for every trial. However, in the actual trials, you will not.</p>
+            <p><i>Please click the "Next" button to begin the practice round.</i></p>`
+        ],
+        show_clickable_nav:true
+    }
+
+    var number_included_stimuli = [
+        {stimulus: `<img src='img/23.png'; style='width:1000px'></img`, name: "2,3", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/34.png'; style='width:1000px'></img`, name: "3,4", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/43.png'; style='width:1000px'></img`, name: "4,3", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/67.png'; style='width:1000px'></img`, name: "6,7", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/76.png'; style='width:1000px'></img`, name: "7,6", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/87.png'; style='width:1000px'></img`, name: "8,7", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/26.png'; style='width:1000px'></img`, name: "2,6", difference: "4", correct_response: "j"},
+        {stimulus: `<img src='img/37.png'; style='width:1000px'></img`, name: "3,7", difference: "4", correct_response: "j"},
+        {stimulus: `<img src='img/48.png'; style='width:1000px'></img`, name: "4,8", difference: "4", correct_response: "j"},
+        {stimulus: `<img src='img/62.png'; style='width:1000px'></img`, name: "6,2", difference: "4", correct_response: "f"},
+        {stimulus: `<img src='img/73.png'; style='width:1000px'></img`, name: "7,3", difference: "4", correct_response: "f"},
+        {stimulus: `<img src='img/84.png'; style='width:1000px'></img`, name: "8,4", difference: "4", correct_response: "f"},
+    ]
+
+    var number_excluded_stimuli = [
+        {stimulus: `<img src='img/23.png'; style='width:1000px'></img`, name: "2,3", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/34.png'; style='width:1000px'></img`, name: "3,4", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/43.png'; style='width:1000px'></img`, name: "4,3", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/67.png'; style='width:1000px'></img`, name: "6,7", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/76.png'; style='width:1000px'></img`, name: "7,6", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/87.png'; style='width:1000px'></img`, name: "8,7", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/23.png'; style='width:1000px'></img`, name: "2,3", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/34.png'; style='width:1000px'></img`, name: "3,4", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/43.png'; style='width:1000px'></img`, name: "4,3", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/67.png'; style='width:1000px'></img`, name: "6,7", difference: "1", correct_response: "j"},
+        {stimulus: `<img src='img/76.png'; style='width:1000px'></img`, name: "7,6", difference: "1", correct_response: "f"},
+        {stimulus: `<img src='img/87.png'; style='width:1000px'></img`, name: "8,7", difference: "1", correct_response: "f"},
+    ]
+
+    var number_stimuli = null;
+    if (condition[0] == "Factor-Included") {
+        number_stimuli = number_included_stimuli
+    } else {
+        number_stimuli = number_excluded_stimuli
+    }
+
+    var number_correct = null
+    var number_practice = {
+        timeline: [
+            {//fixation
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '<p style = "font-size:30px">+</p>',
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {//stimulus
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                choices: ['f', 'j'],
+                on_finish: function(data) {
+                    number_correct = jsPsych.timelineVariable('correct_response')
+                }
+            },
+            {//feedback
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: function(){
+                    var last_trial = jsPsych.data.get().last(1).values()[0].response
+                    if (last_trial == number_correct) {
+                        return `<p style = "font-size:30px"><font color = "GREEN">Correct!</font></p>`
+                    } else {
+                        return `<p style = "font-size:30px"><font color = "RED">Incorrect!</font></p>
+                        <p>Remember:</p>
+                        <p>Press the <b>F key</b> if the <b>left number is larger</b>.
+                        <p>Press the <b>J key</b> if the <b>right number is larger</b>.`
+                    }
+                },
+                choices: "NO_KEYS",
+                trial_duration: 1500
+            }
+        ],
+        timeline_variables: number_stimuli,
+        sample: {
+        type: 'without-replacement',
+        size: 5
+        }
+    }
+
+    number_instructions2 = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>Now you will begin the actual trials. For these trials, you will no longer receive feedback on your responses.</p>
+            <p><i>Please click the button below when you are ready to begin.</i></p>`
+        ],
+        show_clickable_nav:true,
+    }
+
+    var number_trials = {
+        timeline: [
+            {//fixation
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '<p style = "font-size:30px">+</p>',
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {//stimulus
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                choices: ['f', 'j'],
+                data: {stim: jsPsych.timelineVariable('name'), con: jsPsych.timelineVariable('difference'), correct_response: jsPsych.timelineVariable('correct_response')},
+                on_finish: function(data){
+                    s1_data = {
+                        subject: data.subject,
+                        version: data.version,
+                        task_name: "numerical distance effect",
+                        factor: data.condition,
+                        condition: data.con,
+                        stimulus: data.stim,
+                        choice: data.response,
+                        auxiliary_info1: data.response == data.correct_response ? "Correct" : "Incorrect",
+                        rt: data.rt
+                    }
+                    save_data(s1_data, 'introspection');
+                }
+            }
+        ],
+        timeline_variables: number_stimuli,
+        randomize_order: true
+    }
+
+    var number_openQ_response = null;
+    var number_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were shown a series of number pairs and asked to judge which number in the pair was larger (left or right). Describe your thought process during this exercise. Did you notice if there were any trials where you were able to make those judgments <i>faster</i> than in other trials? If so, what factors do you think influenced <b>how fast or slow</b> you were able to make each judgment?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            number_openQ_response = data.response.Q0;
+        }
+    };
+
+    var number_intro_response1 = null;
+    var number_introspect1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if(condition[0] == "Factor-Included") {
+                return `<p>During this exercise, you might have noticed that these number pairs varied in the differences between them. For example, some number pairs were farther apart from each other (e.g. <u>3 and 7</u>) while others were closer to each other (e.g. <u>3 and 4</u>).
+                <p>On a scale from 1 to 9, how much do you think the <b>difference</b> between the numbers in each number pair affected <b>how fast</b> you were able to make your judgment for each trial?`
+            } else {
+                return `During this exercise, you might have noticed that all of the number pairs had a difference of exactly 1 between each number (e.g. <u>3 and 4</u>, or <u>1 and 2</u>).
+                <p>Now imagine if only some of these pairs had a difference of 1, while others had a difference of 4 between them. For example, one trial might ask you to choose the larger number between <u>1 and 2</u>, whereas others would ask you to choose the larger number between <u>4 and 7</u>.
+                <p>If this were the case, how much do you think the <b>difference</b> between the numbers in each number pair (e.g. a difference of 4 vs. a difference of 1) would have affected <b>how fast</b> you were able to make your judgment for each trial?`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            number_intro_response1 = data.response
+        }
+    }
+
+    var number_intro_response2 = null;
+    var number_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            number_intro_response2 = data.response.Q0
+        }
+    };
+
+    var number_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                task_name: "numerical distance effect",
+                factor: data.condition,
+                openq_response: number_openQ_response,
+                introspect_rating: number_intro_response1,
+                introspect_open: number_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var numb = {
+        timeline: [number_instructions1, number_practice, number_instructions2, number_trials, number_openQ, number_introspect1, number_introspect2, number_familiar]
+    }
+    //#endregion
+    //timeline.push(preload, numb)
+
+  //#region 11. Simon Task - WITHIN
+  var simon_instructions1 = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>In this exercise, you will be given a series of trials where you will see a box on either side of the screen.</p>
+            <p>If the box is <font color="RED"><b>red</b></font>, press the letter <b>F</b> on your keyboard as fast as you can.</p>
+            <p>If the box is <font color="BLUE"><b>blue</b></font>, press the letter <b>J</b> on your keyboard as fast as you can.</p>
+            <div style='width:500px; height:350px; margin:auto'>
+            <div style='float: left;'><img src='img/redbox.png'; style='width:200px'></img>
+            <p class='small'><strong>Press the F key</strong></p></div>
+            <div style='float: right;'><img src='img/bluebox.png'; style='width:200px'></img>
+            <p class='small'><strong>Press the J key</strong></p></div>
+            </div>
+            <p>Please note that it <i>does not matter which side the box appears on</i>. Just press the key that corresponds to the box's <b>color.</b>`,
+            `<p>You will now begin a practice round.</p><p>Remember, if you see a <font color="RED"><b>red</b></font> box, press the letter <b>F</b> on your keyboard.
+            If you see a <font color="BLUE"><b>blue</b></font> box, press the letter <b>J</b> on your keyboard. Please try to respond to each trial as fast as you can.
+            For the practice round, you will recieve feedback for every trial. However, in the actual trials, you will not.</p>
+            <p><i>Please click the "Next" button to begin the practice round.</i></p>`
+        ],
+        show_clickable_nav:true,
+    }
+
+    var simon_included_stimuli = [
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: left;'><img src='img/redbox.png'; style='width:300px'></img>`,
+            correct_response: 'f', color: "Red", type: "Congruent"
+        },
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: right;'><img src='img/bluebox.png'; style='width:300px'></img>`,
+            correct_response: 'j', color: "Blue", type: "Congruent"
+        },
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: left;'><img src='img/bluebox.png'; style='width:300px'></img>`,
+            correct_response: 'j', color: "Blue", type: "Incongruent"
+        },
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: right;'><img src='img/redbox.png'; style='width:300px'></img>`,
+            correct_response: 'f', color: "Red", type: "Incongruent"
+        }
+    ]
+
+    var simon_excluded_stimuli = [
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: left;'><img src='img/redbox.png'; style='width:300px'></img>`,
+            correct_response: 'f', color: "Red", type: "Congruent"
+        },
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: right;'><img src='img/bluebox.png'; style='width:300px'></img>`,
+            correct_response: 'j', color: "Blue", type: "Congruent"
+        },
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: left;'><img src='img/redbox.png'; style='width:300px'></img>`,
+            correct_response: 'f', color: "Red", type: "Congruent"
+        },
+        {
+            stimulus:
+            `<div style='width:700px; height:350px; margin:auto'>
+            <div style='float: right;'><img src='img/bluebox.png'; style='width:300px'></img>`,
+            correct_response: 'j', color: "Blue", type: "Congruent"
+        }
+    ]
+
+    var simon_stimuli = null;
+    if(condition[0] == "Factor-Included") {
+        simon_stimuli = simon_included_stimuli
+    } else {
+        simon_stimuli = simon_excluded_stimuli
+    }
+
+    var simon_correct = null
+    var simon_practice = {
+        timeline: [
+            {//fixation
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '<p style = "font-size:30px">+</p>',
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {//stimulus
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                choices: ['f', 'j'],
+                trial_duration: 1000,
+                on_finish: function(data) {
+                    simon_correct = jsPsych.timelineVariable('correct_response')
+                }
+            },
+            {//feedback
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: function(){
+                    var last_trial = jsPsych.data.get().last(1).values()[0].response
+                    if (last_trial == simon_correct) {
+                        return `<p style = "font-size:30px"><font color = "GREEN">Correct!</font></p>`
+                    } else if (last_trial == null){
+                        return `<p style = "font-size:30px">Respond faster!</p>`
+                    } else {
+                        return `<p style = "font-size:30px"><font color = "RED">Incorrect</font></p>`
+                    }
+                },
+                choices: "NO_KEYS",
+                trial_duration: 1000
+            }
+        ],
+        timeline_variables: simon_stimuli,
+        randomize_order: true,
+        repetitions: 2
+    }
+
+    simon_instructions2 = {
+        type: jsPsychInstructions,
+        pages: [
+            `<p>Now you will begin the actual trials. For these trials, you will no longer receive feedback on your responses.</p>
+            <p><i>Please click the button below when you are ready to begin.</i></p>`
+        ],
+        show_clickable_nav:true,
+    }
+
+    var simon_aux = null
+    var simon_trials = {
+        timeline: [
+            {//fixation
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: '<p style = "font-size:30px">+</p>',
+                choices: "NO_KEYS",
+                trial_duration: 500
+            },
+            {//stimulus
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: jsPsych.timelineVariable('stimulus'),
+                choices: ['f', 'j'],
+                trial_duration: 1000,
+                data: {stim: jsPsych.timelineVariable('color'), con: jsPsych.timelineVariable('type'), correct_response: jsPsych.timelineVariable('correct_response')},
+            on_finish: function(data){
+                if (data.response == data.correct_response) {
+                    simon_aux = "Correct"
+                } else if (data.response == null) {
+                    simon_aux = "Failure"
+                } else {
+                    simon_aux = "Incorrect"
+                }
+                s1_data = {
+                    subject: data.subject,
+                    version: data.version,
+                    factor: data.condition,
+                    task_name: "simon task",
+                    condition: data.con,
+                    stimulus: data.stim,
+                    choice: data.response,
+                    auxiliary_info1: simon_aux,
+                    rt: data.rt
+                }
+                save_data(s1_data, 'introspection');
+            }
+            },
+        ],
+        timeline_variables: simon_stimuli,
+        sample: {
+        type: 'with-replacement',
+        size: 20
+        }
+    }
+
+    var simon_openQ_response = null;
+    var simon_openQ = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>In this exercise, you were shown a series of boxes. You were asked to press the F key if you saw a red box and the J key if you saw a blue box.</p>
+            <p>Describe your thought process during each trial of this exercise. Did you notice if there were any trials where you were <i>faster</i> at pressing the correct key than in other trials? If so, what factors do you think influenced <b>how fast or slow</b> you were able to press the correct key?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            simon_openQ_response = data.response.Q0;
+        }
+    };
+
+    var simon_intro_response1 = null;
+    var simon_introspect1= {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: function() {
+            if(condition[0] == "Factor-Included") {
+                return `During this exercise, you might have noticed that sometimes the boxes would appear on the <b>left</b> side of the screen, while other times they appeared on the <b>right</b> side of the screen.</p>
+                <p>On a scale from 1 to 9, how much do you think the <b>location</b> of the boxes affected (whether they were on the left or right of the screen) <b>how fast</b> you were able to complete each trial?</p>`
+            } else {
+                return `<p>During this exercise, you might have noticed that the red boxes always appeared on the <b>left</b> side of the screen, while the blue boxes always appeared on the <b>right</b> side of the screen.</p>
+                <p>Imagine if, in some trials, the boxes switched locations. For example, imagine that the <b>red</b> box appeared on the <b>right</b> side of the screen rather than the left side of the screen. This would have required you to press the <b>F key</b> upon seeing the red box on the right side of the screen.</p> 
+                <p>Similarly, imagine if the <b>blue</b> box had appeared on the <b>left</b> side of the screen, requiring you to press the <b>J key</b> upon seeing the blue box on the left side of the screen.</p>
+                <p>If this were the case, how much do you think the <b>location</b> of the boxes (if they were on the left or right of the screen) would have affected <b>how fast</b> you were able to complete each trial?</p>`
+            }
+        },
+        labels: [`<strong>1<br> not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>completely</strong>`],
+        slider_width: 750,
+        min: 10,
+        max: 90,
+        slider_start: 50,
+        require_movement: true,
+        on_finish: function(data) {
+            simon_intro_response1 = data.response
+        }
+    }
+
+    var simon_intro_response2 = null;
+    var simon_introspect2 = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you choose the number that you did?</p>`,
+        required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            simon_intro_response2 = data.response.Q0
+        }
+    };
+
+    var simon_familiar = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
+        choices: ["Yes", "No"],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                factor: data.condition,
+                task_name: "simon task",
+                openq_response: simon_openQ_response,
+                introspect_rating: simon_intro_response1,
+                introspect_open: simon_intro_response2,
+                familiarity: data.response == 0 ? "Yes" : "No",
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
+        }
+    }
+
+    var simon = {
+        timeline: [simon_instructions1, simon_practice, simon_instructions2, simon_trials, simon_openQ, simon_introspect1, simon_introspect2, simon_familiar]
+    }
+
+    //#endregion
+    //timeline.push(simon)
+
+    var task_list = [anchor, avail, cause, contact, double, decoy, assoc, belief, mee, numb, simon]
+    var task_list_shuffled = _.shuffle(task_list)
+    var tasks = {
+        timeline: task_list_shuffled
+    }
+
+    /*var testarray = [begin, begin, begin, begin, begin, begin, begin, begin, begin, begin, begin]
+    var test = {
+        timeline: testarray
+    }*/
+
+   for (i=0; i<20; i++) {
+        var index = 0;
+        var number = 0
+        if (i == 0){
+            index = 1;
+            number = 2;
+        } else if(i == 2) {
+            index = 3;
+            number = 3;
+        } else if (i == 4) {
+            index = 5;
+            number = 4;
+        } else if (i == 6) {
+            index = 7,
+            number = 5;
+        } else if(i == 8) {
+            index = 9;
+            number = 6;
+        } else if (i == 10) {
+            index = 11;
+            number = 7;
+        } else if (i == 12) {
+            index = 13,
+            number = 8;
+        } else if(i == 14) {
+            index = 15;
+            number = 9;
+        } else if (i == 16) {
+            index = 17;
+            number = 10;
+        } else if (i == 18) {
+            index = 19,
+            number = 11;
+        } else {
+            index = 0
+        }
+
+        var transition = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus:  `<p>This exercise is now complete. Great job!</p><p>You will now move onto exercise <b>`+(number)+` out of 11</b>.</p>
+            <p><i>Please click the button below to begin the next exercise.</i></p>`,
+            choices: ['Next Exercise']
+        }
+
+        if (index) {
+            task_list_shuffled.splice(index, 0, transition)
+        }
+
+    }
+
+    //#endregion
+
+    //#region MEASURES
+    var begin_measures = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus:
+            `Thank you for completing all of the exercises!</p>You have now finished the first phase of the study, and will now begin the <b>second phase</b> of the study.</p>
+            <p>In this phase, you will be asked to answer a series of short questionnaires. These should take around 15 minutes in total to complete. Please try to answer each questionnaire as honestly as possible.</p>
+            <p><i>Click the button below to begin the second phase.</i></p>`,
+        choices: ["Begin"]
+    }
+
+    var phq1_responses = null;
+    var phq9_one = {
+        type: jsPsychSurveyMultiChoice, 
+        preamble: `<p>Over the <i>last 2 weeks</i>, how often have you been bothered by any of the following problems?</p>
+        <p><i>0 = Not at all;  1 = Several days;  2 = More than half the days;  3 = Nearly everyday</i></p>`,
+        questions: [
+            {
+                prompt: "Little interest or pleasure in doing things",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: "Feeling down, depressed, or hopeless",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: "Trouble falling or staying asleep, or sleeping too much",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: "Feeling tired or having little energy",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: "Poor appetite or overeating",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: `Feeling bad about yourself &#8212 or that you are a failure or have let yourself or your family down`,
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: "Trouble concentrating on things, such as reading the newspaper or watching television",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: `Moving or speaking so slowly that other people could have noticed? <p>Or the opposite &#8212 being so fidgety or restless that you have been moving around a lot more than usual`,
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+            {
+                prompt: "Thoughts that you would be better off dead or of hurting yourself in some way",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true,
+            },
+        ],
+        randomize_order: true,
+        on_finish: function(data) {
+            var response = Object.values(data.response);
+            phq91_responses = new Array(response.length);
+            for (var i = 0; i < response.length; i++) {
+            phq91_responses[i] = response[i];
+        }
+        phq91_responses = phq91_responses.join();
+        }
+    }
+
+    var phq9_two_options = ["Not difficult at all", "Somewhat difficult", "Very difficult", "Extremely difficult"]
+
+    var phq2_responses = null;
+    var phq9_two = {
+        type: jsPsychSurveyMultiChoice,
+        questions: [
+            {
+                prompt: "If you checked off <i>any</i> problems, how <i>difficult</i> have these problems made it for you to do your work, take care of things at home, or get along with other people?",
+                options: phq9_two_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+        ],
+        on_finish: function(data) {
+            var response = Object.values(data.response);
+            phq92_responses = new Array(response.length);
+            for (var i = 0; i < response.length; i++) {
+            phq92_responses[i] = phq9_two_options.indexOf(response[i]);
+        }
+        phq92_responses = phq92_responses.join();
+        }
+    }
+
+    var phq9 = {
+        timeline: [phq9_one, phq9_two]
+    }
+
+    var gad71_responses = null;
+    var gad7_one = {
+        type: jsPsychSurveyMultiChoice,
+        preamble: `
+        <p>Over the <i>last two weeks</i>, how often have you been bothered by the following problems?</p>
+        <p><i>0 = Not at all; 1 = Several days; 2 = More than half the days;  3 = Nearly every day</i></p>`,
+        questions: [
+            {
+                prompt: "Feeling nervous, anxious, or on edge",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "Not being able to stop or control worrying",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "Worrying too much about different things",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "Trouble relaxing",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "Being so restless that it is hard to sit still",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "Becoming easily annoyed or irritable",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "Feeling afraid, as if something awful might happen",
+                options: [0, 1, 2, 3],
+                required: debug ? false : true,
+                horizontal: true
+            },
+        ],
+        randomize_order: true,
+        on_finish: function(data) {
+            var response = Object.values(data.response);
+            gad71_responses = new Array(response.length);
+            for (var i = 0; i < response.length; i++) {
+            gad71_responses[i] = response[i];
+        }
+        gad71_responses = gad71_responses.join();
+        }
+    }
+
+    var gad7_two_options = ["Not difficult at all", "Somewhat difficult", "Very difficult", "Extremely difficult"]
+    var gad72_responses = null;
+    var gad7_two = {
+        type: jsPsychSurveyMultiChoice,
+        questions: [
+            {
+                prompt: "If you checked off <i>any</i> problems on the previous screen, how <i>difficult</i> have these problems made it for you to do your work, take care of things at home, or get along with other people?",
+                options: gad7_two_options,
+                required: true,
+                horizontal: true
+            },
+        ],
+        on_finish: function(data) {
+            var response = Object.values(data.response);
+            gad72_responses = new Array(response.length);
+            for (var i = 0; i < response.length; i++) {
+            gad72_responses[i] = gad7_two_options.indexOf(response[i]);
+        }
+        gad72_responses = gad72_responses.join();
+        }
+    }
+
+    var gad7 = {
+        timeline: [gad7_one, gad7_two]
+    }
+
+    var audit_responses = null;
+    var audit = {
+        type: jsPsychSurveyMultiChoice,
+        preamble: `
+        <p>Please choose the answer that is correct for you.</p>`,
+        questions: [
+            {
+                prompt: "How often do you have a drink containing alcohol?",
+                options: ["Never", "Monthly or less", "Two to four times a month", "Two to three times a week", "Four or more times a week"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "How many drinks containing alcohol do you have on a typical day when you are drinking?",
+                options: ["0 (Not Applicable)","1 or 2", "3 or 4", "5 or 6", "7 to 9", "10 or more"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "How often do you have six or more drinks on one occasion?",
+                options: ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "How often during the last year have you found that you were not able to stop drinking once you had started?",
+                options: ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "How often during the last year have you failed to do what was normally expected from you because of drinking?",
+                options: ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "How often during the last year have you needed a first drink in the morning to get yourself going after a heavy drinking session?",
+                options: ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "How often during the last year have you had a feeling of guilt or remorse after drinking?",
+                options: ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "How often during the last year have you been unable to remember what happened the night before because you had been drinking?",
+                options: ["Never", "Less than monthly", "Monthly", "Weekly", "Daily or almost daily"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "Have you or someone else been injured as a result of your drinking?",
+                options: ["No", "Yes, but not in the last year", "Yes, during the last year"],
+                required: debug ? false : true,
+            },
+            {
+                prompt: "Has a relative or friend, or a doctor or other health worker been concerned about your drinking or suggested you cut down?",
+                options: ["No", "Yes, but not in the last year", "Yes, during the last year"],
+                required: debug ? false : true,
+            },
+        ],
+        randomize_order: true,
+        on_finish: function(data) {
+            var response = Object.values(data.response);
+            audit_responses = new Array(response.length);
+            for (var i = 0; i < response.length; i++) {
+            audit_responses[i] = response[i];
+        }
+        audit_responses = audit_responses.join();
+        }
+    }
+
+    var ocir_options = ["Not at all", "A little", "Moderately", "Extremely"]
+    var ocir_responses = null;
+    var ocir = {
+        type: jsPsychSurveyMultiChoice,
+        preamble: `
+        <p>The following statements refer to experiences that many people have in their everyday lives.<p>Select the option that best describes <b>HOW MUCH</b> that experience has <b>DISTRESSED or BOTHERED</b> you during the <b>the PAST MONTH.</b>`,
+        questions: [
+            {
+                prompt: "I have saved up so many things that they get in the way.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I check things more often than necessary.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I get upset if objects are not arranged properly.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I feel compelled to count while I am doing things.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I find it difficult to touch an object when I know it has been touched by strangers or certain people.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I find it difficult to control my own thoughts.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I collect things I don't need.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I repeatedly check doors, windows, drawers, etc.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I get upset if others change the way I have arranged things.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I feel I have to repeat certain numbers.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I sometimes have to wash  or clean myself simply because I feel contaminated.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I am upset by unpleasant thoughts that come into my mind against my will.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I avoid throwing things away because I am afraid I might need them later.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I repeatedly check gas and water taps and light switches after turning them off.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I need things to be arranged in a particular order.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I feel that there are good and bad numbers.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I wash my hands more often and longer than necessary.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+            {
+                prompt: "I frequently get nasty thoughts and have difficulty in getting rid of them.",
+                options: ocir_options,
+                required: debug ? false : true,
+                horizontal: true
+            },
+        ],
+        randomize_order:true,
+        on_finish: function(data) {
+            var response = Object.values(data.response);
+            ocir_responses = new Array(response.length);
+            for (var i = 0; i < response.length; i++) {
+            ocir_responses[i] = ocir_options.indexOf(response[i]);
+        }
+        ocir_responses = ocir_responses.join();
+    }
+    }
+
+    var spq_responses = null;
+    var spq_options = ["Strongly disagree","Disagree", "Neutral", "Agree", "Strongly agree"]
+    var spq = {
+        type: jsPsychSurveyMultiChoice,
+        questions: [
+            {
+                prompt: "Do you sometimes feel that people are talking about you?",
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: "Do you sometimes feel that other people are watching you?",
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: "When shopping, do you get the feeling that other people are taking notice of you?",
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: "I often feel that others have it in for me.",
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: "Do you sometimes get concerned that friends or co-workers are not really loyal or trustworthy?",
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: "Do you often have to keep an eye out to stop people from taking advantage of you?",
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Do you feel that you cannot get “close” to people?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I find it hard to be emotionally close to other people.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Do you feel that there is no one you are really close to outside of your immediate family, or people you can confide in or talk to about personal problems?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I tend to keep my feelings to myself.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I rarely laugh and smile.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I am not good at expressing my true feelings by the way I talk and look.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Other people see me as slightly eccentric (odd).`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I am an odd, unusual person.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I have some eccentric (odd) habits.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `People sometimes comment on my unusual mannerisms and habits.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Do you often feel nervous when you are in a group of unfamiliar people?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I get anxious when meeting people for the first time.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I feel very uncomfortable in social situations involving unfamiliar people.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I sometimes avoid going to places where there will be many people because I will get anxious.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Do you believe in telepathy (mind-reading)?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Do you believe in clairvoyance (psychic forces, fortune telling)?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Have you had experiences with astrology, seeing the future, UFO's, ESP, or a sixth sense?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Have you ever felt that you are communicating with another person telepathically (by mind-reading)?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I sometimes jump quickly from one topic to another when speaking.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Do you tend to wander off the topic when having a conversation?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I often ramble on too much when speaking.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I sometimes forget what I am trying to say.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `I often hear a voice speaking my thoughts aloud.`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `When you look at a person or yourself in a mirror, have you ever seen the face change right before your eyes?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Are your thoughts sometimes so strong that you can almost hear them?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+            {
+                prompt: `Do everyday things seem unusually large or small?`,
+                options: spq_options,
+                required: debug ? false : true,
+            },
+        ],
+        randomize_order: true,
+        on_finish: function(data) {
+            var response = Object.values(data.response);
+            spq_responses = new Array(response.length);
+            for (var i = 0; i < response.length; i++) {
+            spq_responses[i] = spq_options.indexOf(response[i]);
+        }
+        spq_responses = spq_responses.join();
+        }
+    }
+
+    psychsurveys = _.shuffle([phq9, gad7, audit, ocir, spq])
+    surveys = {
+        timeline: psychsurveys
+    }
+
+    measures = {
+        timeline: [begin_measures, surveys]
+    }
+
+    //#endregion
+
+    //#region ENDING
+    var demographics = {
+        type: jsPsychSurveyMultiChoice,
+        preamble: `<b>Thank you so much for completing this study! Now, we will ask you a a series of demographic questions.</b>`,
+        questions: [
+        {prompt: "What's your gender?",
+        name: 'gender',
+        options: ['Female', 'Male', 'Other', 'Prefer not to say'],
+        required: true},
+        {prompt: "What's your age?",
+        name: 'age',
+        options: ['Under 20 years old', '20-29 years old', '30-39 years old', '40-49 years old', '50-59 years old', '60 years old or older', 'Prefer not to say'],
+        required: true},
+        {prompt: "What's the highest degree or level of education you've completed?",
+        name: 'education',
+        options: ['High school/GED', "Bachelor's degree", "Master's Degree", "PhD", "Trade school", "None of the above", "Prefer not to say"],
+        required: true},
+        {prompt: "What's your annual household income?",
+        name: 'income',
+        options: ['Less than $25,000', "$25,000-$50,000", "$50,000-$75,000", "$75,000-$100,000", "More than $100,000", "Prefer not to say"],
+        required: true},
+        ],
+        on_finish: function(data) {
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                gender: data.response.gender,
+                age: data.response.age,
+                education: data.response.education,
+                income: data.response.income,
+                phq91: phq91_responses,
+                phq92: phq92_responses,
+                gad71: gad71_responses,
+                gad72: gad72_responses,
+                audit: audit_responses,
+                ocir: ocir_responses,
+                spq: spq_responses,
+                total_time: Date.now() - start_time
+                }
+                save_data(s1_data, 'demo');
+            }
+       }
+    //timeline.push(demographics)
+
+    //feedback
+    var feedbackQuestion = {
+        type: jsPsychSurveyText,
+        questions: [{prompt: `Do you have any feedback for us about this study? Were there any parts that were confusing, or didn't make sense?`,
+                    required: true, rows: 5, columns:80}],
+        on_finish: function(data) {
+            s1_data = {
+            subject: data.subject,
+            version: data.version,
+            task_name: "feedback",
+            openq_response: data.response.Q0,
+            rt: data.rt
+            }
+            save_data(s1_data, 'introspection');
+        }
+    };
+    //timeline.push(feedbackQuestion)
+
+    //debrief
+    var debrief = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <p><strong>	Thanks for participating! Here's more information about the study.</strong></p>
+            <p><b>What was this study about?</b>
+            In this study, we're looking at how people justify their choices in basic judgment/estimation exercises.</p>
+            <p><b>How was the study conducted?</b>
+            All participants were recruited via Amazon Mechanical Turk. They were asked to participate in five randomly selected exercises. Example exercises involved validity ratings, probability estimations, and judgment calls. For each of these exercises, participants were asked to explain their thought process for the decisions they made, and to identify how much they believed a selected piece of information from the problem affected their decision.</p>
+            <p><b>What was the hypothesis?</b>
+            This research is exploratory; we do not have any specific hypotheses yet.</p>
+            <p><b>Did we tell you everything?</b>
+            The factors that we presented in the form of "on a scale of 1-9, how much do you think (factor) influenced your decision" have been shown through past research to affect the decisions they pertained to. We were curious to see whether subjects would be able to identify this, and to what degree.</p>
+            <p><b>Why is this study important?</b>
+            These insights are important for understanding how people introspect on their decisionmaking processes, and chart a potential path towards better human introspection.</p>
+            <p><b>How to contact the researcher:</b>
+            If you have questions or concerns about your participation or credit, or want to request a summary of research findings, please contact the research manager: Isobel Munday, imunday@g.harvard.edu.</p>
+            <p><b>Whom to contact about your rights as a participant in this research:</b>
+            For questions, concerns, suggestions, or complaints that have not been or cannot be addressed by the researcher, or to report research-related harm, please contact the Committee on the Use of Human Subjects in Research at Harvard University by phone at 617-496-2847 or by email at cuhs@harvard.edu.</p>
+            <p><i>If you are finished reading, please click the button below to end the study.</i></p>
+            `,
+        choices: ["End"]
+    };
+    //timeline.push(debrief)
+
+    var end = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `<strong> Thank you for your participation! The study is now over.</strong><p>
+        <p> Your code is <strong>DALD423FFB</strong>. </p>
+        <p> Please copy the code, then close this window.</p>`,
+        choices: "NO_KEYS",
+    }
+    //timeline.push(end)
+
+    var ending = {
+            timeline: [demographics, feedbackQuestion, debrief, end]
+        };
+
+    //#endregion
+    //timeline.push(ending)
+
+    /*add elements to timeline*/
+
+    timeline.push(preload, double)
+
+    /* initiate experiment */
+    jsPsych.run(timeline);
+
+</script>
+</body>
+</html>

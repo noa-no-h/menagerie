@@ -61,7 +61,7 @@ length(unique(demo$subject)) # 606 Participants
 ## Exclusion 
 
 # subjects that glitched
-glitched <- c("A3EQAA13A1LMNY", 'ABICECSTT3MWF', 'A256QIR5XUIP8K', 'A1LJT9OW9UR4GF')
+glitched <- c("c748075008918ca5fe1b9e1ea6c02c6e", 'b11791870acc14d80c088ee53653b279', 'fb9682cc154b9f33d0f2729e709f032e', 'f8c39ea46c948c4ec6428001b5d3ea50')
 
 # Attention Check 1
 failed.attn1 <- df %>%
@@ -106,42 +106,9 @@ subjects_removed_from_initial_606 <- intersect(initial_subjects, excluded_subjec
 num_subjects_removed_from_initial_606 <- length(subjects_removed_from_initial_606)
 print(num_subjects_removed_from_initial_606) #88 excluded
 
-length(unique(df$subject)) #518 Participants(
-length(unique(df$subject[df$factor == 'experience'])) # 277 experience)
+length(unique(df$subject)) #518 Participants
+length(unique(df$subject[df$factor == 'experience'])) # 277 experience
 length(unique(df$subject[df$factor == 'control'])) # 241 control
-
-# Ensure df is in the state you expect
-# str(df) # To check structure
-# head(df) # To look at a few rows
-
-total_unique_subjects_val <- unique(df$subject)
-L_total <- length(total_unique_subjects_val)
-print(paste("Total unique subjects (L_total):", L_total)) # Should be 518
-
-exp_subjects_val <- unique(df$subject[df$factor == 'experience'])
-L_exp <- length(exp_subjects_val)
-print(paste("Experience unique subjects (L_exp):", L_exp)) # Should be 278
-
-ctrl_subjects_val <- unique(df$subject[df$factor == 'control'])
-L_ctrl <- length(ctrl_subjects_val)
-print(paste("Control unique subjects (L_ctrl):", L_ctrl)) # Should be 242
-
-intersect_subjects_val <- intersect(exp_subjects_val, ctrl_subjects_val)
-L_intersect <- length(intersect_subjects_val)
-V_intersect <- intersect_subjects_val
-print(paste("Intersect length (L_intersect):", L_intersect)) # Should be 1
-print("Intersect value (V_intersect):")
-print(V_intersect) # Should be NA
-
-print(paste("Number of rows with NA in df$factor:", sum(is.na(df$factor))))
-
-# See which subjects (from your 518) have an NA factor for at least one row
-# These are the subjects contributing to the "factor-induced NA" in the group lists
-subjects_with_na_factor <- unique(df$subject[is.na(df$factor)])
-print("Subjects (from your 518) that have NA in df$factor for at least one of their rows:")
-print(subjects_with_na_factor)
-print(paste("Count of such subjects:", length(subjects_with_na_factor)))
-
 
 df$effect.size = NA
 df$effect.size.fac = NA
@@ -717,55 +684,13 @@ all_list_introspection_experience = list(df.anchor.intro.experience,
                                          df.mee.intro.experience)
 
 all_data_introspection_experience = all_list_introspection_experience[[1]] %>% 
+  ungroup() %>% 
   select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect)
 for (i in 2:length(all_list_introspection_experience)) {
   all_data_introspection_experience = all_data_introspection_experience %>% 
     rbind(all_list_introspection_experience[[i]] %>% 
+            ungroup() %>% 
             select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect))
-}
-
-
-# Define the columns you expect to be in each data frame for your final select
-required_cols_for_final_select = c("subject", "task_name", "introspect_rating", "effect_size", "effect_size_range", "showed_effect")
-
-cat("--- Checking Data Frame Structures ---\n")
-
-for (i in 1:length(all_list_introspection_experience)) {
-  # Get the data frame and a name for printing
-  current_df = all_list_introspection_experience[[i]]
-  df_name = if (is.null(names(all_list_introspection_experience))) {
-    paste("Data frame", i) # If the list is unnamed, use index
-  } else {
-    names(all_list_introspection_experience)[i] # If named, use the name
-  }
-  
-  cat(paste0("\nChecking ", df_name, ":\n"))
-  
-  # --- Check for missing required columns ---
-  cols_in_df = colnames(current_df)
-  missing_cols_from_required = setdiff(required_cols_for_final_select, cols_in_df)
-  
-  if (length(missing_cols_from_required) > 0) {
-    cat(paste0("  - MISSING required columns: ", paste(missing_cols_from_required, collapse = ", "), "\n"))
-  } else {
-    cat("  - All required columns are present.\n")
-  }
-  
-  # --- Check type of the 'choice' column (source of bind_rows error) ---
-  if ("choice" %in% cols_in_df) {
-    cat(paste0("  - 'choice' column type: ", class(current_df$choice), "\n"))
-    # Optional: Check for non-standard types if class() returns 'list' or similar
-    if (!is.atomic(current_df$choice) && !inherits(current_df$choice, "factor")) {
-      cat("    WARNING: 'choice' column type is not atomic or factor - might cause issues.\n")
-    }
-    
-  } else {
-    cat("  - 'choice' column is NOT present.\n")
-  }
-  
-  # Optional: Add checks for other columns if needed
-  
-  cat("------------------------------------\n")
 }
 
 ## dichotomous
@@ -865,10 +790,43 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
+# Analyzing demographics (exploratory) ----------------------------------------------------
+df.demo = demo %>%
+  mutate(edu.fac = factor(education, c('None of the above', 'Prefer not to say', 'High school/GED', 'Trade school', "Bachelor's degree",
+                                       "Master's Degree", 'PhD', 'Postgraduate/Professional degree/other')),
+         gender.fac = factor(gender, c('Male', 'Female', 'Other')),
+         age.fac = factor(age, c('20-29 years old', '30-39 years old', '40-49 years old', '50-59 years old', '60 years old or older', 'Prefer not to say')))
+
+for (i in 1:nrow(df.demo)) {
+  if (df.demo$subject[i] %in% all_bysubject_introspection_experience$subject) {
+    df.demo$subject_cor[i] = all_bysubject_introspection_experience$subject_cor[all_bysubject_introspection_experience$subject == df.demo$subject[i]]
+  }
+}
+
+df.demo.edu = df.demo %>%
+  group_by(edu.fac) %>% 
+  summarize(subject_cor.m = mean(subject_cor,na.rm=T),
+            subject_cor.se = se(subject_cor))
+ggplot(df.demo.edu, aes(x = edu.fac, y = subject_cor.m)) +
+  geom_col(color = 'black') +
+  geom_errorbar(aes(ymin = subject_cor.m - subject_cor.se,
+                    ymax = subject_cor.m + subject_cor.se),
+                width = 0.2) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+df.demo.gender = df.demo %>%
+  group_by(gender.fac) %>% 
+  summarize(subject_cor.m = mean(subject_cor,na.rm=T),
+            subject_cor.se = se(subject_cor))
+df.demo.age = df.demo %>%
+  group_by(age.fac) %>% 
+  summarize(subject_cor.m = mean(subject_cor,na.rm=T),
+            subject_cor.se = se(subject_cor))
+
 # Save image --------------------------------------------------------------
+# save all analyses
+save.image("pilot1_output.rdata")
+
 # for use in pilot 4 analysis
 all_data_introspection_experience_pilot1 = all_data_introspection_experience
 save(all_data_introspection_experience_pilot1, file = 'pilot1_alltasks.rdata')
-
-# save all analyses
-save.image("pilot1_output1.rdata")

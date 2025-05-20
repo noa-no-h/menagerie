@@ -41,6 +41,47 @@ dodge <- position_dodge(width=0.9)
 
 default_priors <- set_prior("normal(0,1)", class = 'b')
 
+theme_black = function(base_size = 12, base_family = "") {
+  theme_grey(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # Specify axis options
+      axis.line = element_blank(),  
+      axis.text.x = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.text.y = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.ticks = element_line(color = "white", size  =  0.2),  
+      axis.title.x = element_text(size = 18, color = "white", margin = margin(0, 10, 0, 0)),  
+      axis.title.y = element_text(size = 18, color = "white", angle = 90, margin = margin(0, 10, 0, 0)),  
+      axis.ticks.length = unit(0.3, "lines"),   
+      # Specify legend options
+      legend.background = element_rect(color = NA, fill = "black"),  
+      legend.key = element_rect(color = "white",  fill = "black"),  
+      legend.key.size = unit(1.2, "lines"),  
+      legend.key.height = NULL,  
+      legend.key.width = NULL,      
+      legend.text = element_text(size = base_size*0.8, color = "white"),  
+      legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
+      legend.position = "right",  
+      legend.text.align = NULL,  
+      legend.title.align = NULL,  
+      legend.direction = "vertical",  
+      legend.box = NULL, 
+      # Specify panel options
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank(),
+      panel.border = element_rect(fill = NA, color = "white"),  
+      # Specify facetting options
+      strip.background = element_rect(fill = "grey30", color = "grey10"),  
+      strip.text.x = element_text(size = base_size*0.8, color = "white"),  
+      strip.text.y = element_text(size = base_size*0.8, color = "white",angle = -90),  
+      # Specify plot options
+      plot.background = element_rect(color = "black", fill = "black"),  
+      plot.title = element_text(size = base_size*1.2, color = "white"),  
+      plot.margin = unit(rep(1, 4), "lines")
+    )
+}
+
+
 # Load data ---------------------------------------------------------------
 
 data <- read.csv('pilot2_data.csv') %>%
@@ -98,14 +139,8 @@ ggplot(demographics, aes(x = total_time)) +
 
 print(median(demographics$total_time))
 
-nofactor = df %>% 
-  filter(subject %in% demographics$subject,
-         is.na(factor)) %>% 
-  pull(subject)
-length(nofactor) #0
-
-all_potential_exclusions <- c(attention_exclude, tab_away_exclude)
-to_exclude <- unique(all_potential_exclusions)
+all_exclusions <- c(attention_exclude, tab_away_exclude)
+to_exclude <- unique(all_exclusions)
 
 number_subjects <- n_distinct(data$subject)
 number_to_exclude <- length(to_exclude)
@@ -113,34 +148,16 @@ print(number_subjects) #324
 print(number_to_exclude) #115
 #324-115 = 209
 
-subjects_after_main_exclusion <- data %>%
-  filter(!subject %in% to_exclude) %>%
-  pull(subject) %>%
-  unique()
-
-final_subjects <- data %>%
-  filter(!subject %in% to_exclude,
-         !is.na(factor),
-         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
-         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control")) %>%
-  pull(subject) %>%
-  unique()
-
-subjects_removed_by_subsequent_filters <- setdiff(subjects_after_main_exclusion, final_subjects)
-# 1 subject removed by subsequent filters
-
 data <- data %>%
   filter(!subject %in% to_exclude,
          !is.na(factor),
-         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
-         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control"))
+         !(subject == "2a47a77c48b523a9f73cf427d03a21f5" & factor == "control"),
+         !(subject == "b4ab5adb6171094fa050298cc896203d" & factor == "control"))
 
-length(unique(data$subject)) #206 Participants(
-length(unique(data$subject[data$factor == 'experience'])) # 100 experience)
+length(unique(data$subject)) #208 Participants
+length(unique(data$subject[data$factor == 'experience'])) # 102 experience
 length(unique(data$subject[data$factor == 'control'])) # 106 control
 
-
-#font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
 
 # Halo effect ----
@@ -840,10 +857,12 @@ all_list_introspection_experience = list(halo_data_introspection_experience,
                                          representativeness_data_introspection_experience)
 
 all_data_introspection_experience = all_list_introspection_experience[[1]] %>% 
+  ungroup() %>% 
   select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect)
 for (i in 2:length(all_list_introspection_experience)) {
   all_data_introspection_experience = all_data_introspection_experience %>% 
     rbind(all_list_introspection_experience[[i]] %>% 
+            ungroup() %>% 
             select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect))
 }
 
@@ -944,63 +963,6 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
-theme_update(strip.background = element_blank(),
-             panel.grid.major = element_blank(),
-             panel.grid.minor = element_blank(),
-             panel.background = element_blank(),
-             plot.background = element_blank(),
-             axis.text=element_text(size=18, colour = "black"),
-             axis.title=element_text(size=24, face = "bold"),
-             axis.title.x = element_text(vjust = 0),
-             legend.title = element_text(size = 24, face = "bold"),
-             legend.text = element_text(size = 18),
-             plot.title = element_text(size = 26, face = "bold", vjust = 1),
-             panel.margin = unit(1.0, "lines"), 
-             plot.margin = unit(c(0.5,  0.5, 0.5, 0.5), "lines"),
-             axis.line = element_line(colour = "black", size = 2),
-             axis.ticks = element_line(color = 'black', size = 3),
-             axis.ticks.length = unit(.25, 'cm')
-)
-theme_black = function(base_size = 12, base_family = "") {
-  theme_grey(base_size = base_size, base_family = base_family) %+replace%
-    theme(
-      # Specify axis options
-      axis.line = element_blank(),  
-      axis.text.x = element_text(size = 12, color = "white", lineheight = 0.9),  
-      axis.text.y = element_text(size = 12, color = "white", lineheight = 0.9),  
-      axis.ticks = element_line(color = "white", size  =  0.2),  
-      axis.title.x = element_text(size = 18, color = "white", margin = margin(0, 10, 0, 0)),  
-      axis.title.y = element_text(size = 18, color = "white", angle = 90, margin = margin(0, 10, 0, 0)),  
-      axis.ticks.length = unit(0.3, "lines"),   
-      # Specify legend options
-      legend.background = element_rect(color = NA, fill = "black"),  
-      legend.key = element_rect(color = "white",  fill = "black"),  
-      legend.key.size = unit(1.2, "lines"),  
-      legend.key.height = NULL,  
-      legend.key.width = NULL,      
-      legend.text = element_text(size = base_size*0.8, color = "white"),  
-      legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
-      legend.position = "right",  
-      legend.text.align = NULL,  
-      legend.title.align = NULL,  
-      legend.direction = "vertical",  
-      legend.box = NULL, 
-      # Specify panel options
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      panel.background = element_blank(),
-      panel.border = element_rect(fill = NA, color = "white"),  
-      # Specify facetting options
-      strip.background = element_rect(fill = "grey30", color = "grey10"),  
-      strip.text.x = element_text(size = base_size*0.8, color = "white"),  
-      strip.text.y = element_text(size = base_size*0.8, color = "white",angle = -90),  
-      # Specify plot options
-      plot.background = element_rect(color = "black", fill = "black"),  
-      plot.title = element_text(size = base_size*1.2, color = "white"),  
-      plot.margin = unit(rep(1, 4), "lines")
-    )
-}
-
 ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_histogram(color = 'white') +
   theme_black() +
@@ -1012,6 +974,35 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 get.ci = function(x) {return(c(mean(x,na.rm = T) - 1.96*se(x), mean(x, na.rm = T), mean(x, na.rm = T) + 1.96*se(x)))}
 get.ci(all_bysubject_introspection_experience$subject_cor)
+
+
+# Analyze demographics (exploratory) --------------------------------------
+df.demo = demographics %>%
+  mutate(edu.fac = factor(education, levels=c('Some high school', 'High school', 'Some college', '2 year degree', '4 year degree', 'Postgraduate/Professional degree/other')),
+         gender.fac = factor(gender, c('Man', 'Woman', 'Other'), c('Man', 'Woman', 'Some other way')))
+
+df.demo$subject_cor = NA
+for (i in 1:nrow(df.demo)) {
+  if (df.demo$subject[i] %in% all_bysubject_introspection_experience$subject) {
+    df.demo$subject_cor[i] = all_bysubject_introspection_experience$subject_cor[all_bysubject_introspection_experience$subject == df.demo$subject[i]]
+  }
+}
+
+df.demo.edu = df.demo %>%
+  group_by(edu.fac) %>% 
+  summarize(subject_cor.m = mean(subject_cor,na.rm=T),
+            subject_cor.se = se(subject_cor))
+ggplot(df.demo.edu, aes(x = edu.fac, y = subject_cor.m)) +
+  geom_col(color = 'black') +
+  geom_errorbar(aes(ymin = subject_cor.m - subject_cor.se,
+                    ymax = subject_cor.m + subject_cor.se),
+                width = 0.2) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+df.demo.gender = df.demo %>%
+  group_by(gender.fac) %>% 
+  summarize(subject_cor.m = mean(subject_cor,na.rm=T),
+            subject_cor.se = se(subject_cor))
 
 # Save image --------------------------------------------------------------
 # for use in combined analysis

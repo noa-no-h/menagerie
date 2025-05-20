@@ -44,8 +44,6 @@ default_priors <- set_prior("normal(0,1)", class = 'b')
 # Load data ---------------------------------------------------------------
 
 data <- read.csv('pilot3_data.csv') %>%
-  filter(subject != "",
-         version %in% c("v5_pilot2", "v5_pilot1")) %>%
   arrange(subject, task_name) %>%
   mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
 
@@ -95,31 +93,30 @@ number_to_exclude <- length(to_exclude)
 print(number_subjects)
 print(number_to_exclude)
 
-subjectsPilot3a <- data %>%
-  filter(task_name == "affect heuristic")
-length(unique(subjectsPilot3a$subject)) # 104
+# Get sample size pre-exclusion
+length(unique(data$subject[data$version == 'pilot3a']))
+length(unique(data$subject[data$version == 'pilot3b']))
 
 data <- data %>%
   filter(!subject %in% to_exclude,
-         !is.na(factor), 
-         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
-         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control"))
-
+         !is.na(factor))
 
 number_subjects <- n_distinct(data$subject)
 number_to_exclude <- length(to_exclude)
 print(number_subjects)
 print(number_to_exclude)
 
-length(unique(data$subject)) #312 Participants(
-length(unique(data$subject[data$factor == 'experience'])) # 166 experience)
-length(unique(data$subject[data$factor == 'control'])) # 146 control
+length(unique(data$subject[data$version == 'pilot3a']))
+length(unique(data$subject[data$version == 'pilot3a' & data$factor == 'experience']))
+length(unique(data$subject[data$version == 'pilot3a' & data$factor == 'control']))
+
+length(unique(data$subject[data$version == 'pilot3b']))
 
 # Affect heuristic ----
 
 affect_data = data %>%
   filter(task_name == "affect heuristic")%>%
-  mutate(choice = as.numeric(choice)) 
+  mutate(choice = as.numeric(choice))
 
 summary_affect_data <- affect_data %>%
   group_by(condition) %>%
@@ -139,7 +136,8 @@ ggplot(summary_affect_data, aes(x = condition, y = mean_choice, fill = condition
             family = "Optima") +
   theme_custom()+
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 affect_analysis = brm(choice ~ factor,
                       data = affect_data %>% mutate(choice = scale(choice)),
@@ -330,7 +328,9 @@ status_quo_data = data %>%
   mutate(choice = ifelse(auxiliary_info1 == "Allocate 50% to auto safety and 50% to highway safety status quo: 50/50", 
                          "status quo", 
                          choice))%>%
-  mutate(choice_binary = as.numeric(choice == "status quo"))%>%
+  mutate(choice_binary = as.numeric(choice == "status quo"))
+
+status_quo_graph_data = status_quo_data %>%
   group_by(factor) %>%
   summarize(
     n = n(),
@@ -343,7 +343,7 @@ status_quo_data = data %>%
     percentageUpper = upper * 100
   )
 
-ggplot(status_quo_data, aes(x = factor, y = percentage, fill = factor)) +
+ggplot(status_quo_graph_data, aes(x = factor, y = percentage, fill = factor)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
                 position = position_dodge(width = 0.7),
@@ -378,7 +378,9 @@ hdi(status_quo_analysis)
 
 sunk_cost_data = data %>%
   filter(task_name == "sunk_cost2 effect") %>% 
-  mutate(switched = choice == "Don't Continue Investing") %>%
+  mutate(switched = choice == "Don't Continue Investing")
+
+sunk_cost_graph_data = sunk_cost_data %>%
   group_by(factor) %>%
   summarize(
     n = n(),
@@ -391,7 +393,7 @@ sunk_cost_data = data %>%
     percentageUpper = upper * 100
   )
 
-ggplot(sunk_cost_data, aes(x = factor, y = percentage, fill = factor)) +
+ggplot(sunk_cost_graph_data, aes(x = factor, y = percentage, fill = factor)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
                 position = position_dodge(width = 0.7),
