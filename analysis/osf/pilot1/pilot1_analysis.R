@@ -11,7 +11,8 @@ p_load(char = pkg.names)
 
 setwd(here())
 
-set.seed(123)
+RANDOM_SEED = 123
+set.seed(RANDOM_SEED)
 
 se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
 se.prop = function(x) {return(sqrt(mean(x, na.rm = T) * (1-mean(x, na.rm = T)) / sum(!is.na(x))))}
@@ -150,22 +151,23 @@ ggplot(summary.anchor, aes(x = condition, y = distance.from.anchor.m, fill = con
   geom_errorbar(aes(ymin = distance.from.anchor.m - distance.from.anchor.se,
                     ymax = distance.from.anchor.m + distance.from.anchor.se),
                 width = .2) +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
+  # geom_text(aes(label = paste0("n=", count)), 
+  #           position = position_dodge(0.9), vjust = -0.5, 
+  #           family = "Optima") +
   theme(axis.text = element_text(size=20), axis.title = element_text(size=20)) +
-  labs(title = "Anchor Effect",x = "Condition", y = "distance from anchor") +
+  labs(title = "", x = "Group", y = "Distance from anchor") +
    theme_custom()+
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = FALSE) + 
+  scale_x_discrete(labels = c("Experimental\n(Anchor)", "Control\n(No Anchor)"))
 
 analysis.anchor = brm(distance.from.anchor ~ condition,
-                       data = df.anchor.choices %>%
-                         mutate(distance.from.anchor = scale(distance.from.anchor),
+                      data = df.anchor.choices %>%
+                        mutate(distance.from.anchor = scale(distance.from.anchor),
                                condition = relevel(condition, ref = "No Anchor")),
-                       prior = default_priors,
-                       save_pars = save_pars(group = F))
+                      prior = default_priors,
+                      save_pars = save_pars(group = F),
+                      seed = RANDOM_SEED)
 summarise_draws(analysis.anchor)
 check_divergences(analysis.anchor$fit)
 summary(analysis.anchor)
@@ -207,9 +209,11 @@ ggplot(summary.anchor.intro.experience,
   guides(fill=F)
 
 analysis.anchor.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
-                                                    df.anchor.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                    df.anchor.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                          showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                     prior = default_priors,
-                                                    save_pars = save_pars(group = F))
+                                                    save_pars = save_pars(group = F),
+                                                    seed = RANDOM_SEED)
 summarise_draws(analysis.anchor.intro.experience.dichotomized)
 check_divergences(analysis.anchor.intro.experience.dichotomized$fit)
 summary(analysis.anchor.intro.experience.dichotomized)
@@ -226,7 +230,8 @@ analysis.anchor.intro.experience.continuous = brm(introspect_rating ~ effect_siz
                                                   df.anchor.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                         effect_size = scale(effect_size)),
                                                   prior = default_priors,
-                                                  save_pars = save_pars(group = F))
+                                                  save_pars = save_pars(group = F),
+                                                  seed = RANDOM_SEED)
 summarise_draws(analysis.anchor.intro.experience.continuous)
 check_divergences(analysis.anchor.intro.experience.continuous$fit)
 summary(analysis.anchor.intro.experience.continuous)
@@ -266,20 +271,20 @@ ggplot(df.avail.summarized, aes(x = condition, y = percentage, fill = condition)
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
+  scale_x_discrete(labels = c("Experimental\n(Famous Names)", "Control\n(Not Famous Names")) +
   labs(
-    title = "Availability Heuristic",
     y = "Percentage who Chose 'List 1'",
-    x = "Condition"
+    x = "Group"
   ) +
   theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
   theme_custom() 
 
 analysis.avail = brm(choice.binary ~ condition,
-                     data = df.avail,
+                     data = df.avail %>% mutate(condition = factor(condition, c("Unfamous", "Famous"))),
                      family = 'bernoulli',
                      prior = default_priors,
-                     save_pars = save_pars(group = F))
+                     save_pars = save_pars(group = F),
+                     seed = RANDOM_SEED)
 summarise_draws(analysis.avail)
 check_divergences(analysis.avail$fit)
 summary(analysis.avail)
@@ -311,15 +316,15 @@ ggplot(summary.avail.intro.experience, aes(x = showed_effect, y = mean_introspec
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 analysis.avail.intro.experience = brm(introspect_rating ~ showed_effect,
-                                     df.avail.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                     df.avail.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                          showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                      prior = default_priors,
-                                     save_pars = save_pars(group = F))
+                                     save_pars = save_pars(group = F),
+                                     seed = RANDOM_SEED)
 summarise_draws(analysis.avail.intro.experience)
 check_divergences(analysis.avail.intro.experience$fit)
 summary(analysis.avail.intro.experience)
 hdi(analysis.avail.intro.experience)
-
-
 
 # Abnormal selection in causal inference -------------------------------------------------------------
 ## do people show the effect? ----
@@ -332,21 +337,23 @@ summary.cause = df.cause %>%
             choice.se = se(choice),
             count = n())
 
-ggplot(summary.cause, aes(x = condition, y = choice.m, fill = condition)) +
+ggplot(summary.cause %>% mutate(condition = factor(condition, c('One', 'Nine'))), aes(x = condition, y = choice.m, fill = condition)) +
   geom_col() + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
-  labs(title = "Abnormal Selection in Causal Inference", x = "Condition", y = "average causality rating") +
+  labs(title = "", x = "Group", y = "Average causality rating") +
   theme_custom() +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
+  # geom_text(aes(label = paste0("n=", count)), 
+  #           position = position_dodge(0.9), vjust = -0.5, 
+  #           family = "Optima") +
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)
+  guides(fill = FALSE) +
+  scale_x_discrete(labels = c('Experimental\n(Rare Event)', 'Control\n(Common Event)'))
 
 analysis.cause = brm(choice ~ condition,
                      df.cause,
                      prior = default_priors,
-                     save_pars = save_pars(group = F))
+                     save_pars = save_pars(group = F),
+                     seed = RANDOM_SEED)
 summarise_draws(analysis.cause)
 check_divergences(analysis.cause$fit)
 summary(analysis.cause)
@@ -381,9 +388,11 @@ ggplot(summary.cause.intro.experience, aes(x = showed_effect, y = mean_introspec
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 analysis.cause.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
-                                      df.cause.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                      df.cause.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                           showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                       prior = default_priors,
-                                      save_pars = save_pars(group = F))
+                                      save_pars = save_pars(group = F),
+                                      seed = RANDOM_SEED)
 summarise_draws(analysis.cause.intro.experience.dichotomized)
 check_divergences(analysis.cause.intro.experience.dichotomized$fit)
 summary(analysis.cause.intro.experience.dichotomized)
@@ -400,7 +409,8 @@ analysis.cause.intro.experience.continuous = brm(introspect_rating ~ effect_size
                                                  df.cause.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                       effect_size = scale(effect_size)),
                                                  prior = default_priors,
-                                                 save_pars = save_pars(group = F))
+                                                 save_pars = save_pars(group = F),
+                                                 seed = RANDOM_SEED)
 summary(analysis.cause.intro.experience.continuous)
 hdi(analysis.cause.intro.experience.continuous)
 
@@ -421,19 +431,20 @@ ggplot(summary.decoy, aes(x = factor, y = choice.target.m, fill=factor)) +
   geom_errorbar(aes(ymin = choice.target.m - choice.target.se,
                     ymax = choice.target.m + choice.target.se),
                 width = 0.2) +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  
+  # geom_text(aes(label = paste0("n=", count)), 
+  #           position = position_dodge(0.9), vjust = -0.5, 
+  #           family = "Optima") +
   theme_custom()+ 
-  labs(title = "Decoy Effect", x = "Condition", y = "Proportion Chose Brand N (Target)")+
+  labs(title = "", x = "Group", y = "Proportion Chose Brand N (Target)")+
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = c('Experimental\n(Decoy Present)', 'Control\n(Decoy Absent)'))
 
 analysis.decoy = brm(choice.target ~ condition,
                      df.decoy,
                      prior = default_priors,
-                     family = 'bernoulli')
+                     family = 'bernoulli',
+                     seed = RANDOM_SEED)
 summarise_draws(analysis.decoy)
 check_divergences(analysis.decoy$fit)
 summary(analysis.decoy)
@@ -467,9 +478,11 @@ ggplot(summary.decoy.intro.experience, aes(x = showed_effect, y = mean_introspec
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
 analysis.decoy.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
-                                                   df.decoy.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                   df.decoy.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                        showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                    prior = default_priors,
-                                                   save_pars = save_pars(group = F))
+                                                   save_pars = save_pars(group = F),
+                                                   seed = RANDOM_SEED)
 summarise_draws(analysis.decoy.intro.experience.dichotomized)
 check_divergences(analysis.decoy.intro.experience.dichotomized$fit)
 summary(analysis.decoy.intro.experience.dichotomized)
@@ -484,6 +497,8 @@ df.belief.choices = df.belief %>%
   filter(factor == "experience", !is.na(choice), !is.na(condition))
   
 summary.belief <- df.belief.choices %>%
+  group_by(condition, subject) %>% 
+  summarize(choice.yes = mean(choice.yes)) %>% 
   group_by(condition) %>% 
   summarize(choice.yes.m = mean(choice.yes),
             choice.yes.se = se.prop(choice.yes),
@@ -494,18 +509,17 @@ ggplot(summary.belief, aes(x = condition, y = choice.yes.m, fill = condition)) +
   geom_errorbar(aes(ymin = choice.yes.m - choice.yes.se,
                     ymax = choice.yes.m + choice.yes.se),
                 width = 0.2) +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
   theme_custom() +
-  labs(title = "Belief Effect",x = "Condition", y = "Proportion Chose Yes, Valid")+
+  labs(title = "",x = "Within-subject condition", y = "Percentage choosing valid")+
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)
+  guides(fill = FALSE) +
+  scale_x_discrete(labels = c('Believable', 'Not believable'))
 
 analysis.belief = brm(choice.yes ~ condition,
-                      df.belief.choices,
+                      df.belief.choices %>% mutate(condition = factor(condition, c('Unbelievable', 'Believable'))),
                       prior = default_priors,
-                      family = 'bernoulli')
+                      family = 'bernoulli',
+                      seed = RANDOM_SEED)
 summarise_draws(analysis.belief)
 check_divergences(analysis.belief$fit)
 summary(analysis.belief)
@@ -549,9 +563,11 @@ ggplot(summary.belief.intro.experience,
   guides(fill = F)
 
 analysis.belief.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
-                                                 df.belief.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                 df.belief.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                       showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                  prior = default_priors,
-                                                 save_pars = save_pars(group = F))
+                                                 save_pars = save_pars(group = F),
+                                                 seed = RANDOM_SEED)
 summarise_draws(analysis.belief.intro.experience.dichotomized)
 check_divergences(analysis.belief.intro.experience.dichotomized$fit)
 summary(analysis.belief.intro.experience.dichotomized)
@@ -568,7 +584,8 @@ analysis.belief.intro.experience.continuous = brm(introspect_rating ~ effect_siz
                                                   df.belief.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                         effect_size = scale(effect_size)),
                                                   prior = default_priors,
-                                                  save_pars = save_pars(group = F))
+                                                  save_pars = save_pars(group = F),
+                                                  seed = RANDOM_SEED)
 summarise_draws(analysis.belief.intro.experience.continuous)
 check_divergences(analysis.belief.intro.experience.continuous$fit)
 summary(analysis.belief.intro.experience.continuous)
@@ -585,28 +602,29 @@ df.mee.choices <- df.mee %>%
   mutate(condition = factor(condition, c(1,25), c('low', 'high')))
 
 summary.mee = df.mee.choices %>%
+  group_by(condition, subject) %>% 
+  summarize(choice = mean(choice)) %>% 
   group_by(condition) %>%
   summarize(choice.m = mean(choice),
             choice.se = se(choice),
             count = n())
 
-ggplot(summary.mee, aes(x = condition, y = choice.m, fill = condition)) +
+ggplot(summary.mee %>% mutate(condition = factor(condition, c('high', 'low'))), aes(x = condition, y = choice.m, fill = condition)) +
   geom_col() + 
   geom_errorbar(aes(ymin = choice.m - choice.se, ymax = choice.m + choice.se), width = .2) +
   theme_custom() +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  labs(title = "Mere Exposure Effect",x = "Number of repeats", y = "Mean Liking Rating")+
+  labs(title = "",x = "Within-subject condition", y = "Mean Liking Rating")+
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)
+  guides(fill = FALSE) +
+  scale_x_discrete(labels = c('High\nexposure', 'Low\nexposure'))
 
 analysis.mee = brm(choice ~ condition + (condition | subject),
                    df.mee.choices %>% mutate(choice = scale(choice)),
                    prior = default_priors,
                    save_pars = save_pars(group = F),
                    cores = 4,
-                   control = list(adapt_delta = 0.95))
+                   control = list(adapt_delta = 0.95),
+                   seed = RANDOM_SEED)
 summarise_draws(analysis.mee)
 check_divergences(analysis.mee$fit)
 summary(analysis.mee)
@@ -649,9 +667,11 @@ ggplot(summary.mee.intro.experience,
   guides(fill = F)
 
 analysis.mee.intro.experience.dichotomized = brm(introspect_rating ~ showed_effect,
-                                                 df.mee.intro.experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                 df.mee.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                    showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                  prior = default_priors,
-                                                 save_pars = save_pars(group = F))
+                                                 save_pars = save_pars(group = F),
+                                                 seed = RANDOM_SEED)
 summarise_draws(analysis.mee.intro.experience.dichotomized)
 check_divergences(analysis.mee.intro.experience.dichotomized$fit)
 summary(analysis.mee.intro.experience.dichotomized)
@@ -668,7 +688,8 @@ analysis.mee.intro.experience.continuous = brm(introspect_rating ~ effect_size,
                                                df.mee.intro.experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                   effect_size = scale(effect_size)),
                                                prior = default_priors,
-                                               save_pars = save_pars(group = F))
+                                               save_pars = save_pars(group = F),
+                                               seed = RANDOM_SEED)
 summarise_draws(analysis.mee.intro.experience.continuous)
 check_divergences(analysis.mee.intro.experience.continuous$fit)
 summary(analysis.mee.intro.experience.continuous)
@@ -716,7 +737,8 @@ all_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ show
                                                         prior = default_priors,
                                                         save_pars = save_pars(group = F),
                                                         cores = 4,
-                                                        control = list(adapt_delta = 0.95))
+                                                        control = list(adapt_delta = 0.95),
+                                                        seed = RANDOM_SEED)
 summarise_draws(all_analysis_introspection_experience_dichotomous)
 check_divergences(all_analysis_introspection_experience_dichotomous$fit)
 summary(all_analysis_introspection_experience_dichotomous)
@@ -731,14 +753,15 @@ ggplot(all_data_introspection_experience,
   labs(x = 'Influence magnitude', y = 'Influence rating')
 
 all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size_range + (1 | subject) + (effect_size_range | task_name),
-                                                             all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
-                                                                                                          effect_size_range = scale(effect_size_range)),
-                                                             prior = default_priors,
-                                                             save_pars = save_pars(group = F),
-                                                             cores = 4,
-                                                             control = list(adapt_delta = 0.95))
+                                                       all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                    effect_size_range = scale(effect_size_range)),
+                                                       prior = default_priors,
+                                                       save_pars = save_pars(group = F),
+                                                       cores = 4,
+                                                       control = list(adapt_delta = 0.95),
+                                                       seed = RANDOM_SEED)
 summarise_draws(all_analysis_introspection_experience_continuous)
-check_divergences(all_analysis_introspection_experience_dichotomous$fit)
+check_divergences(all_analysis_introspection_experience_continuous$fit)
 summary(all_analysis_introspection_experience_continuous)
 hdi(all_analysis_introspection_experience_continuous)
 
@@ -761,7 +784,8 @@ all_analysis_introspection_experience_continuous_within = brm(introspect_rating_
                                                              prior = default_priors,
                                                              save_pars = save_pars(group = F),
                                                              cores = 4,
-                                                             control = list(adapt_delta = 0.95))
+                                                             control = list(adapt_delta = 0.95),
+                                                             seed = RANDOM_SEED)
 summarise_draws(all_analysis_introspection_experience_continuous_within)
 check_divergences(all_analysis_introspection_experience_continuous_within$fit)
 summary(all_analysis_introspection_experience_continuous_within)
