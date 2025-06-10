@@ -19,6 +19,7 @@
         <script src="https://unpkg.com/surveyjs-widgets@1.8.75/surveyjs-widgets.min.js"></script>
         <script src="https://unpkg.com/@jspsych-contrib/plugin-survey-slider@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="utilities.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
@@ -47,6 +48,15 @@
         }
         var id = subject_id_url;
         console.log("debug: " + debug);
+
+        //captcha
+        var recaptcha = {
+        type: 'external-html',
+        url: "recaptcha.html",
+        cont_btn: "proceed_button",
+        force_refresh: true,
+        execute_script: true
+    };
 
         /* create timeline */
         var jsPsych = initJsPsych({
@@ -597,6 +607,9 @@ var next_task = {
         // Insert attnCheck3 at the 14th position (adjusting for the earlier insertion)
         //task_list_shuffled.splice(26, 0, attnCheck3);
         task_list_shuffled.splice(12,0,attnCheck3);
+
+        //insert captcha at the 16th position
+        task_list_shuffled.splice(14, 0, recaptcha);
 
         var tasks = {
             timeline: task_list_shuffled
