@@ -10,7 +10,8 @@ p_load(char = pkg.names)
 
 setwd(here())
 
-set.seed(123)
+RANDOM_SEED = 123
+set.seed(RANDOM_SEED)
 
 # color palettes
 
@@ -44,8 +45,6 @@ default_priors <- set_prior("normal(0,1)", class = 'b')
 # Load data ---------------------------------------------------------------
 
 data <- read.csv('pilot3_data.csv') %>%
-  filter(subject != "",
-         version %in% c("v5_pilot2", "v5_pilot1")) %>%
   arrange(subject, task_name) %>%
   mutate(factor = factor(factor, c("Factor-Included", "Factor-Excluded"), c("experience", "control")))
 
@@ -95,31 +94,30 @@ number_to_exclude <- length(to_exclude)
 print(number_subjects)
 print(number_to_exclude)
 
-subjectsPilot3a <- data %>%
-  filter(task_name == "affect heuristic")
-length(unique(subjectsPilot3a$subject)) # 104
+# Get sample size pre-exclusion
+length(unique(data$subject[data$version == 'pilot3a']))
+length(unique(data$subject[data$version == 'pilot3b']))
 
 data <- data %>%
   filter(!subject %in% to_exclude,
-         !is.na(factor), 
-         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
-         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control"))
-
+         !is.na(factor))
 
 number_subjects <- n_distinct(data$subject)
 number_to_exclude <- length(to_exclude)
 print(number_subjects)
 print(number_to_exclude)
 
-length(unique(data$subject)) #312 Participants(
-length(unique(data$subject[data$factor == 'experience'])) # 166 experience)
-length(unique(data$subject[data$factor == 'control'])) # 146 control
+length(unique(data$subject[data$version == 'pilot3a']))
+length(unique(data$subject[data$version == 'pilot3a' & data$factor == 'experience']))
+length(unique(data$subject[data$version == 'pilot3a' & data$factor == 'control']))
+
+length(unique(data$subject[data$version == 'pilot3b']))
 
 # Affect heuristic ----
 
 affect_data = data %>%
   filter(task_name == "affect heuristic")%>%
-  mutate(choice = as.numeric(choice)) 
+  mutate(choice = as.numeric(choice))
 
 summary_affect_data <- affect_data %>%
   group_by(condition) %>%
@@ -133,18 +131,18 @@ summary_affect_data <- affect_data %>%
 ggplot(summary_affect_data, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Affect Heuristic", x = "Condition", y = "How beneficial is natural gas") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
+  labs(title = "", x = "Group", y = "Benefit ratings") +
   theme_custom()+
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = c("Experimental\n(Passage)", "Control\n(No passage)"))
 
-affect_analysis = brm(choice ~ factor,
-                      data = affect_data %>% mutate(choice = scale(choice)),
+affect_analysis = brm(choice ~ condition,
+                      data = affect_data %>% mutate(choice = scale(choice),
+                                                    condition = factor(condition, levels = c("without passage", "With passage"))),
                       save_pars = save_pars(group = F),
-                      prior = default_priors)
+                      prior = default_priors,
+                      seed=RANDOM_SEED)
 summarise_draws(affect_analysis)
 check_divergences(affect_analysis$fit)
 summary(affect_analysis)
@@ -184,7 +182,8 @@ if (run_power_analysis) {
       power_analysis = brm(choice ~ factor,
                            data = new_data %>% mutate(choice = scale(choice)),
                            save_pars = save_pars(group = F),
-                           prior = default_priors)
+                           prior = default_priors,
+                           seed=RANDOM_SEED)
   
       power_analysis_hdi = bayestestR::hdi(power_analysis)
       coef_estimate = summary(power_analysis)$fixed$Estimate[2]
@@ -223,13 +222,11 @@ summary_hindsight_data <- hindsight_data %>%
 ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Hindsight Bias", x = "Condition", y = "Percent Likelihood of British Victory") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
+  labs(title = "", x = "Group", y = "% chance of British Victory") +
   theme_custom()+
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)+   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  guides(fill = FALSE)+
+  scale_x_discrete(labels = c('Experimental\n(Knows outcome)', "Control\n(Does not know)"))
 
 
 ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condition)) +
@@ -247,18 +244,14 @@ ggplot(summary_hindsight_data, aes(x = condition, y = mean_choice, fill = condit
   guides(fill = FALSE) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
 
-t_test_result <- t.test(choice ~ condition, data = hindsight_data, var.equal = TRUE)
-print(t_test_result$p.value)
-# p = 0.0108
-
-hindsight_analysis = brm(choice ~ factor,
-                         data = hindsight_data %>% mutate(choice = scale(choice)),
+hindsight_analysis = brm(choice ~ condition,
+                         data = hindsight_data %>% mutate(choice = scale(choice),
+                                                          condition = factor(condition, levels = c("no knowledge of outcome", "knowledge of outcome"))),
                          save_pars = save_pars(group = F),
-                         prior = default_priors)
+                         prior = default_priors,
+                         seed=RANDOM_SEED)
 summary(hindsight_analysis)
 hdi(hindsight_analysis)
-
-
 
 # Order effect ----
 
@@ -286,33 +279,23 @@ ggplot(primacy_graph_data, aes(x = choice, y = percent, fill = choice)) +
     color = "black",
     linewidth = 0.5 
   ) +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  scale_x_discrete(labels = c("car1" = "positive attributes first", "car2" = "negative attributes first"))+
+  scale_x_discrete(labels = c("car1" = "Positive\nfirst", "car2" = "Negative\nfirst"))+
   scale_y_continuous(labels = scales::percent_format(scale = 1)) + 
   labs(
-    title = "Percentage of Choices for Each Car",
-    x = "Car Choice",
+    x = "Within-subject condition",
     y = "Percentage chosen",
     fill = "Car"
   ) +
   theme_custom() +
   guides(fill = FALSE) +
-  scale_fill_manual(values = exp_control) +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 16),
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12),
-    axis.title.x = element_text(size = 14),
-    axis.title.y = element_text(size = 14)
-  )
+  scale_fill_manual(values = exp_control)
 
 
 primacy_analysis = brm(car_1_or_2 ~ 1, 
                        primacy_data,
                        family = 'bernoulli',
-                       save_pars = save_pars(group = F))
+                       save_pars = save_pars(group = F),
+                       seed=RANDOM_SEED)
 summary(primacy_analysis)
 hdi(primacy_analysis)
 summarise_draws(primacy_analysis)
@@ -330,7 +313,9 @@ status_quo_data = data %>%
   mutate(choice = ifelse(auxiliary_info1 == "Allocate 50% to auto safety and 50% to highway safety status quo: 50/50", 
                          "status quo", 
                          choice))%>%
-  mutate(choice_binary = as.numeric(choice == "status quo"))%>%
+  mutate(choice_binary = as.numeric(choice == "status quo"))
+
+status_quo_graph_data = status_quo_data %>%
   group_by(factor) %>%
   summarize(
     n = n(),
@@ -343,7 +328,7 @@ status_quo_data = data %>%
     percentageUpper = upper * 100
   )
 
-ggplot(status_quo_data, aes(x = factor, y = percentage, fill = factor)) +
+ggplot(status_quo_graph_data, aes(x = factor, y = percentage, fill = factor)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
                 position = position_dodge(width = 0.7),
@@ -352,15 +337,11 @@ ggplot(status_quo_data, aes(x = factor, y = percentage, fill = factor)) +
     values = c("#F37121", "#4793AF"), 
     guide = "none"
   ) +
-  geom_text(aes(label = paste0("n=", n)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
-  scale_x_discrete(labels = c("Status Quo Given", "Status Quo Not Given")) + # Changed the labels here
+  scale_x_discrete(labels = c("Experimental\n(Status quo)", "Control\n(No status quo)")) + # Changed the labels here
   labs(
-    title = "Status Quo Bias",
-    y = "Percentage who Chose 50/50 Allocation",
-    x = "Condition"
+    y = "% who chose 50/50 allocation",
+    x = "Group"
   ) +
   theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
   theme_custom() 
@@ -369,7 +350,8 @@ status_quo_analysis = brm(choice_binary ~ condition,
                         data = status_quo_data,
                         family = 'bernoulli',
                         save_pars = save_pars(group = F),
-                        prior = default_priors)
+                        prior = default_priors,
+                        seed=RANDOM_SEED)
 summary(status_quo_analysis)
 hdi(status_quo_analysis)
 
@@ -378,11 +360,13 @@ hdi(status_quo_analysis)
 
 sunk_cost_data = data %>%
   filter(task_name == "sunk_cost2 effect") %>% 
-  mutate(switched = choice == "Don't Continue Investing") %>%
+  mutate(stayed = choice == "Continue Investing")
+
+sunk_cost_graph_data = sunk_cost_data %>%
   group_by(factor) %>%
   summarize(
     n = n(),
-    p = mean(switched),
+    p = mean(stayed),
     se = sqrt(p * (1 - p) / n),
     lower = p - se,
     upper = p + se,
@@ -391,7 +375,7 @@ sunk_cost_data = data %>%
     percentageUpper = upper * 100
   )
 
-ggplot(sunk_cost_data, aes(x = factor, y = percentage, fill = factor)) +
+ggplot(sunk_cost_graph_data, aes(x = factor, y = percentage, fill = factor)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
                 position = position_dodge(width = 0.7),
@@ -403,21 +387,20 @@ ggplot(sunk_cost_data, aes(x = factor, y = percentage, fill = factor)) +
   geom_text(aes(label = paste0("n=", n)), 
             position = position_dodge(0.9), vjust = -0.5, 
             family = "Optima") +
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
-  scale_x_discrete(labels = c("sunk cost", "no sunk cost")) + # Changed the labels here
+  #scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 20), labels = function(x) paste0(x, "%")) +
+  scale_x_discrete(labels = c("Experimental\n(Sunk cost)", "Control\n(No sunk cost)")) + # Changed the labels here
   labs(
-    title = "Sunk Cost Fallacy",
-    y = "Percentage who Chose to Switch Projects",
-    x = "Condition"
+    y = "Percentage staying",
+    x = "Group"
   ) +
-  theme(axis.text = element_text(size = 20), axis.title = element_text(size = 20)) +
   theme_custom() 
 
-sunk_cost_analysis = brm(switched ~ condition,
+sunk_cost_analysis = brm(stayed ~ condition,
                         data = sunk_cost_data,
                         family = 'bernoulli',
                         save_pars = save_pars(group = F),
-                        prior = default_priors)
+                        prior = default_priors,
+                        seed=RANDOM_SEED)
 summary(sunk_cost_analysis)
 hdi(sunk_cost_analysis)
 

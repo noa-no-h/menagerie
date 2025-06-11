@@ -1,154 +1,379 @@
-﻿subject,subject_prolific,version,gender,age,education,income,race,phq91,phq92,gad71,gad72,audit,spq,ocir,tas,icar_responses,icar_correct,icar_num_correct,feedback,total_time,timestamp,id
-6644f37947ff3c7c3f9bbca1,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,no,503040,2024-12-19 19:18:47,1411
-5beb8419aec9ef0001e9d5fb,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,interesting,465664,2024-12-19 19:27:38,1412
-6362852176f08a3984fa6ef1,,v5_pilot2,Man,,High school,"$75,000-$100,000",,,,,,,,,,,,,no,745157,2024-12-19 19:29:18,1413
-5c1827dbebe9950001752e40,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,None,477228,2024-12-19 19:29:30,1414
-5fb757520b48c928a9b6e00b,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,No. It all made sense.,729297,2024-12-19 19:32:07,1415
-66cf6c471a4e4397dac16e71,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,no,748742,2024-12-19 19:32:50,1416
-66bf96a398b165333e46f5e1,,v5_pilot2,Woman,,Some college,"Less than $25,000",,,,,,,,,,,,,no. great study,865642,2024-12-19 19:34:48,1417
-5c01d3c509e9c70001500b10,,v5_pilot2,Woman,,4 year degree,Prefer not to say,,,,,,,,,,,,, no,959012,2024-12-19 19:35:38,1418
-594a955b09c434000142a8fb,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,"no, everything was fine",498665,2024-12-19 19:37:08,1419
-675f50ab88662e8002f0ee08,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"$75,000-$100,000",,,,,,,,,,,,,no comments,1083184,2024-12-19 19:37:39,1420
-66ee1b8ee4da3710c1695515,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,Everything was clear,1161417,2024-12-19 19:38:28,1421
-5928b6414a05920001393ecf,,v5_pilot2,Woman,,High school,"$50,000-$75,000",,,,,,,,,,,,,No feedback.,1036789,2024-12-19 19:41:57,1422
-66c3d098ba154cc6b959cd6d,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,No. ,725724,2024-12-19 19:42:32,1423
-60675b278929f00a78c91c3f,,v5_pilot2,Man,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,none were confusing. The survey transitioned nicely,1487586,2024-12-19 19:43:49,1424
-6760b3ba799791bde55247b4,,v5_pilot2,Woman,,Some college,"$50,000-$75,000",,,,,,,,,,,,,the survey was easy to understand,1393831,2024-12-19 19:44:17,1425
-66632c69d2b270f0314a0b16,,v5_pilot2,Man,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,none,1615880,2024-12-19 19:44:46,1426
-6763f037f664e455a22d3f42,,v5_pilot2,Man,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,"Some looked somewhat new to me,but I enjoyed the study.",1454889,2024-12-19 19:45:43,1427
-663a5c69296e5ab16fa30d00,,v5_pilot2,Woman,,Some college,"$50,000-$75,000",,,,,,,,,,,,,I was a little confused on the reading comprehension.,1181521,2024-12-19 19:45:58,1428
-67276ea4e89404cc3ccdc824,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,No comment,1453104,2024-12-19 19:47:07,1429
-66d375043d9de95a440447e6,,v5_pilot2,Man,,Some college,"$25,000-$50,000",,,,,,,,,,,,,This was fun. I thoroughly enjoyed it!,693598,2024-12-19 20:17:04,1430
-"",,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,test,231022,2024-12-20 15:45:10,1431
-6764396d96c17bbd5b758fba,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,Everything went on smoothly ,1141347,2024-12-20 16:23:11,1432
-67497e622b1507cdc1c2aa49,,v5_pilot2,Man,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,no,503635,2024-12-20 16:29:27,1433
-6022cb0bc69ce70874b42f78,,v5_pilot2,Woman,,4 year degree,"Less than $25,000",,,,,,,,,,,,,I thought that this study was interesting or engaging the whole thing made perfect sense to me,491268,2024-12-20 16:33:05,1434
-665f1309c64c2a4f4ea7bb91,,v5_pilot2,Woman,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,no comment,418342,2024-12-20 16:33:06,1435
-5baec6c108a10b000139cce8,,v5_pilot2,Woman,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,No,360755,2024-12-20 16:35:47,1436
-664652ddda67a00a585caca5,,v5_pilot2,Woman,,Some college,"$25,000-$50,000",,,,,,,,,,,,,"No, it was all very easy to understand.",873516,2024-12-20 16:36:30,1437
-672bcb852371307f3e808b23,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,Little confused on the connection of these studies,646139,2024-12-20 16:38:17,1438
-6081806ab383aa89f6c61940,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,no,557714,2024-12-20 16:38:27,1439
-6757d7f2fa46ca15d04e50b4,,v5_pilot2,Man,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,no feedback,1154942,2024-12-20 16:39:43,1440
-56797198c3041a0012b64b5e,,v5_pilot2,Woman,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,All parts were clear to me. ,618238,2024-12-20 16:40:25,1441
-5b662d96b178a90001d16ea6,,v5_pilot2,Man,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,"No feedback, everything made sense in the context used",879735,2024-12-20 16:40:29,1442
-663a94c4f1f80e7c9c8a2d19,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$25,000-$50,000",,,,,,,,,,,,,None,535588,2024-12-20 16:41:04,1443
-6714eae9498ae545ce540926,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,no,1207909,2024-12-20 16:41:38,1444
-676362bdfef03bf31281312d,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,No,641399,2024-12-20 16:41:38,1445
-664fe905b115cee7ef9dc8df,,v5_pilot2,Woman,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,No.,1045146,2024-12-20 16:42:19,1446
-66639889ea005547089b6cbf,,v5_pilot2,Woman,,2 year degree,"More than $100,000",,,,,,,,,,,,,No it was all really clear.,488427,2024-12-20 16:44:14,1447
-6304b7a752adde130e57bddf,,v5_pilot2,Woman,,High school,"More than $100,000",,,,,,,,,,,,,no,661365,2024-12-20 16:47:37,1448
-674e8432cd2245c036228396,,v5_pilot2,Woman,,Some college,"Less than $25,000",,,,,,,,,,,,,most of it,417217,2024-12-20 16:47:52,1449
-675af7ba3d278ff7e52196d1,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"$50,000-$75,000",,,,,,,,,,,,,there were no confusing parts all parts required logical reasoning ,1080701,2024-12-20 16:48:04,1450
-6428f7ac297e312f7262d93b,,v5_pilot2,Woman,,Some college,"More than $100,000",,,,,,,,,,,,,no,519693,2024-12-20 16:48:27,1451
-5ecf40ccb218ec372490e3ea,,v5_pilot2,Some other way,,4 year degree,Prefer not to say,,,,,,,,,,,,,No,361233,2024-12-20 16:49:07,1452
-6630f8111375c019e8380986,,v5_pilot2,Woman,,2 year degree,"$25,000-$50,000",,,,,,,,,,,,,No feedback at this time,790802,2024-12-20 16:49:28,1453
-67439bd25ea9ffc95e0d0ebe,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,Not applicable,741514,2024-12-20 16:49:54,1454
-66805f486ae4ada5289839e3,,v5_pilot2,Man,,2 year degree,"$25,000-$50,000",,,,,,,,,,,,,No,619709,2024-12-20 16:50:45,1455
-60c847e9a5930ff7e5ace6e7,,v5_pilot2,Woman,,4 year degree,"Less than $25,000",,,,,,,,,,,,,no,445470,2024-12-20 16:52:15,1456
-664647d420183b9017337dfa,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$75,000-$100,000",,,,,,,,,,,,,No not really,653398,2024-12-20 16:52:52,1457
-673e1fd0bd9093214a458228,,v5_pilot2,Woman,,Some college,"$25,000-$50,000",,,,,,,,,,,,,"Not really. It was very slightly mentally challenging to jump from one task to another and not knowing what to expect, but I enjoyed the challenge. ",669178,2024-12-20 16:53:04,1458
-61287939bc5a971fc15333e4,,v5_pilot2,Man,,2 year degree,"$25,000-$50,000",,,,,,,,,,,,,interesting,1193558,2024-12-20 16:54:05,1459
-6728ae9120bb974219a023e9,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,No. I understood all parts.,1015064,2024-12-20 16:54:30,1460
-6712d5b9e3d84e9a520966fd,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,Nothing was confusing,512561,2024-12-20 16:55:22,1461
-674f092681e9b6f133494e47,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,I don't have any feedback.,1126807,2024-12-20 16:55:43,1462
-612e91f6654fd2227289c863,,v5_pilot2,Man,,Some college,"More than $100,000",,,,,,,,,,,,,I enjoyed them.,427576,2024-12-20 16:55:56,1463
-5db9a46ff8e3f9000f88cb85,,v5_pilot2,Man,,2 year degree,"More than $100,000",,,,,,,,,,,,,No feedback.,983647,2024-12-20 16:56:06,1464
-66fd6acd36eb80a1ea468aed,,v5_pilot2,Man,,Some college,"$50,000-$75,000",,,,,,,,,,,,,I enjoyed the hypothetical scenario on designing a plane that could not be detected by radar.,385931,2024-12-20 16:56:23,1465
-662ad9c7673f1b65868e47de,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,no thank you,635107,2024-12-20 16:57:17,1466
-62d86c63e2966588c71b9ff2,,v5_pilot2,Man,,Some college,"$25,000-$50,000",,,,,,,,,,,,,No,491530,2024-12-20 16:57:19,1467
-672d1196aecfa972e90f1149,,v5_pilot2,Woman,,High school,"$50,000-$75,000",,,,,,,,,,,,,none,872813,2024-12-20 16:57:36,1468
-671e8a1e55becb8595564b4d,,v5_pilot2,Man,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,This was a really interesting study,628759,2024-12-20 16:58:09,1469
-652d616c13aa00700bfdce1e,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,no,415826,2024-12-20 16:58:22,1470
-674f40d3a727e70b1c767aec,,v5_pilot2,Man,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,NO,716535,2024-12-20 16:58:28,1471
-6757c7df61a1989317e6c428,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$25,000-$50,000",,,,,,,,,,,,,Nope.,387781,2024-12-20 16:58:48,1472
-63bde0097a3d8b55bdef4a9e,,v5_pilot2,Man,,Some college,"$75,000-$100,000",,,,,,,,,,,,,No,812291,2024-12-20 16:58:51,1473
-5f9f169c30a3e752c6ef6a93,,v5_pilot2,Woman,,Some college,"$25,000-$50,000",,,,,,,,,,,,,None,539678,2024-12-20 16:59:33,1474
-6763704a6b7d73013089fae2,,v5_pilot2,Woman,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,n/a,491761,2024-12-20 16:59:50,1475
-67614f44f5359c4ec86dc744,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,it was really confusing,1066021,2024-12-20 17:00:26,1476
-61549a2caa92d84f392000e9,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,no,502881,2024-12-20 17:00:27,1477
-5d083644613fce001b2a1001,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,no,345354,2024-12-20 17:00:28,1478
-6748a8b7fab563f38a5b3b21,,v5_pilot2,Man,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,The study is quite good. like the survey.,900485,2024-12-20 17:01:02,1479
-5fb5ef0ab61b9e02d5752768,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"Less than $25,000",,,,,,,,,,,,,no,688209,2024-12-20 17:01:03,1480
-5f6a3e3dbd67e60c184e9bb5,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,no,326935,2024-12-20 17:01:20,1481
-614dd304ed948bbfe8c22215,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,No,488973,2024-12-20 17:01:22,1482
-6705a08c56fb496777c48189,,v5_pilot2,Woman,,Some college,"$75,000-$100,000",,,,,,,,,,,,,No,644798,2024-12-20 17:01:24,1483
-66bd14ed87bac9e4decbe3f7,,v5_pilot2,Man,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,No,416132,2024-12-20 17:01:29,1484
-67403cea0ececac71794000f,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,NON,620864,2024-12-20 17:01:45,1485
-6713bf49930c6194aabcd9de,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$75,000-$100,000",,,,,,,,,,,,,the auto part was way too quick so I was really just guessing,416815,2024-12-20 17:01:53,1486
-65a5bc46a459a1f1b5a8ade9,,v5_pilot2,Woman,,Some college,"$25,000-$50,000",,,,,,,,,,,,,N/a,459302,2024-12-20 17:02:00,1487
-614a2938ccbb6e48eb2dcbd1,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,There was no confusion. ,778917,2024-12-20 17:02:13,1488
-5e307edef5abed05e1736185,,v5_pilot2,Woman,,4 year degree,"Less than $25,000",,,,,,,,,,,,,No.,454950,2024-12-20 17:02:48,1489
-66b40e98d25ace686463b6ef,,v5_pilot2,Man,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,No,521659,2024-12-20 17:02:48,1490
-59c96ffd21454d000194c258,,v5_pilot2,Man,,2 year degree,"$75,000-$100,000",,,,,,,,,,,,,no,508106,2024-12-20 17:02:50,1491
-5d8d12f6d88e3a00142c9751,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,I enjoyed participating. All instructions made sense to me.,617852,2024-12-20 17:02:51,1492
-673e304da72b31d5273d9a2d,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$50,000-$75,000",,,,,,,,,,,,,I enjoyed this study very much! Thank you for letting me participate!,793043,2024-12-20 17:02:52,1493
-6711ef1c3df4701d4aacc909,,v5_pilot2,Man,,2 year degree,"$50,000-$75,000",,,,,,,,,,,,,Good survey,465305,2024-12-20 17:02:52,1494
-6004d426710b3c300a1259ee,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,Somehow I missed the statement at the end that said the result was British victory. I think that was because it was underlined and maybe was bolded. That made me think that it didn't pertain to the description of the conflict,598431,2024-12-20 17:02:52,1495
-5ee561897247c02ad544c299,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,There were no issues.  It was kind of a strange group of random questions.,557444,2024-12-20 17:02:55,1496
-6741eac6271b139c64813fa5,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,I wasnt sure how it was all related,662386,2024-12-20 17:02:58,1497
-67331c56025d16ec8a859235,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,No Comment or Feedback.,1073003,2024-12-20 17:03:00,1498
-65c11389b0d2ba8e63cb8b22,,v5_pilot2,Woman,,Some college,"$25,000-$50,000",,,,,,,,,,,,,no,516098,2024-12-20 17:03:10,1499
-641a29f716d67c84d246fbae,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,none,565560,2024-12-20 17:03:15,1500
-612274842d4805447451f87b,,v5_pilot2,Woman,,2 year degree,"$50,000-$75,000",,,,,,,,,,,,,No,712994,2024-12-20 17:03:19,1501
-611ff6cc935b6de3fff0b896,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,Study was good,617036,2024-12-20 17:03:22,1502
-612547f89bad5437aaecfa66,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,no,456985,2024-12-20 17:03:25,1503
-60ddc7abdf6661b9c294691f,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,no,483601,2024-12-20 17:03:33,1504
-5f314c886de93f6003c963d4,,v5_pilot2,Woman,,High school,"$25,000-$50,000",,,,,,,,,,,,,Everything was clear and legible. Nothing was confusing.All the different questions definitely required a different type of thinking to get them correct. It was interesting to try and correctly answer them all.,727231,2024-12-20 17:03:35,1505
-67550d05844f90410cf15017,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,"No, although the first part with the different vehicles was somewhat stressful. It was difficult to keep the names straight and remember specific details about each car due to the speed of the facts being shown",440390,2024-12-20 17:03:50,1506
-671d0acce7be3fcc302905f9,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,This was a great surevey,1022285,2024-12-20 17:04:05,1507
-67609adab74848a5e70969d1,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,no,1449317,2024-12-20 17:04:19,1508
-67431c7d1e7e37b5843c818c,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$75,000-$100,000",,,,,,,,,,,,,N/A,1746444,2024-12-20 17:04:25,1509
-546ec14dfdf99b2bc7ebd032,,v5_pilot2,Man,,2 year degree,"$25,000-$50,000",,,,,,,,,,,,,none,486968,2024-12-20 17:04:30,1510
-5f5d6b0def06255d5119a9ba,,v5_pilot2,Woman,,Some college,"More than $100,000",,,,,,,,,,,,,"It all seemed random, but was easy enough. ",1001432,2024-12-20 17:04:49,1511
-5f62c1eea3901f34d53e1c18,,v5_pilot2,Man,,4 year degree,"Less than $25,000",,,,,,,,,,,,,none,681703,2024-12-20 17:05:21,1512
-60430fc782b5752a7ae8d797,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,no,531462,2024-12-20 17:05:36,1513
-666c9530efcee473827d7913,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,"No, all parts of the study made sense and were presented where they could be easily understood.",1250222,2024-12-20 17:05:37,1514
-61117e8d9c4878fdd4551e02,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,no,456615,2024-12-20 17:05:49,1515
-67577a61dbf2caa6c7cc1ae6,,v5_pilot2,Man,,4 year degree,"Less than $25,000",,,,,,,,,,,,,no thanks,957615,2024-12-20 17:06:00,1516
-6748a8b7fab563f38a5b3b21,,v5_pilot2,Man,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,the study is quite good.,280794,2024-12-20 17:06:16,1517
-5c475608cae0ab000188cb6e,,v5_pilot2,Man,,Some college,"$25,000-$50,000",,,,,,,,,,,,,Everything was fine and made sense,519072,2024-12-20 17:06:19,1518
-672e54ab6f911f94d43e0c98,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,no,608635,2024-12-20 17:06:24,1519
-5e16bce18dffa0c6f76cda9b,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,nothing was confusing,639651,2024-12-20 17:06:43,1520
-66075df395213912ccbfdf0f,,v5_pilot2,Woman,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,"No, it was all very well-explained.",612272,2024-12-20 17:06:57,1521
-6761cafdb6d47535e3e6c4f6,,v5_pilot2,Man,,Some college,"$75,000-$100,000",,,,,,,,,,,,,No,592367,2024-12-20 17:07:10,1522
-672f795028d274cb06d27fb8,,v5_pilot2,Woman,,2 year degree,"$75,000-$100,000",,,,,,,,,,,,,I did not like the question about the British war it was confusing ,772276,2024-12-20 17:07:10,1523
-669d37d5e19a4d6c692e49e4,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,NICE STUDY,775196,2024-12-20 17:08:05,1524
-67596d30e65bda466958d294,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"$50,000-$75,000",,,,,,,,,,,,,good,972465,2024-12-20 17:08:27,1525
-66228088ddfa13f2d401ca49,,v5_pilot2,Woman,,2 year degree,"$25,000-$50,000",,,,,,,,,,,,,no,685317,2024-12-20 17:09:01,1526
-60e7739644eb45bfddedf039,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,"No, thanks.",836654,2024-12-20 17:09:14,1527
-664050854b928e5094b3c4e1,,v5_pilot2,Woman,,4 year degree,"Less than $25,000",,,,,,,,,,,,,none,1226957,2024-12-20 17:10:00,1528
-67432e4f935cab0de0320727,,v5_pilot2,Man,,4 year degree,"$75,000-$100,000",,,,,,,,,,,,,"No, all of it made sense and was presented in a way that encouraged a steady workflow throughout its entirety.",896622,2024-12-20 17:10:00,1529
-673a3f38694a6d733ee71da6,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,not at all,920124,2024-12-20 17:10:37,1530
-5589565cfdf99b6bd06016dc,,v5_pilot2,Woman,,2 year degree,"Less than $25,000",,,,,,,,,,,,,Nothing was confusing.  I just hope I did them correctly.  ,771870,2024-12-20 17:10:59,1531
-66e8697870b9f536f129e22a,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$50,000-$75,000",,,,,,,,,,,,,EVERYTHING WAS CLEAR,994813,2024-12-20 17:10:59,1532
-60ae2fc5749d240eaf7db711,,v5_pilot2,Woman,,4 year degree,"More than $100,000",,,,,,,,,,,,,"no, but thank you.",888124,2024-12-20 17:12:08,1533
-675b00ae8582c6a88bcd87cf,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,"In general, the instructions were clear and the process seemed smooth.",863042,2024-12-20 17:12:11,1534
-6737b718cc19d6b7ce3dbcf1,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"$50,000-$75,000",,,,,,,,,,,,,I had No confused. ,1271341,2024-12-20 17:12:13,1535
-649754db1c54fad23e345093,,v5_pilot2,Woman,,Some college,"$50,000-$75,000",,,,,,,,,,,,,It was a bit all over the place but a fun study thank you,822144,2024-12-20 17:13:18,1536
-67179f60818200c8d9dc7b14,,v5_pilot2,Woman,,2 year degree,"$25,000-$50,000",,,,,,,,,,,,,no,815440,2024-12-20 17:13:28,1537
-63d13bce0971871b9ff88f56,,v5_pilot2,Woman,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,"Nothing was confusing, and the interface worked well.",536013,2024-12-20 17:13:59,1538
-66a94c224273fab59f0b2c71,,v5_pilot2,Woman,,High school,"$25,000-$50,000",,,,,,,,,,,,,no all things are okay.,1053084,2024-12-20 17:14:10,1539
-6561f9edfd7315a2f858adff,,v5_pilot2,Woman,,Some college,"$25,000-$50,000",,,,,,,,,,,,,N/A,882660,2024-12-20 17:14:40,1540
-676192c0f40a3eeb07b31aa3,,v5_pilot2,Man,,Some college,"$25,000-$50,000",,,,,,,,,,,,,it was normal.,1110393,2024-12-20 17:15:16,1541
-674b715d85b26d93e351316f,,v5_pilot2,Man,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,," I appreciated the clear and concise instructions, which helped me to stay focused on the critical thinking and problem-solving aspects of the study,Thank you for the opportunity to participate.",2168738,2024-12-20 17:15:21,1542
-67484abd3beeb41fc2ebbdd7,,v5_pilot2,Man,,High school,"$25,000-$50,000",,,,,,,,,,,,,No,1183384,2024-12-20 17:15:27,1543
-66ac666f3e030205c277b763,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"$50,000-$75,000",,,,,,,,,,,,,"No, I think all the parts were pretty clear to me.",1310979,2024-12-20 17:15:57,1544
-66541006a1dd56700858320a,,v5_pilot2,Woman,,Some college,"$25,000-$50,000",,,,,,,,,,,,,"All sections were clear, some more difficut than others.",680823,2024-12-20 17:16:12,1545
-66303e673635423378ae6ac3,,v5_pilot2,Woman,,High school,"$25,000-$50,000",,,,,,,,,,,,,No.,595781,2024-12-20 17:16:44,1546
-666bb3c2a3d285b44af2b25d,,v5_pilot2,Man,,Some college,"$75,000-$100,000",,,,,,,,,,,,,No it was all clear.,1300482,2024-12-20 17:17:38,1547
-6138f7e0ad42e592ca5f2024,,v5_pilot2,Man,,High school,"$25,000-$50,000",,,,,,,,,,,,,no comments.,1086403,2024-12-20 17:18:26,1548
-67235e1aad7fdd5fca6840e9,,v5_pilot2,Woman,,High school,"Less than $25,000",,,,,,,,,,,,,everything made sense,1550055,2024-12-20 17:18:43,1549
-674eb8b83ea5bb36807aded3,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$75,000-$100,000",,,,,,,,,,,,,the study made sense and was interesting.,1516215,2024-12-20 17:20:55,1550
-663730456acb6562b087057d,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"More than $100,000",,,,,,,,,,,,,None,977149,2024-12-20 17:21:37,1551
-66a94c224273fab59f0b2c71,,v5_pilot2,Woman,,High school,"$25,000-$50,000",,,,,,,,,,,,,all things are good.,440677,2024-12-20 17:22:15,1552
-67225056aa9d8e6583b4f452,,v5_pilot2,Man,,Some college,"More than $100,000",,,,,,,,,,,,,NO,864019,2024-12-20 17:22:40,1553
-67596d30e65bda466958d294,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"$25,000-$50,000",,,,,,,,,,,,,good,664769,2024-12-20 17:24:24,1554
-673d4b493a214d994150a956,,v5_pilot2,Man,,Postgraduate/Professional degree/other,"$25,000-$50,000",,,,,,,,,,,,,Thank you,1547826,2024-12-20 17:27:55,1555
-67555dfc51343599cbc9232b,,v5_pilot2,Woman,,4 year degree,"$25,000-$50,000",,,,,,,,,,,,,The last question about movie and the numbers and letters were a bit confusing,2369240,2024-12-20 17:29:31,1556
-5d5af833f35ed70001e17a5c,,v5_pilot2,Man,,4 year degree,"More than $100,000",,,,,,,,,,,,,Great study!,376952,2024-12-20 17:32:03,1557
-6737a7751f0f53ed4920811a,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,"No, the study is well understandable",1482839,2024-12-20 17:32:12,1558
-6728131f684b31c9d5b501ab,,v5_pilot2,Woman,,Some college,"$75,000-$100,000",,,,,,,,,,,,,"The study made sense, it was interesting and engaging.",1132272,2024-12-20 17:33:23,1559
-673a53fc2a05c93edf027ccd,,v5_pilot2,Woman,,4 year degree,"$50,000-$75,000",,,,,,,,,,,,,Everything was easy to understand,1334325,2024-12-20 17:34:39,1560
-5d5618b69cd0f20015e1ab0d,,v5_pilot2,Woman,,High school,"$25,000-$50,000",,,,,,,,,,,,,No there wasn't,1072710,2024-12-20 17:37:56,1561
-66e58e209ba96e130b779a3a,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$25,000-$50,000",,,,,,,,,,,,,everything was easy to understand and I faced no difficulty what so ever.,576031,2024-12-20 17:39:28,1562
-663140c398e19ff9b77d4663,,v5_pilot2,Woman,,Postgraduate/Professional degree/other,"$75,000-$100,000",,,,,,,,,,,,, I thought it was interesting,344591,2024-12-20 18:06:42,1563
+"subject","subject_prolific","version","gender","age","education","income","race","phq91","phq92","gad71","gad72","audit","spq","ocir","tas","icar_responses","icar_correct","icar_num_correct","feedback","total_time","timestamp","id"
+"0c6f2669f1a00e9f471f37a120a7aef4",NA,"v5_pilot2","Man",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",486968,"2024-12-20 17:04:30",1510
+"9bbaca92a7de499c78699b6c5e476cfc",NA,"v5_pilot2","Woman",NA,"2 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing was confusing.  I just hope I did them correctly.  ",771870,"2024-12-20 17:10:59",1531
+"25aa781888e8f6621dd2f3612aa90d40",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nothing",118461,"2025-04-08 17:43:01",1675
+"78c1395b7720035b691a09cef9e4d9b9",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no no",97760,"2025-04-08 17:46:32",1694
+"461e8162cda1b8708f743138818b372a",NA,"pilot3b","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",105633,"2025-04-08 17:40:38",1663
+"b08002b5b13dd55073a078886a1bbab7",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no comments",109596,"2025-04-08 18:17:58",1773
+"d5aa078b55bb093805732b72ff8446bf",NA,"v5_pilot2","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"All parts were clear to me. ",618238,"2024-12-20 16:40:25",1441
+"70034b5e9a61b5a866d2b94b15d19448",NA,"pilot3b","Man",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything made sense.",116478,"2025-04-08 18:09:55",1758
+"899c90f8d1578486c05e979af7edfb18",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",96160,"2025-04-08 18:21:59",1779
+"d5e36bc6e53e6241e8746a675914d123",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",92192,"2025-04-08 17:18:43",1592
+"d7f3262bff38c6dd1c940871826d2350",NA,"pilot3b","Prefer not to say",NA,"Prefer not to say","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I have to write something in this box in order to be forwarded to the end of the study.",207012,"2025-04-08 18:21:12",1778
+"61e775af2a412507f4e80fbc41e9046e",NA,"pilot3b","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"n/a",97472,"2025-04-08 17:49:51",1705
+"acf39830b506144f1a428cbd18320b17",NA,"v5_pilot2","Woman",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No feedback.",1036789,"2024-12-19 19:41:57",1422
+"c615e1b8abceb4fdaf0d560ce8232631",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no, everything was fine",498665,"2024-12-19 19:37:08",1419
+"e3d2b07323399a7ffd04f9fdc740de3d",NA,"pilot3b","Woman",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",242827,"2025-04-08 18:00:24",1731
+"e3d2b07323399a7ffd04f9fdc740de3d",NA,"pilot3b","Woman",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",157584,"2025-04-08 18:07:38",1753
+"8bb2589b56ebada14704e7fc40ede764",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Well done.",113627,"2025-04-08 17:40:57",1666
+"a35c3049f238d7ab5cad27a61286cdd4",NA,"v5_pilot2","Man",NA,"2 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",508106,"2024-12-20 17:02:50",1491
+"b88f86af7c06421234f36fc07bf92719",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None. ",111764,"2025-04-08 17:50:11",1708
+"97ce592f6c0f9b4a20d00f30c24341dd",NA,"pilot3b","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I don't have any feedback.",112142,"2025-04-08 17:41:34",1667
+"782f5a3d3463fb8150411594e5df95fe",NA,"pilot3b","Man",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",374974,"2025-04-08 17:38:54",1655
+"0d60c3b6b1930f724ea8245f10a708bf",NA,"pilot3b","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",180499,"2025-04-08 17:40:11",1658
+"824c3f0b04cab681b643cf1b76fe5ee9",NA,"v5_pilot2","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No feedback, everything made sense in the context used",879735,"2024-12-20 16:40:29",1442
+"4e6870ae601da3c84853362f90a2f939",NA,"pilot3b","Woman",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was fine.",117040,"2025-04-08 17:56:04",1720
+"c74695ba87fa46e9815d89d73087f332",NA,"v5_pilot2","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",360755,"2024-12-20 16:35:47",1436
+"200d8066c68046d81a1b74f8cc3763e6",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",93667,"2025-04-07 18:27:49",1580
+"470d2ce7870a6bc0ff9d02e22f4532ec",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"interesting",465664,"2024-12-19 19:27:38",1412
+"71db5018c5d50a0d5682a08b9a8295ff",NA,"pilot3b","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",96557,"2025-04-08 17:35:02",1642
+"998e9532e44a7b802e61b53de84e7bcf",NA,"v5_pilot2","Woman",NA,"4 year degree","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA," no",959012,"2024-12-19 19:35:38",1418
+"cb129fe1df8cede20db986214a558bb0",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",233757,"2025-04-08 17:31:49",1627
+"ea88c92d48a9e15777c207f269998743",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",477228,"2024-12-19 19:29:30",1414
+"dabcfee69c277b056e1b9f938c4da775",NA,"pilot3b","Man",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing",100223,"2025-04-08 17:43:40",1680
+"a0484a3f3cfb95f0970b3ebee8d1b79e",NA,"pilot3b","Woman",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"n/a",98363,"2025-04-08 17:18:08",1590
+"037199386f4e63f0bad4b33971bd84d0",NA,"v5_pilot2","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was fine and made sense",519072,"2024-12-20 17:06:19",1518
+"9eff7171892866c51d97ff1f74ef0f4d",NA,"pilot3b","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NO",174232,"2025-04-08 18:45:16",1789
+"acc746e741597164fb46cf9a26e21c86",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",101628,"2025-04-08 17:13:31",1588
+"d4a24f2c4b6280ac61e33acbe173fa8b",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"n/a",106209,"2025-04-08 18:16:48",1766
+"3651044f2a173225be4cb0fc0b8d6add",NA,"pilot3b","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing was confusing. ",121339,"2025-04-08 17:23:42",1598
+"1d973bb4b6898694f3200a58377a8048",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I can't remember that many random facts well.",113321,"2025-04-08 18:56:54",1792
+"2abdff433326b754f1daefeb5e619cd3",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",345354,"2024-12-20 17:00:28",1478
+"84fb34cf8fe94d66e8c03ab431b4fecd",NA,"pilot3b","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"This study was very well-designed. There was nothing that was confusing to me.",237259,"2025-04-08 18:32:08",1784
+"8ba4eec749ac5e30ebc388dbb225ff2b",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, though I wish I knew the names of the cars at the beginning because I was confused by the first fact if Nabusi was the car or someone giving their opinion about a car",140474,"2025-04-08 17:31:44",1625
+"8d67088ddc5387a1d999c4c5cee95ae1",NA,"pilot3b","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything made sense and the survey was easy to understand",104132,"2025-04-08 18:04:47",1746
+"c68a3983813312c9129273bd33206011",NA,"pilot3b","Woman",NA,"2 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",97984,"2025-04-08 17:40:08",1657
+"1e229b52c4e2975e8c6488a3548f0366",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",118694,"2025-04-08 18:02:36",1740
+"5945747842cdb59802df08b2ce004cb7",NA,"v5_pilot2","Woman",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No there wasn't",1072710,"2024-12-20 17:37:56",1561
+"268f47fab84f81939ca44e847b6b8d68",NA,"pilot3b","Woman",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",115662,"2025-04-07 18:12:41",1574
+"d4502692315c59d7ccc9236ef7186764",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Great study!",376952,"2024-12-20 17:32:03",1557
+"bc32d24631db2b68cb546ca070a86aea",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing was confusing",137490,"2025-04-08 17:36:10",1645
+"d8b5d81cb16fc7920ab1a0f30c74aa2c",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I enjoyed participating. All instructions made sense to me.",617852,"2024-12-20 17:02:51",1492
+"43eb8a5e4aa57d12c61ee0729f876886",NA,"v5_pilot2","Man",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No feedback.",983647,"2024-12-20 16:56:06",1464
+"cadddd4d638c33a1470300157e13d5a8",NA,"pilot3b","Woman",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",155920,"2025-04-08 17:42:34",1670
+"19f4c2e4593f2d03906e104e84bbb297",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nothing was confusing",639651,"2024-12-20 17:06:43",1520
+"68123d8281e25a9980c368d685d3cf2f",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",147452,"2025-04-08 17:34:18",1638
+"48d2b311f515c36870427b30e4391d6c",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The study was not confusing.",118523,"2025-04-08 17:45:55",1691
+"c2e9888c71d2a0fa2cf7fee0bd60658d",NA,"v5_pilot2","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No.",454950,"2024-12-20 17:02:48",1489
+"943424b561e1fe53b395a6a0b47e8def",NA,"pilot3b","Man",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nope, made sense",106528,"2025-04-08 17:23:22",1595
+"46cfc24960cb1aad701eb7bd3af80fdd",NA,"pilot3b","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No and no",137094,"2025-04-08 17:43:36",1679
+"2eb64a6dd02e67b0f54d93e330faa930",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",132111,"2025-04-07 17:47:34",1571
+"4ee58dea5d88e9a57f70e496ebe46b42",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I have no comments",115572,"2025-04-08 18:04:05",1745
+"519689056dcd486ebb63fdc59bff32ef",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"It was hard to keep track of which attributes applied to which car.",136197,"2025-04-08 17:40:43",1664
+"18ade3c45ed98ab1907750dcc367c30c",NA,"pilot3b","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",99745,"2025-04-08 17:47:54",1699
+"cbabec05ea311c70f665b948cf0346c7",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",104171,"2025-04-08 17:49:58",1707
+"8ad6df097979b58319f44c52626a3f34",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"na",109619,"2025-04-07 18:20:21",1577
+"0d554715210050b0d1f2e49f2856f99a",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"It was very hard to keep track of what characteristics were associated with which model by the end.",153013,"2025-04-08 17:36:49",1651
+"fba5435eb6afe8690677740ad3d31313",NA,"v5_pilot2","Some other way",NA,"4 year degree","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",361233,"2024-12-20 16:49:07",1452
+"ef4e3a2c55f951b64c9eaf3e8e25a11c",NA,"pilot3b","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"everything worked fine. ",120741,"2025-04-08 17:43:05",1677
+"02ecf97c4091b39060f1e0dc0f376df3",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/a",97668,"2025-04-08 17:25:58",1604
+"79e4f00384101e2950aedb6721e5fdd3",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"There were no issues.  It was kind of a strange group of random questions.",557444,"2024-12-20 17:02:55",1496
+"25e9f376f1e39b83caa61c491e7e1e06",NA,"pilot3b","Woman",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I have no additional feedback regarding the study; everything was clear and made sense.",331761,"2025-04-07 18:43:09",1584
+"e695a2aaef68b80a5aaa10ce3651c98e",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, it made perfect sense. Thank you",127425,"2025-04-07 19:12:06",1587
+"6ac6d3878330ecc20f9d47ac7817f308",NA,"pilot3b","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No.",128039,"2025-04-08 18:05:58",1750
+"fa7128e71243213c9728d5f0ebc82051",NA,"pilot3b","Man",NA,"High school","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Had no issues. Thanks! (At first it seemed like the one that started with a K was the best, until it got to the fact that it's very old.)",140259,"2025-04-08 17:26:09",1606
+"c3be3f70d275c8efd259f189363b6b87",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",92534,"2025-04-08 17:30:02",1617
+"7ef4915524149688bd4e111abf8585d9",NA,"v5_pilot2","Woman",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was clear and legible. Nothing was confusing.All the different questions definitely required a different type of thinking to get them correct. It was interesting to try and correctly answer them all.",727231,"2024-12-20 17:03:35",1505
+"45b25e0313d3227d16ab0ef009ab369f",NA,"v5_pilot2","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"It all seemed random, but was easy enough. ",1001432,"2024-12-20 17:04:49",1511
+"4314f04400b27777a28b36b9a9bb2b47",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no comments thank you",135680,"2025-04-08 17:28:03",1611
+"e1a5a034cc00ee9e16562cb3391afbd9",NA,"v5_pilot2","Man",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",681703,"2024-12-20 17:05:21",1512
+"658674bcb7c43a962b1b09febfacf312",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",326935,"2024-12-20 17:01:20",1481
+"eef120287534aff98f2a6fc5a69c204e",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nothing was confusing",113757,"2025-04-08 18:32:14",1785
+"edf6c09c84c0ff81ef29bad66b3595e2",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",116354,"2025-04-08 17:41:42",1668
+"5445e4690175158eececd08d7843ce25",NA,"v5_pilot2","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",539678,"2024-12-20 16:59:33",1474
+"cad4d88729b857a325ff2970827bf5c0",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",688209,"2024-12-20 17:01:03",1480
+"2350089eea72e4ac3eede14768f987c3",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No. It all made sense.",729297,"2024-12-19 19:32:07",1415
+"7dd1a54aba8b6bc111d366d3cc7d9ee6",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",103743,"2025-04-08 18:39:55",1787
+"1a7a1a859a14ec48d18f1276f125f746",NA,"pilot3b","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None, thank you.",102223,"2025-04-08 17:57:31",1721
+"c5ab9cd61f734f2a5ccb9a8704fbe967",NA,"pilot3b","Woman",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No issues.",134489,"2025-04-08 17:58:33",1726
+"766b44b0cabe7b4d31b187d6221c9072",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Somehow I missed the statement at the end that said the result was British victory. I think that was because it was underlined and maybe was bolded. That made me think that it didn't pertain to the description of the conflict",598431,"2024-12-20 17:02:52",1495
+"5e4fa7da1d089db809592c8e34478a47",NA,"pilot3b","Woman",NA,"2 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was fine. ",151132,"2025-04-08 18:03:11",1742
+"33504b00e34878df5b42a28f5d19fae4",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",110019,"2025-04-08 17:31:03",1623
+"34a8d06a1446c7bb3497bb616c5516f5",NA,"pilot3b","Some other way",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Thank you!",100699,"2025-04-08 17:23:47",1599
+"b804e08e4198eda6d3e541131a982be8",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I did not find it confusing.  I found it difficult to keep up with as quickly as they were being shown.",125836,"2025-04-08 17:58:08",1725
+"8865dc5a997ad36cd831d9a9e2828f8d",NA,"v5_pilot2","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I thought that this study was interesting or engaging the whole thing made perfect sense to me",491268,"2024-12-20 16:33:05",1434
+"3bd2983f3de3e5bab67540c67d8054b0",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The trickiest part for me was the names of the cars; I had a little difficulty differentiating the names in my head at times because they were all unfamiliar/foreign-sounding words. The one I chose stood out to me because it had the least criticism levied against it.",301051,"2025-04-08 18:11:01",1759
+"37574fcded7c3cb63f1310505a0d38b7",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Thank you for the opportunity. Interesting.",117879,"2025-04-08 18:02:07",1738
+"234a546acdfbeaa8ce1b2db0d932f74e",NA,"pilot3b","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",167892,"2025-04-08 17:34:36",1639
+"1f088da97e25567fa4390889c29cd20d",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",531462,"2024-12-20 17:05:36",1513
+"c40317b7aade9bca3b26b4d51306d4e8",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nothing to add",107057,"2025-04-08 17:35:54",1644
+"56ed59bb264def505e2a1598fb4d8402",NA,"v5_pilot2","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none were confusing. The survey transitioned nicely",1487586,"2024-12-19 19:43:49",1424
+"fe1843b04709764dafad109a77c7a418",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I think this survey could have been better with a list format for each vehicle, although I understand the purpose of paying attention.",117131,"2025-04-08 17:42:55",1673
+"c8c0a16273d23b8f136b1aeeb53219ae",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",557714,"2024-12-20 16:38:27",1439
+"7aed8048b363a9ef4080511ae304559c",NA,"pilot3b","Woman",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",97970,"2025-04-08 17:59:27",1728
+"a946191e5d580828fb2b95a96d1e7fe0",NA,"pilot3b","Woman",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no problems",121049,"2025-04-08 17:44:32",1685
+"44565562cab18a9dc1cd0f419a678bef",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no, but thank you.",888124,"2024-12-20 17:12:08",1533
+"7ec021bdd0413835d87c1dbf3bf253ae",NA,"v5_pilot2","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",445470,"2024-12-20 16:52:15",1456
+"37b5587edc882a2827519e6b75cb6475",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",483601,"2024-12-20 17:03:33",1504
+"377ce42e671ded5063fac1a0705d46b6",NA,"pilot3b","Woman",NA,"Some college","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nONE",105182,"2025-04-08 17:23:11",1594
+"146d23b2d8da76ddc56968ee72b4d4f2",NA,"pilot3b","Woman",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"All clear",165822,"2025-04-08 17:54:00",1714
+"f7c575b1d5e5fb536f26fad7f651be14",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, thanks.",836654,"2024-12-20 17:09:14",1527
+"bf5560e9832bf6c79dc982946e907a4c",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything made sense for this study",110353,"2025-04-08 17:36:42",1650
+"92e6ddc20a5bb7188eb92785bfeefe60",NA,"pilot3b","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",266660,"2025-04-07 18:15:23",1576
+"693e0e5b7b82780c87604ec856b4ebf3",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",192801,"2025-04-07 18:40:09",1583
+"5a8c2e95c41679c5b1a3ba97e521727d",NA,"pilot3b","Woman",NA,"4 year degree","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No problems :)",137302,"2025-04-08 18:24:12",1781
+"ce36094c99988a843ab8766a2a2495b3",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, thank you!",137249,"2025-04-08 17:30:55",1621
+"1f8fe96b2ff584fad9410aa14f0ed40f",NA,"pilot3b","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",122502,"2025-04-08 17:27:50",1609
+"824384dcdf9bbc79f1f607fcf04e707b",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",95441,"2025-04-08 17:32:56",1632
+"54782f3fbc63ccdda8bcbed8422e2a88",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",108538,"2025-04-08 18:03:46",1744
+"3b51143cc77c0e9c3d297a103b2ebd7c",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"na",105315,"2025-04-08 17:27:58",1610
+"efddf49b25d0ca7fe585a7ee6ecd1b0a",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",456615,"2024-12-20 17:05:49",1515
+"3b5e0e648276fd3937423bd664746611",NA,"pilot3b","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",100901,"2025-04-08 18:17:28",1768
+"92f0ba598ca62fb1de0b88dd6b0fd8ea",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Study was good",617036,"2024-12-20 17:03:22",1502
+"22bb55ce08d3610616e44be3555a99c8",NA,"v5_pilot2","Woman",NA,"2 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",712994,"2024-12-20 17:03:19",1501
+"f1badbb46b8cc3549de4ae135d056095",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I do not.",127659,"2025-04-08 17:46:31",1693
+"cd5d580eff81195ab79ac9fee6a35ada",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",456985,"2024-12-20 17:03:25",1503
+"7d63940d6043ab131f69e65227973aed",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",113739,"2025-04-08 17:44:31",1684
+"c084ecbb3f4d6689a03145c93cad93fc",NA,"pilot3b","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"yes it made sense it was telling the good and bad about each car",181757,"2025-04-08 17:33:42",1634
+"4dcb87100be3d7ee2871b53abb6522da",NA,"v5_pilot2","Man",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"interesting",1193558,"2024-12-20 16:54:05",1459
+"18f657ba6efd7ec4255aabe1e6830108",NA,"pilot3b","Man",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, it made sense to me, thank you!",100473,"2025-04-08 17:45:46",1690
+"45194942b648fdfae674398cec43e9cc",NA,"v5_pilot2","Man",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I enjoyed them.",427576,"2024-12-20 16:55:56",1463
+"ab013b227a4c1938cc447d2a788900dc",NA,"v5_pilot2","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no comments.",1086403,"2024-12-20 17:18:26",1548
+"7a990fb2947901b0ec35a79b4241b678",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"There was no confusion. ",778917,"2024-12-20 17:02:13",1488
+"10a5e922bfeaff2cb2284408e9234fd8",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",488973,"2024-12-20 17:01:22",1482
+"dce78fa1148518e7eeb7f6d657388bc8",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",502881,"2024-12-20 17:00:27",1477
+"11b18d96af089c4892ccc44fdba4f200",NA,"pilot3b","Man",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",133793,"2025-04-08 17:37:03",1653
+"97ae4a66843dcef97e16aa840221e7f1",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",110317,"2025-04-08 17:55:50",1718
+"4edc9b172d9c02a53346e6efd3594d67",NA,"pilot3b","Woman",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing confusing.",167992,"2025-04-08 18:25:17",1782
+"a470fdec96653d70b591f93370c40e79",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",128726,"2025-04-08 17:48:30",1700
+"3c9823011c20d9bccd55755c63eebf48",NA,"pilot3b","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",144370,"2025-04-08 17:54:02",1715
+"66c9c9dc62fb1cfe7ab5e36c235a8101",NA,"pilot3b","Woman",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",102068,"2025-04-08 17:42:53",1672
+"f55ea30bf0476be74537cdec335adf14",NA,"pilot3b","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nothing",189334,"2025-04-08 17:42:35",1671
+"253abfe948b0136666611cc143441706",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Not at this time",98228,"2025-04-08 17:36:56",1652
+"4df90ded8019557787dbaa0483f6a430",NA,"pilot3b","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",112530,"2025-04-08 17:25:04",1601
+"c813bc183f5ef333a0c1130341cfe484",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No issues",98376,"2025-04-08 17:47:37",1698
+"190dc59f2e340e5890fc921e69ea8d54",NA,"v5_pilot2","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",491530,"2024-12-20 16:57:19",1467
+"d6887f74f3d8636aaab9d50fd4bcaefd",NA,"v5_pilot2","Woman",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",661365,"2024-12-20 16:47:37",1448
+"c68d3d0a36b54c9e6f49c69f99b7aab5",NA,"pilot3b","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Interesting study.",101370,"2025-04-08 18:16:39",1765
+"ea7ab46a30de331aebc554f9eb3f7aea",NA,"pilot3b","Man",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",168338,"2025-04-08 18:14:34",1763
+"b9507e7787d06f4a847643222cb07002",NA,"pilot3b","Man",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",109791,"2025-04-08 17:22:42",1593
+"e09b61a61b959289720033fa768268e3",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No feedback",98378,"2025-04-08 18:11:36",1760
+"ba6edb5d2d843bb4f5ee7283a8419616",NA,"pilot3b","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No issues, good study ",109914,"2025-04-08 18:02:16",1739
+"86f4d7bd9feeae0b7cfde0572a3e66d3",NA,"v5_pilot2","Man",NA,"High school","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",745157,"2024-12-19 19:29:18",1413
+"3bb641585f2485ab920ff95ff14aba8d",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The names of the cars were a little odd, but overall everything made sense.",280487,"2025-04-08 17:28:49",1614
+"ee5cc1134fa9fcffd6c135496ddffd61",NA,"pilot3b","Man",NA,"2 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no all was fine",214173,"2025-04-07 18:25:46",1579
+"bcea1df30a134e82594a372c992b406f",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"There was nothing confusing.  It would have been nice and more realistic to see all the claims side by side rather than flashed one at a time.",156688,"2025-04-08 18:22:44",1780
+"615f4923b4a467fddea0338e91caf3a7",NA,"v5_pilot2","Man",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",812291,"2024-12-20 16:58:51",1473
+"6b14cff6c8c0300564f2c321bf1d208b",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",146014,"2025-04-08 18:07:30",1752
+"e5d77f8c5503845dea6bcbc5a1a76b2b",NA,"v5_pilot2","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing was confusing, and the interface worked well.",536013,"2024-12-20 17:13:59",1538
+"d522ed604fa4e2ad70cbf690b6510ef0",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, thank you",113064,"2025-04-08 17:50:25",1709
+"42be70b82135ebe18a0dddba53b12b80",NA,"pilot3b","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"lots of information",123323,"2025-04-07 18:12:47",1575
+"ee18481fc83bb898aec1b6e2b8ab0233",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",111578,"2025-04-08 17:45:04",1686
+"609ea0808746a5b6d6b47c6ba8656b9e",NA,"pilot3b","Some other way",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"n?a",99218,"2025-04-08 18:00:48",1732
+"14146a6705ec5e6f51a1a3689c319bb7",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything made sense. ",100647,"2025-04-08 18:01:23",1735
+"bff4c4abbe3113348e11da33bde76e1c",NA,"pilot3b","Woman",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",443096,"2025-04-08 17:31:56",1629
+"b53b42bfb462ef6dca79359d2205eaf7",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",565560,"2024-12-20 17:03:15",1500
+"d7fb49040459f82999c879d0debfc55f",NA,"v5_pilot2","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",519693,"2024-12-20 16:48:27",1451
+"562ba3c82e44a43aaf8147ea349365ef",NA,"pilot3b","Woman",NA,"2 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",93621,"2025-04-08 17:44:25",1683
+"4232c7f2d684a1cf53b7f6e1635242b0",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No. thank you",193702,"2025-04-08 18:01:47",1737
+"604fb8dd111b68510feb75ba63835e7f",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",135411,"2025-04-08 18:14:04",1761
+"cff658e31be6a0b8b6ada29514083c50",NA,"v5_pilot2","Woman",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"It was a bit all over the place but a fun study thank you",822144,"2024-12-20 17:13:18",1536
+"8b10653f6d213b368d40fc87767de141",NA,"pilot3b","Man",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing confusing.",117931,"2025-04-08 17:59:14",1727
+"80e26cb4cdb823d9f60d7e79faa1b878",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",96709,"2025-04-08 17:33:51",1636
+"f11806afd56541eb1e360b6804f49828",NA,"pilot3b","Prefer not to say",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",147255,"2025-04-08 17:46:58",1697
+"6617663f141c8c63af2c7764d554c2d3",NA,"pilot3b","Man",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was fine.",124587,"2025-04-08 17:42:15",1669
+"b995cf4420f0c9f7b90c3a4ebf5dea1c",NA,"pilot3b","Man",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no, I understood everything.",184806,"2025-04-08 17:39:18",1656
+"8f6ff25bcba5b8c6d138b847316776a7",NA,"pilot3b","Woman",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no.",122118,"2025-04-08 17:33:48",1635
+"c185b650c5c27300639b38183c72d520",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",415826,"2024-12-20 16:58:22",1470
+"2bd1426fb9b096d097e0dbf6fb2d7522",NA,"pilot3b","Man",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"It was very difficult to keep track of all the details",120963,"2025-04-08 17:45:24",1688
+"52feb58ad0a9646f92bef0b9468d3bc0",NA,"pilot3b","Woman",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",101717,"2025-04-08 18:07:46",1754
+"64d337e3e1e1fcfa94c67c80680f1a7d",NA,"pilot3b","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",114020,"2025-04-08 17:45:35",1689
+"59ab7812745c8704648449631efaeb50",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I'd love to see images for these vehicles. ",251115,"2025-04-08 17:40:51",1665
+"22002f9e885b2b2c9c245cfa3943c131",NA,"v5_pilot2","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",882660,"2024-12-20 17:14:40",1540
+"e7813423fbaa9c7eb7cd38024f0e6467",NA,"pilot3b","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",100954,"2025-04-08 17:35:39",1643
+"d3dd84cbf55c2c5d6ffd5b3961c30cb3",NA,"pilot3b","Woman",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NO",149531,"2025-04-07 17:44:27",1570
+"392b9a1194a4a7b6c39c84ab87cb4ce1",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"IT MADE SENSE AND I LIKE THAT THE FACTS WERE GIVEN QUICKLY FOR AS MANY AS THERE WERE",165263,"2025-04-08 18:01:08",1733
+"2111e5baabd68403387ff8697091c29f",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",110438,"2025-04-08 17:55:48",1717
+"a3d34559ca4cdb0351cecc3daf78089c",NA,"v5_pilot2","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/a",459302,"2024-12-20 17:02:00",1487
+"74e9342ce24f3d12c7ce3f311d165df5",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Very hard to keep tabs on the best attributes of each car without a list.",154131,"2025-04-08 17:23:35",1596
+"d0da297c9634600944d33a8cfb85f245",NA,"v5_pilot2","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",516098,"2024-12-20 17:03:10",1499
+"6d23cfe3be6f28184461fad31000509c",NA,"pilot3b","Man",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",120149,"2025-04-08 17:58:02",1724
+"df972119d822eec5c1f4cc72ad9500fe",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",103586,"2025-04-08 18:08:28",1755
+"248288f7f756fa44802f11c4519f0b20",NA,"pilot3b","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No it was all very straightforward ",119756,"2025-04-08 17:52:47",1711
+"09628c6cb8c68b1d9da7d4cd07204ad9",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, it was all very well-explained.",612272,"2024-12-20 17:06:57",1521
+"2ca12351de83d8c84c6956dd6d0df07e",NA,"pilot3b","Man",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"all good",103222,"2025-04-08 17:36:23",1648
+"dfcac6624884d8bfc71ce5ef18b8d0e4",NA,"v5_pilot2","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",685317,"2024-12-20 17:09:01",1526
+"7aa8166c5e4287279fc7ba1dc62afe84",NA,"pilot3b","Woman",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No comments",96097,"2025-04-08 18:14:33",1762
+"43d9f66b06300f7e2a83f48f40867b4e",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",119200,"2025-04-08 18:05:43",1749
+"806c4a4f0b525dc9ea9ba1f1c5fdf61f",NA,"pilot3b","Man",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was clear and easy to understand",109815,"2025-04-08 17:49:55",1706
+"eabaf098d376aa884b9c23ecb016357a",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no thank you",635107,"2024-12-20 16:57:17",1466
+"1710361ae48ffcaa74dc5234e88a8068",NA,"v5_pilot2","Woman",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No.",595781,"2024-12-20 17:16:44",1546
+"8e4096ea74a5c76c9f995fe9fe1fd5cb",NA,"v5_pilot2","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No feedback at this time",790802,"2024-12-20 16:49:28",1453
+"a20e1de4d182b82a1bed58895c5c86ab",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA," I thought it was interesting",344591,"2024-12-20 18:06:42",1563
+"1984fe002b0c53b62c826d99bc999291",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",92252,"2025-04-08 18:05:35",1748
+"a8d937daf940fa7d86b784dcf9dc0738",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",977149,"2024-12-20 17:21:37",1551
+"a340fa6b8588176a96d9181f6fa23b4e",NA,"v5_pilot2","Woman",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I was a little confused on the reading comprehension.",1181521,"2024-12-19 19:45:58",1428
+"4f7153f4aa34e3b63349b745a4ae0156",NA,"pilot3b","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nope, interesting study!",106538,"2025-04-07 17:43:41",1569
+"e3b9d99b529e8ccc9921c921c09faf8e",NA,"pilot3b","Man",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",104265,"2025-04-08 17:34:12",1637
+"0474c512182e38332aa7d450b0de2dde",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",535588,"2024-12-20 16:41:04",1443
+"612aea1859897d1434acf9b6c4d65653",NA,"pilot3b","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",123177,"2025-04-08 17:31:44",1626
+"530c52d25b0271ee5eef4d639a2bd38c",NA,"v5_pilot2","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",1226957,"2024-12-20 17:10:00",1528
+"d57ebb1921fdbb577de024ec51b9878b",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",503040,"2024-12-19 19:18:47",1411
+"da9b77f8935d49515e7dc843c39fa92e",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",102126,"2025-04-08 17:36:10",1646
+"813d9b22977ca867a7156c0ecd4a3c23",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No not really",653398,"2024-12-20 16:52:52",1457
+"e7a77660dc8009db856e872f33e303c8",NA,"v5_pilot2","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, it was all very easy to understand.",873516,"2024-12-20 16:36:30",1437
+"51070195fba50f97c94d5b9b45131f13",NA,"pilot3b","Woman",NA,"4 year degree","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Was hard to keep track of the details for each car. At first I was thinking the car with the K was best but then changed my mind near the end. ",172616,"2025-04-08 17:29:32",1615
+"d378ca47d67cf37e9dc0ee85e4e2274d",NA,"pilot3b","Woman",NA,"Some college","Prefer not to say",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No. Thank you.",574456,"2025-04-08 17:43:53",1681
+"f5942f6540ec13c703e66c0f6343eedf",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"facts were presented a little to fast to process and remember",179821,"2025-04-08 17:25:56",1603
+"890d9c04915953a1b203dbedce031fc9",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",103156,"2025-04-08 18:27:43",1783
+"5b20b05d53d289a24852e8e950ce51e3",NA,"v5_pilot2","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No.",1045146,"2024-12-20 16:42:19",1446
+"6a87893bb4bb38ed41a61fa5349d3e60",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",113214,"2025-04-08 17:49:19",1702
+"fca0c2a7f3c9deb36f42df5bf1e0ac3b",NA,"pilot3b","Woman",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",107679,"2025-04-08 17:57:53",1723
+"19760b69460074160ae761e8dc61645c",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, the survey was very clear.",140608,"2025-04-08 17:43:04",1676
+"4d018b03c20927009f4ec55e3e34b897",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",156915,"2025-04-08 18:47:00",1790
+"09e4b755bf1fa5e93e7388b92c0c1bbf",NA,"v5_pilot2","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"All sections were clear, some more difficut than others.",680823,"2024-12-20 17:16:12",1545
+"d2ff9a71fd24ff704efd7515a29a3ed7",NA,"pilot3b","Woman",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",185330,"2025-04-08 18:17:32",1769
+"4472a2a2cd5a8e919474bd4b7d31fd23",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"n/a",123804,"2025-04-08 18:17:46",1771
+"fbf00f3ff7e5f39986578aff394e495e",NA,"pilot3b","Woman",NA,"2 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",185972,"2025-04-08 18:03:25",1743
+"d6ccad3bf897ecff9a89151d535f048a",NA,"pilot3b","Man",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing else to add!",104426,"2025-04-07 17:41:00",1568
+"2dcbcdd82e88b676ad32f9c5d19174be",NA,"pilot3b","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",103050,"2025-04-08 17:25:30",1602
+"14429dca36dc7789f7072df7d5ae8362",NA,"v5_pilot2","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no comment",418342,"2024-12-20 16:33:06",1435
+"83d59641f123069c0cfb1db130998765",NA,"pilot3b","Woman",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",117867,"2025-04-08 18:19:58",1776
+"489f88f1fde3b988a766f0f6ccef9a17",NA,"v5_pilot2","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",1615880,"2024-12-19 19:44:46",1426
+"69c6b0c0c0df65736a23dd500fb85d04",NA,"v5_pilot2","Woman",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No it was all really clear.",488427,"2024-12-20 16:44:14",1447
+"ef269d87615ff6e19b021423065b1d09",NA,"v5_pilot2","Man",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No it was all clear.",1300482,"2024-12-20 17:17:38",1547
+"35f03e3bddb05c73d22a93b38c423a4e",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, all parts of the study made sense and were presented where they could be easily understood.",1250222,"2024-12-20 17:05:37",1514
+"816cfbee1399afd1d5144fcfaeee0d1b",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I think this study was clear and easy to understand.",195685,"2025-04-08 17:34:43",1640
+"772e862d6bcd12341651a2e2ed1d347f",NA,"pilot3b","Woman",NA,"2 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was clear. Thank you.",133680,"2025-04-08 17:31:52",1628
+"95ef8ff584302a12d11e7668e4199cb5",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No feedback. The study was straightforward and made sense.",147678,"2025-04-08 18:17:35",1770
+"c7b83e8d026e09a162020bc463e0396b",NA,"v5_pilot2","Man",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",619709,"2024-12-20 16:50:45",1455
+"e0c511cfb6d78f3a804b45cf7e03e816",NA,"pilot3b","Man",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",97446,"2025-04-08 17:57:49",1722
+"1ae4d65931990c2c18c9005368553b69",NA,"pilot3b","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing odd to mention.",96626,"2025-04-08 17:55:52",1719
+"29d097c347ad8af0aa6aea9580f833a6",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NICE STUDY",775196,"2024-12-20 17:08:05",1524
+"b7273713d25e70ff49e1a261fa428570",NA,"pilot3b","Woman",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The names of the cars were confusing.",112285,"2025-04-08 17:16:34",1589
+"0a0b9f8afa2063349ce0b10ee1dc6047",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",118503,"2025-04-07 18:38:54",1581
+"77231323064d216ecbdc58cd9f3ca69f",NA,"v5_pilot2","Woman",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no all things are okay.",1053084,"2024-12-20 17:14:10",1539
+"77231323064d216ecbdc58cd9f3ca69f",NA,"v5_pilot2","Woman",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"all things are good.",440677,"2024-12-20 17:22:15",1552
+"4611e3cf927c8a26ef506a5f106998d4",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",110724,"2025-04-08 17:49:16",1701
+"dbb0c7766f1b3bfa19dc3c9e27511408",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, I think all the parts were pretty clear to me.",1310979,"2024-12-20 17:15:57",1544
+"9aef3006f91beafadf8aa13ec61719d6",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"It was challenging to try to remember the pros and cons of each car, but I focused on environmental impact.",139896,"2025-04-08 17:27:07",1608
+"7d0bf69c05088c957e5eb1907e70ad8a",NA,"v5_pilot2","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",521659,"2024-12-20 17:02:48",1490
+"f7a440ac9058618138c340045e1d4ad4",NA,"pilot3b","Woman",NA,"2 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",123786,"2025-04-08 17:40:14",1659
+"65554c9748b3bf8c31e2995be95daaaa",NA,"pilot3b","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No.",127386,"2025-04-08 17:33:29",1633
+"8e67469ba1382aa66fd64efe8bda4bf3",NA,"v5_pilot2","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",416132,"2024-12-20 17:01:29",1484
+"1d612f9533ba567fbda7818f5fac5b11",NA,"v5_pilot2","Woman",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no. great study",865642,"2024-12-19 19:34:48",1417
+"f1990479bb57ade6cdd1203cdcfd9e37",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No. ",725724,"2024-12-19 19:42:32",1423
+"ed5a69dd27865b2f8145c3e5aa4b91a5",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",748742,"2024-12-19 19:32:50",1416
+"2dc50b7255522f9d7783ec32442f31d5",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No part",206686,"2025-04-07 18:39:50",1582
+"38418932be62d3ef42f831465cd7988a",NA,"v5_pilot2","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"This was fun. I thoroughly enjoyed it!",693598,"2024-12-19 20:17:04",1430
+"3fe34d0e02489c37e92d86bfbceb7881",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"everything was easy to understand and I faced no difficulty what so ever.",576031,"2024-12-20 17:39:28",1562
+"2693dd88cfacae1f72ef693cc6524d40",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"EVERYTHING WAS CLEAR",994813,"2024-12-20 17:10:59",1532
+"f2d1f6ff1a73905a8550ace50d8a58ac",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was clear",1161417,"2024-12-19 19:38:28",1421
+"829a13488c50ae9ef48f92564df6985d",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"n",116269,"2025-04-08 17:45:09",1687
+"71530385632fa655af4ab0595a10858c",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The kawai seemed the worst by far. ",124496,"2025-04-08 17:49:37",1703
+"088a341ea5224a2bffea0447184b1c6f",NA,"v5_pilot2","Man",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I enjoyed the hypothetical scenario on designing a plane that could not be detected by radar.",385931,"2024-12-20 16:56:23",1465
+"d44e878f2b07be55793ab4ca7c3c6e9e",NA,"v5_pilot2","Woman",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",644798,"2024-12-20 17:01:24",1483
+"c1c86ac47d9047170f32081a1c3a22d1",NA,"v5_pilot2","Man",NA,"2 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Good survey",465305,"2024-12-20 17:02:52",1494
+"879da937d6deef585c69773220424337",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing was confusing",512561,"2024-12-20 16:55:22",1461
+"b26712749c8f40fa32a9a1d22a376196",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"the auto part was way too quick so I was really just guessing",416815,"2024-12-20 17:01:53",1486
+"2db2c354b53847cb2cf3415b2cfe5e28",NA,"pilot3b","Man",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no
+",162872,"2025-04-08 17:28:37",1613
+"98c9dcc60c6d57caa941ac8077c1c011",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",1207909,"2024-12-20 16:41:38",1444
+"05ceb122e70f0c200115cce8c2dee470",NA,"pilot3b","Man",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",123320,"2025-04-08 18:02:50",1741
+"eaef3045b30ad23c5f9abc34e979f163",NA,"v5_pilot2","Woman",NA,"2 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",815440,"2024-12-20 17:13:28",1537
+"a6b74c267723898e0137928a4e11f88f",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",175029,"2025-04-08 18:06:57",1751
+"d73aca82c206161bca8d308f81e9136d",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"This was a great surevey",1022285,"2024-12-20 17:04:05",1507
+"0c4871f500f4e841e0e1723766bad182",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",272540,"2025-04-08 17:30:28",1619
+"307064c5b835cd5be17539ddb9961b30",NA,"v5_pilot2","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"This was a really interesting study",628759,"2024-12-20 16:58:09",1469
+"97821a122f2bfc89eda3e351a06b3963",NA,"v5_pilot2","Man",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NO",864019,"2024-12-20 17:22:40",1553
+"82101045d005be7742698e882cfc3242",NA,"v5_pilot2","Woman",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"everything made sense",1550055,"2024-12-20 17:18:43",1549
+"b73e332537da167c73e87da610b20012",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nothing was confusing!",110074,"2025-04-08 17:36:30",1649
+"561445483a1b59e8e91b7110b6339d10",NA,"pilot3b","Woman",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nothing confusing",119604,"2025-04-08 17:44:01",1682
+"87da1dccf36f6540285a072e6a1ff883",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No comment",1453104,"2024-12-19 19:47:07",1429
+"5fc59d42cb381e13b6c892f62f5055b4",NA,"v5_pilot2","Woman",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The study made sense, it was interesting and engaging.",1132272,"2024-12-20 17:33:23",1559
+"7e8cf0d7fa57c2ee0561cfb655e44126",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No. I understood all parts.",1015064,"2024-12-20 16:54:30",1460
+"2e201a0fc7065d02afdf9538778d4e05",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Little confused on the connection of these studies",646139,"2024-12-20 16:38:17",1438
+"7b206947dd1cf2f9e61f31315996aec9",NA,"v5_pilot2","Woman",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",872813,"2024-12-20 16:57:36",1468
+"e0cc4215481be7bede84dfb4aaf56505",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",608635,"2024-12-20 17:06:24",1519
+"a7ec73a6a3931264c10b41945852d3cb",NA,"v5_pilot2","Woman",NA,"2 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I did not like the question about the British war it was confusing ",772276,"2024-12-20 17:07:10",1523
+"326bc1125935a446801035cf665e015b",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",149085,"2025-04-08 17:23:42",1597
+"6562368c31c725dc16aca09fa63b3c11",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No Comment or Feedback.",1073003,"2024-12-20 17:03:00",1498
+"8bd53e2fa57b06087a751b83c1a2f908",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, the study is well understandable",1482839,"2024-12-20 17:32:12",1558
+"d85ba4204bd89f40e9b6ab1d85a84aaa",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I had No confused. ",1271341,"2024-12-20 17:12:13",1535
+"eb2c19df10e46a88c7899ec25706cc01",NA,"pilot3b","Man",NA,"2 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Not at this time",119483,"2025-04-08 17:34:52",1641
+"300da18be3e05bf65e31671608098781",NA,"v5_pilot2","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"not at all",920124,"2024-12-20 17:10:37",1530
+"76412dae8e791d31c1afc158d9d85371",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything was easy to understand",1334325,"2024-12-20 17:34:39",1560
+"3bed4e53edf036f195327ae37adbb7da",NA,"pilot3b","Woman",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",158506,"2025-04-08 18:05:29",1747
+"d9f33ac85ff703cc80ea78877c97c4ae",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Thank you",1547826,"2024-12-20 17:27:55",1555
+"26c561ed32402db22eae67306a5ff7de",NA,"v5_pilot2","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Not really. It was very slightly mentally challenging to jump from one task to another and not knowing what to expect, but I enjoyed the challenge. ",669178,"2024-12-20 16:53:04",1458
+"818a58e4a8fc6d2aa2d856ffea1d20f5",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I enjoyed this study very much! Thank you for letting me participate!",793043,"2024-12-20 17:02:52",1493
+"6887c7149c090373379c56b4d5ee9677",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NON",620864,"2024-12-20 17:01:45",1485
+"859dcceed0ab5c265b443942213fda0b",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I wasnt sure how it was all related",662386,"2024-12-20 17:02:58",1497
+"98647f6efb1d8992755f0b3fd8d7a854",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",1746444,"2024-12-20 17:04:25",1509
+"f2d2d18a0f69a376b23b176769a94fdb",NA,"v5_pilot2","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, all of it made sense and was presented in a way that encouraged a steady workflow throughout its entirety.",896622,"2024-12-20 17:10:00",1529
+"83787e93efb1b5f48e927cf5fc04586d",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Not applicable",741514,"2024-12-20 16:49:54",1454
+"a46b98ae10f070f52cd4bafa58ba1c99",NA,"v5_pilot2","Man",NA,"High school","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",1183384,"2024-12-20 17:15:27",1543
+"71c310ccf8e0057b190319cdd4e3924f",NA,"v5_pilot2","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The study is quite good. like the survey.",900485,"2024-12-20 17:01:02",1479
+"71c310ccf8e0057b190319cdd4e3924f",NA,"v5_pilot2","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"the study is quite good.",280794,"2024-12-20 17:06:16",1517
+"2f5e5dd74bf648be64a0d3959398e18c",NA,"v5_pilot2","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",503635,"2024-12-20 16:29:27",1433
+"4ff213d12ec336147604b2a703cc66c6",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"cool",151873,"2025-04-08 17:24:11",1600
+"4ff213d12ec336147604b2a703cc66c6",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"cool",152128,"2025-04-08 17:46:42",1695
+"6cac0c91faa02156c641e4543fa3d517",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA," I appreciated the clear and concise instructions, which helped me to stay focused on the critical thinking and problem-solving aspects of the study,Thank you for the opportunity to participate.",2168738,"2024-12-20 17:15:21",1542
+"9d519e1926c5212245f5071ae14402e0",NA,"v5_pilot2","Woman",NA,"Some college","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"most of it",417217,"2024-12-20 16:47:52",1449
+"d0416d3e7d4a9c99329376094f613ab7",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"the study made sense and was interesting.",1516215,"2024-12-20 17:20:55",1550
+"90d15cfdd4625fa0b3a5b0f60dcb3a1b",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I don't have any feedback.",1126807,"2024-12-20 16:55:43",1462
+"9efa3a4c7d151b07b0e95fe04540b201",NA,"v5_pilot2","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NO",716535,"2024-12-20 16:58:28",1471
+"4c351077f94b17fff52c79d5b9c25ae9",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No ",118466,"2025-04-08 18:20:05",1777
+"5c911c3a443eaaa76bfd7d198a534202",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No, although the first part with the different vehicles was somewhat stressful. It was difficult to keep the names straight and remember specific details about each car due to the speed of the facts being shown",440390,"2024-12-20 17:03:50",1506
+"d5e6ba43cf0d0695049d9a04cece132f",NA,"v5_pilot2","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The last question about movie and the numbers and letters were a bit confusing",2369240,"2024-12-20 17:29:31",1556
+"665f553398920b66d7b0190e4d53a044",NA,"v5_pilot2","Man",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no thanks",957615,"2024-12-20 17:06:00",1516
+"824c3298f526474995670c45d8c3be29",NA,"v5_pilot2","Woman",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Nope.",387781,"2024-12-20 16:58:48",1472
+"9f7764832ca1ed9b05fa4a16f2efc528",NA,"v5_pilot2","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no feedback",1154942,"2024-12-20 16:39:43",1440
+"1698ae5f7364c5e3ea2790d050e370ab",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"good",972465,"2024-12-20 17:08:27",1525
+"1698ae5f7364c5e3ea2790d050e370ab",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"good",664769,"2024-12-20 17:24:24",1554
+"e4b92d37ae350dd53b8e015d2f366f4b",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"there were no confusing parts all parts required logical reasoning ",1080701,"2024-12-20 16:48:04",1450
+"2bee494875a3876e82a7b126fb3e3cbd",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"In general, the instructions were clear and the process seemed smooth.",863042,"2024-12-20 17:12:11",1534
+"5e9589139b0c5c3852d6e8a0d5a9cbf6",NA,"pilot3b","Woman",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The only part that was a little confusing were the names of the items because they were made up words.",170210,"2025-04-07 18:48:44",1586
+"9426c759053d7e23c8c650fe9a247bce",NA,"v5_pilot2","Man",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no comments",1083184,"2024-12-19 19:37:39",1420
+"15d74fb0716fb9637fecdf2425405959",NA,"v5_pilot2","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",1449317,"2024-12-20 17:04:19",1508
+"e3ad4918a0e74cb67f028c48fa720c99",NA,"v5_pilot2","Woman",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"the survey was easy to understand",1393831,"2024-12-19 19:44:17",1425
+"830ea0c277ba8d8cf82b078262ea9413",NA,"v5_pilot2","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"it was really confusing",1066021,"2024-12-20 17:00:26",1476
+"c18b2a256b0a46136941e80efb64393b",NA,"v5_pilot2","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"it was normal.",1110393,"2024-12-20 17:15:16",1541
+"35f520f8d79c47dfb091d37100cb3be6",NA,"v5_pilot2","Man",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",592367,"2024-12-20 17:07:10",1522
+"3b45c55dff73f93ece754f743c1bff73",NA,"v5_pilot2","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",641399,"2024-12-20 16:41:38",1445
+"ec22cbecb70aa0a8d55079d7bb89d9ad",NA,"v5_pilot2","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"n/a",491761,"2024-12-20 16:59:50",1475
+"5d460e4a97990c7d237d4df923348e32",NA,"v5_pilot2","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Some looked somewhat new to me,but I enjoyed the study.",1454889,"2024-12-19 19:45:43",1427
+"062c677d1f04487744a66bfb58b71e85",NA,"v5_pilot2","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Everything went on smoothly ",1141347,"2024-12-20 16:23:11",1432
+"b24199dbedd0549b8f4d2579d5c25060",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"thanks",111851,"2025-04-08 17:46:17",1692
+"933eb961e9f8fe0b94ee1dcfe8707573",NA,"pilot3b","Man",NA,"2 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",103104,"2025-04-08 17:18:21",1591
+"41267f27a1b86073cc6874545c262f0b",NA,"pilot3b","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"nope",115726,"2025-04-08 17:49:43",1704
+"7de6d3dc4c04dff1df84a4b0d437aa27",NA,"pilot3b","Man",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",150043,"2025-04-07 17:51:44",1573
+"3af28d6ceb3226eb987e55d3c8f9bba0",NA,"pilot3b","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No parts were confusing. The study was easy to follow.",148247,"2025-04-08 17:54:57",1716
+"f6ba6612a5049e98b127a9041b40dcee",NA,"pilot3b","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",105334,"2025-04-08 18:17:27",1767
+"5da27e3218192feee872a1f8522cc8de",NA,"pilot3b","Woman",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The names were a bit hard to sound out in my head. ",201101,"2025-04-08 18:17:58",1772
+"d4dda2dbefa6a37206b95c1cabeb30d2",NA,"pilot3b","Woman",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"All was good",158810,"2025-04-08 17:32:19",1630
+"d99f426cb0e103672a463ec0774520f1",NA,"pilot3b","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",101387,"2025-04-08 17:37:19",1654
+"90a989cb38b4c596c478179909aec651",NA,"pilot3b","Woman",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",118655,"2025-04-08 17:29:52",1616
+"80f3698ac44c687905c4e11bfc1dd167",NA,"pilot3b","Woman",NA,"Some college","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",111440,"2025-04-08 17:30:27",1618
+"eba910ddd6e0d1d1abe0bcbcf6cdbb47",NA,"pilot3b","Man",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,101238,"2025-04-08 17:53:43",1712
+"0929ef1747382f3ad05774374422ec7f",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",118466,"2025-04-08 17:59:58",1730
+"c9f73a4776e9fab4efbfa60bf4f2e512",NA,"pilot3b","Woman",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"It was very straightforward, no notes.",119931,"2025-04-08 17:26:58",1607
+"239502cce1feee3ac2f795de20eb9e22",NA,"pilot3b","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"no",97259,"2025-04-08 18:01:23",1734
+"7c82c870df9131f94a6f307c46ebb75f",NA,"pilot3b","Man",NA,"High school","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"not it was fairly simple and easy to pay attention too",110910,"2025-04-08 17:26:08",1605
+"3e2a4682207b9548a8ba66c78190f38b",NA,"pilot3b","Woman",NA,"Some college","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"I understood the study and the font was easy to read.",192086,"2025-04-08 17:46:56",1696
+"a762104aa8bfc96b35d0b8b2c0b0a168",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",119048,"2025-04-08 18:01:46",1736
+"783a03bffe7bd78e3fb20bc1cd64463b",NA,"pilot3b","Woman",NA,"High school","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"the study went well",193699,"2025-04-08 18:36:49",1786
+"e84286b041903f6edc7f33bf87d77e37",NA,"pilot3b","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"why are they old",365710,"2025-04-08 18:18:26",1775
+"5e8adcc5285eff22527874ae7958df63",NA,"pilot3b","Woman",NA,"2 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"its a bit much trying to remember all 36 key points and which car the point belonged to but as soon as I heard new i knew that was the car for me. new outperformed any other positive.",276467,"2025-04-07 18:46:00",1585
+"6ee803974b44779137f06c60cbe46087",NA,"pilot3b","Woman",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",140074,"2025-04-08 18:14:55",1764
+"01ec585a7078e38ba15958ff59a13b09",NA,"pilot3b","Man",NA,"Some college","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",165853,"2025-04-08 17:36:20",1647
+"4301488f49d8467534da2e59633095a4",NA,"pilot3b","Man",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",148423,"2025-04-08 17:31:21",1624
+"fdaf9cb32d37a4006c6e2120164ec29b",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",125393,"2025-04-08 17:43:09",1678
+"a9c9129bb1705313db2ba199fc8c95f1",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NO",166058,"2025-04-08 18:18:03",1774
+"7fecaa8fd7e5acad1ed04110451909db",NA,"pilot3b","Man",NA,"4 year degree","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"None",208729,"2025-04-08 18:48:50",1791
+"49e324519b6f78a1b62ab448c93f90f4",NA,"pilot3b","Woman",NA,"Some college","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The study was very interesting. There were not any parts that were confusing at all.",202731,"2025-04-08 17:40:18",1660
+"7296d3cb84c60ae1cfa0e5df350a9ce3",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"yes",215135,"2025-04-08 17:51:54",1710
+"06d5f71420743c5784233db0c324d796",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No.",172201,"2025-04-08 18:09:11",1756
+"4a6b1a7746e98e9588689b5139dce40b",NA,"pilot3b","Some other way",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",188451,"2025-04-08 18:43:40",1788
+"e9b46db4e83cc751b512e54fef56c20e",NA,"pilot3b","Woman",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"none",168414,"2025-04-08 18:09:27",1757
+"16d29f21cd9498268dc745f9a6a2e6bc",NA,"pilot3b","Man",NA,"Postgraduate/Professional degree/other","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"Yes,",177201,"2025-04-08 17:53:57",1713
+"0408c5b8cd7e060f1b1ba45f32f3d121",NA,"pilot3b","Man",NA,"High school","$50,000-$75,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"The sentences flashed on the screen pretty fast but I was able to see the car that had the most favorable traits.",171633,"2025-04-08 17:30:41",1620
+"853fdc0f89e61a75d06ac80099a40ca5",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"N/A",189075,"2025-04-08 17:30:59",1622
+"91991ba98aa14052dbfa24e5fcb05907",NA,"pilot3b","Man",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"NONE",102452,"2025-04-08 17:59:42",1729
+"c86e5c2be220153d01af996ddf1a968e",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",205808,"2025-04-08 17:40:23",1661
+"c86e5c2be220153d01af996ddf1a968e",NA,"pilot3b","Woman",NA,"4 year degree","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",205808,"2025-04-08 17:40:33",1662
+"15c4b0818bc39cd1aecf420b3e75c158",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"na",92850,"2025-04-08 17:28:36",1612
+"8d4ff4077355c46c6e6fae3635bcfada",NA,"pilot3b","Some other way",NA,"4 year degree","Less than $25,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No",153034,"2025-04-07 18:23:14",1578
+"1a0521572df6174418a6b9f0baa8f3de",NA,"pilot3b","Woman",NA,"4 year degree","$75,000-$100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No everything was okay. It only needed attention to compare between the three cars ",240690,"2025-04-07 17:50:07",1572
+"c18d8c8366b95c0e4810c64ce7ea94e0",NA,"pilot3b","Man",NA,"4 year degree","$25,000-$50,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"No. It was all good",188231,"2025-04-08 17:43:00",1674
+"2257c254a4e750ebfb3635bc6794731a",NA,"pilot3b","Woman",NA,"Postgraduate/Professional degree/other","More than $100,000",NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,"the pop up defintions were too fast, not enough to compare with the previous",158412,"2025-04-08 17:32:44",1631

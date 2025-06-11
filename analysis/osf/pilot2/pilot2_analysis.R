@@ -9,7 +9,9 @@ pkg.names = c('ggplot2', 'tidyverse', 'RColorBrewer', 'extrafont',
 p_load(char = pkg.names)
 
 setwd(here())
-set.seed(123)
+
+RANDOM_SEED = 123
+set.seed(RANDOM_SEED)
 
 # color palettes
 
@@ -40,6 +42,47 @@ range01 <- function(x){(x-min(x))/(max(x)-min(x))}
 dodge <- position_dodge(width=0.9)
 
 default_priors <- set_prior("normal(0,1)", class = 'b')
+
+theme_black = function(base_size = 12, base_family = "") {
+  theme_grey(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # Specify axis options
+      axis.line = element_blank(),  
+      axis.text.x = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.text.y = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.ticks = element_line(color = "white", size  =  0.2),  
+      axis.title.x = element_text(size = 18, color = "white", margin = margin(0, 10, 0, 0)),  
+      axis.title.y = element_text(size = 18, color = "white", angle = 90, margin = margin(0, 10, 0, 0)),  
+      axis.ticks.length = unit(0.3, "lines"),   
+      # Specify legend options
+      legend.background = element_rect(color = NA, fill = "black"),  
+      legend.key = element_rect(color = "white",  fill = "black"),  
+      legend.key.size = unit(1.2, "lines"),  
+      legend.key.height = NULL,  
+      legend.key.width = NULL,      
+      legend.text = element_text(size = base_size*0.8, color = "white"),  
+      legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
+      legend.position = "right",  
+      legend.text.align = NULL,  
+      legend.title.align = NULL,  
+      legend.direction = "vertical",  
+      legend.box = NULL, 
+      # Specify panel options
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank(),
+      panel.border = element_rect(fill = NA, color = "white"),  
+      # Specify facetting options
+      strip.background = element_rect(fill = "grey30", color = "grey10"),  
+      strip.text.x = element_text(size = base_size*0.8, color = "white"),  
+      strip.text.y = element_text(size = base_size*0.8, color = "white",angle = -90),  
+      # Specify plot options
+      plot.background = element_rect(color = "black", fill = "black"),  
+      plot.title = element_text(size = base_size*1.2, color = "white"),  
+      plot.margin = unit(rep(1, 4), "lines")
+    )
+}
+
 
 # Load data ---------------------------------------------------------------
 
@@ -98,14 +141,8 @@ ggplot(demographics, aes(x = total_time)) +
 
 print(median(demographics$total_time))
 
-nofactor = df %>% 
-  filter(subject %in% demographics$subject,
-         is.na(factor)) %>% 
-  pull(subject)
-length(nofactor) #0
-
-all_potential_exclusions <- c(attention_exclude, tab_away_exclude)
-to_exclude <- unique(all_potential_exclusions)
+all_exclusions <- c(attention_exclude, tab_away_exclude)
+to_exclude <- unique(all_exclusions)
 
 number_subjects <- n_distinct(data$subject)
 number_to_exclude <- length(to_exclude)
@@ -113,34 +150,16 @@ print(number_subjects) #324
 print(number_to_exclude) #115
 #324-115 = 209
 
-subjects_after_main_exclusion <- data %>%
-  filter(!subject %in% to_exclude) %>%
-  pull(subject) %>%
-  unique()
-
-final_subjects <- data %>%
-  filter(!subject %in% to_exclude,
-         !is.na(factor),
-         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
-         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control")) %>%
-  pull(subject) %>%
-  unique()
-
-subjects_removed_by_subsequent_filters <- setdiff(subjects_after_main_exclusion, final_subjects)
-# 1 subject removed by subsequent filters
-
 data <- data %>%
   filter(!subject %in% to_exclude,
          !is.na(factor),
-         !(subject == "62d06d1b651d6922f62fab9b" & factor == "control"),
-         !(subject == "672cbd3e4db513bd8523d57f" & factor == "control"))
+         !(subject == "2a47a77c48b523a9f73cf427d03a21f5" & factor == "control"),
+         !(subject == "b4ab5adb6171094fa050298cc896203d" & factor == "control"))
 
-length(unique(data$subject)) #206 Participants(
-length(unique(data$subject[data$factor == 'experience'])) # 100 experience)
+length(unique(data$subject)) #208 Participants
+length(unique(data$subject[data$factor == 'experience'])) # 102 experience
 length(unique(data$subject[data$factor == 'control'])) # 106 control
 
-
-#font_import(pattern = "Optima", prompt = FALSE)
 loadfonts(device = "pdf")
 
 # Halo effect ----
@@ -193,26 +212,27 @@ ggplot(halo_summary, aes(x = condition, y = mean_attractiveness, fill = conditio
 ggplot(halo_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-  labs(title = "Average Persuasiveness by Attractiveness", x = "Condition", y = "Average Choice") +
   theme_custom()+
   scale_fill_manual(values = exp_control)+
+  labs(x="Within-subject condition", y = "Average persuasiveness rating")+
   guides(fill = "none")+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  scale_x_discrete(labels = c("Attractive\ntargets", "Unattractive\ntargets"))
 
 # bayesian analysis
 halo_analysis = brm(choice ~ condition + (1 | subject),
-                    data = halo_data_choices %>% mutate(choice = scale(choice)),
+                    data = halo_data_choices %>% 
+                      filter(condition != "average") %>%
+                      mutate(choice = scale(choice),
+                             condition = factor(condition, c('unattractive', 'attractive'))),
                     prior = default_priors,
                     save_pars = save_pars(group = F),
                     cores = 4,
-                    control = list(adapt_delta = 0.95))
+                    control = list(adapt_delta = 0.95),
+                    seed = RANDOM_SEED)
 summarise_draws(halo_analysis)
 check_divergences(halo_analysis$fit)
 summary(halo_analysis)
-hdi(halo_analysis, effects = 'all')
+hdi(halo_analysis)
 
 ## are people aware of the effect? ----
 
@@ -253,16 +273,19 @@ ggplot(halo_summary_introspection_experience,
 
 halo_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
                                                       halo_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
-                                                      save_pars = save_pars(group = F))
+                                                      save_pars = save_pars(group = F),
+                                                      seed = RANDOM_SEED)
 summary(halo_analysis_introspection_experience_midpoint)
 hdi(halo_analysis_introspection_experience_midpoint)
 summarise_draws(halo_analysis_introspection_experience_midpoint)
 check_divergences(halo_analysis_introspection_experience_midpoint$fit)
 
 halo_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
-                                                          halo_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                          halo_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                        showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                           prior = default_priors,
-                                                          save_pars = save_pars(group = F))
+                                                          save_pars = save_pars(group = F),
+                                                          seed = RANDOM_SEED)
 summary(halo_analysis_introspection_experience_dichotomized)
 hdi(halo_analysis_introspection_experience_dichotomized)
 summarise_draws(halo_analysis_introspection_experience_dichotomized)
@@ -279,7 +302,8 @@ halo_analysis_introspection_experience_continuous = brm(introspect_rating ~ effe
                                                         halo_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                                       effect_size = scale(effect_size)),
                                                         prior = default_priors,
-                                                        save_pars = save_pars(group = F))
+                                                        save_pars = save_pars(group = F),
+                                                        seed = RANDOM_SEED)
 summary(halo_analysis_introspection_experience_continuous)
 hdi(halo_analysis_introspection_experience_continuous)
 summarise_draws(halo_analysis_introspection_experience_continuous)
@@ -312,20 +336,19 @@ ggplot(illusory_summary, aes(x = seen_before, y = mean_choice, fill = seen_befor
                     ymax = mean_choice + se_choice),
                 width = 0.2) +
   theme_custom() +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
-
-  labs(title = "Illusory Truth Effect", x = "Seen Before?", y = "Truth Rating") +
+  labs(title = "", x = "Within-subject condition", y = "Truthfulness rating") +
   scale_fill_manual(values = exp_control)+
-  guides(fill = FALSE)
+  guides(fill = FALSE) +
+  scale_x_discrete(labels=c('Seen', 'Unseen'))
 
 illusory_analysis = brm(choice ~ seen_before + (1 | subject),
                         prior = default_priors,
-                        illusory_data_choices %>% mutate(choice = scale(choice)),
+                        illusory_data_choices %>% mutate(choice = scale(choice),
+                                                         seen_before = factor(seen_before, c('Unseen', 'Seen'))),
                         save_pars = save_pars(group = F),
                         cores = 4,
-                        control = list(adapt_delta = 0.95))
+                        control = list(adapt_delta = 0.95),
+                        seed = RANDOM_SEED)
 summarise_draws(illusory_analysis)
 check_divergences(illusory_analysis$fit)
 summary(illusory_analysis)
@@ -371,16 +394,19 @@ ggplot(illusory_summary_introspection_experience,
 
 illusory_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
                                                       illusory_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
-                                                      save_pars = save_pars(group = F))
+                                                      save_pars = save_pars(group = F),
+                                                      seed = RANDOM_SEED)
 summary(illusory_analysis_introspection_experience_midpoint)
 hdi(illusory_analysis_introspection_experience_midpoint)
 summarise_draws(illusory_analysis_introspection_experience_midpoint)
 check_divergences(illusory_analysis_introspection_experience_midpoint$fit)
 
 illusory_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
-                                                              illusory_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                              illusory_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                               prior = default_priors,
-                                                              save_pars = save_pars(group = F))
+                                                              save_pars = save_pars(group = F),
+                                                              seed = RANDOM_SEED)
 summary(illusory_analysis_introspection_experience_dichotomized)
 hdi(illusory_analysis_introspection_experience_dichotomized)
 summarise_draws(illusory_analysis_introspection_experience_dichotomized)
@@ -397,7 +423,8 @@ illusory_analysis_introspection_experience_continuous = brm(introspect_rating ~ 
                                                             illusory_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                                               effect_size = scale(effect_size)),
                                                             prior = default_priors,
-                                                            save_pars = save_pars(group = F))
+                                                            save_pars = save_pars(group = F),
+                                                            seed = RANDOM_SEED)
 summary(illusory_analysis_introspection_experience_continuous)
 hdi(illusory_analysis_introspection_experience_continuous)
 summarise_draws(illusory_analysis_introspection_experience_continuous)
@@ -423,19 +450,18 @@ omission_summary <- omission_data %>%
 ggplot(omission_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Omission Principle", x = "Condition", y = "Forbidden to Obligatory") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
+  labs(title = "", x = "Group", y = "Moral permisiveness") +
   theme_custom()+
   scale_fill_manual(values = exp_control)+
   guides(fill = "none")+ 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  scale_x_discrete(labels = c("Experimental\n(Commission)", "Control\n(Omission)"))
 
 omission_analysis = brm(choice ~ condition,
-                        omission_data %>% mutate(choice = scale(choice)),
+                        omission_data %>% mutate(choice = scale(choice),
+                                                 condition = factor(condition, c('omission', 'commission'))),
                         prior = default_priors,
-                        save_pars = save_pars(group = F))
+                        save_pars = save_pars(group = F),
+                        seed = RANDOM_SEED)
 summary(omission_analysis)
 hdi(omission_analysis)
 summarise_draws(omission_analysis)
@@ -473,16 +499,19 @@ ggplot(omission_summary_introspection_experience, aes(x = showed_effect, y = mea
 
 omission_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
                                                           omission_data_introspection_experience%>% mutate(introspect_rating = scale(introspect_rating, center = F)),
-                                                          save_pars = save_pars(group = F))
+                                                          save_pars = save_pars(group = F),
+                                                          seed = RANDOM_SEED)
 summary(omission_analysis_introspection_experience_midpoint)
 hdi(omission_analysis_introspection_experience_midpoint)
 summarise_draws(omission_analysis_introspection_experience_midpoint)
 check_divergences(omission_analysis_introspection_experience_midpoint$fit)
 
 omission_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
-                                                              omission_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                              omission_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                               prior = default_priors,
-                                                              save_pars = save_pars(group = F))
+                                                              save_pars = save_pars(group = F),
+                                                              seed = RANDOM_SEED)
 summary(omission_analysis_introspection_experience_dichotomized)
 hdi(omission_analysis_introspection_experience_dichotomized)
 summarise_draws(omission_analysis_introspection_experience_dichotomized)
@@ -499,7 +528,8 @@ omission_analysis_introspection_experience_continuous = brm(introspect_rating ~ 
                                                             omission_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                                               effect_size = scale(effect_size)),
                                                             prior = default_priors,
-                                                            save_pars = save_pars(group = F))
+                                                            save_pars = save_pars(group = F),
+                                                            seed = RANDOM_SEED)
 summary(omission_analysis_introspection_experience_continuous)
 hdi(omission_analysis_introspection_experience_continuous)
 summarise_draws(omission_analysis_introspection_experience_continuous)
@@ -532,33 +562,20 @@ ggplot(recognition_summary, aes(x = auxiliary_info1, y = percent, fill = auxilia
     color = "black",
     linewidth = 0.5
   ) +
-  geom_text(aes(label = paste0("n=", n)),
-            position = position_dodge(0.9),
-            vjust = -0.5, # Adjust this if text overlaps with error bars too much
-            family = "Optima",
-            size = 3.5) +
-  scale_y_continuous(labels = scales::percent_format(scale = 1), limits = c(0, max(recognition_summary$percent + recognition_summary$se_percent, na.rm = TRUE) * 1.1), expand = c(0,0)) +
   labs(
-    title = "Recognition Effect for City Population",
-    x = "Chose the Recognizable City",
-    y = "Percentage"
+    x = "Within-subject condition",
+    y = "Percentage of choice"
   ) +
   theme_custom() +
   scale_fill_manual(values = exp_control) +
   guides(fill = FALSE) +
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14)) +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 16), # Added for completeness if theme_custom doesn't set it
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12),
-    axis.title.x = element_text(size = 14),
-    axis.title.y = element_text(size = 14)
-  )
+  scale_x_discrete(labels = c('Recognizable\ncity', 'Unrecognizable\ncity'))
 
 recognition_analysis = brm(chose_recognizable_num ~ 1 + (1 | subject), 
                            recognition_data,
                            family = 'bernoulli',
-                           save_pars = save_pars(group = F))
+                           save_pars = save_pars(group = F),
+                           seed = RANDOM_SEED)
 summary(recognition_analysis)
 hdi(recognition_analysis)
 summarise_draws(recognition_analysis)
@@ -599,20 +616,23 @@ ggplot(recognition_summary_introspection_experience, aes(x = showed_effect, y = 
 
 recognition_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
                                                              recognition_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
-                                                             save_pars = save_pars(group = F))
+                                                             save_pars = save_pars(group = F),
+                                                             seed = RANDOM_SEED)
 summary(recognition_analysis_introspection_experience_midpoint)
 hdi(recognition_analysis_introspection_experience_midpoint)
 summarise_draws(recognition_analysis_introspection_experience_midpoint)
 check_divergences(recognition_analysis_introspection_experience_midpoint$fit)
 
-recognition_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect,
-                                                                recognition_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+recognition_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
+                                                                recognition_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                     showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                                 prior = default_priors,
-                                                                save_pars = save_pars(group = F))
-summary(recognition_analysis_introspection_experience_dichotomous)
-hdi(recognition_analysis_introspection_experience_dichotomous)
-summarise_draws(recognition_analysis_introspection_experience_dichotomous)
-check_divergences(recognition_analysis_introspection_experience_dichotomous$fit)
+                                                                save_pars = save_pars(group = F),
+                                                                seed = RANDOM_SEED)
+summary(recognition_analysis_introspection_experience_dichotomized)
+hdi(recognition_analysis_introspection_experience_dichotomized)
+summarise_draws(recognition_analysis_introspection_experience_dichotomized)
+check_divergences(recognition_analysis_introspection_experience_dichotomized$fit)
 
 # continuous
 ggplot(recognition_data_introspection_experience, aes(x = effect_size, y = introspect_rating)) +
@@ -625,7 +645,8 @@ recognition_analysis_introspection_experience_continuous = brm(introspect_rating
                                                                recognition_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                                                     effect_size = scale(effect_size)),
                                                                prior = default_priors,
-                                                               save_pars = save_pars(group = F))
+                                                               save_pars = save_pars(group = F),
+                                                               seed = RANDOM_SEED)
 summary(recognition_analysis_introspection_experience_continuous)
 hdi(recognition_analysis_introspection_experience_continuous)
 summarise_draws(recognition_analysis_introspection_experience_continuous)
@@ -651,19 +672,18 @@ reference_summary <- reference_data %>%
 ggplot(reference_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Amount Willing to Pay for Beer", x = "Condition", y = "Average Amount Willing to Pay (Dollars)") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
+  labs(title = "", x = "Group", y = "Willingness to pay ($)") +
   theme_custom()+
   scale_fill_manual(values = exp_control)+
   guides(fill = "none")+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  scale_x_discrete(labels = c("Experimental\n(Hotel)", "Control\n(Motel)"))
 
 reference_analysis = brm(choice_parsed ~ condition,
-                         reference_data %>% mutate(choice_parsed = scale(choice_parsed)),
+                         reference_data %>% mutate(choice_parsed = scale(choice_parsed),
+                                                   condition = factor(condition, c('motel', 'hotel'))),
                          prior = default_priors,
-                         save_pars = save_pars(group = F))
+                         save_pars = save_pars(group = F),
+                         seed = RANDOM_SEED)
 summary(reference_analysis)
 hdi(reference_analysis)
 summarise_draws(reference_analysis)
@@ -699,16 +719,19 @@ ggplot(reference_summary_introspection_experience, aes(x = showed_effect, y = me
 
 reference_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
                                                            reference_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
-                                                           save_pars = save_pars(group = F))
+                                                           save_pars = save_pars(group = F),
+                                                           seed = RANDOM_SEED)
 summary(reference_analysis_introspection_experience_midpoint)
 hdi(reference_analysis_introspection_experience_midpoint)
 summarise_draws(reference_analysis_introspection_experience_midpoint)
 check_divergences(reference_analysis_introspection_experience_midpoint$fit)
 
 reference_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
-                                                               reference_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                               reference_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                  showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                                prior = default_priors,
-                                                               save_pars = save_pars(group = F))
+                                                               save_pars = save_pars(group = F),
+                                                               seed = RANDOM_SEED)
 summary(reference_analysis_introspection_experience_dichotomized)
 hdi(reference_analysis_introspection_experience_dichotomized)
 summarise_draws(reference_analysis_introspection_experience_dichotomized)
@@ -725,7 +748,8 @@ reference_analysis_introspection_experience_continuous = brm(introspect_rating ~
                                                              reference_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                                                 effect_size = scale(effect_size)),
                                                              prior = default_priors,
-                                                             save_pars = save_pars(group = F))
+                                                             save_pars = save_pars(group = F),
+                                                             seed = RANDOM_SEED)
 summary(reference_analysis_introspection_experience_continuous)
 hdi(reference_analysis_introspection_experience_continuous)
 summarise_draws(reference_analysis_introspection_experience_continuous)
@@ -750,19 +774,17 @@ representativeness_summary <- representativeness_data %>%
 ggplot(representativeness_summary, aes(x = condition, y = mean_choice, fill = condition)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_choice - se_choice, ymax = mean_choice + se_choice), width = 0.2) +
-  labs(title = "Representativeness Heuristic", x = "Condition", y = "average likelihood of engineer") +
-  geom_text(aes(label = paste0("n=", count)), 
-            position = position_dodge(0.9), vjust = -0.5, 
-            family = "Optima") +
+  labs(title = "", x = "Group", y = "Reported likelihood of engineer") +
   theme_custom() +
   scale_fill_manual(values = exp_control)+
   guides(fill = "none")+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 14))
+  scale_x_discrete(labels = c("Experimental\n(Representative)", "Control\n(No description)"))
 
 representativeness_analysis = brm(choice ~ condition,
                                   representativeness_data %>% mutate(choice = scale(choice)),
                                   prior = default_priors,
-                                  save_pars = save_pars(group = F))
+                                  save_pars = save_pars(group = F),
+                                  seed = RANDOM_SEED)
 summary(representativeness_analysis)
 hdi(representativeness_analysis)
 summarise_draws(representativeness_analysis)
@@ -798,16 +820,19 @@ ggplot(representativeness_summary_introspection_experience, aes(x = showed_effec
 
 representativeness_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1,
                                                                     representativeness_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating, center = F)),
-                                                                    save_pars = save_pars(group = F))
+                                                                    save_pars = save_pars(group = F),
+                                                                    seed = RANDOM_SEED)
 summary(representativeness_analysis_introspection_experience_midpoint)
 hdi(representativeness_analysis_introspection_experience_midpoint)
 summarise_draws(representativeness_analysis_introspection_experience_midpoint)
 check_divergences(representativeness_analysis_introspection_experience_midpoint$fit)
 
 representativeness_analysis_introspection_experience_dichotomized = brm(introspect_rating ~ showed_effect,
-                                                                        representativeness_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating)),
+                                                                        representativeness_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
+                                                                                                                                    showed_effect = factor(showed_effect, c('No effect', 'Effect'))),
                                                                         prior = default_priors,
-                                                                        save_pars = save_pars(group = F))
+                                                                        save_pars = save_pars(group = F),
+                                                                        seed = RANDOM_SEED)
 summary(representativeness_analysis_introspection_experience_dichotomized)
 hdi(representativeness_analysis_introspection_experience_dichotomized)
 summarise_draws(representativeness_analysis_introspection_experience_dichotomized)
@@ -824,7 +849,8 @@ representativeness_analysis_introspection_experience_continuous = brm(introspect
                                                                       representativeness_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
                                                                                                                                   effect_size = scale(effect_size)),
                                                                       prior = default_priors,
-                                                                      save_pars = save_pars(group = F))
+                                                                      save_pars = save_pars(group = F),
+                                                                      seed = RANDOM_SEED)
 summary(representativeness_analysis_introspection_experience_continuous)
 hdi(representativeness_analysis_introspection_experience_continuous)
 summarise_draws(representativeness_analysis_introspection_experience_continuous)
@@ -840,10 +866,12 @@ all_list_introspection_experience = list(halo_data_introspection_experience,
                                          representativeness_data_introspection_experience)
 
 all_data_introspection_experience = all_list_introspection_experience[[1]] %>% 
+  ungroup() %>% 
   select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect)
 for (i in 2:length(all_list_introspection_experience)) {
   all_data_introspection_experience = all_data_introspection_experience %>% 
     rbind(all_list_introspection_experience[[i]] %>% 
+            ungroup() %>% 
             select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect))
 }
 
@@ -866,7 +894,8 @@ ggplot(all_summary_introspection_experience,
 
 all_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
                                                      all_data_introspection_experience,
-                                                     save_pars = save_pars(group = F))
+                                                     save_pars = save_pars(group = F),
+                                                     seed = RANDOM_SEED)
 summarise_draws(all_analysis_introspection_experience_midpoint)
 check_divergences(all_analysis_introspection_experience_midpoint$fit)
 summary(all_analysis_introspection_experience_midpoint)
@@ -878,7 +907,8 @@ all_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ show
                                                         prior = default_priors,
                                                         save_pars = save_pars(group = F),
                                                         cores = 4,
-                                                        control = list(adapt_delta = 0.95))
+                                                        control = list(adapt_delta = 0.95),
+                                                        seed = RANDOM_SEED)
 summarise_draws(all_analysis_introspection_experience_dichotomous)
 check_divergences(all_analysis_introspection_experience_dichotomous$fit)
 summary(all_analysis_introspection_experience_dichotomous)
@@ -899,7 +929,8 @@ all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effec
                                                        prior = default_priors,
                                                        save_pars = save_pars(group = F),
                                                        cores = 4,
-                                                       control = list(adapt_delta = 0.95))
+                                                       control = list(adapt_delta = 0.95),
+                                                       seed = RANDOM_SEED)
 summarise_draws(all_analysis_introspection_experience_continuous)
 check_divergences(all_analysis_introspection_experience_continuous$fit)
 summary(all_analysis_introspection_experience_continuous)
@@ -921,10 +952,11 @@ ggplot(all_data_introspection_experience,
 all_analysis_introspection_experience_continuous_within = brm(introspect_rating_within ~ effect_size_range_within + (1 | subject) + (effect_size_range_within | task_name),
                                                               all_data_introspection_experience %>% mutate(introspect_rating_within = scale(introspect_rating_within),
                                                                                                            effect_size_range_within = scale(effect_size_range_within)),
-                                                               prior = default_priors,
-                                                               save_pars = save_pars(group = F),
-                                                               cores = 4,
-                                                               control = list(adapt_delta = 0.95))
+                                                              prior = default_priors,
+                                                              save_pars = save_pars(group = F),
+                                                              cores = 4,
+                                                              control = list(adapt_delta = 0.95),
+                                                              seed = RANDOM_SEED)
 summarise_draws(all_analysis_introspection_experience_continuous_within)
 check_divergences(all_analysis_introspection_experience_continuous_within$fit)
 summary(all_analysis_introspection_experience_continuous_within)
@@ -944,63 +976,6 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 
-theme_update(strip.background = element_blank(),
-             panel.grid.major = element_blank(),
-             panel.grid.minor = element_blank(),
-             panel.background = element_blank(),
-             plot.background = element_blank(),
-             axis.text=element_text(size=18, colour = "black"),
-             axis.title=element_text(size=24, face = "bold"),
-             axis.title.x = element_text(vjust = 0),
-             legend.title = element_text(size = 24, face = "bold"),
-             legend.text = element_text(size = 18),
-             plot.title = element_text(size = 26, face = "bold", vjust = 1),
-             panel.margin = unit(1.0, "lines"), 
-             plot.margin = unit(c(0.5,  0.5, 0.5, 0.5), "lines"),
-             axis.line = element_line(colour = "black", size = 2),
-             axis.ticks = element_line(color = 'black', size = 3),
-             axis.ticks.length = unit(.25, 'cm')
-)
-theme_black = function(base_size = 12, base_family = "") {
-  theme_grey(base_size = base_size, base_family = base_family) %+replace%
-    theme(
-      # Specify axis options
-      axis.line = element_blank(),  
-      axis.text.x = element_text(size = 12, color = "white", lineheight = 0.9),  
-      axis.text.y = element_text(size = 12, color = "white", lineheight = 0.9),  
-      axis.ticks = element_line(color = "white", size  =  0.2),  
-      axis.title.x = element_text(size = 18, color = "white", margin = margin(0, 10, 0, 0)),  
-      axis.title.y = element_text(size = 18, color = "white", angle = 90, margin = margin(0, 10, 0, 0)),  
-      axis.ticks.length = unit(0.3, "lines"),   
-      # Specify legend options
-      legend.background = element_rect(color = NA, fill = "black"),  
-      legend.key = element_rect(color = "white",  fill = "black"),  
-      legend.key.size = unit(1.2, "lines"),  
-      legend.key.height = NULL,  
-      legend.key.width = NULL,      
-      legend.text = element_text(size = base_size*0.8, color = "white"),  
-      legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
-      legend.position = "right",  
-      legend.text.align = NULL,  
-      legend.title.align = NULL,  
-      legend.direction = "vertical",  
-      legend.box = NULL, 
-      # Specify panel options
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      panel.background = element_blank(),
-      panel.border = element_rect(fill = NA, color = "white"),  
-      # Specify facetting options
-      strip.background = element_rect(fill = "grey30", color = "grey10"),  
-      strip.text.x = element_text(size = base_size*0.8, color = "white"),  
-      strip.text.y = element_text(size = base_size*0.8, color = "white",angle = -90),  
-      # Specify plot options
-      plot.background = element_rect(color = "black", fill = "black"),  
-      plot.title = element_text(size = base_size*1.2, color = "white"),  
-      plot.margin = unit(rep(1, 4), "lines")
-    )
-}
-
 ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_histogram(color = 'white') +
   theme_black() +
@@ -1012,6 +987,35 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05)))
 get.ci = function(x) {return(c(mean(x,na.rm = T) - 1.96*se(x), mean(x, na.rm = T), mean(x, na.rm = T) + 1.96*se(x)))}
 get.ci(all_bysubject_introspection_experience$subject_cor)
+
+
+# Analyze demographics (exploratory) --------------------------------------
+df.demo = demographics %>%
+  mutate(edu.fac = factor(education, levels=c('Some high school', 'High school', 'Some college', '2 year degree', '4 year degree', 'Postgraduate/Professional degree/other')),
+         gender.fac = factor(gender, c('Man', 'Woman', 'Other'), c('Man', 'Woman', 'Some other way')))
+
+df.demo$subject_cor = NA
+for (i in 1:nrow(df.demo)) {
+  if (df.demo$subject[i] %in% all_bysubject_introspection_experience$subject) {
+    df.demo$subject_cor[i] = all_bysubject_introspection_experience$subject_cor[all_bysubject_introspection_experience$subject == df.demo$subject[i]]
+  }
+}
+
+df.demo.edu = df.demo %>%
+  group_by(edu.fac) %>% 
+  summarize(subject_cor.m = mean(subject_cor,na.rm=T),
+            subject_cor.se = se(subject_cor))
+ggplot(df.demo.edu, aes(x = edu.fac, y = subject_cor.m)) +
+  geom_col(color = 'black') +
+  geom_errorbar(aes(ymin = subject_cor.m - subject_cor.se,
+                    ymax = subject_cor.m + subject_cor.se),
+                width = 0.2) +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+df.demo.gender = df.demo %>%
+  group_by(gender.fac) %>% 
+  summarize(subject_cor.m = mean(subject_cor,na.rm=T),
+            subject_cor.se = se(subject_cor))
 
 # Save image --------------------------------------------------------------
 # for use in combined analysis
