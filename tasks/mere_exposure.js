@@ -152,6 +152,19 @@ var mere_exposure_questions = {
     randomize_order: true
 };
 
+
+
+var know_turkish = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: '<p>Do you know Turkish?</p>',
+    choices: ['Yes', 'No'],
+    on_finish: function (data) {
+       /*  if (data.response == 0) {
+
+        } */
+    }
+};
+
 var mere_exposure_openQ_response = null;
 var mere_exposure_openQ = {
     type: jsPsychSurveyText,
