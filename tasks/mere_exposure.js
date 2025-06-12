@@ -2,7 +2,8 @@
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the number of times you saw each word)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the number of times you saw each word)?</p>";
- 
+
+
 
 //preparing stimuli
 var stimulus_id_array = [
@@ -180,6 +181,7 @@ var mere_exposure_openQ = {
 
 var introspection_q_labels_mee1 = [`<strong>When I saw a word a lot of times, that made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word did not affect my response</strong>", "", `<strong>When I saw a word a lot of times, that made me like the word <u>MORE</u></strong>`];
 var introspection_q_labels_mee2 = [`<strong>If I had seen a word a lot of times, that would have made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word would not have affected my response</strong>", "", `<strong>If I had seen a word a lot of times, that would have made me like the word <u>MORE</u></strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var mere_exposure_intro_response1 = null;
 var mere_exposure_introspect1 = {
@@ -194,7 +196,18 @@ var mere_exposure_introspect1 = {
             <p>Do you think the <b>number of times</b> you saw each word would have affected how highly you rated each word? If so, how?`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_mee1 : introspection_q_labels_mee2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_mee1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_mee1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_mee2;
+        } else {
+            return introspection_q_labels_mee2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -202,8 +215,13 @@ var mere_exposure_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
-        mere_exposure_intro_response1 = data.response
+        if (label_order_randomized == 'original') {
+            mere_exposure_intro_response1 = data.response
     }
+        else {
+                mere_exposure_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var mere_exposure_intro_response2 = null;
