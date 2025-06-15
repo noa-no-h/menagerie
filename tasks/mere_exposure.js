@@ -155,16 +155,7 @@ var mere_exposure_questions = {
 
 
 
-var know_turkish = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: '<p>Do you know Turkish?</p>',
-    choices: ['Yes', 'No'],
-    on_finish: function (data) {
-       /*  if (data.response == 0) {
 
-        } */
-    }
-};
 
 var mere_exposure_openQ_response = null;
 var mere_exposure_openQ = {
@@ -251,7 +242,18 @@ var mere_exposure_intro_confidence = {
     slider_start: 50,
     require_movement: require_movement_general,
     on_finish: function (data) {
-        mere_exposure_intro_confidence_response = data.response; 
+        mere_exposure_intro_confidence_response = data.response;
+    }
+}
+
+var knows_turkish = null; 
+
+var knows_turkish_question = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: '<p>Do you know Turkish?</p>',
+    choices: ['Yes', 'No'],
+    on_finish: function (data) {
+        knows_turkish = data.response == 0 ? 1 : 0; 
         s1_data = {
             subject: data.subject,
             version: data.version,
@@ -260,13 +262,14 @@ var mere_exposure_intro_confidence = {
             condition: condition[0],
             stimulus: null,
             choice: null,
-            auxiliary_info1: null,
+            auxiliary_info1: knows_turkish,
             openq_response: mere_exposure_openQ_response,
             introspect_rating: mere_exposure_intro_response1,
             introspect_open: mere_exposure_intro_confidence_response,
             familiarity: familiarity,
             rt: data.rt
         }
+        console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection')
     }
 };
@@ -285,17 +288,19 @@ var mere_exposure_familiar = {
 
 
 
-if (only_main_question) {
-    var mere_exposure = {
-        timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions]
-    };
-} else {
-    var mere_exposure = {
-        timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, mere_exposure_familiar, mere_exposure_openQ, mere_exposure_introspect1, mere_exposure_intro_confidence]
-    };
+// if (only_main_question) {
+//     var mere_exposure = {
+//         timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, knows_turkish_question]
+//     };
+// } else {
+//     var mere_exposure = {
+//         timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, mere_exposure_familiar, mere_exposure_openQ, mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
+//     };
+// }
+
+mere_exposure = {
+    timeline: [mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
 }
-
-
 
 //#endregion
 //timeline.push(mee)
