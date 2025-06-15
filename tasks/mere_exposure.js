@@ -285,19 +285,17 @@ var mere_exposure_familiar = {
 
 
 
-// if (only_main_question) {
-//     var mere_exposure = {
-//         timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions]
-//     };
-// } else {
-//     var mere_exposure = {
-//         timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, mere_exposure_familiar, mere_exposure_openQ, mere_exposure_introspect1, mere_exposure_intro_confidence]
-//     };
-// }
+if (only_main_question) {
+    var mere_exposure = {
+        timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions]
+    };
+} else {
+    var mere_exposure = {
+        timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, mere_exposure_familiar, mere_exposure_openQ, mere_exposure_introspect1, mere_exposure_intro_confidence]
+    };
+}
 
-var mere_exposure = {
-         timeline: [mere_exposure_introspect1]
-     };
+
 
 //#endregion
 //timeline.push(mee)
