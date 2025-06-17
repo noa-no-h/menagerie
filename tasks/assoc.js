@@ -257,6 +257,7 @@ var assoc_openQ = {
 
 var introspection_q_labels_assoc1 = [`<strong>When the word was related to sleep, that made me <u>LESS</u> likely to judge it as new (and more likely to judge it as original)</strong>`, "", "<strong>Whether the word was related to sleep did not affect my response</strong>", "", `<strong>When the word was related to sleep, that made me <u>MORE</u> likely to judge it as new (and less likely to judge it as original)</strong>`];
 var introspection_q_labels_assoc2 = [`<strong>If the word had been related to sleep, that would have made me <u>LESS</u> likely to judge it as new (and more likely to judge it as original)</strong>`, "", "<strong>Whether the word was related to sleep would not have affected my response</strong>", "", `<strong>If the word had been related to sleep, that would have made me <u>MORE</u> likely to judge it as new (and less likely to judge it as original)</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var assoc_intro_response1 = null;
 var assoc_introspect1 = {
@@ -277,7 +278,18 @@ var assoc_introspect1 = {
         <p>If this were the case, do you think your decision-making process would have been influenced by whether the word was <b>related to the topic of sleep?</b> If so, how?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_assoc1 : introspection_q_labels_assoc2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_assoc;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_assoc1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_assoc2;
+        } else {
+            return introspection_q_labels_assoc2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -285,8 +297,14 @@ var assoc_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>>",
     on_finish: function (data) {
-        assoc_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            mere_exposure_intro_response1 = data.response
     }
+        else {
+                mere_exposure_intro_response1 = 100 - data.response;
+            }
+        }
 }
 
 var assoc_intro_response2 = null;

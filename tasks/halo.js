@@ -139,8 +139,9 @@ var halo_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think they were <u>MORE</u> persuasive</strong>'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were <u>MORE</u> persuasive</strong>'];
+var introspection_q_labels_halo1 = ['<strong>It made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think they were <u>MORE</u> persuasive</strong>'];
+var introspection_q_labels_halo2 = ['<strong>It would have made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were <u>MORE</u> persuasive</strong>'];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var halo_intro_response1 = null;
 var halo_introspect1 = {
@@ -159,8 +160,18 @@ var halo_introspect1 = {
             <p>If this were the case, do you think the <b>attractiveness of the faces</b> would have affected your impression of their persuasiveness? If so, how?</p>`;
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_halo1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_halo1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_halo2;
+        } else {
+            return introspection_q_labels_halo2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
@@ -179,8 +190,14 @@ var halo_introspect2 = {
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
-        halo_intro_response2 = data.response.Q0;
+
+        if (label_order_randomized == 'original') {
+            halo_intro_response1 = data.response
     }
+        else {
+            halo_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var halo_intro_confidence_response = null;

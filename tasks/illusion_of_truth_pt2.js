@@ -191,8 +191,9 @@ var illusion_of_truth_openQ = {
     }
 };
 
-var introspection_q_labels_mee1 = [`<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study did not affect my response</strong>", "", `<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>MORE</u> likely to be true</strong>`];
-var introspection_q_labels_mee2 = [`<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study would not have affected my response</strong>", "", `<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>MORE</u> likely to be true</strong>`];
+var introspection_q_labels_illusion_of_truth1 = [`<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study did not affect my response</strong>", "", `<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>MORE</u> likely to be true</strong>`];
+var introspection_q_labels_illusion_of_truth2 = [`<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study would not have affected my response</strong>", "", `<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>MORE</u> likely to be true</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var illusion_of_truth_intro_response1 = null;
 var illusion_of_truth_introspect1 = {
@@ -208,16 +209,32 @@ var illusion_of_truth_introspect1 = {
                     Do you think <b>seeing the statement earlier in this study</b> would have  affected your assessment of whether it was true or false? If so, how?`
                         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_mee1 : introspection_q_labels_mee2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_illusion_of_truth1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_illusion_of_truth1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_illusion_of_truth2;
+        } else {
+            return introspection_q_labels_illusion_of_truth2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
-        illusion_of_truth_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            illusion_of_truth_intro_response1 = data.response
     }
+        else {
+            illusion_of_truth_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var illusion_of_truth_intro_response2 = null;

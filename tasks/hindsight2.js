@@ -248,6 +248,7 @@ var hindsight_openQ = {
 
 var introspection_q_labels_hindsight1 = [`<strong>It made me judge the outcome of British victory as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
 var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the outcome of British victory  as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var hindsight_intro_response1 = null;
 var hindsight_introspect1 = {
@@ -262,16 +263,32 @@ var hindsight_introspect1 = {
             <p>In this case, do you think the fact that you would have known the true outcome — a British victory — would have influenced your judgment of how likely the outcome of British victory was?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_hindsight1 : introspection_q_labels_hindsight2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_hindsight1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_hindsight1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_hindsight2;
+        } else {
+            return introspection_q_labels_hindsight2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        hindsight_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            hindsight_intro_response1 = data.response
     }
+        else {
+            hindsight_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var hindsight_intro_response2 = null;

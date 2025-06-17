@@ -93,6 +93,8 @@ var introspection_q_labels_rep2 = [
     "",
     `<strong>It would have made me say he was <u>MORE</u> likely to be an engineer.</strong>`
 ];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
+
 var rep_intro_response1 = null;
 var rep_introspect1 = {
 type: jsPsychHtmlSliderResponse,
@@ -115,7 +117,18 @@ stimulus: function () {
                     <p>If this were the case, do you think <b>being given that information about him</b> would have affected your response? If so, how?</p>`;
     }
 },
-labels: condition[0] == "Factor-Included" ? introspection_q_labels_rep1 : introspection_q_labels_rep2,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_rep1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_rep1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_rep2;
+        } else {
+            return introspection_q_labels_rep2.slice().reverse();
+        }
+    },
 slider_width: introspection_q_slider_width,
 min: introspection_q_min,
 max: introspection_q_max,
@@ -123,8 +136,14 @@ slider_start: 50,
 require_movement: introspection_q_require,
 prompt: "<br><br><br>",
 on_finish: function (data) {
-    rep_intro_response1 = data.response;
-}
+
+        if (label_order_randomized == 'original') {
+            rep_intro_response1 = data.response
+    }
+        else {
+            rep_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var rep_intro_response2 = null;

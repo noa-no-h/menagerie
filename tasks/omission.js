@@ -56,6 +56,7 @@ var omission_openQ = {
 
 var introspection_q_labels_omission1 = [`<strong>It made me <u>LESS</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge the action as permissible</strong>`];
 var introspection_q_labels_omission2 = [`<strong>It would have made me <u>LESS</u> likely to judge the action as permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge the action as permissible</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var omission_intro_response1 = null;
 var omission_introspect1 = {
@@ -70,7 +71,18 @@ var omission_introspect1 = {
             <p>Do you think the fact that James <b>actively poisoned the one villager instead of failing to give him an antidote</b> would have affected your judgement of the permissibility of his action? If so, how?`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_omission1 : introspection_q_labels_omission2,
+    labels: function() {
+
+            if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+                return introspection_q_labels_omission1;
+            } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+                return introspection_q_labels_omission1.slice().reverse();
+            } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+                return introspection_q_labels_omission2;
+            } else {
+                return introspection_q_labels_omission2.slice().reverse();
+            }
+        },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -78,8 +90,14 @@ var omission_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        omission_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            omission_intro_response1 = data.response
     }
+        else {
+            omission_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var omission_intro_response2 = null;

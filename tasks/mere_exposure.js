@@ -211,7 +211,7 @@ var mere_exposure_introspect1 = {
             mere_exposure_intro_response1 = data.response
     }
         else {
-                mere_exposure_intro_response1 = 100 - data.response;
+            mere_exposure_intro_response1 = 100 - data.response;
             }
         }
 

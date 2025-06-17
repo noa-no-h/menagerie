@@ -67,6 +67,7 @@ var sunk_cost2_openQ = {
 
 var introspection_q_labels_sunk_cost21 = [`<strong>It made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
 var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var sunk_cost2_intro_response1 = null;
 var sunk_cost2_introspect1 = {
@@ -82,7 +83,18 @@ var sunk_cost2_introspect1 = {
                 <p>Do you think <b>the fact that you had already spent 9 million dollars on the project</b> would have affected your response? If so, how?</p>`;
          }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_sunk_cost21 : introspection_q_labels_sunk_cost22,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_sunk_cost21;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_sunk_cost21.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_sunk_cost22;
+        } else {
+            return introspection_q_labels_sunk_cost22.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -90,8 +102,14 @@ var sunk_cost2_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        sunk_cost2_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            sunk_cost2_intro_response1 = data.response
     }
+        else {
+            sunk_cost2_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var sunk_cost2_intro_response2 = null;

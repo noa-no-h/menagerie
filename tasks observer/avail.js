@@ -131,7 +131,8 @@ var avail_excluded_stimuli = [
 var avail_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p> In this exercise, you will be shown lists of people's names.<p>Your goal will be to <b>memorize as many names as possible</b> in a short amount of time.</p>`,
+        `<p> We told the Prolific user:</p>`,
+        `<p>In this exercise, you will be shown lists of people's names.<p>Your goal will be to <b>memorize as many names as possible</b> in a short amount of time.</p>`,
         `<p>You will only be given <b>five seconds</b> to memorize each list. This is a very short amount of time, so just try your best to memorize as many names as you can.<p> You will be shown <b>two</b> lists in total, with a short break in between.</p>`,
         `<p>You will now be shown the two lists of names. There will be no warning before the second list, so please remain attentive.</p>
     <p><i>Please click the "Next" button when you are ready to see the lists.</i></p>`
@@ -161,7 +162,7 @@ var avail_trials = {
 var more_men = null;
 var avail_question = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>Now that you have seen both lists, please answer the question below to the best of your ability:</p><p><b>Which list contained more men?</b></p><br>`,
+    stimulus: `<p>We then told the prolific user, \"Now that you have seen both lists, please answer the question below to the best of your ability:</p><p><b>Which list contained more men?\"</b></p><br>`,
     choices: ["List 1", "List 2"],
     on_finish: function (data) {
         more_men = data.response;
@@ -172,7 +173,7 @@ var avail_openQ_response = null;
 var avail_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were shown two lists of names and asked to determine which list contained more men.</p><p>Describe your thought process behind your decision about which list contained more men. How did you come to your eventual decision?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was shown two lists of names and asked to determine which list contained more men.</p><p>Describe what you think the thought process was behind their decision about which list contained more men. How do you think they came to their eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -180,7 +181,7 @@ var avail_openQ = {
     }
 };
 
-var introspection_q_labels_avail1 = [`<strong>It made me more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
+var introspection_q_labels_avail1 = [`<strong>It made them more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
 var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
 
 var avail_intro_response1 = null;

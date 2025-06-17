@@ -80,6 +80,7 @@ var cause_openQ = {
 
 var introspection_q_labels_cause1 = [`<strong>It made me <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
 var introspection_q_labels_cause2 = [`<strong>It would have made me <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var cause_intro_response1 = null;
 var cause_introspect1 = {
@@ -96,7 +97,18 @@ var cause_introspect1 = {
         <p>If this were the case, do you think the fact that there were only one green ball in the left box would have affected your judgment about whether <b>Joe's choice of a green ball from the left box</b> caused him to win? If so, how?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_cause1 : introspection_q_labels_cause2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_cause1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_cause1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_cause2;
+        } else {
+            return introspection_q_labels_cause2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -104,8 +116,15 @@ var cause_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br>",
     on_finish: function (data) {
-        cause_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            case_intro_response1 = data.response
     }
+        else {
+            case_intro_response1 = 100 - data.response;
+            }
+        }
+
 };
 
 var cause_intro_response2 = null;

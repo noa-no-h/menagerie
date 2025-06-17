@@ -248,6 +248,7 @@ var belief_openQ = {
 
 var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect my response</strong>", "", `<strong>When the conclusion was believable, that made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
 var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected my response</strong>", "", `<strong>If the conclusion had been believable, that would have made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var belief_intro_response1 = null;
 var belief_introspect1 = {
@@ -262,16 +263,33 @@ var belief_introspect1 = {
         <p>Do you think the <b>believability</b> of each conclusion would have affected your decision about whether or not the alien would come to that conclusion? If so, how?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_belief1 : introspection_q_labels_belief2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_belief1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_belief1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_belief2;
+        } else {
+            return introspection_q_labels_belief2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        belief_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            belief_intro_response1 = data.response
     }
+        else {
+                belief_intro_response1 = 100 - data.response;
+            }
+        }
+
 };
 
 var belief_intro_response2 = null;
