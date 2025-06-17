@@ -69,350 +69,10 @@
 </body>
 <script>
 
-// ***Setting Up the Experiment***
-
-// Meta-var's
-var study_version = "ma_choice_v4_movie_observers_real1";
-var both_halves = false;
-
-var turk_code = "JSALK23";
-var study_time = 55;
-var study_money = 11;
-
-// // find the assignmentId & debugging status from the URL
-var urlParams = parseURLParams(window.location.href);
-var subject_id_url = '';
-var debug = false;
-if (typeof urlParams != "undefined") {
-    if (urlParams.hasOwnProperty('PROLIFIC_PID')) {
-        subject_id_url = urlParams.PROLIFIC_PID[0];
-    }
-
-    if (urlParams.hasOwnProperty('debug')) {
-        debug = urlParams.debug[0];
-    }
-}
-
-
-var movie_scale = ['Very Bad', 'Bad', 'Moderate', 'Good', 'Very Good'];
-
-// if scale is null, must include postfix
-//"artistic","funny","romantic","visual","great acting","plot","dialogue","awesome soundtrack","good action"
-var home_attributes = [
-	{name: 'artistic', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Creativity', round_to: 10},
-	{name: 'funny', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Humor', round_to: 10},
-	{name: 'romantic', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Romantic Scenes', round_to: 10},
-	{name: 'visual', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Visuals', round_to: 10},
-	{name: 'great acting', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Acting', round_to: 10},
-	{name: 'plot', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Plot', round_to: 10},
-	{name: 'dialogue', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Dialogue', round_to: 10},
-	{name: 'awesome soundtrack', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Soundtrack', round_to: 10},
-	{name: 'good action', scale: null, lb: 0, ub: 100, postfix: '', display_name: 'Action Scenes', round_to: 10},
-];
-
-var home_attribute_names = [];
-for (i = 0; i < home_attributes.length; i++) {
-	home_attribute_names.push(home_attributes[i].name);
-}
-
-var home_attribute_display_names = [];
-for (i = 0; i < home_attributes.length; i++) {
-	home_attribute_display_names.push(home_attributes[i].display_name);
-}
-
-var num_attributes_to_use = home_attributes.length;
-var num_practice_trials = 10;
-var num_trials = 100;
-var num_practice_trials_to_use = num_practice_trials;
-var num_trials_to_use = num_trials;
-var trial_wait_time = 7000;
-var num_attributes_to_ask_about = home_attributes.length;
-
-// parameters for OBSERVERS
-
-var num_target_subjects = trials_db.length;
-prac_trials_db = prac_trials_db.slice(0,num_target_subjects);
-trials_db = trials_db.slice(0,num_target_subjects);
-
-if (debug) {
-	num_practice_trials_to_use = 2;
-	num_trials_to_use = 1;
-	trial_wait_time = 0;
-}
-
-/* BEGIN */
-
-function generateAttributeValues(cur_attributes){
-	var arr = [];
-	for (let j=0;j<cur_attributes.length;j++){
-		cur_att = cur_attributes[j];
-		if (cur_att.scale == null) {
-			var rand1 = Math.floor(Math.random() * (cur_att.ub - cur_att.lb)) + cur_att.lb;
-			var rand2 = -1;
-			do {
-				rand2 = Math.floor(Math.random() * (cur_att.ub - cur_att.lb)) + cur_att.lb;
-			} while(Math.abs(rand2 - rand1) < cur_att.min_diff);
-			arr.push([cur_att.name, Math.round(rand1/cur_att.round_to)*cur_att.round_to + cur_att.postfix, Math.round(rand2/cur_att.round_to)*cur_att.round_to + cur_att.postfix]);
-				//}
-		} else {
-			var rand1 = Math.floor(Math.random() * cur_att.scale.length);
-			var rand2 = -1;
-			do {
-				rand2 = Math.floor(Math.random() * cur_att.scale.length);
-			} while(Math.abs(rand2 - rand1) < cur_att.min_diff);
-			arr.push([cur_att.name, cur_att.scale[rand1], cur_att.scale[rand2]]);
-		}
-	}
-return arr;
-}
-
-
-function generateTable(cur_attributes,cur_opt1,cur_opt2) {
-	let tbl_html = "<div align='center'><table border = 2px solid black><thead>\
-	</tr><tr><th></th><td><b><u>Movie A</u></b></td><td><b><u>Movie B</u></b></td>";
-
-	for (var i = 0; i < cur_attributes.length; i++) {
-		var first = Math.floor(cur_opt1[i]/20);
-		var second = Math.floor(cur_opt2[i]/20);
-
-		if (first < 0) {
-			first = 0;
-		} else if (first > 4) {
-			first = 4;
-		}
-		if (second < 0) {
-			second = 0;
-		} else if (second > 4) {
-			second = 4;
-		}
-
-		// get display name
-		var display_name = home_attribute_display_names[home_attribute_names.indexOf(cur_attributes[i])];
-
-    cell_one_html = "<div class='container'><div class='skills php'>1%</div>"
-		tbl_html += "<tr><th>"+display_name+"</th><td><div class='bg' style='width: "+(first*25)+"%'></div>"+movie_scale[first]+"</td>\
-			<td><div class='bg2' style='width: "+(second*25)+"%'></div>"+movie_scale[second]+"</td>";
-	}
-
-	tbl_html += '</tr></table><br>';
-	return tbl_html;
-}
-
-
-/* STUFF FOR OBSERVERS */
-
-// funtion to get participant counter
-function getCounter(url, datDir) {
-	let numCounter = 0;
-	$.ajax({
-			url: url,
-			type: 'POST',
-			async: false,
-			data: { dir: datDir },
-	}).done(function (data) {
-			numCounter = data;
-	});
-	return numCounter;
-}
-
-function write_array_to_csv(filename, arr) {
-	$.ajax({
-			url: "write_array_to_csv.php",
-			type: 'POST',
-			async: false,
-			data: {arr: arr.toString(), filename: filename},
-			success: function(response) {
-				console.log(response);
-			}
-	});
-}
-
-x = getCounter("counter.php");
-y = parseInt(x)
-
-// deal with y > # past subjects (b/c of dropout in observer study)
-// overall plan:
-// start back at y - # past subjects
-// find lowest number above that that's not completed & not being redone; assign y = that (but don't update counter.txt)
-// if there are none, randomly sample from being_redone
-// if there are none in being_redone, randomly sample from 1 to num_targets
-
-var past_end = false;
-var target_num = y;
-
-// this is "while" instead of "if" in case counter went over num_target_subjects*2
-while (target_num >= num_target_subjects) {
-	target_num = target_num - num_target_subjects; // restart at 0
-	past_end = true;
-}
-
-// get past subjects that have already been completed
-var completed = null;
-var being_redone = null;
-
-// if we're not past end, just keep as is
-if (past_end) {
-	var is_being_redone = true;
-
-	// if we are past end, we need to get completed & being_redone synchronously
-	$.ajax({
-			type: "GET",
-			url: "https://amorris.mprlab327.opalstacked.com/ma_choice/v4_movie_observers/completed.csv",
-			dataType: "text",
-			async: false,
-			success: function(d) {
-				if (d.length > 0) {
-					completed = Papa.parse(d, {dynamicTyping: true}).data[0];
-				} else {
-					completed = [];
-				}
-			},
-			error: function(xhr, ajaxOptions, thrownError) {
-					alert("Status: " + xhr.status + "     Error: " + thrownError);
-			}
-	});
-
-	$.ajax({
-			type: "GET",
-			url: "https://amorris.mprlab327.opalstacked.com/ma_choice/v4_movie_observers/being_redone.csv",
-			dataType: "text",
-			async: false,
-			success: function(d) {
-				if (d.length > 0) {
-					being_redone = Papa.parse(d, {dynamicTyping: true}).data[0];
-				} else {
-					being_redone = [];
-				}
-			},
-			error: function(xhr, ajaxOptions, thrownError) {
-					alert("Status: " + xhr.status + "     Error: " + thrownError);
-			}
-	});
-
-	// assign y to the lowest value not in completed or being_redone.
-	while (completed.includes(target_num) || being_redone.includes(target_num)) {
-		if (target_num < (num_target_subjects - 1)) {
-			target_num++;
-		}
-		else {
-			// this means that there's no targets that are neither completed nor being_redone
-			// in which case, check if there are any being redone...
-			if (being_redone.length > 0) {
-				// choose randomly from among them
-				target_num = being_redone[Math.floor(Math.random() * being_redone.length)];
-			} else {
-				// otherwise, just choose randomly
-				target_num = getRandomInt(0, num_target_subjects-1);
-				is_being_redone = false; // if we're in this branch, it means that everything was completed, nothing is being redone, and we're just redoing one of the completed ones (cause why not).
-			}
-
-			break;
-		}
-	}
-
-	if (is_being_redone) {
-		being_redone.push(target_num);
-		write_array_to_csv('being_redone.csv', being_redone);
-	}
-}
-
-console.log(y)
-console.log(target_num)
-
-var start_instructions = 0;
-
-// ***Intro Blocks***
-
-var welcome = {
-	type: 'instructions',
-	pages: ['<b>Welcome to the ' + (both_halves ? 'first half of the ' : '') + 'research study on decision-making!</b>'],
-	show_clickable_nav: true
-}
-
-var fullscreen = {
-	type: "fullscreen",
-	message: "We ask that you take this experiment in full screen mode. \
-	When you click the 'Continue' button below, your browser will go full screen and you may start the study.<br><br>",
-	fullscreen_mode: true,
-};
-
-var get_id = {
-	type: 'survey-text',
-	questions: [{prompt: "<b>Prolific ID:</b>", name: "worker_id"}],
-	preamble: ["Please enter your <b>Prolific ID</b> below.<br>(When you're done, press <b>'Continue'</b>.)"],
-};
-
-var subject_id = '';
-var get_id_loop = {
-	timeline: [get_id],
-	loop_function: function(data) {
-		id = data.values()[0].response.worker_id;
-		if (id) {
-			jsPsych.data.addProperties({
-				subject: id,
-				version: study_version,
-				assignmentId: subject_id_url
-			});
-			subject_id = id;
-
-			// save att data
-			for (var i = 0; i < home_attributes.length; i++) {
-				att = home_attributes[i];
-				att_data = {
-					subject: id,
-					version: study_version,
-					assignmentId: subject_id_url,
-					attribute: att.name,
-					scale: att.scale == null ? '' : att.scale.toString(),
-					min_diff: att.min_diff || null,
-					lb: att.lb == undefined ? '' : att.lb,
-					ub: att.ub == undefined ? '' : att.ub,
-					postfix: att.postfix == undefined ? '' : att.postfix,
-				}
-
-				save_data(att_data, 'attributes');
-			}
-
-			start_instructions = Date.now();
-
-			return false;
-		} else {
-			alert("Please provide your Prolific ID.");
-			return true;
-		}
-	}
-}
-
-var check_consent = function(elem) {
-	if ($('#consent_checkbox').is(':checked')) {
-		return true;
-	}
-	else {
-		alert("If you wish to participate, you must check the box next to the statement 'I agree to participate in this study.'");
-		return false;
-	}
-	return false;
-};
-
-var consent_block = {
-	type:'external-html',
-	url: "consent.php?time=" + study_time + "&money=" + study_money + "&test=1",
-	cont_btn: "start",
-	check_fn: check_consent,
-	force_refresh: true
-};
-
-// first attention check
-var attnCheck1 = {
-    type: 'survey-text',
-    questions: [{prompt: 'Your response', name: 'attention_check', required: debug ? false : true}],
-    preamble: ["In order to complete this study, you will need to pay close attention for its entire duration. If you do not pay close attention, your data will be unusable.\
+"In order to complete this study, you will need to pay close attention for its entire duration. If you do not pay close attention, your data will be unusable.\
 		<b>Please do not take this study unless you have time and energy to pay attention for the full length of time.</b>\
 		<br><br>Please type this exact sentence into the box below: 'I will complete this study with my full attention.' and then continue."],
-    on_finish: function(data) {
-    	jsPsych.data.addProperties({attention_check: data.response.attention_check});
-    }
-};
+
 
 // ***Welcome and Task 1 Instructions***
 var instructions_text = ['Please <b>do not</b> press the <b>back</b> button or <b>refresh</b> your browser during the study; if you do, you will have to start over. <br><br> Please click <b>Next</b> and read the following instructions carefully. <br></br>',
@@ -455,169 +115,23 @@ var instructions_text = ['Please <b>do not</b> press the <b>back</b> button or <
 	When you're ready to see them, please continue."
 ];
 
-var instructions_times = Array();
- var instructions = {
-	type: "instructions",
-	pages: instructions_text,
-	show_clickable_nav: true,
-	on_finish: function(data) {
-		for (var i = 0; i < data.view_history.length; i++) {
-			instructions_times.push(Math.round(data.view_history[i].viewing_time));
-		}
-	}
-}
 
-var att_list = '<ul style="text-align: left">';
-for (var i = 0; i < home_attributes.length; i++) {
-	var cur_att = home_attributes[i];
-	att_list += '<li style="list-style-type: none;">';
-	att_list += '<b>' + cur_att.display_name + '</b> ';
-}
-att_list += '</ul>';
 
-var instructions2 = {
-	type: 'instructions',
-	pages: ["Great job. Let's move on to the Prolific user's real trials.",
+"Great job. Let's move on to the Prolific user's real trials.",
 		"Here's how the bonus payment will work. After you observe all the person's choices, we will ask you a series of questions about how you think they made their choices.<br><br>\
 		Then, after you complete the study, we will <b>compare your answers to the person's actual strategy</b>, and give you bonus money based on how close you got.<br><br>\
 		You could earn up to a maximum of $1 in bonus money, if you can get really close to the true strategy the person used.",
 		"Just to remind you, here's the full list of features that differed across the two movies:<br><br>" + att_list +"<br> Each feature ranged from 'Very Bad' to 'Very Good'.<br><br>",
 		"The Prolific user completed " + num_trials_to_use + " real trials in total. Please do your best to pay attention throughout this whole section, and try to figure out how the person was making their choices.<br><br>\
-		When you're ready to start, press 'Next'."],
-		show_clickable_nav: true,
-		on_finish: function(data) {
-			for (var i = 0; i < data.view_history.length; i++) {
-				instructions_times.push(Math.round(data.view_history[i].viewing_time));
-			}
-		}
-}
+		When you're ready to start, press 'Next'."
 
-var practice_trials = [];
-for (var i = 0; i < num_practice_trials; i++) {
-	var cur_attributes = prac_trials_db[target_num][i]["attributes"].split(',');
-	var cur_opt1 = prac_trials_db[target_num][i]["opt1_values"].split(',');
-	var cur_opt2 = prac_trials_db[target_num][i]["opt2_values"].split(',');
-	var cur_choice = prac_trials_db[target_num][i]["choice"];
 
-	var tbl = generateTable(cur_attributes,cur_opt1,cur_opt2);
-
-	practice_trials.push({
-		 type: 'html-button-response-machoice',
-		 stimulus: tbl,
-		 choices: ['Movie A','Movie B'],
-		 orig_choice: cur_choice,
-		 prompt: '<br>Please select the movie the person chose (highlighted in green).<br><small>(Trial ' + (i+1) + ' out of ' + num_practice_trials_to_use + ')</small>',
-		 button_duration: trial_wait_time, //how long to hide buttons
- 		 data: {which_trial: i, att_names: cur_attributes, atts_opt1: cur_opt1, atts_opt2: cur_opt2, orig_choice: cur_choice},
-		 on_finish: function(data) {
-			 s1_data = {
-				 subject: data.subject,
-				 version: data.version,
-				 assignmentId: subject_id_url,
-				 trial: data.which_trial,
-				 practice: 1,
-				 opt1_id: -1,
-				 opt2_id: -1,
-				 attributes: data.att_names.toString(),
-				 opt1_values: data.atts_opt1.toString(),
-				 opt2_values: data.atts_opt2.toString(),
-				 choice: data.response,
-				 orig_choice: data.orig_choice,
-				 rt: data.rt
-			 }
-
-			 save_data(s1_data, 's1');
-		 }
-	 });
-}
-
-var trials = [];
-for (var i = 0; i < num_trials; i++) {
-	var cur_attributes = trials_db[target_num][i]["attributes"].split(',');
-	var cur_opt1 = trials_db[target_num][i]["opt1_values"].split(',').map(Number);
-	var cur_opt2 = trials_db[target_num][i]["opt2_values"].split(',').map(Number);
-	var cur_choice = trials_db[target_num][i]["choice"];
-
-	var tbl = generateTable(cur_attributes,cur_opt1,cur_opt2);
-
-	trials.push({
-		 type: 'html-button-response-machoice',
-		 stimulus: tbl,
-		 choices: ['Movie A','Movie B'],
-		 orig_choice: cur_choice,
-		 prompt: '<br>Please select the movie the person chose.<br><small>(Trial ' + (i+1) + ' out of ' + num_trials_to_use + ')</small>',
-		 button_duration: trial_wait_time, //how long to hide buttons
- 		 data: {which_trial: i, att_names: cur_attributes, atts_opt1: cur_opt1, atts_opt2: cur_opt2, orig_choice: cur_choice},
-		 on_finish: function(data) {
-			 s1_data = {
-				 subject: data.subject,
-				 version: data.version,
-				 assignmentId: subject_id_url,
-				 trial: data.which_trial,
-				 practice: 0,
-				 opt1_id: -1,
-				 opt2_id: -1,
-				 attributes: data.att_names.toString(),
-				 opt1_values: data.atts_opt1.toString(),
-				 opt2_values: data.atts_opt2.toString(),
-				 choice: data.response,
-				 orig_choice: data.orig_choice,
-				 rt: data.rt
-			 }
-
-			 save_data(s1_data, 's1');
-		 }
-	 });
-}
-
-var fixation = {
-    type: 'html-keyboard-response',
-    stimulus: '<span style="font-size:40px;">+</span>',
-    choices: jsPsych.NO_KEYS,
-    trial_duration: 1000
-}
-
-var question_rts = new Object();
-
-//*** Survey Questions ***
-var attribute_instructions = {
-	type: 'instructions',
-	pages: ["Great work. You've completed Section 1.",
+"Great work. You've completed Section 1.",
 	"<h2><u>Section 2</u></h2> Now, in Section 2, we are going to ask you to reflect on the decisions you just observed in Section 1, and how you think the Prolific user considered the various features of each movie while making their choices.",
-	],
-	show_clickable_nav: true,
-	on_finish: function(data) {
-		for (var i = 0; i < data.view_history.length; i++) {
-			instructions_times.push(Math.round(data.view_history[i].viewing_time));
-		}
-	}
-};
 
-// Overarching feature questions
-
-var strat_instructions_intro = {
-	type: 'instructions',
-	pages: ["On the next few pages, we're going to ask you some questions about the <b>big-picture decision-making strategies</b> people might use when choosing between movies in Section 1.<br><br>\
+	"On the next few pages, we're going to ask you some questions about the <b>big-picture decision-making strategies</b> people might use when choosing between movies in Section 1.<br><br>\
 	The strategies are not mutually exclusive, or all-or-nothing; people could be somewhere in the middle, or use one strategy on some trials and then another strategy on other trials. The strategies are meant to capture aspects of how people made their choices, not necessarily to describe their entire thought process. Just do your best to understand each strategy and answer the questions as accurately as you can."],
-	show_clickable_nav: true,
-	on_finish: function(data) {
-		for (var i = 0; i < data.view_history.length; i++) {
-			instructions_times.push(Math.round(data.view_history[i].viewing_time));
-		}
-	}
-};
-
-function get_strat_labels(word1, word2, type) {
-	var lbls = null;
-	if (type == 'real') {
-		lbls = ['<b>Strategy ' + word1 + ' much better</b> describes how <b>the Prolific user</b> made their choices', '', '<b>Strategy ' + word1 + ' somewhat better</b> describes how <b>the Prolific user</b> made their choices', '', '<b>Both strategies equally</b> describe how <b>the Prolific user</b> made their choices', '', '<b>Strategy  ' + word2 + '  somewhat better</b> describes how <b>the Prolific user</b> made their choices', '', '<b>Strategy  ' + word2 + '  much better</b> describes how <b>the Prolific user</b> made their choices'];
-	} else if (type == 'comp') {
-		lbls = ['<b>Strategy ' + word1 + ' much better</b> describes how this person made their choices', '', '<b>Strategy ' + word1 + ' somewhat better</b> describes how this person made their choices', '', '<b>Both strategies equally</b> describe how this person made their choices', '', '<b>Strategy ' + word2 + ' somewhat better</b> describes how this person made their choices', '', '<b>Strategy ' + word2 + ' much better</b> describes how this person made their choices'];
-	} else if (type == 'norm') {
-		lbls = ['<b>Strategy ' + word1 + ' much better</b> describes how someone <b>SHOULD</b> make their choices', '', '<b>Strategy ' + word1 + ' somewhat better</b> describes how someone <b>SHOULD</b> make their choices', '', '<b>Both strategies equally</b> describe how someone <b>SHOULD</b> make their choices', '', '<b>Strategy ' + word2 + ' somewhat better</b> describes how someone <b>SHOULD</b> make their choices', '', '<b>Strategy ' + word2 + ' much better</b> describes how someone <b>SHOULD</b> make their choices'];
-	}
-	return(lbls);
-}
+	
 
 var strat_preamble = 'Here are the two strategies described again, for reference.';
 var strat_post_intro = "<br>When you feel like you've understood the two strategies, press 'Continue'.";
@@ -650,11 +164,7 @@ var strat_instr = [[`First, we're going to describe two strategies -- <b>Strateg
 									 [`Finally, we're going to describe a last two big-picture strategies -- <b>Strategy E</b> and <b>Strategy F</b> -- that a person could have used to make choices in Section 1.`]];
 var strat_instr_trial = new Array(3);
 
-for (var q = 0; q < 3; q++) {
-	var strat_order_word = strat_order_words[q];
 
-	if (strat_q_order[q] == 'lex') {
-		var to_add = [
 			"<b>Strategies " + strat_order_word[0] + "</b> and <b>" + strat_order_word[1] + "</b> are about the number of features of the movies that a person cared about when making their choices.",
 
 			"A person using <b>Strategy " + strat_order_word[0] + "</b> made all their decisions based off a <b>single, all-important feature</b> and \
@@ -715,114 +225,13 @@ for (var q = 0; q < 3; q++) {
 			"When the person compared two movies on a feature, they cared about <b>how much</b> better or worse each movie was on that feature."];
 	}
 
-	strat_instr[q] = strat_instr[q].concat(to_add);
-
-	strat_instr_trial[q] = {
-		type: 'instructions',
-		pages: strat_instr[q],
-		show_clickable_nav: true,
-		on_finish: function(data) {
-			for (var i = 0; i < data.view_history.length; i++) {
-				instructions_times.push(Math.round(data.view_history[i].viewing_time));
-			}
-		}
-	};
-}
 
 
-/* LEX question */
 
 var lex_comp_descriptions = [
 	"<b>Person description:</b> When making his choices between movies in Section 1, Ricardo only cared the quality of the soundtrack; he always just chose whichever movie had a better soundtrack.",
  `<b>Person description:</b> When making her choices between movies in Section 1, Sarah cared about three features: how good the humor was, how good the dialogue was, and how good the romantic scenes were. She cared about the humor the most, but also cared a little about the other two features.`
 ];
-
-var lex_comp_answers = [0,100];
-var lex_comp_numbers = [1,2];
-shufflethree(lex_comp_descriptions, lex_comp_answers, lex_comp_numbers);
-
-var lex_intro = {
-    type: 'survey-multi-choice-twocol-button',
-    preamble: strat_preamble,
-		questions: function() {
-			return ([{prompt: strat_post_intro, options: lex_options, horizontal: true, required: debug ? false : true}]);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-			instructions_times.push(Math.round(data.rt));
-    }
-};
-
-var lex_comp1 = {
-    type: 'survey-multi-choice-twocol-slider',
-    preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_posts[0] + "<div class='diff-font'>" + lex_comp_descriptions[0] + "</div>", options: lex_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (lex_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		data: {number: lex_comp_numbers[0], description: lex_comp_descriptions[0], answer: lex_comp_answers[0]},
-		on_finish: function(data) {
-      jsPsych.data.addProperties({lex_q_comp1: data.response});
-	   	jsPsych.data.addProperties({lex_q_comp1_description: data.description});
-	   	jsPsych.data.addProperties({lex_q_comp1_answer: data.answer});
-	   	jsPsych.data.addProperties({lex_q_comp1_number: data.number});
-			question_rts.lex_q_comp1 = Math.round(data.rt);
-    }
-};
-var lex_comp2 = {
-    type: 'survey-multi-choice-twocol-slider',
-    preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_posts[1] + "<div class='diff-font'>" + lex_comp_descriptions[1] + "</div>", options: lex_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (lex_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		data: {number: lex_comp_numbers[1], description: lex_comp_descriptions[1], answer: lex_comp_answers[1]},
-		on_finish: function(data) {
-      jsPsych.data.addProperties({lex_q_comp2: data.response});
-	   	jsPsych.data.addProperties({lex_q_comp2_description: data.description});
-	   	jsPsych.data.addProperties({lex_q_comp2_answer: data.answer});
-	   	jsPsych.data.addProperties({lex_q_comp2_number: data.number});
-			question_rts.lex_q_comp2 = Math.round(data.rt);
-    }
-};
-
-var lex_real = {
-    type: 'survey-multi-choice-twocol-slider',
-		preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_post_real, options: lex_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (lex_labels_real);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-      jsPsych.data.addProperties({lex_q_real: data.response});
-			question_rts.lex_q_real = Math.round(data.rt);
-    }
-};
-
-var lex_norm = {
-    type: 'survey-multi-choice-twocol-slider',
-		preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_post_norm, options: lex_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (lex_labels_norm);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-      jsPsych.data.addProperties({lex_q_norm: data.response});
-			question_rts.lex_q_norm = Math.round(data.rt);
-    }
-};
 
 /* Binary weights question */
 
@@ -831,96 +240,6 @@ var binwts_comp_descriptions = [
  `<b>Person description:</b> When making her choices between movies in Section 2, Monica cared about four features: the acting, the dialogue, the soundtrack, and the visuals. She cared the most about the acting and the dialogue, but she also cared a little about the other two features.`
 ];
 
-var binwts_comp_answers = [0,100];
-var binwts_comp_numbers = [1,2];
-shufflethree(binwts_comp_descriptions, binwts_comp_answers, binwts_comp_numbers);
-
-var binwts_intro = {
-    type: 'survey-multi-choice-twocol-button',
-    preamble: strat_preamble,
-		questions: function() {
-			return ([{prompt: strat_post_intro, options: binwts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binwts_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-			instructions_times.push(Math.round(data.rt));
-    }
-};
-
-var binwts_comp1 = {
-    type: 'survey-multi-choice-twocol-slider',
-    preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_posts[0] + "<div class='diff-font'>" + binwts_comp_descriptions[0] + "</div>", options: binwts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binwts_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		data: {number: binwts_comp_numbers[0], description: binwts_comp_descriptions[0], answer: binwts_comp_answers[0]},
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binwts_q_comp1: data.response});
-	   	jsPsych.data.addProperties({binwts_q_comp1_description: data.description});
-	   	jsPsych.data.addProperties({binwts_q_comp1_answer: data.answer});
-	   	jsPsych.data.addProperties({binwts_q_comp1_number: data.number});
-			question_rts.binwts_q_comp1 = Math.round(data.rt);
-    }
-};
-var binwts_comp2 = {
-    type: 'survey-multi-choice-twocol-slider',
-    preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_posts[1] + "<div class='diff-font'>" + binwts_comp_descriptions[1] + "</div>", options: binwts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binwts_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		data: {number: binwts_comp_numbers[1], description: binwts_comp_descriptions[1], answer: binwts_comp_answers[1]},
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binwts_q_comp2: data.response});
-	   	jsPsych.data.addProperties({binwts_q_comp2_description: data.description});
-	   	jsPsych.data.addProperties({binwts_q_comp2_answer: data.answer});
-	   	jsPsych.data.addProperties({binwts_q_comp2_number: data.number});
-			question_rts.binwts_q_comp2 = Math.round(data.rt);
-    }
-};
-
-var binwts_real = {
-    type: 'survey-multi-choice-twocol-slider',
-		preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_post_real, options: binwts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binwts_labels_real);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binwts_q_real: data.response});
-			question_rts.binwts_q_real = Math.round(data.rt);
-    }
-};
-
-var binwts_norm = {
-    type: 'survey-multi-choice-twocol-slider',
-		preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_post_norm, options: binwts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binwts_labels_norm);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binwts_q_norm: data.response});
-			question_rts.binwts_q_norm = Math.round(data.rt);
-    }
-};
-
 /* Binary attributes question */
 
 var binatts_comp_descriptions = [
@@ -928,112 +247,11 @@ var binatts_comp_descriptions = [
  `<b>Person description:</b> When making his choices between movies in Section 1, Joe cared about three features: how good the acting was, how good the dialogue was, and how good the romantic scenes were. He considered the difference between the two movies on each feature (e.g. if Movie A had 'Very Good' acting and Movie B had 'Very Bad' acting, that's a huge difference), and then weighed those differences together to figure out which movie was better overall.`
 ];
 
-var binatts_comp_answers = [0,100];
-var binatts_comp_numbers = [1,2];
-shufflethree(binatts_comp_descriptions, binatts_comp_answers, binatts_comp_numbers);
-
-var binatts_intro = {
-    type: 'survey-multi-choice-twocol-button',
-    preamble: strat_preamble,
-		questions: function() {
-			return ([{prompt: strat_post_intro, options: binatts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binatts_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-			instructions_times.push(Math.round(data.rt));
-    }
-};
-
-var binatts_comp1 = {
-    type: 'survey-multi-choice-twocol-slider',
-    preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_posts[0] + "<div class='diff-font'>" + binatts_comp_descriptions[0] + "</div>", options: binatts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binatts_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		data: {number: binatts_comp_numbers[0], description: binatts_comp_descriptions[0], answer: binatts_comp_answers[0]},
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binatts_q_comp1: data.response});
-	   	jsPsych.data.addProperties({binatts_q_comp1_description: data.description});
-	   	jsPsych.data.addProperties({binatts_q_comp1_answer: data.answer});
-	   	jsPsych.data.addProperties({binatts_q_comp1_number: data.number});
-			question_rts.binatts_q_comp1 = Math.round(data.rt);
-    }
-};
-var binatts_comp2 = {
-    type: 'survey-multi-choice-twocol-slider',
-    preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_posts[1] + "<div class='diff-font'>" + binatts_comp_descriptions[1] + "</div>", options: binatts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binatts_labels_comp);
-		},
-		require_movement: false,//debug ? false : true,
-		data: {number: binatts_comp_numbers[1], description: binatts_comp_descriptions[1], answer: binatts_comp_answers[1]},
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binatts_q_comp2: data.response});
-	   	jsPsych.data.addProperties({binatts_q_comp2_description: data.description});
-	   	jsPsych.data.addProperties({binatts_q_comp2_answer: data.answer});
-	   	jsPsych.data.addProperties({binatts_q_comp2_number: data.number});
-			question_rts.binatts_q_comp2 = Math.round(data.rt);
-    }
-};
-
-var binatts_real = {
-    type: 'survey-multi-choice-twocol-slider',
-		preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_post_real, options: binatts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binatts_labels_real);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binatts_q_real: data.response});
-			question_rts.binatts_q_real = Math.round(data.rt);
-    }
-};
-
-var binatts_norm = {
-    type: 'survey-multi-choice-twocol-slider',
-		preamble: ['<span class="transparent-text">' + strat_preamble + '</span>'],
-		questions: function() {
-			return ([{prompt: strat_post_norm, options: binatts_options, horizontal: true, required: debug ? false : true}]);
-		},
-		labels: function() {
-			return (binatts_labels_norm);
-		},
-		require_movement: false,//debug ? false : true,
-		on_finish: function(data) {
-      jsPsych.data.addProperties({binatts_q_norm: data.response});
-			question_rts.binatts_q_norm = Math.round(data.rt);
-    }
-};
-
 // Consistency question1
 
 var consistency_labels = ['0 <br>The Prolific user changed their strategy on every trial', '1', '2 <br>The Prolific user changed their strategy on some trials', '3', '4 <br>The Prolific user was somewhere in the middle', '5', '6 <br>The Prolific user used the same strategy on most trials', '7', '8<br>The Prolific user used the same strategy on every trial'];
 
-var consistency1 = {
-    type: 'html-slider-response',
-		require_movement: debug ? false : true,
-		start: 0,
-    stimulus: '<p>For the decision strategies you said the Prolific user used, how consistently do you think they used these strategies throughout Section 1 of the experiment? <br>In other words, how much did the way they made their choices stay the same from trial to trial?</p>',
-    labels: consistency_labels,
-		on_finish: function(data) {
-			jsPsych.data.addProperties({consistency1: data.response});
 
-			question_rts.consistency1 = Math.round(data.rt);
-		}
-};
 
 // **Attribute questions
 
@@ -1062,98 +280,12 @@ So if they didn't care at all about how good the humor was, you'd move the slide
 and if it completely determined their choice, you'd move the slider to 8. And you can move the slider anywhere in between.<br><br>\
 When you're ready, press 'Next'."];
 
-var attribute_instructions_wad = {
-	type: 'instructions',
-	pages: function() {
-		return ([attr_instr_text_wad]);
-	},
-	show_clickable_nav: true,
-	on_finish: function(data) {
-		for (var i = 0; i < data.view_history.length; i++) {
-			instructions_times.push(Math.round(data.view_history[i].viewing_time));
-		}
-	}
-};
-
-var label = ["0 <br> Didn't care about it at all", '1', '2 <br> Cared a little', '3', '4 <br> Cared somewhat', '5', '6 <br> Cared a lot', '7', '8<br>It completely determined their choices']
-var prompt = '<br><br><br><br>How much did the Prolific user care about this feature when making their decisions?';
-var attribute_ratings = new Array(home_attributes.length);
-
-for (var i = 0; i < home_attributes.length; i++) {
-	att = home_attributes[i];
-	attribute_ratings[i] = {
-  	type: 'html-slider-response',
-		labels: label,
-  	stimulus: '<b>' + att.display_name + '</b>',
-		prompt: prompt,
-		max: 100,
-		slider_start: 0,
-	 	require_movement: debug ? false : true,
-		data: {which_trial: i, attribute_name: att.name},
-		on_finish: function(data) {
-				s2_data = {
-					subject: data.subject,
-					version: data.version,
-					assignmentId: subject_id_url,
-					trial: data.which_trial,
-					type: 'wad_att_rating',
-					attribute: data.attribute_name,
-					rating: data.response,
-					rt: data.rt
-				}
-
-				save_data(s2_data, 's2');
-		}
-	};
-}
-
-attribute_ratings = _.shuffle(attribute_ratings);
-
 // Attribute questions: EW
 
 var attr_instr_text_ew = [", we'll ask <b>which</b> features of the movies the Prolific user cared about when making their decisions. This is what the question will look like:<br><br>\
 <img src='images/example_introspection_ew.png' width='65%' style='border: 1px solid #000000'></img><br><br>\
 So if they cared about the movies' creativity and visuals, and didn't care about any of the other features, you'd check 'Creativity' and 'Visuals' and not check any of the others.<br><br>\
 When you're ready, press 'Next'."];
-
-var attribute_instructions_ew = {
-	type: 'instructions',
-	pages: function() {
-		return ([attr_instr_text_ew]);
-	},
-	show_clickable_nav: true,
-	on_finish: function(data) {
-		for (var i = 0; i < data.view_history.length; i++) {
-			instructions_times.push(Math.round(data.view_history[i].viewing_time));
-		}
-	}
-};
-
-home_attribute_display_names_ext = [...home_attribute_display_names];
-var attribute_ratings_ew = {
-		type: 'survey-multi-select',
-		questions: [
-			{prompt: '<b>Which features did the Prolific user care about when making their choices?</b><br><br>(You can select as little as just 1 feature if they only cared about 1, or as many as all 9 features if they cared about all 9.)', options: home_attribute_display_names, required : debug ? false : true, horizontal: false}
-		],
-		preamble: '',
-		on_finish: function(data) {
-			var ans = data.response.Q0;
-
-			for (var i = 0; i < ans.length; i++) {
-					s2_data = {
-						subject: data.subject,
-						version: data.version,
-						assignmentId: subject_id_url,
-						trial: 0,
-						type: 'ew_att_rating',
-						attribute: ans[i],
-						rating: 1,
-						rt: data.rt
-					}
-				save_data(s2_data, 's2');
-			}
-		}
-}
 
 
 // Attribute questions: LEX
@@ -1164,52 +296,10 @@ The question will look like this:<br><br>\
 For instance, maybe you think they primarily made their decision based on the quality of the plot. If so, you would select 'Plot' for this question.<br><br>\
 When you're ready, press 'Next'."];
 
-var attribute_instructions_lex = {
-	type: 'instructions',
-	pages: function() {
-		return ([attr_instr_text_lex]);
-	},
-	show_clickable_nav: true,
-	on_finish: function(data) {
-		for (var i = 0; i < data.view_history.length; i++) {
-			instructions_times.push(Math.round(data.view_history[i].viewing_time));
-		}
-	}
-};
-
-var attribute_ratings_lex = {
-		type: 'survey-multi-choice',
-		questions: [
-			{prompt: '<b>What single feature did the Prolific user <u>MOST</u> use to make their choices?</b>', options: home_attribute_display_names, required : debug ? false : true, horizontal: false}
-		],
-		preamble: '',
-		on_finish: function(data) {
-				s2_data = {
-					subject: data.subject,
-					version: data.version,
-					assignmentId: subject_id_url,
-					trial: 0,
-					attribute: data.response.Q0,
-					type: 'lex_att_rating',
-					rating: 1,
-					rt: data.rt
-				}
-			save_data(s2_data, 's2');
-		}
-}
-
-var appropriateness = {
-    type: 'html-slider-response',
-		require_movement: debug ? false : true,
     stimulus: `Great job.<br><p>Throughout Section 2, we've asked you various questions about how you think the Prolific user made their choices in Section 1. <b>How well have these questions captured the way you think they made their choices?</b>
 		Do you think that, by answering these questions, you've accurately and fully described how they made their choices in Section 1? Or are there important aspects of their decision-making process that we've missed?</p>`,
     labels: ['0<br>These questions totally failed to capture how the Prolific user made their choices in Section 1', '1', '2', '3', '4', '5', '6', '7', '8 <br>These questions completely captured how the Prolific user made their choices in Section 1'],
-		on_finish: function(data) {
-			jsPsych.data.addProperties({appropriateness: data.response});
 
-			question_rts.appropriateness = Math.round(data.rt);
-		}
-};
 
 var consistency_labels2 = ['0<br>The amount they cared about each feature changed on every trial', '1', '2<br>The amount they cared about each feature changed on some trials', '3', '4<br>They were somewhere in the middle', '5', '6<br>The amount they cared about each feature was the same on most trials', '7', '8<br>The amount they cared about each feature was the same on every trial'];
 
@@ -1238,38 +328,6 @@ var attr_instr_text_direction = [
 	"When you're ready to start, press 'Next'."
 ];
 
-var attribute_instructions_direction = {
-	type: 'instructions',
-	pages: attr_instr_text_direction,
-	show_clickable_nav: true,
-	on_finish: function(data) {
-		for (var i = 0; i < data.view_history.length; i++) {
-			instructions_times.push(Math.round(data.view_history[i].viewing_time));
-		}
-	}
-};
-
-var attribute_ratings_direction = new Array(home_attributes.length);
-var last_trial_val = null;
-
-function makeArr(startValue, stopValue, cardinality) {
-  var arr = [];
-  var step = (stopValue - startValue) / (cardinality - 1);
-  for (var i = 0; i < cardinality; i++) {
-    arr.push(startValue + (step * i));
-  }
-  return arr;
-}
-
-atts_shuffled = _.shuffle(home_attributes);
-
-var comparisons = [[0,4], [0,1], [1,2], [2,3], [3,4]];
-
-for (var i = 0; i < atts_shuffled.length; i++) {
-	att = atts_shuffled[i];
-	var cur_scale = movie_scale;
-
-	attribute_ratings_direction[i] = new Array(comparisons.length+1);
 
 	var opening_instr = '';
 	if (i == 0) {
@@ -1280,11 +338,6 @@ for (var i = 0; i < atts_shuffled.length; i++) {
 		opening_instr = "Finally, we're going to ask you the same questions about the feature <b>" + att.display_name + "</b>.";
 	}
 
-	attribute_ratings_direction[i][0] = {
-		type: 'instructions',
-		pages: [opening_instr],
-		show_clickable_nav: true
-	}
 
 	for (var j = 0; j < comparisons.length; j++) {
 		var preamble = '';
@@ -1293,39 +346,6 @@ for (var i = 0; i < atts_shuffled.length; i++) {
 		} else {
 			preamble = "Now imagine another two movies, which were again identical in every way except that they had different scores for the feature '" + att.display_name + "'.";
 		}
-
-		var cur_options = ["The movie where '" + att.display_name + "' was <b>" + cur_scale[comparisons[j][0]] + "</b>",
-			"The movie where '" + att.display_name + "' was <b>" + cur_scale[comparisons[j][1]] + "</b>"];
-		attribute_ratings_direction[i][j+1] = {
-			type: 'survey-multi-choice',
-			questions: [
-				{prompt: "Which of these two movies would the Prolific user have chosen?",
-				options: cur_options,
-				required: debug ? false : true, horizontal: true},
-			],
-			preamble: preamble +
-				"<br><br>For one of the movies, '" + att.display_name + "' had a score of <b>" + cur_scale[comparisons[j][0]] +
-				"</b>. For the other movie, '" + att.display_name + "' had a score of <b>" + cur_scale[comparisons[j][1]] + "</b>.",
-			data: {which_trial: i, attribute_name: att.name, comp1: cur_scale[comparisons[j][0]], comp2: cur_scale[comparisons[j][1]], options: cur_options},
-			on_finish: function(data) {
-				s2_data = {
-					subject: data.subject,
-					version: data.version,
-					assignmentId: subject_id_url,
-					trial: data.which_trial,
-					attribute: data.attribute_name,
-					type: 'direction',
-					rating: data.options.indexOf(data.response.Q0),
-					least_preferred: data.comp1,
-					most_preferred: data.comp2,
-					rt: data.rt
-				}
-
-				save_data(s2_data, 's2');
-			}
-		}
-	}
-}
 
 var strategy = {
 	type: 'survey-text',
