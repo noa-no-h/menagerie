@@ -65,8 +65,8 @@ var sunk_cost2_openQ = {
     }
 };
 
-var introspection_q_labels_sunk_cost21 = [`<strong>It made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
-var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
+var introspection_q_labels_sunk_cost21 = [`<strong>It made me <u>LESS</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to spend the last million dollars to finish the plane`];
+var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>LESS</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to spend the last million dollars to finish the plane`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var sunk_cost2_intro_response1 = null;

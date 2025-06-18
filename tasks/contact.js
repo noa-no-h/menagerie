@@ -51,8 +51,8 @@ var contact_openQ = {
     }
 };
 
-var introspection_q_labels_contact1 = [`<strong>It made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`];
-var introspection_q_labels_contact2 = [`<strong>It would have made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`];
+var introspection_q_labels_contact1 = [`<strong>It made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`];
+var introspection_q_labels_contact2 = [`<strong>It would have made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var contact_intro_response1 = null;

@@ -102,8 +102,8 @@ var affect_openQ = {
     }
 };
 
-var introspection_q_labels_affect1 = [`<strong>It made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`];
-var introspection_q_labels_affect2 = [`<strong>It would have made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`];
+var introspection_q_labels_affect1 = [`<strong>It made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`,"", `<strong>It did not affect my response</strong>`,"",`<strong>It made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
+var introspection_q_labels_affect2 = [`<strong>It would have made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var affect_intro_response1 = null;

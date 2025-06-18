@@ -130,8 +130,6 @@
         }
         //#endregion
     </script>
-
-    <script src="tasks/status_quo.js"></script>
     <script src="tasks/representativeness.js"></script>
     <script src="tasks/reference_price.js"></script>
     <script src="tasks/anchor.js"></script>
@@ -139,20 +137,16 @@
     <script src="tasks/avail.js"></script>
     <script src="tasks/cause.js"></script>
     <script src="tasks/contact.js"></script>
-    <script src="tasks/double.js"></script>
     <script src="tasks/decoy.js"></script>
     <script src="tasks/belief.js"></script>
     <script src="tasks/omission.js"></script>
-    <script src="tasks/assoc.js"></script>
-    <script src="tasks/simulation.js"></script>
     <script src="tasks/mere_exposure.js"></script>
     <script src="tasks/halo.js"></script>
     <script src="tasks/primacy_order.js"></script>
-    <script src="tasks/imaginability.js"></script>
     <script src="tasks/illusion_of_truth_pt2.js"></script>
     <script src="tasks/illusion_of_truth_pt1.js"></script>
-    <script src="tasks/sunk_cost.js"></script>
     <script src="tasks/sunk_cost2.js"></script>
+    <script src="tasks/status_quo.js"></script>
     <script src="tasks/recognition.js"></script>
     <script src="tasks/hindsight2.js"></script>
 
@@ -482,7 +476,13 @@ var next_task = {
         //December 2024 pilot
         //var task_list = [hindsight2, simulation, affect, sunk_cost2, status_quo, primacy_order]
 
-        var task_list = [simulation]
+        //June 2025 pilot
+        var task_list = [affect, anchor, avail, cause, contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]
+
+        task_list.flat();
+
+        for (const task of task_list) {
+    console.log(task);}
 
         console.log("task_list: ", task_list);
 
@@ -505,7 +505,7 @@ var next_task = {
         task_list_shuffled.splice(12,0,attnCheck3);
 
         //insert captcha at the 16th position
-        task_list_shuffled.splice(14, 0, recaptcha);
+        //task_list_shuffled.splice(14, 0, recaptcha);
 
         console.log(typeof task_list_shuffled);
 
@@ -1341,27 +1341,22 @@ var next_task = {
 
         /*add elements to timeline*/
 
+        console.log(welcome)
+
         var intro;
         if (!debug) {
-            var intro = {
-                timeline: [welcome, consent_block, /*MTurk_id_loop,attnCheck2, attnCheck3,*/  begin]
-            };
+            console.log("here!")
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list, ending].flat()
+            ;
         } else {
-            var intro = {
-                timeline: [welcome, /*MTurk_id_loop,*/ begin]
-            };
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list, ending].flat();
         }
 
-        timeline.push(preload) 
+        console.log("debug: " + debug)
 
-
-        //timeline.push(intro)
-        timeline.push(mere_exposure)
-        //timeline.push(measures)
-        timeline.push(ending)
 
         /* initiate experiment */
-        jsPsych.run(timeline);
+        jsPsych.run(experiment_timeline);
 
     </script>
 </body>

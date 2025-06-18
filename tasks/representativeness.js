@@ -83,7 +83,7 @@ var introspection_q_labels_rep1 = [
     "",
     "<strong>It did not affect my response</strong>",
     "",
-    `<strong>It made me say he was <u>MORE</u> likely to be an engineer.</strong>`  // Corrected closing tag
+    `<strong>It made me say he was <u>MORE</u> likely to be an engineer.</strong>`
 ];
 
 var introspection_q_labels_rep2 = [

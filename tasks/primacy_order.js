@@ -188,8 +188,8 @@ var primacy_order_openQ = {
     }
 };
 
-var introspection_q_labels_mee1 = [`<strong>This ordering made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts did not affect my response</strong>", "", `<strong>This ordering made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`];
-var introspection_q_labels_mee2 = [`<strong>This ordering would have made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts would not have affected my response</strong>", "", `<strong>This ordering would have made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`];
+var introspection_q_labels_mee1 = [`<strong>This ordering made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts did not affect my response</strong>", "", `<strong>This ordering made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
+var introspection_q_labels_mee2 = [`<strong>This ordering would have made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts would not have affected my response</strong>", "", `<strong>This ordering would have made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var primacy_order_intro_response1 = null;

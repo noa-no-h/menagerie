@@ -69,8 +69,8 @@ var ref_price_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made the price I was willing to pay <u>HIGHER</u></strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made the price I was willing to pay <u>LOWER</u></strong>'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay <u>HIGHER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay <u>LOWER</u></strong>'];
+var introspection_q_labels_ref_price1 = ['<strong>It made the price I was willing to pay <u>LOWER</u></strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made the price I was willing to pay <u>HIGHER</u></strong>'];
+var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay <u>LOWER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay <u>HIGHER</u></strong>'];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 

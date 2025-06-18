@@ -382,19 +382,19 @@ var status_quo_openQ = {
 };
 
 var introspection_q_labels_status_quo1 = [
-    `<strong>It made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
+    `<strong>It made me more LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
     "",
     "<strong>It did not affect my response</strong>",
     "",
-    `<strong>It made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+    `<strong>It made me MORE likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
 
 var introspection_q_labels_status_quo2 = [
-    `<strong>It would have made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
+    `<strong>It would have made me LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
     "",
     "<strong>It would not have affected my response</strong>",
     "",
-    `<strong>It would have made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+    `<strong>It would have made me MORE likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
