@@ -188,8 +188,8 @@ var primacy_order_openQ = {
     }
 };
 
-var introspection_q_labels_mee1 = [`<strong>This ordering made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts did not affect my response</strong>", "", `<strong>This ordering made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
-var introspection_q_labels_mee2 = [`<strong>This ordering would have made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts would not have affected my response</strong>", "", `<strong>This ordering would have made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
+var introspection_q_labels_primacy_order1 = [`<strong>This ordering made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts did not affect my response</strong>", "", `<strong>This ordering made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
+var introspection_q_labels_primacy_order2 = [`<strong>This ordering would have made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts would not have affected my response</strong>", "", `<strong>This ordering would have made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var primacy_order_intro_response1 = null;
@@ -211,13 +211,13 @@ var primacy_order_introspect1 = {
     labels: function () {
 
         if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
-            return introspection_q_labels_priamcy_order1;
+            return introspection_q_labels_primacy_order1;
         } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
-            return introspection_q_labels_priamcy_order1.slice().reverse();
+            return introspection_q_labels_primacy_order1.slice().reverse();
         } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
-            return introspection_q_labels_priamcy_order2;
+            return introspection_q_labels_primacy_order2;
         } else {
-            return introspection_q_labels_priamcy_order2.slice().reverse();
+            return introspection_q_labels_primacy_order2.slice().reverse();
         }
     },
     slider_width: introspection_q_slider_width,
@@ -229,10 +229,11 @@ var primacy_order_introspect1 = {
     on_finish: function (data) {
 
         if (label_order_randomized == 'original') {
-            priamcy_order_intro_response1 = data.response
+            primacy_order_intro_response1 = data.response
+            
         }
         else {
-            priamcy_order_intro_response1 = 100 - data.response;
+            primacy_order_intro_response1 = 100 - data.response;
         }
     }
 };

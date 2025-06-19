@@ -256,8 +256,8 @@ var recognition_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_recognition1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_recognition2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var recognition_intro_response1 = null;
@@ -292,7 +292,7 @@ labels: function() {
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
-    function (data) {
+    on_finish: function (data) {
 
         if (label_order_randomized == 'original') {
             recognition_intro_response1 = data.response

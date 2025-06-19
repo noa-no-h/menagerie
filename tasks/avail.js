@@ -180,8 +180,10 @@ var avail_openQ = {
     }
 };
 
-var introspection_q_labels_avail1 = [`<strong>It made me more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
-var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
+
+var introspection_q_labels_avail1 = [`<strong>It made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
+
+var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`,"","<strong>It would not have affected my response</strong>", "",`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var avail_intro_response1 = null;

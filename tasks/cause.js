@@ -118,10 +118,10 @@ var cause_introspect1 = {
     on_finish: function (data) {
 
         if (label_order_randomized == 'original') {
-            case_intro_response1 = data.response
+            cause_intro_response1 = data.response
     }
         else {
-            case_intro_response1 = 100 - data.response;
+            cause_intro_response1 = 100 - data.response;
             }
         }
 

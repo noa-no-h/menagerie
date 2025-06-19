@@ -145,13 +145,13 @@ var affect_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
         if (label_order_randomized == 'original') {
             affect_intro_response1 = data.response
     }
         else {
                 affect_intro_response1 = 100 - data.response;
             }
+
         }
 };
 

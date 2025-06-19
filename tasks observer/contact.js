@@ -118,6 +118,7 @@ var contact_intro_confidence = {
             familiarity: familiarity,
             rt: data.rt
         }
+        console.log(s1_data['introspect_rating'])
         save_data(s1_data, 'introspection')
     }
 };

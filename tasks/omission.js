@@ -93,10 +93,12 @@ var omission_introspect1 = {
 
         if (label_order_randomized == 'original') {
             omission_intro_response1 = data.response
+
     }
         else {
             omission_intro_response1 = 100 - data.response;
             }
+
         }
 };
 

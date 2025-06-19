@@ -178,8 +178,14 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        halo_intro_response1 = data.response;
+
+        if (label_order_randomized == 'original') {
+            halo_intro_response1 = data.response
     }
+        else {
+            halo_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var halo_intro_response2 = null;
@@ -191,12 +197,8 @@ var halo_introspect2 = {
     }],
     on_finish: function (data) {
 
-        if (label_order_randomized == 'original') {
-            halo_intro_response1 = data.response
-    }
-        else {
-            halo_intro_response1 = 100 - data.response;
-            }
+       halo_intro_response2 = data.response
+
         }
 };
 
