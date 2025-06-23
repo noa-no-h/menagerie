@@ -256,7 +256,7 @@ var recognition_openQ = {
     }
 };
 
-var introspection_q_labels_recognition1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_recognition1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
 var introspection_q_labels_recognition2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 

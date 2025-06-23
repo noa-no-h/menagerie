@@ -6,9 +6,9 @@ var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you
 var belief_instructions1 = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will play a short logic game. Please try to play the game to the best of your ability.</p>
+        `<p>In this exercise, the Prolific user played a short logic game. They were asked to try to play the game to the best of their ability.</p>
     <p><i>Please click the button below to view the instructions for the game.</i></p>`,
-        `<p>The game you will be playing is called the <b>Alien Game</b>. In this game, imagine an alien from another planet has just landed on Earth. This alien's thought processes are very <b>logical</b>, but it knows nothing about Earth.</p>`,
+        `<p>The game they played is called the <b>Alien Game</b>. In this game, the Prolific user is asked to imagine an alien from another planet has just landed on Earth. This alien's thought processes are very <b>logical</b>, but it knows nothing about Earth.</p>`,
         `<p>In every round of the Alien Game, the alien will be told a number of things about Earth.</p>
     <p>For example, the alien might be told the following statements:
     <p><i>All elephants have big ears.</p>
@@ -25,21 +25,21 @@ var belief_instructions1 = {
     <p>For example, a conclusion based on the above statements might be:
     <p><b><i>Therefore, some places have big ears.</i></b></p>
     <p>In this case, even though the conclusion is <i>false</i>, it still logically follows from what the alien was told.</p>`,
-        `<p>Now that you know how to play the Alien game, you will be given a short practice round. Then, you will begin the actual game. Please ensure that you have read and understood the instructions before continuing (You can click the "Previous" button below to review them again).</p>
-    <p>During the practice round, you will receive feedback on your responses. However, you will not receive feedback during the actual game.</p>
-    <p><i>Once you are sure you know how to play the game, please click the "Next" button below to begin the practice round.</i></p>`
+        `<p>Now that you know how to play the Alien game, you will be see the Prolific user's response in a practice round. Then, you will see their response in the actual game. Please ensure that you have read and understood the instructions before continuing (You can click the "Previous" button below to review them again).</p>
+    <p>During the practice round, the Prolific user received feedback on their responses. However, they did not receive feedback during the actual game.</p>
+    <p><i>Once you are sure you know how to play the game, please click the "Next" button below to see the practice round responses.</i></p>`
     ],
     show_clickable_nav: true
 };
 
 var belief_practice1 = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p><i>This is a practice question. Please answer the question using the buttons at the bottom of the screen. Click "Yes" if you think the alien would come to the conclusion. Otherwise, click "No".</i></p><br>
+    stimulus: `<p><i>This is a practice question. The Prolific user was asked to answer the question using the buttons at the bottom of the screen. They were told to click "Yes" if they thought the alien would come to the conclusion. Otherwise, they were told to click "No".</i></p><br>
 <p>Imagine the logical alien is told the following statements:</p>
 <p><i>All dogs are animals.</p>
 <p>All cats are animals.</i></p>
-<p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
-<p><i><b>Therefore, all dogs are cats.</b></i></p>`,
+<p>Based on these statements, the Prolific user was asked whether they thought the alien would be able to come to the conclusion below:</p>
+<p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + observedPractice + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         s1_data = {
@@ -61,10 +61,10 @@ var belief_practice1_feedback = {
     stimulus: function (data) {
         var logic = jsPsych.data.get().last(1).values()[0].response
         if (logic == 1) {
-            return `<p>Correct! This conclusion is illogical, so the alien would be unable to make it.</p>
+            return `<p>The Prolific user was given the following feedback: Correct! This conclusion is illogical, so the alien would be unable to make it.</p>
         <p><i>Please click the button below to continue.</i></p>`
         } else {
-            return `<p>Incorrect. This conclusion is illogical, so the alien would be unable to make it.</p>
+            return `<p>The Prolific user was given the following feedback: Incorrect. This conclusion is illogical, so the alien would be unable to make it.</p>
         <p><i>Please click the button below to continue.</i></p>`
         }
     },
@@ -113,7 +113,7 @@ var belief_practice2_feedback = {
 belief_instructions2 = {
     type: jsPsychInstructions,
     pages: [
-        `<p>Now you will begin the actual trials. Please note that for these trials, you will no longer receive feedback on your responses.</p>
+        `<p>Now you will see the Prolific user's responses in the actual trials. Please note that for these trials, they no longer received feedback on their responses.</p>
     <p><i>Please click the button below when you are ready to begin.</i></p>`
     ],
     show_clickable_nav: true
@@ -248,6 +248,7 @@ var belief_openQ = {
 
 var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect my response</strong>", "", `<strong>When the conclusion was believable, that made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
 var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected my response</strong>", "", `<strong>If the conclusion had been believable, that would have made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var belief_intro_response1 = null;
 var belief_introspect1 = {
@@ -262,16 +263,33 @@ var belief_introspect1 = {
         <p>Do you think the <b>believability</b> of each conclusion would have affected your decision about whether or not the alien would come to that conclusion? If so, how?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_belief1 : introspection_q_labels_belief2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_belief1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_belief1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_belief2;
+        } else {
+            return introspection_q_labels_belief2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        belief_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            belief_intro_response1 = data.response
     }
+        else {
+                belief_intro_response1 = 100 - data.response;
+            }
+        }
+
 };
 
 var belief_intro_response2 = null;

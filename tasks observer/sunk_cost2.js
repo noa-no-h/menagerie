@@ -1,7 +1,7 @@
 //#region 5. sunk_cost2 Effect - BETWEEN
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that you had already spent 9 million dollars)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that you had already spent 9 million dollars)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that they had already spent 9 million dollars)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that you had already spent 9 million dollars)?</p>";
 
 var sunk_cost2_instructions = {
     type: jsPsychInstructions,
@@ -13,8 +13,8 @@ var sunk_cost2_instructions = {
 }
 
 var stimulus = function(){if (condition[0] == "Factor-Included") {
-    return `<p><b>Please consider the following scenario:</b></p>
-<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed (and 9 million dollars have already been spent), another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>The question is: should you spend the last million dollars of your research fund to finish the radar-blank plane?</p>`
+    return `<p><b>The Prolific user was asked to consider the following scenario:</b></p>
+<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed (and 9 million dollars have already been spent), another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>The question is: should you spend the last million dollars of your research fund to finish the radar-blank plane? The Prolific user selected ` + observedChoice + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs)</p>`
 } else {
     return `<p><b>Please consider the following scenario:</b></p>
 <p>As president of an airline company, you have received a suggestion from one of your employees. The suggestion is to use the last 1 million dollars of your research fund to develop a plane that would not be detected by conventional radar, in other words, a radar-blank plane. However, another firm has just begun marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company could build. <br><br>The question is: should you spend the last million dollars of your research fund to build the radar-blank plane?</p>`
@@ -57,7 +57,7 @@ var sunk_cost2_openQ_response = null;
 var sunk_cost2_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this task, you were asked what action you would take in a hypothetical scenario.</p><p>Describe your thought process while choosing your action. How did you come to your eventual judgment?</p>`,
+        prompt: `<p>In this task, the Prolific user was asked what action they would take in a hypothetical scenario.</p><p>Describe what you think their thought process was while choosing their action. How do you think they came to their eventual judgment?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -65,24 +65,36 @@ var sunk_cost2_openQ = {
     }
 };
 
-var introspection_q_labels_sunk_cost21 = [`<strong>It made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
-var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>MORE</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to spend the last million dollars to finish the plane`];
+var introspection_q_labels_sunk_cost21 = [`<strong>It made them <u>LESS</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>MORE</u> likely to spend the last million dollars to finish the plane`];
+var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>LESS</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to spend the last million dollars to finish the plane`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var sunk_cost2_intro_response1 = null;
 var sunk_cost2_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this task, you were asked whether you would spend the last million dollars of your research fund to finish the radar-blank plane.</p>
-                <p>You were told that you had already spent 9 million dollars on this research project.</p>
-                <p>Do you think <b>the fact that you had already spent 9 million dollars on the project</b> affected your response? If so, how?</p>`;
+            return `<p>In this task, the Prolific user was asked whether they would spend the last million dollars of your research fund to finish the radar-blank plane.</p>
+                <p>They were told that they had already spent 9 million dollars on this research project.</p>
+                <p>Do you think <b>the fact that they had already spent 9 million dollars on the project</b> affected your response? If so, how?</p>`;
          } else {
             return `<p>In this task, you were asked whether you would spend the last million dollars of your research fund to build the radar-blank plane.</p>
                 <p>Now imagine that you had already spent 9 million dollars on this research project.</p></p>
                 <p>Do you think <b>the fact that you had already spent 9 million dollars on the project</b> would have affected your response? If so, how?</p>`;
          }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_sunk_cost21 : introspection_q_labels_sunk_cost22,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_sunk_cost21;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_sunk_cost21.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_sunk_cost22;
+        } else {
+            return introspection_q_labels_sunk_cost22.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -90,8 +102,14 @@ var sunk_cost2_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        sunk_cost2_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            sunk_cost2_intro_response1 = data.response
     }
+        else {
+            sunk_cost2_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var sunk_cost2_intro_response2 = null;

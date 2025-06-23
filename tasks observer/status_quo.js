@@ -1,9 +1,9 @@
 
-var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>";
 
 
 var status_quo_stimulus_factor_included =
-    `In this study we are interested in your perceptions of decision making situations. Below is a scenario, please read the scenario carefully and answer the questions that follow. <br><br>
+    `We told the Prolific user that in this study we are interested in your perceptions of decision making situations. Below is a scenario. We asked the Prolific user to read the scenario carefully and answer the questions that follow. <br><br>
 The National Highway Safety Commission is deciding
 how to allocate its budget between two safety research 
 programs: <br>
@@ -19,7 +19,7 @@ speed limits). <br><br>
 approximately 50% of its funds to auto safety and 
 50% of its funds to highway safety.</b>
 
-<br><br>To make sure you understood the scenario, please answer the following comprehension questions:`;
+<br><br>To make sure you understood the scenario, the Prolific user was asked to answer the following comprehension questions. Please answer them as well:`;
 
 var status_quo_stimulus_factor_excluded =
     `In this study we are interested in your perceptions of decision making situations. Below is a scenario, please read the scenario carefully and answer the questions that follow. <br><br>
@@ -39,8 +39,8 @@ To make sure you understood the scenario, please answer the following comprehens
 var status_quo_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will be given a hypothetical scenario and asked what option you would recommend.</p>
-    <p><i>Please click the "Next" button when you are ready to see the scenario and your options.</i></p>`
+        `<p>In this exercise, the Prolific user was given a hypothetical scenario and asked what option they would recommend.</p>
+    <p><i>Please click the "Next" button when you are ready to see the scenario and their options.</i></p>`
     ],
     show_clickable_nav: true
 };
@@ -58,7 +58,7 @@ var status_quo_trial = {
             questions: [
                 {
                     prompt: condition[0] === 'Factor-Included'
-                        ? "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?"
+                        ? "Now, we asked for the Prolific user's opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion. We asked them to answer to the best of their understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br>We asked the Prolific user: Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose? <br><br> The Prolific user selected " + observedChoice + ". Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs)."
                         : "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)</span><br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?",
                     name: "StatusQuoAnswer",
                     options: function () {
@@ -370,10 +370,10 @@ var status_quo_openQ_response = null;
 var status_quo_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked to advise the National Highway 
+        prompt: `<p>In this exercise, the Prolific user was asked to advise the National Highway 
     Safety Commission on how to allocate its budget between improving automobile safety
     and improving the safety of interstate highway. 
-    </p><p>Describe your thought process behind your decision about what allocation of funds you would recommend. How did you come to your eventual decision?</p>`,
+    </p><p>Describe what you think. the thought process was behind their decision about what allocation of funds they would recommend. How do you think they came to their eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -382,36 +382,49 @@ var status_quo_openQ = {
 };
 
 var introspection_q_labels_status_quo1 = [
-    `<strong>It made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
+    `<strong>It made them LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
     "",
     "<strong>It did not affect my response</strong>",
     "",
-    `<strong>It made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+    `<strong>It made them MORE likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
 
 var introspection_q_labels_status_quo2 = [
-    `<strong>It would have made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
+    `<strong>It would have made me LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
     "",
     "<strong>It would not have affected my response</strong>",
     "",
-    `<strong>It would have made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+    `<strong>It would have made me MORE likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
+
 
 var status_quo_intro_response1 = null;
 var status_quo_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this exercise, you were asked what allocation of funds you would recommend to the National Highway Safety Commission.</p>
-                <p>We first told you that the <b><u>current allocations</u> of funds is 50% to auto safety and 50% to highway safety</b>  before asking you what you would recommend.</p>
-                <p>Do you think <b>knowing that the <u>current allocation</u> of funds is 50% to auto safety and 50% to highway safety</b> affected your response? If so, how?</p>`;
+            return `<p>In this exercise, the Prolific user was asked what allocation of funds they would recommend to the National Highway Safety Commission.</p>
+                <p>We first told them that the <b><u>current allocations</u> of funds is 50% to auto safety and 50% to highway safety</b>  before asking you what you would recommend.</p>
+                <p>Do you think <b>knowing that the <u>current allocation</u> of funds is 50% to auto safety and 50% to highway safety</b> affected their response? If so, how?</p>`;
         } else {
             return `<p>In this exercise, you were asked what allocation of funds you would recommend to the National Highway Safety Commission.</p>
                 <p>Now, imagine if you had first been told the <b><u>current allocation</u> of funds</b> is 50% auto safety / 50% highway safety.</p>
                 <p>If this were the case, do you think <b>knowing that the <u>current allocation</u> of funds is 50% to auto safety and 50% to highway safety</b> would have affected your response? If so, how?</p>`;
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_status_quo1 : introspection_q_labels_status_quo2,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_status_quo1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_status_quo1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_status_quo2;
+        } else {
+            return introspection_q_labels_status_quo2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -419,8 +432,14 @@ var status_quo_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        status_quo_intro_response1 = data.response;
+
+        if (label_order_randomized == 'original') {
+            status_quo_intro_response1 = data.response
     }
+        else {
+            status_quo_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 

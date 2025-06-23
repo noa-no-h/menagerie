@@ -1,7 +1,7 @@
  //#region 9. Mere Exposure (Stang (1974)
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the number of times you saw each word)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the number of times you saw each word)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the number of times they saw each word)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the number of times you saw each word)?</p>";
 
 
 
@@ -87,13 +87,13 @@ for (var i = 0; i < stimulus_array.length; i++) {
 var mere_exposure_instructions1 = {
     type: jsPsychInstructions,
     pages: [
-        `<p>This exercise comes in two parts. In the first part of this exercise, you will be shown a series of Turkish words. Then, in the second part of this exercise, you will be asked to answer a few questions about the words you were shown.</p>`,
-        `<p>For the first part of this exercise, you will see a series of Turkish words. It is not expected that you be able to speak Turkish. We are simply interested in your impression of the words.<p>Each word will appear once in the center of the screen, as follows:</p><br><br><br><br>
+        `<p>This exercise comes in two parts. In the first part of this exercise, the Prolific user was shown a series of Turkish words. Then, in the second part of this exercise, they were asked to answer a few questions about the words they were shown.</p>`,
+        `<p>For the first part of this exercise, they saw a series of Turkish words. It was not expected that they be able to speak Turkish. We were simply interested in their impression of the words.<p>Each word appeared once in the center of the screen, as follows:</p><br><br><br><br>
 <p style = "font-size:30px">kalem</p>
 <br><br><br>
-<p>The words will appear relatively <b>quickly</b>, so please pay attention to the screen throughout the exercise. Note that some of the words may appear more than once.</p>
-        <p>This part of the exercise should take about five minutes.</p>
-        <p>You will now begin the first part of the exercise. The words will appear as soon as you press the "Next" button below.</p>
+<p>The words appeared relatively <b>quickly</b>, so the Prolific user was asked to pay attention to the screen throughout the exercise. They were told  that some of the words might appear more than once.</p>
+        <p>This part of the exercise took about five minutes.</p>
+        <p>You will now begin the first part of the exercise to see what the Prolific user saw. The words will appear as soon as you press the "Next" button below.</p>
 <p><i>Please click the "Next" button when you are ready to see the words.</i></p>`,
     ],
     show_clickable_nav: true
@@ -116,7 +116,7 @@ var mere_exposure_stimuli = [
 
 var mere_exposure_instructions2 = {
     type: jsPsychInstructions,
-    pages: [`<p>You will now begin the second part of the exercise. For this part, you will be shown a series of words and be asked to rate how much you <b>like</b> each one. Note that several of these words may be ones that you have seen before. There are no right or wrong answers so try to be as honest as possible.</p>
+    pages: [`<p>The Prolific user then began the second part of the exercise. For this part, they were shown a series of words and asked to rate how much they <b>like</b> each one. They were told that several of these words may be ones that they had seen before. There were no right or wrong answers so they were asked to try to be as honest as possible.</p>
 <p><i>Please click the button below to continue.</i></p>`,],
     show_clickable_nav: true
 };
@@ -161,8 +161,8 @@ var mere_exposure_openQ_response = null;
 var mere_exposure_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were shown a series of words and asked to rate how much you liked them.</p>
-<p>Describe your thought process during this exercise. How did you come to your eventual ratings for each word?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was shown a series of words and asked to rate how much they liked them.</p>
+<p>Describe what you think their thought process was during this exercise. How do you think they came to their eventual ratings for each word?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -170,7 +170,7 @@ var mere_exposure_openQ = {
     }
 };
 
-var introspection_q_labels_mee1 = [`<strong>When I saw a word a lot of times, that made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word did not affect my response</strong>", "", `<strong>When I saw a word a lot of times, that made me like the word <u>MORE</u></strong>`];
+var introspection_q_labels_mee1 = [`<strong>When they saw a word a lot of times, that made them like the word <u>LESS</u></strong>`, "", "<strong>The number of times they saw a word did not affect their response</strong>", "", `<strong>When they saw a word a lot of times, that made them like the word <u>MORE</u></strong>`];
 var introspection_q_labels_mee2 = [`<strong>If I had seen a word a lot of times, that would have made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word would not have affected my response</strong>", "", `<strong>If I had seen a word a lot of times, that would have made me like the word <u>MORE</u></strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
@@ -179,8 +179,8 @@ var mere_exposure_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, you may have noticed that some of these words appeared many times, while others appeared only a few times or not at all.
-            <p>Do you think the <b>number of times</b> you saw each word affected how highly you rated it? If so, how?`
+            return `During this exercise, the Prolific user was initially shown a series of foreign words. Then, they were asked to rate how much they liked each of these words. When they were originally shown these words, they may have noticed that some of these words appeared many times, while others appeared only a few times or not at all.
+            <p>Do you think the <b>number of times</b> they saw each word affected how highly they rated it? If so, how?`
         } else {
             return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, you may have noticed that each word (e.g. "dudak") appeared exactly <i>one</i> time.
             <p>Now, imagine if some of the words you saw appeared more often than others. For example, imagine if the word "mimar" had appeared twenty-five times while the word "dudak" only appeared once.
@@ -211,7 +211,7 @@ var mere_exposure_introspect1 = {
             mere_exposure_intro_response1 = data.response
     }
         else {
-                mere_exposure_intro_response1 = 100 - data.response;
+            mere_exposure_intro_response1 = 100 - data.response;
             }
         }
 

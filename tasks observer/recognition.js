@@ -2,7 +2,7 @@
 // Pachur, Mata, Schooler 2009
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by how much you recognized the name of the city)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how much you recognized the name of the city)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by how much they recognized the name of the city)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how much you recognized the name of the city)?</p>";
 
 var preload = {
     type: jsPsychPreload,
@@ -14,8 +14,8 @@ var recognition_instructions = {
     pages: function() {
         if (trivia_question_already) {
             return [
-                `<p>In this exercise, you will be asked to answer another series of trivia questions.</p>
-            <br><p>Please do not search the answers online while you are completing the study; if you are unsure of an answer, please just make your best guess.
+                `<p>In this exercise, the Prolific user was asked to answer another series of trivia questions.</p>
+            <br><p>They were asked not to search the answers online while you are completing the study; if they were unsure of an answer, they were asked to just make their best guess.
             <p><i>Click the Next button below when you are ready to see the first question.</i></p>`
             ];
         } else {
@@ -248,7 +248,7 @@ var recognition_openQ_response = null;
 var recognition_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were presented with a series of trivia questions. In each one, you were either asked to pick the city with the larger population. </p><p>Describe your thought process behind your decision about which city to select. How did you come to your eventual decision?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was presented with a series of trivia questions. In each one, they were either asked to pick the city with the larger population. </p><p>Describe what you think the thought process was behind their decision about which city to select. How did they come to your eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -256,33 +256,51 @@ var recognition_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_recognition1 = ['<strong>It made them think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It did not affect their response</strong>', "", '<strong>It made them think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_recognition2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this exercise, you were presented with a series of trivia questions.
-            <p>In each one, you were either asked to pick the city with the larger population. </p>
-            <p>Some of the cities (like New York) you likely recognized the names of. While others (like Lexington–Fayette) you may have recognized less well. How do you think <b>how much you'd heard of the city before</b> affected your impression of its population?</p>`;
+            return `<p>In this exercise, the Prolific user was presented with a series of trivia questions.
+            <p>In each one, they were either asked to pick the city with the larger population. </p>
+            <p>Some of the cities (like New York) they likely recognized the names of. While others (like Lexington–Fayette) they may have recognized less well. How do you think <b>how much they'd heard of the city before</b> affected they impression of its population?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of trivia questions.
             <p>In each one, you were either asked to pick the city with the larger population. </p>
             <p>Imagine if some of the  cities (like New York) were ones you likely recognized the names of. While others (likeLexington–Fayette) were ones you likely recognized less well. How do you think <b>how much you'd heard of the city before</b> would have affected your impression of its population?</p>`;
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_recognition1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_recognition1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_recognition2;
+        } else {
+            return introspection_q_labels_recognition2.slice().reverse();
+        }
+    },
+        slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        recognition_intro_response1 = data.response;
+
+        if (label_order_randomized == 'original') {
+            recognition_intro_response1 = data.response
     }
+        else {
+            recognition_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var recognition_intro_response2 = null;

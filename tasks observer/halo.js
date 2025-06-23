@@ -1,7 +1,7 @@
 //#region Halo
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by attractiveness of the face)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by attractiveness of the face)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by attractiveness of the face)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by attractiveness of the face)?</p>";
 
 
 var preload = {
@@ -12,8 +12,8 @@ var preload = {
 var halo_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this exercise, you will be presented with a series of pictures of anonymous strangers. Based on these pictures, you will then be asked to rate your impression of these strangers.</p>
-        <p>There are no right or wrong answers in this task. We are simply interested in your honest impressions of these individuals.</p>
+        `<p>In this exercise, the Prolific user was presented with a series of pictures of anonymous strangers. Based on these pictures, they were then asked to rate their impression of these strangers.</p>
+        <p>They were told that there are no right or wrong answers in this task. We were simply interested in their honest impressions of these individuals.</p>
         <p><i>Click the Next button below when you are ready to see the first stranger.</i></p>`
     ],
     show_clickable_nav: true
@@ -129,9 +129,9 @@ var halo_openQ_response = null;
 var halo_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were presented with a series of pictures of 
-        anonymous strangers. Based on these pictures, you were then asked to rate your 
-        impression how persuasive the strangers were. </p><p>Describe your thought process behind your decision about how persuasive to rate each individual. How did you come to your eventual decision?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was presented with a series of pictures of 
+        anonymous strangers. Based on these pictures, they were then asked to rate their 
+        impression how persuasive the strangers were. </p><p>Describe what you think their thought process was behind their decision about how persuasive to rate each individual. How do you think they came to their eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -139,18 +139,19 @@ var halo_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think they were <u>MORE</u> persuasive</strong>'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were <u>MORE</u> persuasive</strong>'];
+var introspection_q_labels_halo1 = ['<strong>It made the Prolific user think the stranger was <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected their response</strong>', "", '<strong>It made the Prolific user think the stranger was <u>MORE</u> persuasive</strong>'];
+var introspection_q_labels_halo2 = ['<strong>It would have made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were <u>MORE</u> persuasive</strong>'];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var halo_intro_response1 = null;
 var halo_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this exercise, you were presented with a series of pictures of 
-            anonymous strangers. Based on these pictures, you were then asked to rate your 
+            return `<p>In this exercise, the Prolific user was presented with a series of pictures of 
+            anonymous strangers. Based on these pictures, they were then asked to rate their 
             impression of how persuasive strangers were.</p>
-            <p>How do you think the <b>attractiveness of the face</b> affected your impression of their persuasiveness?</p>`;
+            <p>How do you think the <b>attractiveness of the face</b> affected the Prolific user's impression of the strangers' persuasiveness?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of pictures of 
             anonymous strangers. Based on these pictures, you were then asked to rate your 
@@ -159,16 +160,32 @@ var halo_introspect1 = {
             <p>If this were the case, do you think the <b>attractiveness of the faces</b> would have affected your impression of their persuasiveness? If so, how?</p>`;
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_halo1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_halo1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_halo2;
+        } else {
+            return introspection_q_labels_halo2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        halo_intro_response1 = data.response;
+
+        if (label_order_randomized == 'original') {
+            halo_intro_response1 = data.response
     }
+        else {
+            halo_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var halo_intro_response2 = null;
@@ -179,8 +196,10 @@ var halo_introspect2 = {
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
-        halo_intro_response2 = data.response.Q0;
-    }
+
+       halo_intro_response2 = data.response
+
+        }
 };
 
 var halo_intro_confidence_response = null;

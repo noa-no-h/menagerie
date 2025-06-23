@@ -164,17 +164,18 @@ var anchor_openQ = {
     }
 };
 
-var introspection_q_labels_anchor1 = [`<strong>It pushed their answer <u>FURTHER</u> away from the example value (e.g., further away from -45 degrees)</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It pushed their answer <u>CLOSER</u> to the example value (e.g., closer to -45 degrees)</strong>`];
+var introspection_q_labels_anchor1 = [`<strong>It pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from -45 degrees)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It pushed my answer <u>CLOSER</u> to the example value (e.g., closer to -45 degrees)</strong>`];
 var introspection_q_labels_anchor2 = [`<strong>It would have pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from -45 degrees)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have pushed my answer <u>CLOSER</u> to the example value (e.g., closer to -45 degrees)</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var anchor_intro_response1 = null;
 var anchor_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>The trivia question the Prolific user saw came in pairs, where the first question would ask them if the answer was greater or less than an <b>example value</b>.
-        <p>Specifically, we first asked them whether the mean winter antarctic temperature in the Antarctic was higher or lower than -45 degrees Fahrenheit. Then, we asked them to provide an estimate of the mean winter temperature in the Antarctic. 
-        <p>Do them think the <b>presence of the example value (-45 degrees Fahrenheit)</b> affected their response? If so, how?`
+            return `<p>The trivia question you saw came in pairs, where the first question would ask you if the answer was greater or less than an <b>example value</b>.
+        <p>Specifically, we first asked you whether the mean winter antarctic temperature in the Antarctic was higher or lower than -45 degrees Fahrenheit. Then, we asked you to provide an estimate of the mean winter temperature in the Antarctic. 
+        <p>Do you think the <b>presence of the example value (-45 degrees Fahrenheit)</b> affected your response? If so, how?`
         } else {
             return `<p>The trivia question you saw asked you to estimate a specific value: the mean winter temperature in the Antarctic.
         <p>Now, imagine if before we asked you to provide this estimate, we first asked you if you thought the value was greater or less than an <b>example value.</b>
@@ -182,7 +183,18 @@ var anchor_introspect1 = {
         <p>Do you think the <b>presence of such an example value</b> would have affected your response? If so, how?`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_anchor1 : introspection_q_labels_anchor2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_anchor1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_anchor1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_anchor2;
+        } else {
+            return introspection_q_labels_anchor2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -190,8 +202,15 @@ var anchor_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        anchor_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            anchor_intro_response1 = data.response
     }
+        else {
+                anchor_intro_response1 = 100 - data.response;
+            }
+        }
+
 };
 
 var anchor_intro_response2 = null;

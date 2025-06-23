@@ -1,12 +1,12 @@
 //#region 3. Causal Inference (Morris et al., 2019) - BETWEEN
 
 
-var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fact that there was only one green ball in the left box)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that there was only one green ball in the left box)?</p>';
+var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that there was only one green ball in the left box)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that there was only one green ball in the left box)?</p>';
 
 var cause_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `In this exercise, you will be given a description of a hypothetical event. After you read the description, you will then be asked a question about that event.
+        `In this exercise, the Prolific user was given a description of a hypothetical event. After they read the description, they were then asked a question about that event.
     <p><i>Please click the button below to view the description.</i></p>`
     ],
     show_clickable_nav: true
@@ -52,8 +52,8 @@ var cause_question = {
         } else {
             image = "img/nineballs.png"
         }
-        return `<b>Please tell us much you agree or disagree with the statement below.</b> There are no right or wrong answers; we are simply interested in your opinion.
-<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p>`
+        return `<b>The Prolific user was asked to tell us how much they agree or disagree with the statement below.</b> They were told there were no right or wrong answers and that we were simply interested in your opinion.
+<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p> The Prolific user selected ` + observedCausality + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`
     },
     labels: [`<strong>1<br>totally disagree</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>totally agree</strong>`],
     slider_width: 750,
@@ -70,7 +70,7 @@ var cause_openQ_response = null;
 var cause_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked to judge the extent to which Joe's choice from the left box (where he chose a green ball) caused him to win the dollar.</p><p>Describe your thought process while making this judgment. How did you come to your eventual judgment about how much the green ball caused the win?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was asked to judge the extent to which Joe's choice from the left box (where he chose a green ball) caused him to win the dollar.</p><p>Describe what you think their thought process was while making this judgment. How do you think they came to their eventual judgment about how much the green ball caused the win?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -78,17 +78,18 @@ var cause_openQ = {
     }
 };
 
-var introspection_q_labels_cause1 = [`<strong>It made me <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
+var introspection_q_labels_cause1 = [`<strong>It made them <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
 var introspection_q_labels_cause2 = [`<strong>It would have made me <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var cause_intro_response1 = null;
 var cause_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In the scenario you saw, these were the boxes that Joe chose from: <p><img src = "img/oneball.png" style="width:700px;"><img></p>
+            return `<p>In the scenario the Prolific user saw, these were the boxes that Joe chose from: <p><img src = "img/oneball.png" style="width:700px;"><img></p>
         <p>As you can see, there was exactly <b>one</b> <font color = "GREEN">green</font> ball that Joe could have chosen.
-        <p>Do you think the fact that there was only one green ball in the left box affected your judgment about whether <b>Joe's choice of a green ball from the left box</b> caused him to win? If so, how?`
+        <p>Do you think the fact that there was only one green ball in the left box affected the Prolific user's judgment about whether <b>Joe's choice of a green ball from the left box</b> caused him to win? If so, how?`
         } else {
             return `<p>In the scenario you saw, these were the boxes that Joe chose from: <p><img src = "img/nineballs.png" style="width:700px;"><img></p>
         <p>As you can see, there were <b>nine</b> <font color = "GREEN">green</font> balls that Joe could have chosen.</b><hr><b>Now</b>, imagine if the boxes had looked like this: <p><img src = "img/oneball.png" style="width:700px;"><img></p>
@@ -96,7 +97,18 @@ var cause_introspect1 = {
         <p>If this were the case, do you think the fact that there were only one green ball in the left box would have affected your judgment about whether <b>Joe's choice of a green ball from the left box</b> caused him to win? If so, how?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_cause1 : introspection_q_labels_cause2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_cause1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_cause1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_cause2;
+        } else {
+            return introspection_q_labels_cause2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -104,8 +116,15 @@ var cause_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br>",
     on_finish: function (data) {
-        cause_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            cause_intro_response1 = data.response
     }
+        else {
+            cause_intro_response1 = 100 - data.response;
+            }
+        }
+
 };
 
 var cause_intro_response2 = null;

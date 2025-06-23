@@ -1,7 +1,7 @@
 //#region 5. hindsight Effect - BETWEEN
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by your knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by your knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
 
 var hindsight_instructions = {
     type: jsPsychInstructions,
@@ -9,7 +9,7 @@ var hindsight_instructions = {
         `<p> A short description of a real social
 or personal event appears on the next page with a
 number of possible outcomes. On the basis of
-these data, we ask you to evaluate the likelihood
+these data, we asked the Prolific user to evaluate the likelihood
 of the outcomes listed.</p>
     <p><i>Please click the button below to view the passage.</i>`,
     ],
@@ -32,7 +32,7 @@ var comprehension_questions = {
                         html: function () {
                             if (condition[0] === "Factor-Included") {
                                 return `
-                                    <p><b>Please consider the following event:</b></p>
+                                    <p><b>We asked the Prolific user to consider the following event:</b></p>
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
                                     <p><u>The result was a British victory.</u></p>
                                     `;
@@ -46,7 +46,7 @@ var comprehension_questions = {
                     },
                     {
                         type: "radiogroup",
-                        name: "To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?",
+                        name: "To make sure they read and understood the scenario, we asked the Prolific user to answer the following comprehension question: What was the outcome of the event? Please answer this question as well.",
                         choices: ["British victory", "Gurka victory", "Military stalemate with no peace settlement", "Military stalemate with a peace settlement", "The case did not indicate the outcome"],
                         isRequired: true
                     }
@@ -57,7 +57,7 @@ var comprehension_questions = {
     on_finish: function (data) {
         // Extract response index and verify if the answer is correct
         console.log("response", data.response); // data.response
-        const response = data.response["To make sure you read and understood the scenario, please answer the following comprehension question: What was the outcome of the event?"] ;
+        const response = data.response["To make sure they read and understood the scenario, we asked the Prolific user to answer the following comprehension question: What was the outcome of the event? Please answer this question as well."] ;
         passed = false;
 
         if (response !== null) {
@@ -115,7 +115,7 @@ var hindsight_question = {
                             if (condition[0] === "Factor-Included") {
                                 return `
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p> <p> <u>The result was a British victory.</u></p>
-                                    <p>In the light of the information appearing in the passage, please estimate the probability of occurrence of each of the four possible outcomes listed below. There are no right or wrong answers, answer based on your intuition. (The probabilities should sum to 100%). <b> Answer as if you do not know the outcome, estimating the case at that time before outcomes were known.</b></p>`;
+                                    <p>In the light of the information appearing in the passage, we asked the Prolific user to estimate the probability of occurrence of each of the four possible outcomes listed below. We told them that there are no right or wrong answers, and they should answer based on their intuition. (The probabilities should sum to 100%). <b> We asked them to answer as if they did not know the outcome, estimating the case at that time before outcomes were known.</b></p><br> The Prolific user selected ` + observedChoice + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`;
                             } else {
                                 return `
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
@@ -238,7 +238,7 @@ var hindsight_openQ_response = null;
 var hindsight_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were asked to judge the probability of occurrence of each of the four possible outcomes.</p><p>Describe your thought process while judging the probabilities. How did you come to your eventual judgment?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was asked to judge the probability of occurrence of each of the four possible outcomes.</p><p>Describe what you think their thought process was while judging the probabilities. How do you think they came to their eventual judgment?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -246,32 +246,49 @@ var hindsight_openQ = {
     }
 };
 
-var introspection_q_labels_hindsight1 = [`<strong>It made me judge the outcome of British victory as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
+var introspection_q_labels_hindsight1 = [`<strong>It made them judge the outcome of British victory as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them judge the outcome of British victory as <u>MORE</u> likely </strong>`];
 var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the outcome of British victory  as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var hindsight_intro_response1 = null;
 var hindsight_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p> After reading about the historical event, we had told you what actually happened: a British victory.</p>
-            <p> You were then asked to judge the probabilities of occurrence of each of the four possible outcomes but answering <b> as if </b>you had not known the true outcome.</p>
-            <p>Do you think the fact that you knew the true outcome — a British victory — influenced your judgment of how likely the outcome of British victory was?</p>`
+            return `<p> After reading about the historical event, we had told the Prolific user what actually happened: a British victory.</p>
+            <p> They were then asked to judge the probabilities of occurrence of each of the four possible outcomes but answering <b> as if </b>they had not known the true outcome.</p>
+            <p>Do you think the fact that they knew the true outcome — a British victory — influenced their judgment of how likely the outcome of British victory was? If so, how?</p>`
         } else {
             return `<p>Imagine that, after reading about the historical event, we had told you what actually happened: a British victory. Then, imagine we had asked you the same question -- to judge the probabilities of the four possible outcomes -- but answering <b> as if </b>you had not known the true outcome.</p>
             <p>In this case, do you think the fact that you would have known the true outcome — a British victory — would have influenced your judgment of how likely the outcome of British victory was?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_hindsight1 : introspection_q_labels_hindsight2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_hindsight1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_hindsight1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_hindsight2;
+        } else {
+            return introspection_q_labels_hindsight2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        hindsight_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            hindsight_intro_response1 = data.response
     }
+        else {
+            hindsight_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var hindsight_intro_response2 = null;

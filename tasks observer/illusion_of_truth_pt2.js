@@ -3,7 +3,7 @@
 //Ongoing Secondary Tasks Can Reduce the Illusory Truth Effect
 //Deva P. Ly, Daniel M. Bernstein, Eryn J. Newman*
 
-var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by whether you had seen the statement earlier in this study)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by whether you had seen the statement earlier in this study)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by whether they had seen the statement earlier in this study)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by whether you had seen the statement earlier in this study)?</p>";
 
 
 //preparing stimuli
@@ -125,12 +125,12 @@ for (var i = 0; i < included_twelve_statements.length; i++) {
 var illusion_of_truth_instructions1 = {
     type: jsPsychInstructions,
     pages: [
-        `<p>In this next task, you will see series of statements appear on the screen. Half of these statements are ones that you have already seen, and half are new. Some of these trivia statements are true and some of these trivia statements are false.
-        <br><p>You will be asked to assess whether each claim is true or false. When you see each statement appear on the screen, please read it carefully and answer the following question:
+        `<p>In this next task, the Prolific user was a series of statements appear on the screen. Half of these statements were ones that they have already seen, and half were new. Some of these trivia statements were true and some of these trivia statements are false.
+        <br><p>They were asked to assess whether each claim is true or false. When they saw each statement appear on the screen, they were asked to read it carefully and answer the following question:
 <br> <p><strong> Is this statement true or false? </strong>
-<br><p>You will be asked to answer this question on a scale from definitely false to definitely true.</p>
-        <br><p>It is important that you respond as quickly as possible, but not so quickly that you start making errors.
-        <br><p>Please do not search the answers online while you are completing the study; if you are unsure of an answer, please just make your best guess.
+<br><p>They were asked to answer this question on a scale from definitely false to definitely true.</p>
+        <br><p>They were told it was important that you respond as quickly as possible, but not so quickly that you start making errors.
+        <br><p>They were asked not to search the answers online while they were completing the study; if they are unsure of an answer, they were asked to just make their best guess.
         <p><i>Press the next button to begin.</i></p>`,
     ],
     show_clickable_nav: true
@@ -182,8 +182,8 @@ var illusion_of_truth_openQ_response = null;
 var illusion_of_truth_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you were shown a series of trivia statements and asked to assess whether each claim was true or false.</p>
-        <p>Describe your thought process during this exercise. How did you come to your eventual judgement whether each claim was true or false?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was shown a series of trivia statements and asked to assess whether each claim was true or false.</p>
+        <p>Describe what you think their thought process was during this exercise. How do you think they came to their eventual judgement whether each claim was true or false?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -191,33 +191,50 @@ var illusion_of_truth_openQ = {
     }
 };
 
-var introspection_q_labels_mee1 = [`<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study did not affect my response</strong>", "", `<strong>When I had seen a trivia statement earlier in this study, that made me judge the statement as <u>MORE</u> likely to be true</strong>`];
-var introspection_q_labels_mee2 = [`<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study would not have affected my response</strong>", "", `<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>MORE</u> likely to be true</strong>`];
+var introspection_q_labels_illusion_of_truth1 = [`<strong>When they had seen a trivia statement earlier in this study, that made them judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether they had seen a statement earlier in this study did not affect their response</strong>", "", `<strong>When they had seen a trivia statement earlier in this study, that made them judge the statement as <u>MORE</u> likely to be true</strong>`];
+var introspection_q_labels_illusion_of_truth2 = [`<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study would not have affected my response</strong>", "", `<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>MORE</u> likely to be true</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var illusion_of_truth_intro_response1 = null;
 var illusion_of_truth_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `During this exercise, you were shown a series of trivia statements and you were asked to assess whether each claim was true or false. 
-                    <p>Some of these claims had been shown to you earlier in the experiment and some you just saw for the first time.
-                    <p>Do you think <b>seeing the statement earlier in this study</b> affected  your assessment of whether it was true or false? If so, how?`
+            return `During this exercise, the Prolific user was shown a series of trivia statements and they were asked to assess whether each claim was true or false. 
+                    <p>Some of these claims had been shown to them earlier in the experiment and some they just saw for the first time.
+                    <p>Do you think <b>seeing the statement earlier in this study</b> affected their assessment of whether it was true or false? If so, how?`
         } else {
             return `During this exercise, you were shown a series of trivia statements and you were asked to assess whether each claim was true or false. 
                     <p>Earlier in this experiment, you were shown another series of trivia statements. Now, imagine if some of the trivia statements you were just asked to assess had also been shown to you earlier in the experiment. 
                     Do you think <b>seeing the statement earlier in this study</b> would have  affected your assessment of whether it was true or false? If so, how?`
                         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_mee1 : introspection_q_labels_mee2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_illusion_of_truth1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_illusion_of_truth1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_illusion_of_truth2;
+        } else {
+            return introspection_q_labels_illusion_of_truth2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
-        illusion_of_truth_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            illusion_of_truth_intro_response1 = data.response
     }
+        else {
+            illusion_of_truth_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var illusion_of_truth_intro_response2 = null;

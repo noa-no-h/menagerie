@@ -1,6 +1,6 @@
 //#region 2. Famous Names (Tversky & Kahneman, 1973) - BETWEEN
 
-var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific usesr was influenced by the fame of the people in each list)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fame of the people in each list)?</p>';
+var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way they were influenced by the fame of the people in each list)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fame of the people in each list)?</p>';
 
 var avail_included_stimuli = [
     {
@@ -131,10 +131,9 @@ var avail_excluded_stimuli = [
 var avail_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p> We told the Prolific user:</p>`,
-        `<p>In this exercise, you will be shown lists of people's names.<p>Your goal will be to <b>memorize as many names as possible</b> in a short amount of time.</p>`,
-        `<p>You will only be given <b>five seconds</b> to memorize each list. This is a very short amount of time, so just try your best to memorize as many names as you can.<p> You will be shown <b>two</b> lists in total, with a short break in between.</p>`,
-        `<p>You will now be shown the two lists of names. There will be no warning before the second list, so please remain attentive.</p>
+        `<p> In this exercise, the Prolific user was shown lists of people's names.<p>Their goal was to <b>memorize as many names as possible</b> in a short amount of time.</p>`,
+        `<p>They were only be given <b>five seconds</b> to memorize each list. This is a very short amount of time, so they were told to just try their best to memorize as many names as they can.<p> They were told they would be shown <b>two</b> lists in total, with a short break in between.</p>`,
+        `<p>You will now be shown the two lists of names they were shown. There will be no warning before the second list.</p>
     <p><i>Please click the "Next" button when you are ready to see the lists.</i></p>`
     ],
     show_clickable_nav: true
@@ -162,7 +161,7 @@ var avail_trials = {
 var more_men = null;
 var avail_question = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p>We then told the prolific user, \"Now that you have seen both lists, please answer the question below to the best of your ability:</p><p><b>Which list contained more men?\"</b></p><br>`,
+    stimulus: `<p> After the Prolific user had seen both lists, they answered the following question:</p><p><b>Which list contained more men?</b></p><br>The Prolific user selected ` + observedList + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`,
     choices: ["List 1", "List 2"],
     on_finish: function (data) {
         more_men = data.response;
@@ -173,7 +172,7 @@ var avail_openQ_response = null;
 var avail_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, the Prolific user was shown two lists of names and asked to determine which list contained more men.</p><p>Describe what you think the thought process was behind their decision about which list contained more men. How do you think they came to their eventual decision?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was shown two lists of names and asked to determine which list contained more men.</p><p>What do you think was their thought process behind your decision about which list contained more men? How do you think they came to their eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -181,24 +180,38 @@ var avail_openQ = {
     }
 };
 
-var introspection_q_labels_avail1 = [`<strong>It made them more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
-var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
+
+var introspection_q_labels_avail1 = [`<strong>It made them more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made them more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
+
+var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`,"","<strong>It would not have affected my response</strong>", "",`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var avail_intro_response1 = null;
 var avail_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this exercise, you were asked to memorize two lists of names. Some of the names on these lists belonged to very famous people, while others belonged to people who are not famous.</p>
+            return `<p>In this exercise, the Prolifc user was asked to memorize two lists of names. Some of the names on these lists belonged to very famous people, while others belonged to people who are not famous.</p>
         <p>Specifically, in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were not famous. However, in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were not famous.</p>
-        <p>Do you think the <b>fame of the people in each list</b> affected your response about which list contained more men? If so, how?`
+        <p>Do you think the <b>fame of the people in each list</b> affected their response about which list contained more men? If so, how?`
         } else {
             return `<p>In this exercise, you were asked to memorize two lists of names. None of the names on the list you saw belonged to very famous people.</p>
         <p>Now, imagine if some of the names on each list had belonged to very famous people. For example, imagine that in the <b>first list</b>, all of the <i>men</i> were very famous, while all of the women were not famous. And imagine that in the <b>second list</b>, all of the <i>women</i> were very famous while all of the men were not famous.</p>
         <p>If this were the case, do you think the <b>fame of the people in each list</b> would have affected your response about which list contained more men? If so, how?`
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_avail1 : introspection_q_labels_avail2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_avail1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_avail1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_avail2;
+        } else {
+            return introspection_q_labels_avail2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -206,8 +219,15 @@ var avail_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        avail_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            avail_intro_response1 = data.response
     }
+        else {
+            avail_intro_response1 = 100 - data.response;
+            }
+        }
+
 };
 
 var avail_intro_response2 = null;

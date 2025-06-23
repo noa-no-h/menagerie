@@ -130,7 +130,6 @@
         //#endregion
     </script>
 
-    <script src="tasks observer/status_quo.js"></script>
     <script src="tasks observer/representativeness.js"></script>
     <script src="tasks observer/reference_price.js"></script>
     <script src="tasks observer/anchor.js"></script>
@@ -138,23 +137,18 @@
     <script src="tasks observer/avail.js"></script>
     <script src="tasks observer/cause.js"></script>
     <script src="tasks observer/contact.js"></script>
-    <script src="tasks observer/double.js"></script>
     <script src="tasks observer/decoy.js"></script>
     <script src="tasks observer/belief.js"></script>
     <script src="tasks observer/omission.js"></script>
-    <script src="tasks observer/assoc.js"></script>
-    <script src="tasks observer/simulation.js"></script>
     <script src="tasks observer/mere_exposure.js"></script>
     <script src="tasks observer/halo.js"></script>
     <script src="tasks observer/primacy_order.js"></script>
-    <script src="tasks observer/imaginability.js"></script>
     <script src="tasks observer/illusion_of_truth_pt2.js"></script>
     <script src="tasks observer/illusion_of_truth_pt1.js"></script>
-    <script src="tasks observer/sunk_cost.js"></script>
     <script src="tasks observer/sunk_cost2.js"></script>
+    <script src="tasks observer/status_quo.js"></script>
     <script src="tasks observer/recognition.js"></script>
     <script src="tasks observer/hindsight2.js"></script>
-
 
 
 
@@ -482,7 +476,7 @@ var next_task = {
         //December 2024 pilot
         //var task_list = [hindsight2, simulation, affect, sunk_cost2, status_quo, primacy_order]
 
-        var task_list = [simulation]
+        var task_list = [affect, anchor, avail, cause, contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]
 
         console.log("task_list: ", task_list);
 
@@ -1343,25 +1337,18 @@ var next_task = {
 
         var intro;
         if (!debug) {
-            var intro = {
-                timeline: [welcome, consent_block, /*MTurk_id_loop,attnCheck2, attnCheck3,*/  begin]
-            };
+            console.log("here!")
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat()
+            ;
         } else {
-            var intro = {
-                timeline: [welcome, /*MTurk_id_loop,*/ begin]
-            };
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat();
         }
 
-        timeline.push(preload) 
+        console.log("debug: " + debug)
 
-
-        //timeline.push(intro)
-        timeline.push(affect)
-        //timeline.push(measures)
-        timeline.push(ending)
 
         /* initiate experiment */
-        jsPsych.run(timeline);
+        jsPsych.run(experiment_timeline);
 
     </script>
 </body>

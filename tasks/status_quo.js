@@ -382,7 +382,7 @@ var status_quo_openQ = {
 };
 
 var introspection_q_labels_status_quo1 = [
-    `<strong>It made me more LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
+    `<strong>It made me LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
     "",
     "<strong>It did not affect my response</strong>",
     "",
