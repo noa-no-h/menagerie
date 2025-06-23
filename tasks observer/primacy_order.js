@@ -1,4 +1,5 @@
 //#region 9. Mere Exposure (Stang (1974)
+var observedChoice = "CHANGE THIS"
 
 
 var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the order of the facts)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the order of the facts)?</p>";

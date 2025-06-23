@@ -1,5 +1,7 @@
 //#region 5. sunk_cost2 Effect - BETWEEN
 
+var observedChoice = "CHANGE THIS"
+
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that they had already spent 9 million dollars)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that you had already spent 9 million dollars)?</p>";
 

@@ -314,10 +314,9 @@
         var begin = {
             type: jsPsychInstructions,
             pages: [
-                `<p>Thank you for beginning the study! You will be asked to observe a series of short judgment/decision-making tasks along with the choice a real Prolific user made for each one.</p>`,
-                `<p>While they completed the decision-making tasks, they were asked to <b>pay attention to how they were making their judgments/decisions</b>.</p>`,
-                `<p>In each task, there is a key factor which may have influenced this Prolific user’s choice. We will tell you what that factor is. You will then try to figure out to what extent their choice was affected by that factor.</p>`,
-                `<p>The study will take around ${time_needed} minutes to complete.</p>
+                `<p>Thank you for beginning the study! In a prior study, we asked other real Prolific users to make a series of short judgment/decision-making tasks.</p>
+                <p>In this study, we've paired you with one of those prior Prolific users. We're going to show you each judgment/decision-making task that the user completed, along with the actual judgment or decision they made. Then, we'll ask you a series of questions about the Prolific user's judgment/decision-making process. Please do your best to answer the questions as accurately as possible.</p>
+                <p>The study will take around ${time_needed} minutes to complete.</p>
                 <p>Please click the button below to continue!</p>
             `],
             show_clickable_nav: true
@@ -1348,7 +1347,7 @@ var next_task = {
 
 
         /* initiate experiment */
-        jsPsych.run(experiment_timeline);
+        jsPsych.run([affect, anchor, avail, cause, contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]);
 
     </script>
 </body>

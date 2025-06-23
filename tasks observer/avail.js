@@ -1,5 +1,5 @@
 //#region 2. Famous Names (Tversky & Kahneman, 1973) - BETWEEN
-
+observedList = "CHANGE THIS"
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way they were influenced by the fame of the people in each list)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fame of the people in each list)?</p>';
 
 var avail_included_stimuli = [

@@ -1,5 +1,5 @@
 //#region 8. Belief Bias (Evans et al. 1983) - WITHIN
-
+var observedPractice = "CHANGE THIS";
 
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the believability of each conclusion)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the believability of each conclusion)?</p>';
 

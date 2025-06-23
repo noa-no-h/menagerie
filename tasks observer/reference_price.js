@@ -1,4 +1,5 @@
 //#region Reference Price - BETWEEN (Thaler, 2008)
+var observedChoice = "CHANGE THIS"
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fanciness of the hotel selling the beer)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fanciness of the hotel selling the beer)?</p>";
@@ -80,7 +81,7 @@ var ref_price_introspect1 = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>In this exercise, the Prolific user was asked the most they would be willing to pay for the beer in a fancy 5-star hotel.</p>
+            return `<p>In this exercise, the Prolific user were asked the most they would be willing to pay for the beer in a fancy 5-star hotel.</p>
             <p>How do you think the <b>quality of the location selling the beer</b> affected the response about the most they would be willing to pay for the beer?</p>`;
         } else {
             return `<p>In this exercise, you were asked the most you would be willing to pay for the beer.</p>

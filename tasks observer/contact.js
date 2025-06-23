@@ -1,4 +1,5 @@
 //#region 4. Contact Principle - BETWEEN
+var observedChoice = "CHANGE THIS"
 
 var confidence_q = '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that Frank needed to make physical contact with the man)?</p>';
 

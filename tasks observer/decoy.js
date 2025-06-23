@@ -1,5 +1,6 @@
 //#region 6. Decoy Effect (Kaptein et al., 2016) - BETWEEN
 
+var observedChoice = "CHANGE THIS"
 
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the presence of Brand W)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the presence of Brand W)?</p>';
 

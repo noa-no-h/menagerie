@@ -1,4 +1,5 @@
 //#region 5. hindsight Effect - BETWEEN
+var observedChoice = "CHANGE THIS"
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by your knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
