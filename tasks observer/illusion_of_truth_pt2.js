@@ -140,7 +140,7 @@ var illusion_of_truth_instructions1 = {
 var illusion_of_truth_questions = {
     timeline: [
         {
-            type: jsPsychHtmlSliderResponse,
+            type: 'html-slider-response',
             stimulus: jsPsych.timelineVariable('stimulus'),
             stimulus_height: 350,
             labels: [`<strong>1<br>Definitely False</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>Definitely True</strong>`],
@@ -197,7 +197,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var illusion_of_truth_intro_response1 = null;
 var illusion_of_truth_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `During this exercise, the Prolific user was shown a series of trivia statements and they were asked to assess whether each claim was true or false. 
@@ -251,7 +251,7 @@ var illusion_of_truth_introspect2 = {
 
 var illusion_of_truth_intro_confidence_response = null;
 var illusion_of_truth_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

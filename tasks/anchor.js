@@ -235,7 +235,7 @@ var anchor_openQ = {
     questions: [{
         prompt: function() {
             if (condition[0] == "Factor-Included"){
-                return `<p>In this exercise, you were asked two related trivia questions.</p><p>Describe your thought process while answering the questions. How did you come to your eventual answers for each question? Please try to describe how you answered each question individually.</p>`;
+                return `<p>In this exercise, you were asked two related trivia questions.</p><p>Describe your thought process while answering the second question: what is the mean winter temperature in the Antarctic? How did you come to your eventual answers for each question? Please try to describe how you answered each question individually.</p>`;
 
             } else {
                 return `<p>In this exercise, you were asked a trivia question.</p><p>Describe your thought process while answering the question. How did you come to your eventual answer?</p>`;

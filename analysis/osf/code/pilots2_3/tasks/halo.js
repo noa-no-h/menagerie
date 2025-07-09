@@ -144,7 +144,7 @@ var halo_introspect1 = {
             return `<p>In this exercise, you were presented with a series of pictures of 
             anonymous strangers. Based on these pictures, you were then asked to rate your 
             impression of how persuasive strangers were.</p>
-            <p>How do you think the <b>attractiveness of the face</b> affected your impression of their persuasiveness?</p>`;
+            <p>Do you think the <b>attractiveness of the face</b> affected your impression of their persuasiveness? If so, how?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of pictures of 
             anonymous strangers. Based on these pictures, you were then asked to rate your 

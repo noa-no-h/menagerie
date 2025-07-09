@@ -18,7 +18,7 @@ var decoy_present = {
     type: jsPsychSurveyMultiChoice,
     questions: [
         {
-            prompt: "We asked the Prolific user to imagine that they were choosing between several brands of frozen concentrated orange juice. For each brand, they knew only the price and the quality ratings made by consumer reports. Given that they had to buy one brand based on this information alone, we asked them which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.<br> The Prolific user selected " + observedChoice + ". Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).",
+            prompt: "We asked the Prolific user to imagine that they were choosing between several brands of frozen concentrated orange juice. For each brand, they knew only the price and the quality ratings made by consumer reports. Given that they had to buy one brand based on this information alone, we asked them which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality. The three brands were:<br><br> Brand W: Price per can = $1.20; Quality rating = 30 <br> Brand N: Price per can = $1.20; Quality rating = 50 <br> Brand J: Price per can = $2.00; Quality rating = 70<br><br> The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own preferences).</b>",
             options: [
                 '<b>Brand W:</b> Price per can = $1.20; Quality rating = 30',
                 '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
@@ -70,7 +70,7 @@ var decoy_openQ_response = null;
 var decoy_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, the Prolific user was asked to choose between several brands of frozen orange juice concentrate.</p><p>Describe what you think their thought process was during this choice. How do you think they came to your eventual decision about which juice to purchase?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was asked to choose between several brands of frozen orange juice concentrate.</p><p>Describe what you think their thought process was during this choice. How do you think they came to their eventual decision about which juice to purchase?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -84,7 +84,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var decoy_intro_response1 = null;
 var decoy_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>Below are the options the Prolific user was asked to choose from:</p>
@@ -143,7 +143,7 @@ var decoy_introspect2 = {
 
 var decoy_intro_confidence_response = null;
 var decoy_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

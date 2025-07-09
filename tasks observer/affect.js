@@ -4,15 +4,15 @@ var observedBeneficial = "CHANGE THIS!"
 var observedRisky = "CHANGE THIS!"
 
 var confidence_q = condition[0] == 'Factor-Included' ? 
-    "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>" : 
-    "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>";
+    "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>" : 
+    "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user would have been influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>";
 
 var affect_instructions = {
     type: jsPsychInstructions,
     pages: function () {
         if (condition[0] == 'Factor-Included') {
             return [
-                `<p>In this task, we told the Prolific user, \"We are interested in the ways people think about the risks and benefits associated with natural gas. Therefore, in this task, you will be asked to give judgments about the benefits, the risks, and the controllability associated with this technology.\"</p>
+                `<p>In this task, we told the Prolific user that we were interested in the ways people think about the risks and benefits associated with natural gas. Therefore, in this task, we asked the Prolific user to give judgments about the benefits, the risks, and the controllability associated with this technology.</p>
                 <p><i>Please click the button below to read the passage about natural gas we showed the Prolific user.</i></p>`
             ];
         } else {
@@ -32,7 +32,11 @@ var affect_question = {
     type: jsPsychSurveySlider,
     questions: [
         {
-            prompt: `<p>We asked the prolific user, \"In general, how <b>beneficial</b> do you consider the use of natural gas to be to U.S. society as a whole?\" The Prolific user selected ` + observedBeneficial + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).</p>`,
+            prompt: `<p>We asked the Prolific user: in general, how <b>beneficial</b> do they consider the use of natural gas to be to U.S. society as a whole?</p>
+
+<p>The Prolific user selected ` + observedBeneficial + `.</p>
+
+<p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`,
             name: "benefit",
             ticks: ["Not at all beneficial", "Moderately beneficial", "Very beneficial"],
             required: true,
@@ -42,7 +46,8 @@ var affect_question = {
             step: 0.01
         },
         {
-            prompt: `<p>We asked the prolific user, \"In general, how <b>risky</b> do you consider the use of natural gas to be to U.S. society as a whole?\"  The Prolific user selected ` + observedRisky + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).</p>`,
+            prompt: `<p>We asked the Prolific user in general, how <b>risky</b> they consider the use of natural gas to be to U.S. society as a whole?</p> <p> The Prolific user selected ` + observedRisky + `.</p>
+            <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`,
             name: "risk",
             ticks: ["Not at all risky", "Moderately risky", "Very risky"],
             required: true,
@@ -105,20 +110,20 @@ var affect_openQ = {
     }
 };
 
-var introspection_q_labels_affect1 = [`<strong>It made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`,"", `<strong>It did not affect my response</strong>`,"",`<strong>It made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
-var introspection_q_labels_affect2 = [`<strong>It would have made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
+var introspection_q_labels_affect1 = [`<strong>It made them <u>MORE</u> likely to judge natural gas as beneficial</strong>`,"", `<strong>It did not affect their response</strong>`,"",`<strong>It made them <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
+var introspection_q_labels_affect2 = [`<strong>It would have made them <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected their response</strong>", "", `<strong>It would have made them <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var affect_intro_response1 = null;
 var affect_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `
-                <p>In this task, you judged how beneficial natural gas is to U.S. society, and how risky it is. <b>Again, focus just on the judgment you made about how <u>beneficial</u> it is.</b></p>
-                <p>Before judging its benefits, you first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
-                
-                <p>Do you think <b>the presence of that passage</b> influenced your judgment of how <u>beneficial</u> natural gas is? If so, how?</p>
+                <p>In this task, the Prolific user judged how beneficial natural gas is to U.S. society, and how risky it is. <b>Again, focus just on the judgment you made about how <u>beneficial</u> it is.</b></p>
+                <p>Before judging its benefits, the Prolific user first read a passage about the risks of natural gas, including explosion, asphyxiation, and contribution to global warming through carbon dioxide emissions.</p>
+
+                <p>Do you think <b>the presence of that passage</b> influenced their judgment of how <u>beneficial</u> natural gas is? If so, how?</p>
             `;
         } else {
             return `
@@ -172,7 +177,7 @@ var affect_introspect2 = {
 
 var affect_intro_confidence_response = null;
 var affect_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

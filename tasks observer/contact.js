@@ -22,9 +22,9 @@ var contact_question = {
             <p>Frank sees that an empty runaway boxcar is about to hit five people working on the track ahead. They are too far away to be warned. The only way to stop the boxcar is for it to hit something heavy.
             One person, unaware of the boxcar, is working on a side track. This person, if hit, will cause the boxcar to stop.  If Frank pushes the one person onto the main track, the boxcar will hit the one person, and therefore stop before it reaches the five people.
             If Frank does not push the one person, the boxcar will continue on the track and hit the five people and not the one person.
-            <p>Based on on this scenario, the Prolific user was asked to complete the following sentence by clicking one of the buttons below:
-            <p><i>Pushing the person is morally permissible/morally impermissible</i></p> 
-            <p>The Prolific user selected ` + observedChoice + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).</p>`
+            <p>Based on on this scenario, the Prolific user was asked to complete the following sentence: Pushing the person is...  </p>
+            <p>The two options were morally permissible or morally impermissible. We asked them: which one would it be?</p>
+            <p>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b></p>`
         } else {
             return `<p><b>Please consider the following scenario:</b></p>
             <p>Frank sees that an empty runaway boxcar is about to hit five people working on the track ahead. They are too far away to be warned. The only way to stop the boxcar is for it to hit something heavy.
@@ -59,7 +59,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var contact_intro_response1 = null;
 var contact_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In the scenario the Prolific user saw, Frank would have needed to make physical contact with the man (i.e. by pushing him onto the main track) in order to save the five people.</p>
@@ -112,7 +112,7 @@ var contact_introspect2 = {
 
 var contact_intro_confidence_response = null;
 var contact_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

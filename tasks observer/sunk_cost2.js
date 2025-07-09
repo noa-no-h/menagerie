@@ -8,7 +8,7 @@ var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you 
 var sunk_cost2_instructions = {
     type: jsPsychInstructions,
     pages: [
-        `<p> In this exercise, you will be given a hypothetical scenario and then asked what action you would take.</p>
+        `<p> In this exercise, the Prolific user was given a hypothetical scenario and then asked what action they would take.</p>
     <p><i>Please click the button below to view the scenario.</i>`,
     ],
     show_clickable_nav: true
@@ -16,7 +16,7 @@ var sunk_cost2_instructions = {
 
 var stimulus = function(){if (condition[0] == "Factor-Included") {
     return `<p><b>The Prolific user was asked to consider the following scenario:</b></p>
-<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed (and 9 million dollars have already been spent), another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>The question is: should you spend the last million dollars of your research fund to finish the radar-blank plane? The Prolific user selected ` + observedChoice + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs)</p>`
+<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed (and 9 million dollars have already been spent), another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>We asked the Prolific user: should you spend the last million dollars of your research fund to finish the radar-blank plane? The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs)</p>`
 } else {
     return `<p><b>Please consider the following scenario:</b></p>
 <p>As president of an airline company, you have received a suggestion from one of your employees. The suggestion is to use the last 1 million dollars of your research fund to develop a plane that would not be detected by conventional radar, in other words, a radar-blank plane. However, another firm has just begun marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company could build. <br><br>The question is: should you spend the last million dollars of your research fund to build the radar-blank plane?</p>`
@@ -59,7 +59,7 @@ var sunk_cost2_openQ_response = null;
 var sunk_cost2_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this task, the Prolific user was asked what action they would take in a hypothetical scenario.</p><p>Describe what you think their thought process was while choosing their action. How do you think they came to their eventual judgment?</p>`,
+        prompt: `<p>In this task, the Prolific user was asked what action they would take in a hypothetical scenario.</p><p>Describe what you think their thought process was while choosing their action.</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -73,12 +73,12 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var sunk_cost2_intro_response1 = null;
 var sunk_cost2_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this task, the Prolific user was asked whether they would spend the last million dollars of your research fund to finish the radar-blank plane.</p>
                 <p>They were told that they had already spent 9 million dollars on this research project.</p>
-                <p>Do you think <b>the fact that they had already spent 9 million dollars on the project</b> affected your response? If so, how?</p>`;
+                <p>Do you think <b>the fact that they had already spent 9 million dollars on the project</b> affected their response? If so, how?</p>`;
          } else {
             return `<p>In this task, you were asked whether you would spend the last million dollars of your research fund to build the radar-blank plane.</p>
                 <p>Now imagine that you had already spent 9 million dollars on this research project.</p></p>
@@ -128,7 +128,7 @@ var sunk_cost2_introspect2 = {
 
 var sunk_cost2_intro_confidence_response = null;
 var sunk_cost2_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

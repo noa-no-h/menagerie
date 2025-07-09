@@ -17,17 +17,16 @@ var omission_question = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. James decides to poison the one.
-            <p><i>Please rate James's action on the given scale:     
-1 (Forbidden) to 7 (Obligatory)
-<i><p>(Slide instructions: Please move the slider to one point of your choice)
-</i></p>`
+            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. <hr>
+            <p>Please rate James's action on the given scale:     
+1 (Forbidden) to 7 (Obligatory). <p>(Slide instructions: Please move the slider to one point of your choice)
+</p>`
         } else {
-            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, notices that the one has accidentally consumed a poisonous substance. James can administer the antidote to the one villager. If James withholds the antidote from the one, the one will die by sunrise, and the five will not be sacrificed. If James does provide the antidote to the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides not to provide the antidote to the one.
-<p><i>Please rate James's action on the given scale:     
-1 (Forbidden) to 7 (Obligatory)
-<i><p>(Slide instructions: Please move the slider to one point of your choice)
-</i></p>`
+            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, notices that the one has accidentally consumed a poisonous substance. James can administer the antidote to the one villager. If James withholds the antidote from the one, the one will die by sunrise, and the five will not be sacrificed. If James does provide the antidote to the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides not to provide the antidote to the one. <hr>
+<p>Please rate James's action on the given scale:     
+1 (Forbidden) to 7 (Obligatory).
+<p>(Slide instructions: Please move the slider to one point of your choice)
+</p>`
         }
     },
     labels: ['1<br>(Forbidden)', '2', '3', '4<br>(Permissible)','5', '6', '7<br>(Obligatory)'],

@@ -44,7 +44,7 @@ if (condition[0] == "Factor-Included") {
 
 var cause = null
 var cause_question = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function(){
         image = null;
         if (cause_condition == cause_one) {
@@ -52,8 +52,8 @@ var cause_question = {
         } else {
             image = "img/nineballs.png"
         }
-        return `<b>The Prolific user was asked to tell us how much they agree or disagree with the statement below.</b> They were told there were no right or wrong answers and that we were simply interested in your opinion.
-<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p> The Prolific user selected ` + observedCausality + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`
+        return `<b>The Prolific user was asked to tell us how much they agree or disagree with the statement below.</b> They were told there were no right or wrong answers and that we were simply interested in their opinion.
+<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p> <br> The Prolific user selected ` + observedCausality + `.<br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`
     },
     labels: [`<strong>1<br>totally disagree</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>totally agree</strong>`],
     slider_width: 750,
@@ -84,7 +84,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var cause_intro_response1 = null;
 var cause_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In the scenario the Prolific user saw, these were the boxes that Joe chose from: <p><img src = "img/oneball.png" style="width:700px;"><img></p>
@@ -141,7 +141,7 @@ var cause_introspect2 = {
 
 var cause_intro_confidence_response = null;
 var cause_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

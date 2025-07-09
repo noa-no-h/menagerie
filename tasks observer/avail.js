@@ -1,6 +1,6 @@
 //#region 2. Famous Names (Tversky & Kahneman, 1973) - BETWEEN
 observedList = "CHANGE THIS"
-var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way they were influenced by the fame of the people in each list)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fame of the people in each list)?</p>';
+var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fame of the people in each list)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fame of the people in each list)?</p>';
 
 var avail_included_stimuli = [
     {
@@ -132,7 +132,7 @@ var avail_instructions = {
     type: jsPsychInstructions,
     pages: [
         `<p> In this exercise, the Prolific user was shown lists of people's names.<p>Their goal was to <b>memorize as many names as possible</b> in a short amount of time.</p>`,
-        `<p>They were only be given <b>five seconds</b> to memorize each list. This is a very short amount of time, so they were told to just try their best to memorize as many names as they can.<p> They were told they would be shown <b>two</b> lists in total, with a short break in between.</p>`,
+        `<p>They were only given <b>five seconds</b> to memorize each list. This is a very short amount of time, so they were told to just try their best to memorize as many names as they can.<p> They were told they would be shown <b>two</b> lists in total, with a short break in between.</p>`,
         `<p>You will now be shown the two lists of names they were shown. There will be no warning before the second list.</p>
     <p><i>Please click the "Next" button when you are ready to see the lists.</i></p>`
     ],
@@ -161,7 +161,7 @@ var avail_trials = {
 var more_men = null;
 var avail_question = {
     type: jsPsychHtmlButtonResponse,
-    stimulus: `<p> After the Prolific user had seen both lists, they answered the following question:</p><p><b>Which list contained more men?</b></p><br>The Prolific user selected ` + observedList + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`,
+    stimulus: `<p> After the Prolific user had seen both lists, they answered the following question:</p><p><b>Which list contained more men?</b></p><br>The Prolific user selected ` + observedList + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs)</b>.<br><br>`,
     choices: ["List 1", "List 2"],
     on_finish: function (data) {
         more_men = data.response;
@@ -172,7 +172,7 @@ var avail_openQ_response = null;
 var avail_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, the Prolific user was shown two lists of names and asked to determine which list contained more men.</p><p>What do you think was their thought process behind your decision about which list contained more men? How do you think they came to their eventual decision?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was shown two lists of names and asked to determine which list contained more men.</p><p>What do you think was their thought process behind their decision about which list contained more men? How do you think they came to their eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -181,14 +181,14 @@ var avail_openQ = {
 };
 
 
-var introspection_q_labels_avail1 = [`<strong>It made them more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made them more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
+var introspection_q_labels_avail1 = [`<strong>It made them more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
 
 var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`,"","<strong>It would not have affected my response</strong>", "",`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var avail_intro_response1 = null;
 var avail_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolifc user was asked to memorize two lists of names. Some of the names on these lists belonged to very famous people, while others belonged to people who are not famous.</p>
@@ -244,7 +244,7 @@ var avail_introspect2 = {
 
 var avail_intro_confidence_response = null;
 var avail_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

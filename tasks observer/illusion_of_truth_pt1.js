@@ -88,7 +88,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
         var illusion_of_truth_questions = {
             timeline: [
                 {
-                    type: jsPsychHtmlSliderResponse,
+                    type: 'html-slider-response',
                     stimulus: jsPsych.timelineVariable('stimulus'),
                     stimulus_height: 350,
                     labels: [`<strong>1<br>not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>very much</strong>`],
@@ -130,15 +130,15 @@ will not be able to pause the study, so make sure you have no distractions.</p>
             }
         };
 
-        var introspection_q_labels_mee1 = [`<strong>When I saw a word a lot of times, that made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word did not affect my response</strong>", "", `<strong>When I saw a word a lot of times, that made me like the word <u>MORE</u></strong>`];
-        var introspection_q_labels_mee2 = [`<strong>If I had seen a word a lot of times, that would have made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word would not have affected my response</strong>", "", `<strong>If I had seen a word a lot of times, that would have made me like the word <u>MORE</u></strong>`];
+        var introspection_q_labels_mee1 = [`<strong>When they saw a word a lot of times, that made them like the word <u>LESS</u></strong>`, "", "<strong>The number of times they saw a word did not affect their response</strong>", "", `<strong>When they saw a word a lot of times, that made them like the word <u>MORE</u></strong>`];
+        var introspection_q_labels_mee2 = [`<strong>If they had seen a word a lot of times, that would have made them like the word <u>LESS</u></strong>`, "", "<strong>The number of times they saw a word would not have affected their response</strong>", "", `<strong>If they had seen a word a lot of times, that would have made them like the word <u>MORE</u></strong>`];
 
         var illusion_of_truth_intro_response1 = null;
         var illusion_of_truth_introspect1 = {
-            type: jsPsychHtmlSliderResponse,
+            type: 'html-slider-response',
             stimulus: function () {
                 if (condition[0] == "Factor-Included") {
-                    return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, you may have noticed that some of these words appeared many times, while others appeared only a few times or not at all.
+                    return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, some of these words appeared many times, while others appeared only a few times or not at all.
                     <p>Do you think the <b>number of times</b> you saw each word affected how highly you rated it? If so, how?`
                 } else {
                     return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, you may have noticed that each word (e.g. "dudak") appeared exactly <i>one</i> time.
@@ -172,7 +172,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
 
         var illusion_of_truth_intro_confidence_response = null;
         var illusion_of_truth_intro_confidence = {
-            type: jsPsychHtmlSliderResponse,
+            type: 'html-slider-response',
             stimulus: confidence_q,
             labels: confidence_q_labels,
             slider_width: confidence_q_slider_width,

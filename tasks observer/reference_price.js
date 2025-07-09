@@ -4,7 +4,7 @@ var observedChoice = "CHANGE THIS"
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fanciness of the hotel selling the beer)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fanciness of the hotel selling the beer)?</p>";
 
-var ref_price_hotel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. The Prolific user was asked what price they would tell him. The Prolific user selected ` + observedChoice + `. Below, to demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs). (Please answer in dollars with only a number)`;
+var ref_price_hotel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. The Prolific user was asked what price they would tell him. <br><br>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, <b>please enter the option that they selected (regardless of your own beliefs).</b> (Please answer in dollars with only a number)`;
 
 var ref_price_motel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a run-down 1-star motel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the store owner. What price do you tell him? (Please answer in dollars with only a number)`;
 
@@ -33,15 +33,21 @@ var ref_price_trial = {
                 name: "page1",
                 elements: [
                     {
+                    "type": "html",
+                    "name": "question2",
+                    "html": function() {
+                            return condition[0] == 'Factor-Included' ? ref_price_hotel_stimulus : ref_price_motel_stimulus;
+                        }
+
+                },
+                    {
                         type: "text",
                         name: "referencePrice",
                         maskType: "numeric",
                         maskSettings: {
                             "precision": 1
                           },
-                        title: function() {
-                            return condition[0] == 'Factor-Included' ? ref_price_hotel_stimulus : ref_price_motel_stimulus;
-                        },
+                        title: " ",  
                         isRequired: true,
                         placeHolder: "Enter your dollar amount here",
                         size: 25
@@ -50,6 +56,28 @@ var ref_price_trial = {
             }
         ]
     },
+    survey_function: function(survey) {
+            let requiredChoice = null;
+            const subjectData = reference_price_db.find(item => item.subject === "0");
+            if (subjectData) {
+                requiredChoice = subjectData.choice;
+            }
+
+            survey.onValidateQuestion.add(function(s, options) {
+                if (options.name === "referencePrice") {
+                    if (requiredChoice === null) {
+                        console.warn("Validation skipped: requiredChoice for subject '0' was not found.");
+                         return; // Exit the validator
+                    }
+
+                    const enteredValue = String(options.value);
+
+                    if (enteredValue !== requiredChoice) {
+                        options.error = `Please enter exactly what the Prolific user entered.`;
+                    }
+                }
+            });
+        },
         on_finish: function (data) {
             console.log(data.response);
             choice = data.response.referencePrice;
@@ -78,11 +106,11 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
     
 var ref_price_intro_response1 = null;
 var ref_price_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolific user were asked the most they would be willing to pay for the beer in a fancy 5-star hotel.</p>
-            <p>How do you think the <b>quality of the location selling the beer</b> affected the response about the most they would be willing to pay for the beer?</p>`;
+            <p>Do you think the <b>quality of the location selling the beer</b> affected the response about the most they would be willing to pay for the beer? If so, how?</p>`;
         } else {
             return `<p>In this exercise, you were asked the most you would be willing to pay for the beer.</p>
             <p>Now, imagine if you had instead been told your friend was going to a fancy 5-star hotel.</p>
@@ -132,7 +160,7 @@ var ref_price_introspect2 = {
 
 var ref_price_intro_confidence_response = null;
 var ref_price_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

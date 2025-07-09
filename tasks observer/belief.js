@@ -39,7 +39,7 @@ var belief_practice1 = {
 <p><i>All dogs are animals.</p>
 <p>All cats are animals.</i></p>
 <p>Based on these statements, the Prolific user was asked whether they thought the alien would be able to come to the conclusion below:</p>
-<p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + observedPractice + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`,
+<p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + observedPractice + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`,
     choices: ["Yes", "No"],
     on_finish: function (data) {
         s1_data = {
@@ -121,7 +121,7 @@ belief_instructions2 = {
 
 var belief_included_stimuli = [
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No police dogs are vicious.</p>
 <p>Some highly trained dogs are vicious</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -129,7 +129,7 @@ var belief_included_stimuli = [
         name: "Therefore, some highly trained dogs are not police dogs."
     },
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No nutritional things are expensive.</p>
 <p>Some vitamin tablets are expensive.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -137,7 +137,7 @@ var belief_included_stimuli = [
         name: "Therefore, some vitamin tablets are not nutritional."
     },
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No addictive things are inexpensive.</p>
 <p>Some cigarettes are inexpensive.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -145,7 +145,7 @@ var belief_included_stimuli = [
         name: "Therefore, some addictive things are not cigarettes."
     },
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No millionaires are hard workers.</p>
 <p>Some rich people are hard workers.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -156,7 +156,7 @@ var belief_included_stimuli = [
 
 var belief_excluded_stimuli = [
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No dogs are vicious.</p>
 <p>Some rottweilers are vicious</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -165,7 +165,7 @@ var belief_excluded_stimuli = [
     },
 
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No nutritional things are expensive.</p>
 <p>Some vitamin tablets are expensive.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -174,7 +174,7 @@ var belief_excluded_stimuli = [
     },
 
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No cigarettes are inexpensive.</p>
 <p>Some addictive things are inexpensive.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -183,7 +183,7 @@ var belief_excluded_stimuli = [
     },
 
     {
-        stimulus: `<p>Imagine the logical alien is told the following statements:</p>
+        stimulus: `<p>We asked the Prolific user to imagine the logical alien is told the following statements:</p>
 <p><i>No millionaires are hard workers.</p>
 <p>Some rich people are hard workers.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
@@ -210,7 +210,17 @@ var belief_trials = {
         },
         {//trials
             type: jsPsychHtmlButtonResponse,
-            stimulus: jsPsych.timelineVariable('stimulus'),
+            stimulus: function(){
+                
+                timeline_stimulus = jsPsych.timelineVariable('stimulus')
+                observed_response = observed_responses[jsPsychtimelineVariable('name')]
+
+                observer_instructions = `<p>The Prolific user selected ` + observed_response + `.</p>
+            <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`
+
+                stimulus_with_observer_instructions = timeline_stimulus + observer_instructions;
+            
+            },
             choices: ["Yes", "No"],
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('validity'), con: jsPsych.timelineVariable('believability'), },
             on_finish: function (data) {
@@ -246,21 +256,21 @@ var belief_openQ = {
     }
 };
 
-var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect my response</strong>", "", `<strong>When the conclusion was believable, that made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
-var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected my response</strong>", "", `<strong>If the conclusion had been believable, that would have made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
+var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made them <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect their response</strong>", "", `<strong>When the conclusion was believable, that made them <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
+var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made them <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected their response</strong>", "", `<strong>If the conclusion had been believable, that would have made them <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var belief_intro_response1 = null;
 var belief_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `Some of the conclusions you saw in this game were <b>believable</b> based on your prior knowledge of how the world works (e.g. "some highly trained dogs are not police dogs"), while others were <b>unbelievable</b> based on your prior knowledge of how the world works (e.g. "some millionaires are not rich people").
-        <p>Do you think the <b>believability</b> of each conclusion affected your decision about whether or not the alien would come to that conclusion? If so, how?</p>`
+        <p>Do you think the <b>believability</b> of each conclusion affected the Prolific user's decision about whether or not the alien would come to that conclusion? If so, how?</p>`
         } else {
             return `You may have noticed that all of the conclusions you saw in this game were <b>not believable</b> based on your prior knowledge of how the world works. For example, it is unbelievable based on prior knowledge that "some millionaires are not rich people" or that "some cigarettes are not addictive things."
         <p>Now, imagine that some of the conclusions <i>had</i> been believable, while others weren't. For example, imagine if one series of statements ended with the <b>believable</b> conclusion that "some highly trained dogs are not police dogs", while another series of statements ended with the <b>unbelievable</b> conclusion that "some millionaires are not rich people".
-        <p>Do you think the <b>believability</b> of each conclusion would have affected your decision about whether or not the alien would come to that conclusion? If so, how?</p>`
+        <p>Do you think the <b>believability</b> of each conclusion would have affected the Prolific user's decision about whether or not the alien would come to that conclusion? If so, how?</p>`
         }
     },
 labels: function() {
@@ -306,7 +316,7 @@ var belief_introspect2 = {
 
 var belief_intro_confidence_response = null;
 var belief_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

@@ -1,7 +1,7 @@
 //#region Halo
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by attractiveness of the face)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by attractiveness of the face)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by how physically attractive each stranger looked)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how physically attractive each stranger looked)?</p>";
 
 
 var preload = {
@@ -62,7 +62,7 @@ for (i = 0; i < num_stimuli; i++) {
 
 var stimulus = null;
 var halo_trial = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function(){
         stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>'
         
@@ -139,25 +139,25 @@ var halo_openQ = {
     }
 };
 
-var introspection_q_labels_halo1 = ['<strong>It made the Prolific user think the stranger was <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected their response</strong>', "", '<strong>It made the Prolific user think the stranger was <u>MORE</u> persuasive</strong>'];
+var introspection_q_labels_halo1 = ['<strong>It made the Prolific user think the stranger was <u>LESS</u> persuasive</strong>', "", '<strong>It did not affect their response</strong>', "", '<strong>It made the Prolific user think the stranger was <u>MORE</u> persuasive</strong>'];
 var introspection_q_labels_halo2 = ['<strong>It would have made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were <u>MORE</u> persuasive</strong>'];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var halo_intro_response1 = null;
 var halo_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolific user was presented with a series of pictures of 
             anonymous strangers. Based on these pictures, they were then asked to rate their 
             impression of how persuasive strangers were.</p>
-            <p>How do you think the <b>attractiveness of the face</b> affected the Prolific user's impression of the strangers' persuasiveness?</p>`;
+            <p>Do you think <b>how physically attractive each stranger looked</b> affected the Prolific user's impression of the strangers' persuasiveness? If so, how?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of pictures of 
             anonymous strangers. Based on these pictures, you were then asked to rate your 
             impression of how persuasive strangers were.</p>
             <p>Now, imagine if you had been shown particularly <b>attractive<b/> faces.</p>
-            <p>If this were the case, do you think the <b>attractiveness of the faces</b> would have affected your impression of their persuasiveness? If so, how?</p>`;
+            <p>If this were the case, do you think <b>how physically attractive each stranger looked</b> would have affected your impression of their persuasiveness? If so, how?</p>`;
         }
     },
 labels: function() {
@@ -204,7 +204,7 @@ var halo_introspect2 = {
 
 var halo_intro_confidence_response = null;
 var halo_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

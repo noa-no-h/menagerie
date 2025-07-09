@@ -2,7 +2,7 @@
 var observedChoice = "CHANGE THIS"
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by your knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by their knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
 
 var hindsight_instructions = {
     type: jsPsychInstructions,
@@ -116,7 +116,7 @@ var hindsight_question = {
                             if (condition[0] === "Factor-Included") {
                                 return `
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p> <p> <u>The result was a British victory.</u></p>
-                                    <p>In the light of the information appearing in the passage, we asked the Prolific user to estimate the probability of occurrence of each of the four possible outcomes listed below. We told them that there are no right or wrong answers, and they should answer based on their intuition. (The probabilities should sum to 100%). <b> We asked them to answer as if they did not know the outcome, estimating the case at that time before outcomes were known.</b></p><br> The Prolific user selected ` + observedChoice + `. Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).`;
+                                    <p>In the light of the information appearing in the passage, we asked the Prolific user to estimate the probability of occurrence of each of the four possible outcomes listed below. We told them that there are no right or wrong answers, and they should answer based on their intuition. (The probabilities should sum to 100%). <b> We asked them to answer as if they did not know the outcome, estimating the case at that time before outcomes were known.</b></p><br> The Prolific user selected ` + observedChoice + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`;
                             } else {
                                 return `
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
@@ -248,12 +248,12 @@ var hindsight_openQ = {
 };
 
 var introspection_q_labels_hindsight1 = [`<strong>It made them judge the outcome of British victory as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them judge the outcome of British victory as <u>MORE</u> likely </strong>`];
-var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the outcome of British victory  as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
+var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the outcome of British victory  as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It would have made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var hindsight_intro_response1 = null;
 var hindsight_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p> After reading about the historical event, we had told the Prolific user what actually happened: a British victory.</p>
@@ -306,7 +306,7 @@ var hindsight_introspect2 = {
 
 var hindsight_intro_confidence_response = null;
 var hindsight_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

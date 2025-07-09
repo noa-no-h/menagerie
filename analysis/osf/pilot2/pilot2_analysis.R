@@ -1017,6 +1017,34 @@ df.demo.gender = df.demo %>%
   summarize(subject_cor.m = mean(subject_cor,na.rm=T),
             subject_cor.se = se(subject_cor))
 
+# save for observer ----
+
+task_data_list <- list(
+  list(halo_data, "halo", list("subject", "choice", "stimulus")),
+  list(illusory_data, "illusory_truth", list("subject", "choice", "stimulus")),
+  list(omission_data, "omission", list("subject", "choice")),
+  list(recognition_data, "recognition", list("subject", "choice")),
+  list(reference_data, "reference_price", list("subject", "choice")),
+  list(representativeness_data, "representativeness", list("subject", "choice"))
+)
+
+for (task_data_info in task_data_list) {
+  task_data = task_data_info[[1]]
+  task_name = task_data_info[[2]]
+  to_select = unlist(task_data_info[[3]])
+  
+  filtered_task_data = task_data %>%
+    filter(factor == "experience") %>%
+    select(all_of(to_select))
+  
+  db_json <- toJSON(filtered_task_data, pretty = TRUE)
+  json_towrite = paste0(task_name, " = ", db_json, ";")
+  write(json_towrite, paste0(task_name, "_db.js"))
+
+}
+
+
+
 # Save image --------------------------------------------------------------
 # for use in combined analysis
 all_data_introspection_experience_pilot2 = all_data_introspection_experience

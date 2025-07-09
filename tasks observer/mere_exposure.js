@@ -124,7 +124,7 @@ var mere_exposure_instructions2 = {
 var mere_exposure_questions = {
     timeline: [
         {
-            type: jsPsychHtmlSliderResponse,
+            type: 'html-slider-response',
             stimulus: jsPsych.timelineVariable('stimulus'),
             stimulus_height: 350,
             labels: [`<strong>1<br>not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>very much</strong>`],
@@ -176,13 +176,13 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var mere_exposure_intro_response1 = null;
 var mere_exposure_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `During this exercise, the Prolific user was initially shown a series of foreign words. Then, they were asked to rate how much they liked each of these words. When they were originally shown these words, they may have noticed that some of these words appeared many times, while others appeared only a few times or not at all.
+            return `During this exercise, the Prolific user was initially shown a series of foreign words. Then, they were asked to rate how much they liked each of these words. When they were originally shown these words, some of these words appeared many times, while others appeared only a few times or not at all.
             <p>Do you think the <b>number of times</b> they saw each word affected how highly they rated it? If so, how?`
         } else {
-            return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, you may have noticed that each word (e.g. "dudak") appeared exactly <i>one</i> time.
+            return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, each word (e.g. "dudak") appeared exactly <i>one</i> time.
             <p>Now, imagine if some of the words you saw appeared more often than others. For example, imagine if the word "mimar" had appeared twenty-five times while the word "dudak" only appeared once.
             <p>Do you think the <b>number of times</b> you saw each word would have affected how highly you rated each word? If so, how?`
         }
@@ -233,7 +233,7 @@ var mere_exposure_introspect2 = {
 
 var mere_exposure_intro_confidence_response = null;
 var mere_exposure_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

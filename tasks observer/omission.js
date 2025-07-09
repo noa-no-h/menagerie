@@ -15,13 +15,12 @@ var omission_instructions = {
 
 var choice = null;
 var omission_question = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. James decides to poison the one.
-            <p><i>The Prolific user was asked to rate James's action on the given scale:     
-1 (Forbidden) to 7 (Obligatory)
-<p>The Prolific user selected ` + observedChoice + `. Below, to demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs).</p>
+            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. <hr>
+            <p>The Prolific user was asked to rate James's action on the given scale: 1 (Forbidden) to 7 (Obligatory).
+<p>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs).</p>
 `
         } else {
             return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, notices that the one has accidentally consumed a poisonous substance. James can administer the antidote to the one villager. If James withholds the antidote from the one, the one will die by sunrise, and the five will not be sacrificed. If James does provide the antidote to the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides not to provide the antidote to the one.
@@ -61,7 +60,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var omission_intro_response1 = null;
 var omission_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>Sometimes when someone harms other people, it is through actively doing something (for example, poisoning someone). Other times it is through failing to do something that would prevent harm (for example, failing to give someone who has already been poisoned an antidote). 
@@ -117,7 +116,7 @@ var omission_introspect2 = {
 
 var omission_intro_confidence_response = null;
 var omission_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

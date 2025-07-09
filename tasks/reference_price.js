@@ -81,7 +81,7 @@ var ref_price_introspect1 = {
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, you were asked the most you would be willing to pay for the beer in a fancy 5-star hotel.</p>
-            <p>How do you think the <b>quality of the location selling the beer</b> affected your response about the most you would be willing to pay for the beer?</p>`;
+            <p>Do you think the <b>quality of the location selling the beer</b> affected your response about the most you would be willing to pay for the beer? If so, how?</p>`;
         } else {
             return `<p>In this exercise, you were asked the most you would be willing to pay for the beer.</p>
             <p>Now, imagine if you had instead been told your friend was going to a fancy 5-star hotel.</p>

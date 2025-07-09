@@ -137,7 +137,7 @@ var primacy_order_question = {
     type: jsPsychSurveyMultiChoice,
     questions: [
         {
-            prompt: "The Prolific user was asked which car they thought is best. They selected " + observedChoice + ". Below, to demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs).",
+            prompt: "The Prolific user was asked which car they thought is best. They selected " + observedChoice + ". Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).",
             name: 'choice',
             options: _.shuffle([car1, car2, car3]),
             required: true,
@@ -195,7 +195,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var primacy_order_intro_response1 = null;
 var primacy_order_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `During this exercise, the Prolific user was shown a series of facts about each car and asked to choose the car they liked best.<br><br>
@@ -253,7 +253,7 @@ var primacy_order_introspect2 = {
 
 var primacy_order_intro_confidence_response = null;
 var primacy_order_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

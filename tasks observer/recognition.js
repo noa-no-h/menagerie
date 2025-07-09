@@ -248,7 +248,7 @@ var recognition_openQ_response = null;
 var recognition_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, the Prolific user was presented with a series of trivia questions. In each one, they were either asked to pick the city with the larger population. </p><p>Describe what you think the thought process was behind their decision about which city to select. How did they come to your eventual decision?</p>`,
+        prompt: `<p>In this exercise, the Prolific user was presented with a series of trivia questions. In each one, they were either asked to pick the city with the larger population. </p><p>Describe what you think the thought process was behind their decision about which city to select. How did they come to their eventual decision?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
@@ -262,12 +262,12 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolific user was presented with a series of trivia questions.
             <p>In each one, they were either asked to pick the city with the larger population. </p>
-            <p>Some of the cities (like New York) they likely recognized the names of. While others (like Lexington–Fayette) they may have recognized less well. How do you think <b>how much they'd heard of the city before</b> affected they impression of its population?</p>`;
+            <p>Some of the cities (like New York) they likely recognized the names of. While others (like Lexington–Fayette) they may have recognized less well. How do you think <b>how recognizable the city was</b> affected their impression of its population?</p>`;
         } else {
             return `<p>In this exercise, you were presented with a series of trivia questions.
             <p>In each one, you were either asked to pick the city with the larger population. </p>
@@ -317,7 +317,7 @@ var recognition_introspect2 = {
 
 var recognition_intro_confidence_response = null;
 var recognition_intro_confidence = {
-    type: jsPsychHtmlSliderResponse,
+    type: 'html-slider-response',
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,
