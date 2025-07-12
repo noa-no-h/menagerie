@@ -69,8 +69,9 @@ var ref_price_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made the price I was willing to pay <u>HIGHER</u></strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made the price I was willing to pay <u>LOWER</u></strong>'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay <u>HIGHER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay <u>LOWER</u></strong>'];
+var introspection_q_labels_ref_price1 = ['<strong>It made the price I was willing to pay <u>LOWER</u></strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made the price I was willing to pay <u>HIGHER</u></strong>'];
+var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay <u>LOWER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay <u>HIGHER</u></strong>'];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 
     
@@ -80,14 +81,25 @@ var ref_price_introspect1 = {
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, you were asked the most you would be willing to pay for the beer in a fancy 5-star hotel.</p>
-            <p>How do you think the <b>quality of the location selling the beer</b> affected your response about the most you would be willing to pay for the beer?</p>`;
+            <p>Do you think the <b>quality of the location selling the beer</b> affected your response about the most you would be willing to pay for the beer? If so, how?</p>`;
         } else {
             return `<p>In this exercise, you were asked the most you would be willing to pay for the beer.</p>
             <p>Now, imagine if you had instead been told your friend was going to a fancy 5-star hotel.</p>
             <p>If this were the case, do you think the <b>quality of the location selling the beer</b> would have affected your response about the most you would be willing to pay for the beer? If so, how?</p>`;
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_ref_price1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_ref_price1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_ref_price2;
+        } else {
+            return introspection_q_labels_ref_price2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -95,8 +107,14 @@ var ref_price_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        ref_price_intro_response1 = data.response;
+
+        if (label_order_randomized == 'original') {
+            ref_price_intro_response1 = data.response
     }
+        else {
+            ref_price_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var ref_price_intro_response2 = null;

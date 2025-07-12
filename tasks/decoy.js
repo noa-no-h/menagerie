@@ -79,6 +79,7 @@ var decoy_openQ = {
 
 var introspection_q_labels_decoy1 = [`<strong>It made me <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
 var introspection_q_labels_decoy2 = [`<strong>It would have made me <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var decoy_intro_response1 = null;
 var decoy_introspect1 = {
@@ -99,16 +100,32 @@ var decoy_introspect1 = {
         <p>Do you think the <b>presence of this option</b> would have affected your preference <b>between Brand N and Brand J?</b> If so, how?</p>`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_decoy1 : introspection_q_labels_decoy2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_decoy1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_decoy1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_decoy2;
+        } else {
+            return introspection_q_labels_decoy2.slice().reverse();
+        }
+    },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        decoy_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            decoy_intro_response1 = data.response
     }
+        else {
+            decoy_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var decoy_intro_response2 = null;

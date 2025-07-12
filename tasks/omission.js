@@ -17,17 +17,16 @@ var omission_question = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
-            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. James decides to poison the one.
-            <p><i>Please rate James's action on the given scale:     
-1 (Forbidden) to 7 (Obligatory)
-<i><p>(Slide instructions: Please move the slider to one point of your choice)
-</i></p>`
+            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. <hr>
+            <p>Please rate James's action on the given scale:     
+1 (Forbidden) to 7 (Obligatory). <p>(Slide instructions: Please move the slider to one point of your choice)
+</p>`
         } else {
-            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, notices that the one has accidentally consumed a poisonous substance. James can administer the antidote to the one villager. If James withholds the antidote from the one, the one will die by sunrise, and the five will not be sacrificed. If James does provide the antidote to the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides not to provide the antidote to the one.
-<p><i>Please rate James's action on the given scale:     
-1 (Forbidden) to 7 (Obligatory)
-<i><p>(Slide instructions: Please move the slider to one point of your choice)
-</i></p>`
+            return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, notices that the one has accidentally consumed a poisonous substance. James can administer the antidote to the one villager. If James withholds the antidote from the one, the one will die by sunrise, and the five will not be sacrificed. If James does provide the antidote to the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides not to provide the antidote to the one. <hr>
+<p>Please rate James's action on the given scale:     
+1 (Forbidden) to 7 (Obligatory).
+<p>(Slide instructions: Please move the slider to one point of your choice)
+</p>`
         }
     },
     labels: ['1<br>(Forbidden)', '2', '3', '4<br>(Permissible)','5', '6', '7<br>(Obligatory)'],
@@ -54,8 +53,9 @@ var omission_openQ = {
     }
 };
 
-var introspection_q_labels_omission1 = [`<strong>It made me <u>LESS</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge the action as permissible</strong>`];
-var introspection_q_labels_omission2 = [`<strong>It would have made me <u>LESS</u> likely to judge the action as permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge the action as permissible</strong>`];
+var introspection_q_labels_omission1 = [`<strong>It made me <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to judge the action as permissible</strong>`];
+var introspection_q_labels_omission2 = [`<strong>It would have made me <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge the action as permissible</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var omission_intro_response1 = null;
 var omission_introspect1 = {
@@ -70,7 +70,18 @@ var omission_introspect1 = {
             <p>Do you think the fact that James <b>actively poisoned the one villager instead of failing to give him an antidote</b> would have affected your judgement of the permissibility of his action? If so, how?`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_omission1 : introspection_q_labels_omission2,
+    labels: function() {
+
+            if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+                return introspection_q_labels_omission1;
+            } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+                return introspection_q_labels_omission1.slice().reverse();
+            } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+                return introspection_q_labels_omission2;
+            } else {
+                return introspection_q_labels_omission2.slice().reverse();
+            }
+        },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -78,8 +89,16 @@ var omission_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        omission_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            omission_intro_response1 = data.response
+
     }
+        else {
+            omission_intro_response1 = 100 - data.response;
+            }
+
+        }
 };
 
 var omission_intro_response2 = null;

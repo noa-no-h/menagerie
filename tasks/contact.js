@@ -51,8 +51,9 @@ var contact_openQ = {
     }
 };
 
-var introspection_q_labels_contact1 = [`<strong>It made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`];
-var introspection_q_labels_contact2 = [`<strong>It would have made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`];
+var introspection_q_labels_contact1 = [`<strong>It made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`];
+var introspection_q_labels_contact2 = [`<strong>It would have made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var contact_intro_response1 = null;
 var contact_introspect1 = {
@@ -67,16 +68,32 @@ var contact_introspect1 = {
             <p>Do you think the fact that Frank would have needed to make <b>physical contact</b> with the man would have affected your judgment about whether Frank's action would be morally permissible? If so, how?`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_contact1 : introspection_q_labels_contact2,
-    slider_width: introspection_q_slider_width,
+    labels: function() {
+
+            if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+                return introspection_q_labels_contact1;
+            } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+                return introspection_q_labels_contact1.slice().reverse();
+            } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+                return introspection_q_labels_contact2;
+            } else {
+                return introspection_q_labels_contact2.slice().reverse();
+            }
+        },    slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br><br>",
     on_finish: function (data) {
-        contact_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            contact_intro_response1 = data.response
     }
+        else {
+            contact_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var contact_intro_response2 = null;

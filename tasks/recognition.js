@@ -256,8 +256,9 @@ var recognition_openQ = {
     }
 };
 
-var introspection_q_labels_ref_price1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
-var introspection_q_labels_ref_price2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_recognition1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
+var introspection_q_labels_recognition2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
@@ -273,16 +274,33 @@ var recognition_introspect1 = {
             <p>Imagine if some of the  cities (like New York) were ones you likely recognized the names of. While others (likeLexington–Fayette) were ones you likely recognized less well. How do you think <b>how much you'd heard of the city before</b> would have affected your impression of its population?</p>`;
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_ref_price1 : introspection_q_labels_ref_price2,
-    slider_width: introspection_q_slider_width,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_recognition1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_recognition1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_recognition2;
+        } else {
+            return introspection_q_labels_recognition2.slice().reverse();
+        }
+    },
+        slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        recognition_intro_response1 = data.response;
+
+        if (label_order_randomized == 'original') {
+            recognition_intro_response1 = data.response
     }
+        else {
+            recognition_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 var recognition_intro_response2 = null;

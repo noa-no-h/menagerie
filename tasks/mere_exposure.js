@@ -2,7 +2,8 @@
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the number of times you saw each word)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the number of times you saw each word)?</p>";
- 
+
+
 
 //preparing stimuli
 var stimulus_id_array = [
@@ -152,6 +153,10 @@ var mere_exposure_questions = {
     randomize_order: true
 };
 
+
+
+
+
 var mere_exposure_openQ_response = null;
 var mere_exposure_openQ = {
     type: jsPsychSurveyText,
@@ -167,6 +172,7 @@ var mere_exposure_openQ = {
 
 var introspection_q_labels_mee1 = [`<strong>When I saw a word a lot of times, that made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word did not affect my response</strong>", "", `<strong>When I saw a word a lot of times, that made me like the word <u>MORE</u></strong>`];
 var introspection_q_labels_mee2 = [`<strong>If I had seen a word a lot of times, that would have made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word would not have affected my response</strong>", "", `<strong>If I had seen a word a lot of times, that would have made me like the word <u>MORE</u></strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var mere_exposure_intro_response1 = null;
 var mere_exposure_introspect1 = {
@@ -181,7 +187,18 @@ var mere_exposure_introspect1 = {
             <p>Do you think the <b>number of times</b> you saw each word would have affected how highly you rated each word? If so, how?`
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_mee1 : introspection_q_labels_mee2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_mee1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_mee1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_mee2;
+        } else {
+            return introspection_q_labels_mee2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -189,8 +206,17 @@ var mere_exposure_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
-        mere_exposure_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            mere_exposure_intro_response1 = data.response
     }
+        else {
+            mere_exposure_intro_response1 = 100 - data.response;
+            }
+        }
+
+
+        
 };
 
 var mere_exposure_intro_response2 = null;
@@ -216,7 +242,18 @@ var mere_exposure_intro_confidence = {
     slider_start: 50,
     require_movement: require_movement_general,
     on_finish: function (data) {
-        mere_exposure_intro_confidence_response = data.response; 
+        mere_exposure_intro_confidence_response = data.response;
+    }
+}
+
+var knows_turkish = null; 
+
+var knows_turkish_question = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: '<p>Do you know Turkish?</p>',
+    choices: ['Yes', 'No'],
+    on_finish: function (data) {
+        knows_turkish = data.response == 0 ? 1 : 0; 
         s1_data = {
             subject: data.subject,
             version: data.version,
@@ -225,13 +262,14 @@ var mere_exposure_intro_confidence = {
             condition: condition[0],
             stimulus: null,
             choice: null,
-            auxiliary_info1: null,
+            auxiliary_info1: knows_turkish,
             openq_response: mere_exposure_openQ_response,
             introspect_rating: mere_exposure_intro_response1,
             introspect_open: mere_exposure_intro_confidence_response,
             familiarity: familiarity,
             rt: data.rt
         }
+        console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection')
     }
 };
@@ -250,14 +288,18 @@ var mere_exposure_familiar = {
 
 
 
-if (only_main_question) {
-    var mere_exposure = {
-        timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions]
-    };
-} else {
-    var mere_exposure = {
-        timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, mere_exposure_familiar, mere_exposure_openQ, mere_exposure_introspect1, mere_exposure_intro_confidence]
-    };
+// if (only_main_question) {
+//     var mere_exposure = {
+//         timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, knows_turkish_question]
+//     };
+// } else {
+//     var mere_exposure = {
+//         timeline: [mere_exposure_instructions1, mere_exposure_exposure, mere_exposure_instructions2, mere_exposure_questions, mere_exposure_familiar, mere_exposure_openQ, mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
+//     };
+// }
+
+mere_exposure = {
+    timeline: [mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
 }
 
 //#endregion

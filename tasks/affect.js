@@ -102,8 +102,9 @@ var affect_openQ = {
     }
 };
 
-var introspection_q_labels_affect1 = [`<strong>It made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`];
-var introspection_q_labels_affect2 = [`<strong>It would have made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`];
+var introspection_q_labels_affect1 = [`<strong>It made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`,"", `<strong>It did not affect my response</strong>`,"",`<strong>It made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
+var introspection_q_labels_affect2 = [`<strong>It would have made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var affect_intro_response1 = null;
 var affect_introspect1 = {
@@ -125,7 +126,18 @@ var affect_introspect1 = {
             `;
         }
     },
-    labels: condition[0] == 'Factor-Included' ? introspection_q_labels_affect1 : introspection_q_labels_affect2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_affect1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_affect1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_affect2;
+        } else {
+            return introspection_q_labels_affect2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -133,8 +145,14 @@ var affect_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        affect_intro_response1 = data.response
+        if (label_order_randomized == 'original') {
+            affect_intro_response1 = data.response
     }
+        else {
+                affect_intro_response1 = 100 - data.response;
+            }
+
+        }
 };
 
 var affect_intro_response2 = null;

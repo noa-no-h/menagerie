@@ -19,6 +19,7 @@
         <script src="https://unpkg.com/surveyjs-widgets@1.8.75/surveyjs-widgets.min.js"></script>
         <script src="https://unpkg.com/@jspsych-contrib/plugin-survey-slider@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="utilities.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
@@ -47,6 +48,15 @@
         }
         var id = subject_id_url;
         console.log("debug: " + debug);
+
+        //captcha
+        var recaptcha = {
+        type: jsPsychExternalHtml,
+        url: "recaptcha.html",
+        cont_btn: "proceed_button",
+        force_refresh: true,
+        execute_script: true
+    };
 
         /* create timeline */
         var jsPsych = initJsPsych({
@@ -120,8 +130,6 @@
         }
         //#endregion
     </script>
-
-    <script src="tasks/status_quo.js"></script>
     <script src="tasks/representativeness.js"></script>
     <script src="tasks/reference_price.js"></script>
     <script src="tasks/anchor.js"></script>
@@ -129,20 +137,16 @@
     <script src="tasks/avail.js"></script>
     <script src="tasks/cause.js"></script>
     <script src="tasks/contact.js"></script>
-    <script src="tasks/double.js"></script>
     <script src="tasks/decoy.js"></script>
     <script src="tasks/belief.js"></script>
     <script src="tasks/omission.js"></script>
-    <script src="tasks/assoc.js"></script>
-    <script src="tasks/simulation.js"></script>
     <script src="tasks/mere_exposure.js"></script>
     <script src="tasks/halo.js"></script>
     <script src="tasks/primacy_order.js"></script>
-    <script src="tasks/imaginability.js"></script>
     <script src="tasks/illusion_of_truth_pt2.js"></script>
     <script src="tasks/illusion_of_truth_pt1.js"></script>
-    <script src="tasks/sunk_cost.js"></script>
     <script src="tasks/sunk_cost2.js"></script>
+    <script src="tasks/status_quo.js"></script>
     <script src="tasks/recognition.js"></script>
     <script src="tasks/hindsight2.js"></script>
 
@@ -319,195 +323,89 @@
             show_clickable_nav: true
         };
 
+
+        var gen_choices = ['Man', 'Woman','Some other way', 'Prefer not to say'];
+        var gen = {
+            type: jsPsychSurveyMultiChoice,
+            preamble: "Finally, we'll ask you to input some demographic information.",
+            questions: [{prompt: "<b>Gender:</b> Do you describe yourself as a man, a woman, or in some other way?", options: gen_choices,
+                required: false}],
+            on_finish: function(data){
+                jsPsych.data.addProperties({gender: data.response.Q0});
+            }
+        };
+
+        var age_years = {
+                type: jsPsychSurveyText,
+                questions: [
+                    {prompt: "Age:", required: false}
+                ],
+            on_finish: function(data){
+                jsPsych.data.addProperties({age: data.response.age});
+            }
+        };
+
+        var race_options = ['White', 'Hispanic, Latinx, or Spanish origin', 'Black or African American', 'Asian', 'American Indian or Alaska Native', 'Middle Eastern or North African', 'Native Hawaiian or Other Pacific Islander', 'Some other race, ethnicity, or origin', 'Prefer not to say'];
+        var race = {
+            type: jsPsychSurveyMultiSelect,
+            questions: [{prompt: '<b>Race/ethnicity</b>: Which categories below describe you? Please select all that apply.', options: race_options,
+                required: false}],
+            on_finish: function(data){
+                jsPsych.data.addProperties({race: JSON.stringify(data.response.Q0)});
+            }
+        };
+
+
+        var nativeEng_options = ['Yes', 'No', 'Prefer not to say'];
+        var nativeEng = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: 'Is English your first language?<br>',
+            choices: nativeEng_options,
+            on_finish: function(data){
+                jsPsych.data.addProperties({nativeEng: nativeEng_options[data.response]});
+            }
+        };
+
+        var edu_options = ["Some high school","High school", "Some college", "2 year degree", "4 year degree", "Postgraduate/Professional degree/other", "Prefer not to say"];
+        var edu = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: 'What is the highest level of education that you have completed?<br>',
+            choices: edu_options,
+            on_finish: function(data){
+                jsPsych.data.addProperties({edu: edu_options[data.response]});
+            }
+        };
+
+        var income_options = ['Under $5,000', '$5,000 - $10,000', '$10,000 - $15,000', '$15,000 - $25,000', '$25,000 - $35,000', '$35,000 - $50,000', '$50,000 - $65,000', '$65,000 - $80,000', '$80,000 - $100,000', 'Over $100,000', 'Prefer not to say'];
+        var income = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: 'What was the total amount of income you earned during the last year?<br>',
+            choices: income_options,
+            on_finish: function(data){
+                jsPsych.data.addProperties({income: income_options[data.response]});
+            }
+        };
+
+        var permission = {
+            type: jsPsychSurveyMultiSelect,
+            preamble: ["Earlier in the task, we asked you several questions about how you think the Prolific user made their choices between movies in Section 1 of this study.<br><br>\
+            At some point in the future, we may want to anonymously quote some of your responses to these questions in other studies, or in scientific publications resulting from this research. \
+            Do you wish to give us permission to quote your answers? The quoted content would be <b>completely anonymous</b> and would not contain any information that could be linked back to you in any way. If you do not wish to have your answers to these questions quoted, you can select 'No' and there will not be any negative consequences."],
+            questions: [{prompt: '', options: ['Yes, I am okay with my answers to these questions being quoted anonymously.', 'No, please do not quote my answers to these questions.'],
+                required: false, horizontal: false, use_default: true}],
+            on_finish: function(data){
+                jsPsych.data.addProperties({permission: data.response.Q0});
+            }
+        };
+
+        var demographics_timeline = [gen, age_years, race, nativeEng, edu, income, permission];
+
         //#endregion
 
         //#region TASKS
 
-
         
 
-        /*//#region Endowment effect
-
-        var endowment_instructions = {
-            type: jsPsychInstructions,
-            pages: [
-                `<p>In this exercise, you will be asked to make some decisions about the price of an object.</p>
-                <p><i>Please click the button below when you are ready to begin the exercise.</i></p>`
-            ],
-            show_clickable_nav: true
-        }
-
-        var juice = null
-        var endowment_instructions2 = {
-            type: jsPsychInstructions,
-            pages: function () {
-                var instructions = [];
-
-                if (condition[0] == 'Factor-Included') {
-                    instructions.push(`Imagine you possess <b>one year's worth of a rare and safe pill that enables a person to maintain ideal weight</b>.<br><br>
-                    You have the option to <b>sell this year's supply of pills</b> in exchange for a certain amount of money. You get to decide how much money this set of pills is worth to you.`)
-                } else {
-
-                }
-            },
-            show_clickable_nav: true
-        }
-        var endowment_present_trials = [];
-
-        for (var i = 0; i, {
-            type: jsPsychSurveyMultiChoice,
-            questions: [
-                {
-                    prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
-                    options: [
-                        '<b>Brand W:</b> Price per can = $1.20; Quality rating = 30',
-                        '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
-                        '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
-                    ],
-                    required: required_general,
-                }
-            ],
-            on_finish: function (data) {
-                if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
-                    juice = 'Brand N (Target)'
-                } else if (data.response.Q0 == '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70') {
-                    juice = 'Brand J (Competitor)'
-                } else {
-                    juice = 'Brand W (decoy)'
-                }
-            }
-        };
-
-        var decoy_absent = {
-                type: jsPsychSurveyMultiChoice,
-                questions: [
-                    {
-                        prompt: "Imagine that you are choosing between several brands of frozen concentrated orange juice. For each brand, you know only the price and the quality ratings made by consumer reports. Given that you had to buy one brand based on this information alone, which one would it be? In case of the quality rating, 0 = worst quality and 100 = ideal quality.",
-                        options: [
-                            '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50',
-                            '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
-                        ],
-                        required: required_general,
-                    }
-                ],
-                on_finish: function (data) {
-                    if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
-                        juice = 'Brand N (Target)'
-                    } else {
-                        juice = 'Brand J (Competitor)'
-                    }
-                }
-            };
-
-        var decoy_question = null;
-        if (condition[0] == "Factor-Included") {
-            decoy_question = decoy_present
-        } else {
-            decoy_question = decoy_absent
-        }
-
-        var decoy_openQ_response = null;
-        var decoy_openQ = {
-            type: jsPsychSurveyText,
-            questions: [{
-                prompt: `<p>In this exercise, you were asked to choose between several brands of frozen orange juice concentrate.</p><p>Describe your thought process during this choice. How did you come to your eventual decision about which juice to purchase?</p>`,
-                required: required_general, rows: 5, columns: 80
-            }],
-            on_finish: function (data) {
-                decoy_openQ_response = data.response.Q0
-            }
-        };
-
-        var introspection_q_labels_decoy1 = [`<strong>It made me <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
-        var introspection_q_labels_decoy2 = [`<strong>It would have made me <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
-
-        var decoy_intro_response1 = null;
-        var decoy_introspect1 = {
-            type: jsPsychHtmlSliderResponse,
-            stimulus: function () {
-                if (condition[0] == "Factor-Included") {
-                    return `<p>Below are the options you were asked to choose from:</p>
-                <p><b>Brand W:</b> Price per can = $1.20; Quality rating = 30</p>
-                <p><b>Brand N:</b> Price per can = $1.20; Quality rating = 50</p>
-                <p><b>Brand J:</b> Price per can = $2.00; Quality rating = 70</p>
-                <p>Do you think the <b>presence of Brand W</b> affected your preference <b>between Brand N and Brand J?</b> If so, how?</p>`
-                } else {
-                    return `<p>Below are the options you were asked to choose from:</p>
-                <p><b>Brand N:</b> Price per can = $1.20; Quality rating = 50</p>
-                <p><b>Brand J:</b> Price per can = $2.00; Quality rating = 70</p>
-                <p>Now, imagine if you were given a <i>third option</i>, as follows:</p>
-                <p><b>Brand W:</b> Price per can = $1.20; Quality rating = 30</p>
-                <p>Do you think the <b>presence of this option</b> would have affected your preference <b>between Brand N and Brand J?</b> If so, how?</p>`
-                }
-            },
-            labels: condition[0] == 'Factor-Included' ? introspection_q_labels_decoy1 : introspection_q_labels_decoy2,
-            slider_width: introspection_q_slider_width,
-            min: introspection_q_min,
-            max: introspection_q_max,
-            slider_start: 50,
-            require_movement: introspection_q_require,
-            prompt: "<br><br><br><br><br><br>",
-            on_finish: function (data) {
-                decoy_intro_response1 = data.response
-            }
-        };
-
-        var decoy_intro_response2 = null;
-        var decoy_introspect2 = {
-            type: jsPsychSurveyText,
-            questions: [{
-                prompt: `<p>Please describe your thought process behind the answer you gave in the previous question. Why did you give the rating that you did?</p>`,
-                required: required_general, rows: 5, columns: 80
-            }],
-            on_finish: function (data) {
-                decoy_intro_response2 = data.response.Q0
-            }
-        };
-
-        var decoy_intro_confidence_response = null;
-        var decoy_intro_confidence = {
-            type: jsPsychHtmlSliderResponse,
-            stimulus: confidence_q,
-            labels: confidence_q_labels,
-            slider_width: confidence_q_slider_width,
-            min: confidence_q_min,
-            max: confidence_q_max,
-            slider_start: 50,
-            require_movement: require_movement_general,
-            on_finish: function (data) {
-                decoy_intro_confidence_response = data.response
-            }
-        };
-
-        var decoy_familiar = {
-            type: jsPsychHtmlButtonResponse,
-            stimulus: `<p>Before doing this study, had you seen or heard of a task similar to this last one before?</p>`,
-            choices: ["Yes", "No"],
-            on_finish: function (data) {
-                s1_data = {
-                    subject: data.subject,
-                    version: data.version,
-                    task_name: "decoy effect",
-                    choice: juice,
-                    condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
-                    factor: data.condition,
-                    openq_response: decoy_openQ_response,
-                    introspect_rating: decoy_intro_response1,
-                    introspect_open: decoy_intro_confidence_response,
-                    familiarity: data.response == 0 ? "Yes" : "No",
-                    rt: data.rt
-                }
-                save_data(s1_data, 'introspection')
-            }
-        }
-
-        var decoy = {
-            timeline: [decoy_instructions, decoy_question, decoy_openQ, decoy_introspect1, decoy_intro_confidence, decoy_familiar]
-        }
-
-        //#endregion
-
-        */
 var current_task_index= 0;
 var next_task = {
     type: jsPsychHtmlButtonResponse,
@@ -576,13 +474,22 @@ var next_task = {
                         status_quo, sunk_cost];*/
 
         //December 2024 pilot
-        var task_list = [hindsight2, simulation, affect, sunk_cost2, status_quo, primacy_order]
+        //var task_list = [hindsight2, simulation, affect, sunk_cost2, status_quo, primacy_order]
+
+        //June 2025 
+        var task_list = [affect, anchor, avail, cause, contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]
+
+
+        task_list.flat();
+
+        for (const task of task_list) {
+    console.log(task);}
 
         console.log("task_list: ", task_list);
 
         var task_list_shuffled_no_in_between = _.shuffle(task_list);
-        //task_list_shuffled_no_in_between.unshift(illusion_of_truth_pt1);
-        //task_list_shuffled_no_in_between.push(illusion_of_truth_pt2);
+        task_list_shuffled_no_in_between.unshift(illusion_of_truth_pt1);
+        task_list_shuffled_no_in_between.push(illusion_of_truth_pt2);
 
         var task_list_shuffled = [];
         for (let i = 0; i < task_list_shuffled_no_in_between.length; i++) {
@@ -598,9 +505,16 @@ var next_task = {
         //task_list_shuffled.splice(26, 0, attnCheck3);
         task_list_shuffled.splice(12,0,attnCheck3);
 
+        //insert captcha at the 16th position
+        //task_list_shuffled.splice(14, 0, recaptcha);
+
+        console.log(typeof task_list_shuffled);
+
         var tasks = {
-            timeline: task_list_shuffled
+            timeline: task_list_shuffled.concat(demographics_timeline)
+
         };
+
 
         console.log("task_list_shuffled: ", task_list_shuffled);
 
@@ -1428,33 +1342,23 @@ var next_task = {
 
         /*add elements to timeline*/
 
+        console.log(welcome)
+
         var intro;
         if (!debug) {
-            var intro = {
-                timeline: [welcome, consent_block, /*MTurk_id_loop,attnCheck2, attnCheck3,*/  begin]
-            };
+            console.log("here!")
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat()
+            ;
         } else {
-            var intro = {
-                timeline: [welcome, /*MTurk_id_loop,*/ begin]
-            };
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat();
         }
 
-        timeline.push(preload) 
+        console.log("debug: " + debug)
 
-
-        //timeline.push(illusion_of_truth_pt2)
-        //timeline.push(hindsight2)
-        //timeline.push(primacy_order)
-        timeline.push(sunk_cost2)
-
-        timeline.push(intro)
-
-        //timeline.push(tasks)
-        //timeline.push(measures)
-        timeline.push(ending)
 
         /* initiate experiment */
-        jsPsych.run(timeline);
+        jsPsych.run(experiment_timeline);
+        //jsPsych.run([affect]);
 
     </script>
 </body>

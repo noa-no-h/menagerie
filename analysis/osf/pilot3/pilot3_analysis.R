@@ -5,7 +5,7 @@ if (!require('pacman')) {
 }
 
 pkg.names = c('ggplot2', 'tidyverse', 'RColorBrewer', 'extrafont',
-              'this.path', 'brms', 'bayestestR', 'rstan', 'posterior', 'parallel', 'doParallel')
+              'this.path', 'jsonlite', 'brms', 'bayestestR', 'rstan', 'posterior', 'parallel', 'doParallel')
 p_load(char = pkg.names)
 
 setwd(here())
@@ -404,6 +404,21 @@ sunk_cost_analysis = brm(stayed ~ condition,
 summary(sunk_cost_analysis)
 hdi(sunk_cost_analysis)
 
+
+# Save for observers ------
+
+affect_db = affect_data %>%
+  filter(factor == "experience") %>%
+  select(subject, choice)
+
+affect_db_json <- toJSON(affect_db, pretty = TRUE)
+json_towrite = paste0("affect_db = ", affect_db_json, ";")
+write(json_towrite, 'affect_db.js')
+
+
 # Save image --------------------------------------------------------------
 
 save.image('pilot3_output.rdata')
+
+
+

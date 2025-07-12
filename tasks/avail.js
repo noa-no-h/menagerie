@@ -180,8 +180,11 @@ var avail_openQ = {
     }
 };
 
-var introspection_q_labels_avail1 = [`<strong>It made me more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
-var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`];
+
+var introspection_q_labels_avail1 = [`<strong>It made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
+
+var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`,"","<strong>It would not have affected my response</strong>", "",`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var avail_intro_response1 = null;
 var avail_introspect1 = {
@@ -197,7 +200,18 @@ var avail_introspect1 = {
         <p>If this were the case, do you think the <b>fame of the people in each list</b> would have affected your response about which list contained more men? If so, how?`
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_avail1 : introspection_q_labels_avail2,
+    labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_avail1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_avail1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_avail2;
+        } else {
+            return introspection_q_labels_avail2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -205,8 +219,15 @@ var avail_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        avail_intro_response1 = data.response
+
+        if (label_order_randomized == 'original') {
+            avail_intro_response1 = data.response
     }
+        else {
+            avail_intro_response1 = 100 - data.response;
+            }
+        }
+
 };
 
 var avail_intro_response2 = null;

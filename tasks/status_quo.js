@@ -382,20 +382,22 @@ var status_quo_openQ = {
 };
 
 var introspection_q_labels_status_quo1 = [
-    `<strong>It made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
+    `<strong>It made me LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
     "",
     "<strong>It did not affect my response</strong>",
     "",
-    `<strong>It made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+    `<strong>It made me MORE likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
 
 var introspection_q_labels_status_quo2 = [
-    `<strong>It would have made me more likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
+    `<strong>It would have made me LESS likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`,
     "",
     "<strong>It would not have affected my response</strong>",
     "",
-    `<strong>It would have made me less likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
+    `<strong>It would have made me MORE likely to recommend the allocation: 50% auto safety / 50% highway safety</strong>`
 ];
+var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
+
 
 var status_quo_intro_response1 = null;
 var status_quo_introspect1 = {
@@ -411,7 +413,18 @@ var status_quo_introspect1 = {
                 <p>If this were the case, do you think <b>knowing that the <u>current allocation</u> of funds is 50% to auto safety and 50% to highway safety</b> would have affected your response? If so, how?</p>`;
         }
     },
-    labels: condition[0] == "Factor-Included" ? introspection_q_labels_status_quo1 : introspection_q_labels_status_quo2,
+labels: function() {
+
+        if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
+            return introspection_q_labels_status_quo1;
+        } else if (condition[0] == 'Factor-Included' && label_order_randomized == 'flipped') {
+            return introspection_q_labels_status_quo1.slice().reverse();
+        } else if (condition[0] == 'Factor-Excluded' && label_order_randomized == 'original') {
+            return introspection_q_labels_status_quo2;
+        } else {
+            return introspection_q_labels_status_quo2.slice().reverse();
+        }
+    },
     slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
@@ -419,8 +432,14 @@ var status_quo_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-        status_quo_intro_response1 = data.response;
+
+        if (label_order_randomized == 'original') {
+            status_quo_intro_response1 = data.response
     }
+        else {
+            status_quo_intro_response1 = 100 - data.response;
+            }
+        }
 };
 
 
