@@ -847,6 +847,27 @@ for (i in 2:length(all_list_introspection_experience)) {
             select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect))
 }
 
+test = all_data_introspection_experience %>% 
+  group_by(subject) %>% 
+  summarize(introspect_rating = mean(introspect_rating)) %>% 
+  group_by() %>% 
+  summarize(introspect_rating.m = mean(introspect_rating),
+            introspect_rating.se = se(introspect_rating))
+ggplot(test, aes(x=0, y = introspect_rating.m)) +
+  geom_point(color = 'red', size = 3) +
+  geom_errorbar(aes(ymin = introspect_rating.m - introspect_rating.se,
+                    ymax = introspect_rating.m + introspect_rating.se),
+                width = 0.2, color = 'red') +
+  geom_jitter(color = 'gray', alpha = 0.1,
+              mapping = aes(y = introspect_rating),
+              data = all_data_introspection_experience,
+              width = .1, height = 0) +
+  theme_black() +
+  scale_x_discrete(labels = NULL) +
+  scale_y_continuous(limits = c(-50, 50)) +
+  labs(x = '', y = 'Self-reported bias') +
+  geom_hline(yintercept = 0, color = 'white', linetype = 'dashed')
+
 ## dichotomous
 all_summary_introspection_experience = all_data_introspection_experience %>% 
   group_by(showed_effect) %>% 
@@ -862,7 +883,24 @@ ggplot(all_summary_introspection_experience,
   scale_fill_manual(values = effect_no) +
   scale_x_discrete(labels = c('Yes', 'No')) +
   guides(fill = "none") +
-  scale_y_continuous(limits = c(-40, 40))
+  scale_y_continuous(limits = c(-50, 50))
+
+  ggplot(all_summary_introspection_experience,
+         aes(x = showed_effect, y = mean_introspect_rating, color = showed_effect)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "", x = "", y = "Self-reported bias") +
+  theme_black() +
+  scale_fill_manual(values = effect_no) +
+  scale_x_discrete(labels = c('Yes', 'No')) +
+  guides(color = "none") +
+  scale_y_continuous(limits = c(-50, 50)) +
+  geom_jitter(color = 'gray', alpha = 0.1,
+              mapping = aes(y = introspect_rating),
+              data = all_data_introspection_experience %>% 
+                filter(!is.na(showed_effect)),
+              width = .1, height = 0) +
+  geom_hline(yintercept = 0, color = 'white', linetype = 'dashed')
 
 all_analysis_introspection_experience_midpoint = brm(introspect_rating ~ 1 + (1 | subject) + (1 | task_name),
                                                      all_data_introspection_experience,
@@ -892,6 +930,14 @@ ggplot(all_data_introspection_experience,
   theme_custom() +
   labs(x = 'Influence magnitude', 
        y = 'Influence rating')
+
+ggplot(all_data_introspection_experience,
+       aes(x = effect_size_range, y = introspect_rating)) +
+  geom_point(alpha=0.5, color = 'white') +
+  geom_smooth(method='lm') +
+  theme_black() +
+  labs(x = '\nObserved\nbias magnitude', 
+       y = 'Self-reported bias')
 
 all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size_range + (effect_size_range | subject) + (effect_size_range | task_name),
                                                        all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
@@ -1004,7 +1050,7 @@ theme_black = function(base_size = 12, base_family = "") {
 ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_histogram(color = 'white') +
   theme_black() +
-  labs(x = 'Participant-level correlation between\ninfluence ratings and influence magnitudes',
+  labs(x = 'Participant-level correlation between\nobserved and self-reported bias magnitudes',
        y = 'Number of subjects') +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T), color = 'red') +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) - se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +

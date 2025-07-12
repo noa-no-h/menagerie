@@ -140,14 +140,16 @@ df.byheuristic = df.long %>%
             test.df = t.test(heuristic_prediction, mu = 4)$parameter,
             test.p = t.test(heuristic_prediction, mu = 4)$p.value)
 
-ggplot(df.byheuristic, aes(x = heuristic_name, y = mean_prediction)) +
-  geom_jitter(data = df.long %>% filter(heuristic_name != 'DRM effect'), aes(y = heuristic_prediction),
-              width = 0, alpha = 0.5, height = 0.2) +
+ggplot(df.byheuristic %>% filter(!(heuristic_name %in% c('DRM effect', 'Hindsight bias', 'Status quo bias', 'Sunk cost bias'))), aes(x = heuristic_name, y = mean_prediction)) +
+  geom_jitter(data = df.long %>% filter(!(heuristic_name %in% c('DRM effect', 'Hindsight bias', 'Status quo bias', 'Sunk cost bias'))), aes(y = heuristic_prediction),
+              width = 0, alpha = 0.5, height = 0.2,
+              color = 'white') +
   geom_point(size = 5, color = 'red') +
   geom_errorbar(aes(ymin = mean_prediction - 1.96*se_prediction,
                     ymax = mean_prediction + 1.96*se_prediction),
                 width = 0.2, color = 'red') +
-  geom_hline(yintercept = 4, linetype = 'dashed') +
+  theme_black() +
+  geom_hline(yintercept = 4, linetype = 'dashed', color = 'white') +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
   scale_y_continuous(limits = c(1,7), breaks = c(1,4,7), labels = c('Extremely unlikely', 'Neither likely\nnor unlikely', 'Extremely likely')) +
   labs(x = '', y = 'Prediction')
@@ -166,6 +168,37 @@ mean(df.bysubject$prediction.range)
 mean(df.bysubject$mean.prediction > 4)
 mean(df.bysubject$any.above.midpoint, na.rm = T)
 
+summary(lmer(heuristic_prediction ~ 1 + (1 | Subject) + (1 | heuristic_name),
+             df.long %>% mutate(heuristic_prediction = heuristic_prediction - 4)))
+
+# split by role
+df.byroleandsubject = df.long %>% 
+  filter(!is.na(Role.fac)) %>% 
+  group_by(Role.fac, Subject) %>% 
+  summarize(heuristic_prediction.m = mean(heuristic_prediction, na.rm = T)) %>% 
+  filter(!is.nan(heuristic_prediction.m))
+df.byrole = df.byroleandsubject %>% 
+  group_by(Role.fac) %>% 
+  summarize(mean_prediction = mean(heuristic_prediction.m, na.rm = T),
+            se_prediction = se(heuristic_prediction.m))
+
+ggplot(df.byrole %>% filter(Role.fac != 'Other'), aes(x = Role.fac, y = mean_prediction)) +
+  geom_jitter(data = df.byroleandsubject %>% filter(Role.fac != 'Other'), mapping = aes(y = heuristic_prediction.m),
+              width = 0, alpha = 0.5, height = 0.2, color = 'white') +
+  geom_point(size = 5, color = 'red') +
+  geom_errorbar(aes(ymin = mean_prediction - 1.96*se_prediction,
+                    ymax = mean_prediction + 1.96*se_prediction),
+                width = 0.2, color = 'red') +
+  theme_black() +
+  geom_hline(yintercept = 4, linetype = 'dashed', color = 'white') +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  scale_y_continuous(limits = c(1,7), breaks = c(1,4,7), labels = c('Extremely unlikely', 'Neither likely\nnor unlikely', 'Extremely likely')) +
+  labs(x = '', y = 'Prediction')
+
+summary(lmer_alt(scale(heuristic_prediction) ~ Role.fac +
+               (1 | Subject) +
+               (Role.fac || heuristic_name),
+             df.long))
 
 # Compare to results of pilots 1 & 2 --------------------------------------
 
@@ -177,15 +210,34 @@ all_data_introspection_experience = all_data_introspection_experience_pilot1 %>%
 
 all_bytask_introspection_experience = all_data_introspection_experience %>% 
   group_by(task_name) %>% 
-  summarize(task_cor = cor(introspect_rating, effect_size_range))
+  summarize(task_cor = cor(introspect_rating, effect_size_range, use = 'pairwise.complete.obs'),
+            task_cor_se = cor.test())
 
 df.byheuristic.filt = df.byheuristic %>%
   filter(!(heuristic_name %in% c('DRM effect', 'Hindsight bias', 'Status quo bias', 'Sunk cost bias')))
 df.byheuristic.filt$actual_cor = all_bytask_introspection_experience$task_cor
 
-ggplot(df.byheuristic.filt, aes(x = actual_cor, y = mean_prediction)) +
-  geom_point() +
-  geom_smooth(method = 'lm')
+ggplot(df.byheuristic.filt, aes(x = mean_prediction, y = actual_cor)) +
+  geom_point(size = 3, color = 'white') +
+  geom_smooth(method = 'lm') +
+  theme_black() +
+  labs(y = 'Task-level awareness',
+       x = 'Predicted likelihood\nof awareness')
+
+
+ggplot(df.byheuristic.filt, aes(x = heuristic_name, y = actual_cor)) +
+  geom_point(size = 5, color = 'red') +
+  #geom_errorbar(aes(ymin = mean_prediction - 1.96*se_prediction,
+  #                  ymax = mean_prediction + 1.96*se_prediction),
+  #              width = 0.2, color = 'red') +
+  theme_black() +
+  #geom_hline(yintercept = 4, linetype = 'dashed', color = 'white') +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  #scale_y_continuous(limits = c(1,7), breaks = c(1,4,7), labels = c('Extremely unlikely', 'Neither likely\nnor unlikely', 'Extremely likely')) +
+  labs(x = '', y='') +
+  #scale_x_discrete(labels = NULL, breaks = NULL) +
+  scale_y_continuous(limits = c(0, 1), breaks = c(0, 0.5, 1))
+
 analysis.byheuristic = brm(mean_prediction ~ actual_cor,
                             df.byheuristic.filt %>% mutate(mean_prediction = scale(mean_prediction),
                                                            actual_cor = scale(actual_cor)),

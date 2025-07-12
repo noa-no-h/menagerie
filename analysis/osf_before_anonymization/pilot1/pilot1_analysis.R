@@ -42,6 +42,46 @@ theme_custom <- function() {
     )
 }
 
+theme_black = function(base_size = 12, base_family = "") {
+  theme_grey(base_size = base_size, base_family = base_family) %+replace%
+    theme(
+      # Specify axis options
+      axis.line = element_blank(),  
+      axis.text.x = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.text.y = element_text(size = 12, color = "white", lineheight = 0.9),  
+      axis.ticks = element_line(color = "white", size  =  0.2),  
+      axis.title.x = element_text(size = 18, color = "white", margin = margin(0, 10, 0, 0)),  
+      axis.title.y = element_text(size = 18, color = "white", angle = 90, margin = margin(0, 10, 0, 0)),  
+      axis.ticks.length = unit(0.3, "lines"),   
+      # Specify legend options
+      legend.background = element_rect(color = NA, fill = "black"),  
+      legend.key = element_rect(color = "white",  fill = "black"),  
+      legend.key.size = unit(1.2, "lines"),  
+      legend.key.height = NULL,  
+      legend.key.width = NULL,      
+      legend.text = element_text(size = base_size*0.8, color = "white"),  
+      legend.title = element_text(size = base_size*0.8, face = "bold", hjust = 0, color = "white"),  
+      legend.position = "right",  
+      legend.text.align = NULL,  
+      legend.title.align = NULL,  
+      legend.direction = "vertical",  
+      legend.box = NULL, 
+      # Specify panel options
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank(),
+      panel.border = element_rect(fill = NA, color = "white"),  
+      # Specify facetting options
+      strip.background = element_rect(fill = "grey30", color = "grey10"),  
+      strip.text.x = element_text(size = base_size*0.8, color = "white"),  
+      strip.text.y = element_text(size = base_size*0.8, color = "white",angle = -90),  
+      # Specify plot options
+      plot.background = element_rect(color = "black", fill = "black"),  
+      plot.title = element_text(size = base_size*1.2, color = "white"),  
+      plot.margin = unit(rep(1, 4), "lines")
+    )
+}
+
 # Load data ---------------------------------------------------------------
 
 df <- read.csv('pilot1_data.csv') %>%
@@ -724,49 +764,29 @@ for (i in 2:length(all_list_introspection_experience)) {
             select(subject, task_name, introspect_rating, effect_size, effect_size_range, showed_effect))
 }
 
+all_data_introspection_experience = all_data_introspection_experience %>%
+  mutate(introspect_rating = (introspect_rating + 10) / 10)
 
-# Define the columns you expect to be in each data frame for your final select
-required_cols_for_final_select = c("subject", "task_name", "introspect_rating", "effect_size", "effect_size_range", "showed_effect")
-
-cat("--- Checking Data Frame Structures ---\n")
-
-for (i in 1:length(all_list_introspection_experience)) {
-  # Get the data frame and a name for printing
-  current_df = all_list_introspection_experience[[i]]
-  df_name = if (is.null(names(all_list_introspection_experience))) {
-    paste("Data frame", i) # If the list is unnamed, use index
-  } else {
-    names(all_list_introspection_experience)[i] # If named, use the name
-  }
-  
-  cat(paste0("\nChecking ", df_name, ":\n"))
-  
-  # --- Check for missing required columns ---
-  cols_in_df = colnames(current_df)
-  missing_cols_from_required = setdiff(required_cols_for_final_select, cols_in_df)
-  
-  if (length(missing_cols_from_required) > 0) {
-    cat(paste0("  - MISSING required columns: ", paste(missing_cols_from_required, collapse = ", "), "\n"))
-  } else {
-    cat("  - All required columns are present.\n")
-  }
-  
-  # --- Check type of the 'choice' column (source of bind_rows error) ---
-  if ("choice" %in% cols_in_df) {
-    cat(paste0("  - 'choice' column type: ", class(current_df$choice), "\n"))
-    # Optional: Check for non-standard types if class() returns 'list' or similar
-    if (!is.atomic(current_df$choice) && !inherits(current_df$choice, "factor")) {
-      cat("    WARNING: 'choice' column type is not atomic or factor - might cause issues.\n")
-    }
-    
-  } else {
-    cat("  - 'choice' column is NOT present.\n")
-  }
-  
-  # Optional: Add checks for other columns if needed
-  
-  cat("------------------------------------\n")
-}
+mean(all_data_introspection_experience$introspect_rating)
+test = all_data_introspection_experience %>% 
+  group_by(subject) %>% 
+  summarize(introspect_rating = mean(introspect_rating)) %>% 
+  group_by() %>% 
+  summarize(introspect_rating.m = mean(introspect_rating),
+            introspect_rating.se = se(introspect_rating))
+ggplot(test, aes(x=0, y = introspect_rating.m)) +
+  geom_point(color = 'red') +
+  geom_errorbar(aes(ymin = introspect_rating.m - introspect_rating.se,
+                    ymax = introspect_rating.m + introspect_rating.se),
+                width = 0.2, color = 'red') +
+  geom_jitter(color = 'gray', alpha = 0.1,
+             mapping = aes(y = introspect_rating),
+             data = all_data_introspection_experience,
+             width = .1, height = 0) +
+  theme_black() +
+  scale_x_discrete(labels = NULL) +
+  scale_y_continuous(limits = c(1,9), breaks = c(1,5,9)) +
+  labs(x = '', y = 'Self-reported bias')
 
 ## dichotomous
 all_summary_introspection_experience = all_data_introspection_experience %>% 
@@ -784,6 +804,23 @@ ggplot(all_summary_introspection_experience,
   scale_fill_manual(values = effect_no) +
   scale_x_discrete(labels = c('Yes', 'No')) +
   guides(fill = "none")
+
+ggplot(all_summary_introspection_experience,
+       aes(x = showed_effect, y = mean_introspect_rating, color = showed_effect)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "", x = "Influenced by heuristic?", y = "Influence rating") +
+  scale_fill_manual(values = effect_no) +
+  scale_x_discrete(labels = c('Yes', 'No')) +
+  theme_black() +
+  geom_jitter(color = 'gray', alpha = 0.1,
+              mapping = aes(y = introspect_rating),
+              data = all_data_introspection_experience %>% 
+                filter(!is.na(showed_effect)),
+              width = .1, height = 0) +
+  scale_y_continuous(limits = c(1,9), breaks = c(1,5,9)) +
+  labs(x = '', y = 'Self-reported bias') +
+  guides(color = "none")
 
 all_analysis_introspection_experience_dichotomous = brm(introspect_rating ~ showed_effect + (1 | subject) + (1 | task_name),
                                                         all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
@@ -804,6 +841,15 @@ ggplot(all_data_introspection_experience,
   geom_smooth(method='lm') +
   theme_custom() +
   labs(x = 'Influence magnitude', y = 'Influence rating')
+
+ggplot(all_data_introspection_experience,
+       aes(x = effect_size_range, y = introspect_rating)) +
+  geom_point(alpha=0.5, color = 'white') +
+  geom_smooth(method='lm') +
+  theme_black() +
+  labs(x = '\nObserved bias magnitude', y = 'Self-reported bias') +
+  scale_y_continuous(limits = c(1,9), breaks = c(1,5,9))
+
 
 all_analysis_introspection_experience_continuous = brm(introspect_rating ~ effect_size_range + (1 | subject) + (effect_size_range | task_name),
                                                              all_data_introspection_experience %>% mutate(introspect_rating = scale(introspect_rating),
@@ -858,7 +904,7 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
 ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_histogram(color = 'white') +
   theme_black() +
-  labs(x = 'Participant-level correlation between\ninfluence ratings and influence magnitudes',
+  labs(x = 'Participant-level correlation between\nself-reported and observed bias magnitudes',
        y = 'Number of subjects') +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T), color = 'red') +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) - se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
