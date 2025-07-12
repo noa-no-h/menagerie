@@ -10,6 +10,32 @@ setwd(here())
 set.seed(123)
 default_priors <- set_prior("normal(0,1)", class = 'b')
 
+se = function(x) {return(sd(x, na.rm = T) / sqrt(sum(!is.na(x))))}
+se.prop = function(x) {return(sqrt(mean(x, na.rm = T) * (1-mean(x, na.rm = T)) / sum(!is.na(x))))}
+range01 <- function(x){(x-min(x))/(max(x)-min(x))}
+dodge <- position_dodge(width=0.9)
+
+exp_control <- c("#F37121", "#4793AF")
+exp_neutral_control <- c("#F37121", "#D3D3D3", "#4793AF")
+effect_no <- c("#e74c3c", "#D3D3D3")
+
+theme_custom <- function() {
+  theme_minimal(base_family = "Optima") +
+    theme(
+      axis.text.x = element_text(size = 15, margin = margin(t = 0, r = 0, b = 0, l = 1)), 
+      axis.text.y = element_text(size = 15),
+      axis.title.x = element_text(size = 15),
+      axis.title.y = element_text(size = 15),
+      plot.title = element_text(size = 18, face = "bold"),
+      legend.text = element_text(size = 15),
+      legend.title = element_text(size = 15),
+      strip.text = element_text(size = 15),
+      aspect.ratio = 1,  # Set the aspect ratio here
+      panel.grid.major.x = element_blank(),  # Remove major vertical grid lines
+      panel.grid.minor.x = element_blank()   # Remove minor vertical grid lines
+    )
+}
+
 fill_missing_tasks <- function(df, full_data) {
   completed_tasks <- unique(df$task_name)
   missing_tasks <- setdiff(task_list, completed_tasks)
@@ -33,16 +59,75 @@ fill_missing_tasks <- function(df, full_data) {
 }
 
 ## load data
-# load('../pilot1/pilot1_alltasks.rdata')
-# load('../pilot2/pilot2_alltasks.rdata')
-# 
-# combined_data_introspection_experience = all_data_introspection_experience_pilot1 %>% 
-#   mutate(introspect_rating = (introspect_rating - 50) / 40,
-#          study = 'pilot1') %>% 
-#   rbind(all_data_introspection_experience_pilot2 %>% mutate(introspect_rating = introspect_rating / 50, study = 'pilot2')) %>% 
-#   mutate(introspect_rating = scale(introspect_rating),
-#          effect_size_range = scale(effect_size_range))
-# 
+load('../pilot1/pilot1_alltasks.rdata')
+load('../pilot2/pilot2_alltasks.rdata')
+
+combined_data_introspection_experience = all_data_introspection_experience_pilot1 %>%
+  mutate(introspect_rating = (introspect_rating - 40) / 40,
+         study = 'pilot1') %>%
+  rbind(all_data_introspection_experience_pilot2 %>% mutate(introspect_rating = introspect_rating / 50, study = 'pilot2')) %>%
+  mutate(introspect_rating = scale(introspect_rating),
+         effect_size_range = scale(effect_size_range))
+
+all_summary_introspection_experience = combined_data_introspection_experience %>% 
+  group_by(showed_effect) %>% 
+  filter(!is.na(showed_effect)) %>% 
+  summarize(mean_introspect_rating = mean(introspect_rating),
+            se_introspect_rating = se(introspect_rating))
+
+# Combined plot 1
+ggplot(all_summary_introspection_experience,
+       aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
+  geom_bar(stat = "identity") +
+  geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
+  labs(title = "", x = "Influenced by heuristic?", y = "Influence rating") +
+  scale_fill_manual(values = effect_no) +
+  theme_custom() +
+  scale_x_discrete(labels = c('Yes', 'No')) +
+  guides(fill = "none") +
+  scale_y_continuous(limits = c(-1, 1)) +
+  geom_jitter(color = 'gray', alpha = 0.1,
+              mapping = aes(y = introspect_rating),
+              data = combined_data_introspection_experience %>% 
+                filter(!is.na(showed_effect)),
+              width = .1, height = 0) +
+  theme(
+    panel.background = element_rect(fill = "transparent"),
+    plot.background = element_rect(fill = "transparent", color = NA)
+  )
+
+# Combined plot 2
+ggplot(combined_data_introspection_experience,
+       aes(x = effect_size_range, y = introspect_rating)) +
+  geom_point(alpha=0.5) +
+  geom_smooth(method='lm') +
+  theme_custom() +
+  labs(x = 'Influence magnitude', 
+       y = 'Influence rating') +
+  theme(
+    panel.background = element_rect(fill = "transparent"),
+    plot.background = element_rect(fill = "transparent", color = NA)
+  )
+
+# Combined plot 3
+all_bysubject_introspection_experience = combined_data_introspection_experience %>%
+  group_by(subject) %>% 
+  summarize(subject_cor = cor(effect_size_range, introspect_rating))
+
+ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
+  geom_histogram(color = 'black') +
+  theme_custom() +
+  labs(x = 'Participant-level correlation between\ninfluence ratings and influence magnitudes',
+       y = 'Number of subjects') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T), color = 'red') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) - se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
+  geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
+  scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05))) +
+  theme(
+    panel.background = element_rect(fill = "transparent"),
+    plot.background = element_rect(fill = "transparent", color = NA)
+  )
+
 # ## run combined analyses
 # 
 # combined_analysis_introspection_continuous = brm(introspect_rating ~ effect_size_range + (effect_size_range || subject) + (effect_size_range || task_name),
