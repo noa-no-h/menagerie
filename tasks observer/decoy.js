@@ -84,7 +84,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var decoy_intro_response1 = null;
 var decoy_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>Below are the options the Prolific user was asked to choose from:</p>
@@ -143,7 +143,7 @@ var decoy_introspect2 = {
 
 var decoy_intro_confidence_response = null;
 var decoy_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

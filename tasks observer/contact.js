@@ -59,7 +59,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var contact_intro_response1 = null;
 var contact_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In the scenario the Prolific user saw, Frank would have needed to make physical contact with the man (i.e. by pushing him onto the main track) in order to save the five people.</p>
@@ -112,7 +112,7 @@ var contact_introspect2 = {
 
 var contact_intro_confidence_response = null;
 var contact_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

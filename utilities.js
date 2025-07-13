@@ -156,3 +156,9 @@ function checkvar(x, strlen) {
 	}
 	return x;
 }
+
+function scaleLikertScalesXToY(num, xmin, xmax, ymin, ymax) {
+
+  let scaledValue = ((num - xmin) * (ymax - ymin)) / (xmax - xmin) + ymin;
+  return Math.round(scaledValue);
+}

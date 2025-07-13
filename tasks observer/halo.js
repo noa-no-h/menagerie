@@ -60,11 +60,38 @@ for (i = 0; i < num_stimuli; i++) {
     choice[stimuli_list[i]]=null;
 }
 
+
 var stimulus = null;
 var halo_trial = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function(){
-        stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>'
+        console.log("stimuli_list[list_index]: " + stimuli_list[list_index]);
+        console.log("actorNumber: " + actorNumber);
+        console.log("halo_db: " + halo_db);
+
+        const foundEntry = halo_db.find(item =>
+    item.subject === String(actorNumber) && // Ensure actorNumber is compared as a string
+    item.stimulus === stimuli_list[list_index]
+);
+
+if (foundEntry) {
+    observedChoice = foundEntry.choice;
+} else {
+    observedChoice = null; 
+    console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${stimuli_list[list_index]}. 'observedChoice' set to null.`);
+}
+
+        console.log("actorNumber type and value:", typeof actorNumber, actorNumber);
+console.log("stimuli_list[list_index] type and value:", typeof stimuli_list[list_index], stimuli_list[list_index]);
+
+const tempSubjectMatch = halo_db.find(item => item.subject === actorNumber);
+console.log("Subject match test:", tempSubjectMatch); // Is anything found just by subject?
+
+const tempStimulusMatch = halo_db.find(item => item.stimulus === stimuli_list[list_index].toString());
+console.log("Stimulus match test:", tempStimulusMatch); // Is anything found just by stimulus?
+
+
+        stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.<br><br>The Prolific user selected ' + observedChoice + '.<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b></p>';
         
         return stimulus;
     },
@@ -75,6 +102,10 @@ var halo_trial = {
     max: 5,
     step: 1,
     slider_start: 3,
+    correct_response: function() {
+        return observedChoice;
+
+    },
     on_finish: function (data) {
         //console.log(data.response);
         //choice[stimuli_list[list_index]] = data.response.Q0;
@@ -145,7 +176,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var halo_intro_response1 = null;
 var halo_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolific user was presented with a series of pictures of 
@@ -204,7 +235,7 @@ var halo_introspect2 = {
 
 var halo_intro_confidence_response = null;
 var halo_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

@@ -1,4 +1,4 @@
-//#region 9. Illusion of truth
+/* //#region 9. Illusion of truth
 //Supplementary Material
 //Ongoing Secondary Tasks Can Reduce the Illusory Truth Effect
 //Deva P. Ly, Daniel M. Bernstein, Eryn J. Newman*
@@ -7,16 +7,16 @@ var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you
 
 
 //preparing stimuli
-var true_old = 
+var true_old =
     [`<p style = "font-size:30px">Volleyball was originally called mintonette</p>`,
-    `<p style = "font-size:30px">The flamingo’s pink color comes from carotenoid pigments in its food</p>`,
-    `<p style = "font-size:30px">Canada is the second largest country in the world in area</p>`,
-    `<p style = "font-size:30px">The largest European glacier is Vatnajökull on Iceland</p>`,
-    `<p style = "font-size:30px">In almost all human populations of newborns, there is a slight excess of males</p>`,
-    `<p style = "font-size:30px">Domesticated goats are descended from the pasang</p>`,
-    `<p style = "font-size:30px">Most limes have more acid than lemon</p>`,
-    `<p style = "font-size:30px">Lake Baikal is the world's largest freshwater lake by volume</p>`,
-    `<p style = "font-size:30px">Female turkeys generally weigh half as much as males</p>`
+        `<p style = "font-size:30px">The flamingo’s pink color comes from carotenoid pigments in its food</p>`,
+        `<p style = "font-size:30px">Canada is the second largest country in the world in area</p>`,
+        `<p style = "font-size:30px">The largest European glacier is Vatnajökull on Iceland</p>`,
+        `<p style = "font-size:30px">In almost all human populations of newborns, there is a slight excess of males</p>`,
+        `<p style = "font-size:30px">Domesticated goats are descended from the pasang</p>`,
+        `<p style = "font-size:30px">Most limes have more acid than lemon</p>`,
+        `<p style = "font-size:30px">Lake Baikal is the world's largest freshwater lake by volume</p>`,
+        `<p style = "font-size:30px">Female turkeys generally weigh half as much as males</p>`
     ]
 true_old = _.shuffle(true_old);
 
@@ -30,7 +30,7 @@ var false_old = [
     `<p style = "font-size:30px">The Caspian Sea is the lowest body of water on the surface of the Earth</p>`,
     `<p style = "font-size:30px">The Nile river flows southward</p>`,
     `<p style = "font-size:30px">Bike riding is the first event in a triathlon</p>`
-    ]  
+]
 false_old = _.shuffle(false_old);
 
 
@@ -38,28 +38,28 @@ false_old = _.shuffle(false_old);
 
 var true_new =
     ['<p style = "font-size:30px">Moose may dive underwater while feeding</p>',
-    '<p style = "font-size:30px">The Colchester is a popular type of oyster</p>',
-    '<p style = "font-size:30px">Taboga Island is in Panama</p>',
-    '<p style = "font-size:30px">Xylem is the water-transporting tissue in plants</p>',
-    '<p style = "font-size:30px">Dart boards are commonly made of sisal</p>',
-    '<p style = "font-size:30px">Snakes lack moveable eyelids</p>',
-    '<p style = "font-size:30px">Cabbages are in the mustard family</p>',
-    '<p style = "font-size:30px">The sun constitutes more than 99 percent of the entire mass of the solar system</p>',
-    '<p style = "font-size:30px">The otter belongs to the squirrel family</p>'
+        '<p style = "font-size:30px">The Colchester is a popular type of oyster</p>',
+        '<p style = "font-size:30px">Taboga Island is in Panama</p>',
+        '<p style = "font-size:30px">Xylem is the water-transporting tissue in plants</p>',
+        '<p style = "font-size:30px">Dart boards are commonly made of sisal</p>',
+        '<p style = "font-size:30px">Snakes lack moveable eyelids</p>',
+        '<p style = "font-size:30px">Cabbages are in the mustard family</p>',
+        '<p style = "font-size:30px">The sun constitutes more than 99 percent of the entire mass of the solar system</p>',
+        '<p style = "font-size:30px">The otter belongs to the squirrel family</p>'
     ]
 true_new = _.shuffle(true_new);
 
 var false_new =
     ['<p style = "font-size:30px">The corn was first domesticated by native peoples in Argentina</p>',
-    '<p style = "font-size:30px">The monetary unit in Afghanistan is the rupee</p>',
-    '<p style = "font-size:30px">Spain produces most of the world’s almonds</p>',
-    '<p style = "font-size:30px">The sport involving a snowboard is believed to have originated in Europe</p>',
-    '<p style = "font-size:30px">The highest waterfall in the world is in Argentina</p>',
-    '<p style = "font-size:30px">Candlepins is the most widely played variation of bowling</p>',
-    '<p style = "font-size:30px">In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color</p>',
-    '<p style = "font-size:30px">The Carpathian Mountains form a high wall between France and Spain</p>',
-    '<p style = "font-size:30px">Giraffes have terrible eyesight</p>'
-     ]
+        '<p style = "font-size:30px">The monetary unit in Afghanistan is the rupee</p>',
+        '<p style = "font-size:30px">Spain produces most of the world’s almonds</p>',
+        '<p style = "font-size:30px">The sport involving a snowboard is believed to have originated in Europe</p>',
+        '<p style = "font-size:30px">The highest waterfall in the world is in Argentina</p>',
+        '<p style = "font-size:30px">Candlepins is the most widely played variation of bowling</p>',
+        '<p style = "font-size:30px">In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color</p>',
+        '<p style = "font-size:30px">The Carpathian Mountains form a high wall between France and Spain</p>',
+        '<p style = "font-size:30px">Giraffes have terrible eyesight</p>'
+    ]
 false_new = _.shuffle(false_new);
 
 // Function to transform the list
@@ -67,7 +67,7 @@ function transformList(htmlList, listType) {
     return htmlList.map(html => {
         // Extract the text content from the HTML string
         var text = html.replace(/<\/?[^>]+(>|$)/g, "");
-        
+
         return { stimulus: html, name: text, type: listType };
     });
 }
@@ -79,8 +79,8 @@ var transformedTrueNew = transformList(true_new, 'true_new');
 var transformedTrueOld = transformList(true_old, 'true_old');
 
 // Combine the transformed lists
-var included_twelve_statements = _.shuffle(transformedFalseNew.slice(0,3).concat(transformedFalseOld.slice(0,3), transformedTrueNew.slice(0,3), transformedTrueOld.slice(0,3)));
-var excluded_twelve_statements = _.shuffle(transformedFalseNew.slice(0,6).concat(transformedTrueNew.slice(0,6)));
+var included_twelve_statements = _.shuffle(transformedFalseNew.slice(0, 3).concat(transformedFalseOld.slice(0, 3), transformedTrueNew.slice(0, 3), transformedTrueOld.slice(0, 3)));
+var excluded_twelve_statements = _.shuffle(transformedFalseNew.slice(0, 6).concat(transformedTrueNew.slice(0, 6)));
 console.log("included: ", included_twelve_statements);
 console.log("excluded: ", excluded_twelve_statements);
 
@@ -104,10 +104,37 @@ function countInArray(array, what) {
         }
     }
     return count;
+} */
+
+// Function to transform the list
+function transformList(htmlList, listType) {
+    return htmlList.map(html => {
+        // Extract the text content from the HTML string
+        var text = html.replace(/<\/?[^>]+(>|$)/g, "");
+
+        return { stimulus: html, name: text, type: listType };
+    });
+}
+
+const subjectIdString = String(actorNumber);
+const stimulus_array = [];
+
+  for (const entry of illusory_truth_db) {
+    if (entry.subject === actorNumber) {
+      stimulus_array.push(entry.stimulus);
+    }
+  }
+
+formatted_stimulus_array = [];
+for (var i = 0; i < stimulus_array.length; i++) {
+      formatted_stimulus_array.push(
+        { stimulus: `<p style="font-size:30px">${stimulus_array[i]}</p>`, name: stimulus_array[i]}
+        
+        );
 }
 
 var illusion_of_truth_trials = [];
-for (var i = 0; i < included_twelve_statements.length; i++) {
+for (var i = 0; i < stimulus_array.length; i++) {
     illusion_of_truth_trials.push({
         type: jsPsychHtmlKeyboardResponse,
         stimulus: stimulus_array[i],
@@ -136,12 +163,34 @@ var illusion_of_truth_instructions1 = {
     show_clickable_nav: true
 };
 
-
+let foundEntry;
+let number_to_match;
 var illusion_of_truth_questions = {
     timeline: [
         {
-            type: 'html-slider-response',
-            stimulus: jsPsych.timelineVariable('stimulus'),
+            type: jsPsychHtmlSliderResponse,
+            stimulus: function () {
+                foundEntry = illusory_truth_db.find(item =>
+                    item.subject === String(actorNumber) && 
+                    item.stimulus === jsPsych.timelineVariable('name')
+                );
+
+                number_to_match = foundEntry.choice;
+
+                if (foundEntry) {
+                    scaledSelection = scaleLikertScalesXToY(number_to_match, 0, 100, 1, 9);
+                    console.log("scaledSelection: ", scaledSelection);
+                    console.log("number_to_match: ", number_to_match);
+                    observedChoice = scaledSelection;
+                } else {
+                    observedChoice = null;
+                    console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${timelineStimulus}. 'observedChoice' set to null.`);
+                }
+                timelineStimulus = jsPsych.timelineVariable('stimulus');
+                console.log("observedChoice: ", observedChoice);
+                console.log("number_to_match type: ", typeof number_to_match);
+                return timelineStimulus + "<br><br>The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b>"
+            },
             stimulus_height: 350,
             labels: [`<strong>1<br>Definitely False</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>Definitely True</strong>`],
             prompt: `Is this statement true or false?<br><br>`,
@@ -149,8 +198,9 @@ var illusion_of_truth_questions = {
             min: 10,
             max: 90,
             slider_start: 50,
+            correct_response: number_to_match,
             require_movement: require_movement_general,
-            data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('type') },
+            data: { stim: jsPsych.timelineVariable('stim')},
             on_finish: function (data) {
                 function isFalsePositive(response, trivia_type) {
                     if (response < 50 && (trivia_type === "false_new" || trivia_type === "false_old")) {
@@ -158,7 +208,7 @@ var illusion_of_truth_questions = {
                     }
                     return 'not false positive';
                 }
-                
+
 
                 var s1_data = {
                     subject: data.subject,
@@ -167,14 +217,14 @@ var illusion_of_truth_questions = {
                     task_name: "illusion of truth pt2",
                     choice: data.response,
                     stimulus: data.stim,
-                    auxiliary_info1: isFalsePositive(data.response, data.aux),
+                    auxiliary_info1: null,
                     condition: data.aux,
                 }
                 save_data(s1_data, 'introspection');
             }
         }
     ],
-    timeline_variables: stimulus_form_twelve_statements,
+    timeline_variables: formatted_stimulus_array,
     randomize_order: true
 };
 
@@ -197,7 +247,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var illusion_of_truth_intro_response1 = null;
 var illusion_of_truth_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `During this exercise, the Prolific user was shown a series of trivia statements and they were asked to assess whether each claim was true or false. 
@@ -207,9 +257,9 @@ var illusion_of_truth_introspect1 = {
             return `During this exercise, you were shown a series of trivia statements and you were asked to assess whether each claim was true or false. 
                     <p>Earlier in this experiment, you were shown another series of trivia statements. Now, imagine if some of the trivia statements you were just asked to assess had also been shown to you earlier in the experiment. 
                     Do you think <b>seeing the statement earlier in this study</b> would have  affected your assessment of whether it was true or false? If so, how?`
-                        }
+        }
     },
-labels: function() {
+    labels: function () {
 
         if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
             return introspection_q_labels_illusion_of_truth1;
@@ -220,7 +270,7 @@ labels: function() {
         } else {
             return introspection_q_labels_illusion_of_truth2.slice().reverse();
         }
-    },    slider_width: introspection_q_slider_width,
+    }, slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
@@ -230,11 +280,11 @@ labels: function() {
 
         if (label_order_randomized == 'original') {
             illusion_of_truth_intro_response1 = data.response
-    }
+        }
         else {
             illusion_of_truth_intro_response1 = 100 - data.response;
-            }
         }
+    }
 };
 
 var illusion_of_truth_intro_response2 = null;
@@ -251,7 +301,7 @@ var illusion_of_truth_introspect2 = {
 
 var illusion_of_truth_intro_confidence_response = null;
 var illusion_of_truth_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

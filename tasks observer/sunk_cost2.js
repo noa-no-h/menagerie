@@ -73,7 +73,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var sunk_cost2_intro_response1 = null;
 var sunk_cost2_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this task, the Prolific user was asked whether they would spend the last million dollars of your research fund to finish the radar-blank plane.</p>
@@ -128,7 +128,7 @@ var sunk_cost2_introspect2 = {
 
 var sunk_cost2_intro_confidence_response = null;
 var sunk_cost2_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

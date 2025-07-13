@@ -188,7 +188,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var avail_intro_response1 = null;
 var avail_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolifc user was asked to memorize two lists of names. Some of the names on these lists belonged to very famous people, while others belonged to people who are not famous.</p>
@@ -244,7 +244,7 @@ var avail_introspect2 = {
 
 var avail_intro_confidence_response = null;
 var avail_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

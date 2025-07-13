@@ -1023,7 +1023,7 @@ var binatts_norm = {
 var consistency_labels = ['0 <br>The Prolific user changed their strategy on every trial', '1', '2 <br>The Prolific user changed their strategy on some trials', '3', '4 <br>The Prolific user was somewhere in the middle', '5', '6 <br>The Prolific user used the same strategy on most trials', '7', '8<br>The Prolific user used the same strategy on every trial'];
 
 var consistency1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
 		require_movement: debug ? false : true,
 		start: 0,
     stimulus: '<p>For the decision strategies you said the Prolific user used, how consistently do you think they used these strategies throughout Section 1 of the experiment? <br>In other words, how much did the way they made their choices stay the same from trial to trial?</p>',
@@ -1082,7 +1082,7 @@ var attribute_ratings = new Array(home_attributes.length);
 for (var i = 0; i < home_attributes.length; i++) {
 	att = home_attributes[i];
 	attribute_ratings[i] = {
-  	type: 'html-slider-response',
+  	type: jsPsychHtmlSliderResponse,
 		labels: label,
   	stimulus: '<b>' + att.display_name + '</b>',
 		prompt: prompt,
@@ -1199,7 +1199,7 @@ var attribute_ratings_lex = {
 }
 
 var appropriateness = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
 		require_movement: debug ? false : true,
     stimulus: `Great job.<br><p>Throughout Section 2, we've asked you various questions about how you think the Prolific user made their choices in Section 1. <b>How well have these questions captured the way you think they made their choices?</b>
 		Do you think that, by answering these questions, you've accurately and fully described how they made their choices in Section 1? Or are there important aspects of their decision-making process that we've missed?</p>`,
@@ -1214,7 +1214,7 @@ var appropriateness = {
 var consistency_labels2 = ['0<br>The amount they cared about each feature changed on every trial', '1', '2<br>The amount they cared about each feature changed on some trials', '3', '4<br>They were somewhere in the middle', '5', '6<br>The amount they cared about each feature was the same on most trials', '7', '8<br>The amount they cared about each feature was the same on every trial'];
 
 var consistency2 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
 		require_movement: debug ? false : true,
     stimulus: '<p>On average, how consistent was the amount that the Prolific user cared about each feature throughout Section 1 of the task? \
 		<br>In other words, how much did the amount they cared about each feature stay the same from trial to trial?</p>',
@@ -1354,7 +1354,7 @@ var strategy2 = {
 /* begin Part 3 */
 
 var confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
 		require_movement: debug ? false : true,
     stimulus: "Great job. We now have some further questions for you about yourself and how you think the Prolific user made choices in the experiment. The remainder of the experiment should take about 15-20 minutes. (Note that, for some of these questions, you may have to move the slider first in order to activate the 'Continue' button and continue to the next trial.)\
 		<br><br><p>How confident are you that, when answering the questions in Section 2 of the task, you knew exactly how the Prolific user made their choices in Section 1?</p>",
@@ -1382,7 +1382,7 @@ var metastrategy = {
 };
 
 var attention = {
-	type: 'html-slider-response',
+	type: jsPsychHtmlSliderResponse,
 	require_movement: debug ? false : true,
     stimulus: "<p>How attentive were you throughout the experiment? (Please be honest; we understand that it's hard to focus throughout the study, and we will accept your submission no matter how you answer.)</p>",
     labels: ['0<br>Very Inattentive', '1', '2<br>Quite Inattentive', '3', '4<br>Moderate', '5', '6<br>Quite Attentive', '7', '8<br>Very Attentive'],
@@ -1406,7 +1406,7 @@ var choice_exp = {
     };
 
 var choice_domain = {
-	type: 'html-slider-response',
+	type: jsPsychHtmlSliderResponse,
     stimulus: "In your life, how much time have you spent thinking about which movies to watch?",
     labels: ['0<br>Very little time', '1<br>Some time', '2<br>A lot of time', '3<br>Tons of time'],
 		require_movement: debug ? false : true,

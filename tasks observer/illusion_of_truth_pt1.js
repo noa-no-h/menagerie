@@ -88,7 +88,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
         var illusion_of_truth_questions = {
             timeline: [
                 {
-                    type: 'html-slider-response',
+                    type: jsPsychHtmlSliderResponse,
                     stimulus: jsPsych.timelineVariable('stimulus'),
                     stimulus_height: 350,
                     labels: [`<strong>1<br>not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>very much</strong>`],
@@ -135,7 +135,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
 
         var illusion_of_truth_intro_response1 = null;
         var illusion_of_truth_introspect1 = {
-            type: 'html-slider-response',
+            type: jsPsychHtmlSliderResponse,
             stimulus: function () {
                 if (condition[0] == "Factor-Included") {
                     return `During this exercise, you were initially shown a series of foreign words. Then, you were asked to rate how much you liked each of these words. When you were originally shown these words, some of these words appeared many times, while others appeared only a few times or not at all.
@@ -172,7 +172,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
 
         var illusion_of_truth_intro_confidence_response = null;
         var illusion_of_truth_intro_confidence = {
-            type: 'html-slider-response',
+            type: jsPsychHtmlSliderResponse,
             stimulus: confidence_q,
             labels: confidence_q_labels,
             slider_width: confidence_q_slider_width,

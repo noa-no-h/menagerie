@@ -1,6 +1,8 @@
 //#region representativeness
 
-var observedChoice = "CHANGE THIS"
+
+subjectData = representativeness_db.find(item => item.subject === actorNumber);
+observedChoice = subjectData.choice;
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the information they were told about Jack)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the information you were told about Jack)?</p>";
 
@@ -20,7 +22,7 @@ ambitious. He shows no interest in political and social issues and
 spends most of his free time on his many hobbies which include home 
 carpentry, sailing, and mathematical puzzles.”<br><br>
 We asked the Prolific user for the probability that Jack is one of the 30 engineers in the sample of 
-100 is.<br><br> The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs). `;
+100 is.<br><br> The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b> `;
 
 var rep_stimulus_factor_excluded =
 `Imagine that a panel of psychologists have interviewed and administered 
@@ -47,7 +49,7 @@ var rep_stimulus = function() {
 var choice = null;
 var rep_trial = {
 timeline: [{
-    type: HtmlSliderResponsePlugin,
+    type: jsPsychHtmlSliderResponse,
     stimulus: rep_stimulus,
     labels: ['0%', '10%', '20%', '30%', '40%', '50%', '60%', '70%', '80%', '90%', '100%'],
     min: 0,
@@ -56,6 +58,7 @@ timeline: [{
     step: 10,
     require_movement: true,
     prompt: "<br><br><br>",
+    correct_response: observedChoice,
     on_finish: function(data) {
         console.log(data.response);
         choice = data.response;
@@ -98,7 +101,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var rep_intro_response1 = null;
 var rep_introspect1 = {
-type: 'html-slider-response',
+type: jsPsychHtmlSliderResponse,
 stimulus: function () {
     if (condition[0] == "Factor-Included") {
         return `<p>In this exercise, the Prolific user was told about the group of people given personality tests.</p>
@@ -158,10 +161,9 @@ on_finish: function (data) {
     rep_intro_response2 = data.response.Q0;
 }
 };
-
 var rep_intro_confidence_response = null;
 var rep_intro_confidence = {
-type: 'html-slider-response',
+type: jsPsychHtmlSliderResponse,
 stimulus: confidence_q,
 labels: confidence_q_labels,
 slider_width: confidence_q_slider_width,
