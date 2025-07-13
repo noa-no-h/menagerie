@@ -76,7 +76,7 @@ all_summary_introspection_experience = combined_data_introspection_experience %>
             se_introspect_rating = se(introspect_rating))
 
 # Combined plot 1
-ggplot(all_summary_introspection_experience,
+plot1= ggplot(all_summary_introspection_experience,
        aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
   geom_bar(stat = "identity") +
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
@@ -86,7 +86,7 @@ ggplot(all_summary_introspection_experience,
   scale_x_discrete(labels = c('Yes', 'No')) +
   guides(fill = "none") +
   scale_y_continuous(limits = c(-1, 1)) +
-  geom_jitter(color = 'gray', alpha = 0.1,
+  geom_jitter(color = 'darkgray', alpha = 0.1,
               mapping = aes(y = introspect_rating),
               data = combined_data_introspection_experience %>% 
                 filter(!is.na(showed_effect)),
@@ -96,8 +96,18 @@ ggplot(all_summary_introspection_experience,
     plot.background = element_rect(fill = "transparent", color = NA)
   )
 
+ggsave(
+  "plot1.pdf",
+  plot = plot1,
+  device = cairo_pdf,
+  width = 8,  
+  height = 6, 
+  units = "in",
+  dpi = 300     
+)
+
 # Combined plot 2
-ggplot(combined_data_introspection_experience,
+plot2=ggplot(combined_data_introspection_experience,
        aes(x = effect_size_range, y = introspect_rating)) +
   geom_point(alpha=0.5) +
   geom_smooth(method='lm') +
@@ -109,12 +119,22 @@ ggplot(combined_data_introspection_experience,
     plot.background = element_rect(fill = "transparent", color = NA)
   )
 
+ggsave(
+  "plot2.pdf",
+  plot = plot2,
+  device = cairo_pdf,
+  width = 8, 
+  height = 6, 
+  units = "in",
+  dpi = 300    
+)
+
 # Combined plot 3
 all_bysubject_introspection_experience = combined_data_introspection_experience %>%
   group_by(subject) %>% 
   summarize(subject_cor = cor(effect_size_range, introspect_rating))
 
-ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
+plot3 = ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_histogram(color = 'black') +
   theme_custom() +
   labs(x = 'Participant-level correlation between\ninfluence ratings and influence magnitudes',
@@ -127,6 +147,16 @@ ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
     panel.background = element_rect(fill = "transparent"),
     plot.background = element_rect(fill = "transparent", color = NA)
   )
+
+ggsave(
+  "plot3.pdf",
+  plot = plot3,
+  device = cairo_pdf,
+  width = 8, 
+  height = 6, 
+  units = "in",
+  dpi = 300    
+)
 
 # ## run combined analyses
 # 

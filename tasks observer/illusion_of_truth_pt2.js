@@ -117,8 +117,20 @@ function transformList(htmlList, listType) {
 }
 
 const subjectIdString = String(actorNumber);
-const stimulus_array = [];
+const formatted_stimulus_array = [];
 
+for (const entry of illusory_truth_db) {
+  if (entry.subject === actorNumber && entry.stimulus != "") {
+    formatted_stimulus_array.push({
+      stimulus: `<p style="font-size:30px">${entry.stimulus}</p>`, 
+      name: entry.stimulus, 
+      choice: entry.choice 
+    });
+  }
+}
+
+console.log("formatted_stimulus_array: ", formatted_stimulus_array);
+/* 
   for (const entry of illusory_truth_db) {
     if (entry.subject === actorNumber) {
       stimulus_array.push(entry.stimulus);
@@ -131,13 +143,13 @@ for (var i = 0; i < stimulus_array.length; i++) {
         { stimulus: `<p style="font-size:30px">${stimulus_array[i]}</p>`, name: stimulus_array[i]}
         
         );
-}
+} */
 
 var illusion_of_truth_trials = [];
-for (var i = 0; i < stimulus_array.length; i++) {
+for (var i = 0; i < formatted_stimulus_array.length; i++) {
     illusion_of_truth_trials.push({
         type: jsPsychHtmlKeyboardResponse,
-        stimulus: stimulus_array[i],
+        stimulus: formatted_stimulus_array[i].stimulus,
         choices: "NO_KEYS",
         trial_duration: 3000
     },
@@ -170,14 +182,11 @@ var illusion_of_truth_questions = {
         {
             type: jsPsychHtmlSliderResponse,
             stimulus: function () {
-                foundEntry = illusory_truth_db.find(item =>
+                /* foundEntry = illusory_truth_db.find(item =>
                     item.subject === String(actorNumber) && 
                     item.stimulus === jsPsych.timelineVariable('name')
                 );
-
-                number_to_match = foundEntry.choice;
-
-                if (foundEntry) {
+if (foundEntry) {
                     scaledSelection = scaleLikertScalesXToY(number_to_match, 0, 100, 1, 9);
                     console.log("scaledSelection: ", scaledSelection);
                     console.log("number_to_match: ", number_to_match);
@@ -185,10 +194,12 @@ var illusion_of_truth_questions = {
                 } else {
                     observedChoice = null;
                     console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${timelineStimulus}. 'observedChoice' set to null.`);
-                }
+                } */
+        
+                number_to_match = jsPsych.timelineVariable('choice');
+                observedChoice = scaleLikertScalesXToY(number_to_match, 0, 100, 1, 9);
+
                 timelineStimulus = jsPsych.timelineVariable('stimulus');
-                console.log("observedChoice: ", observedChoice);
-                console.log("number_to_match type: ", typeof number_to_match);
                 return timelineStimulus + "<br><br>The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b>"
             },
             stimulus_height: 350,
@@ -198,7 +209,11 @@ var illusion_of_truth_questions = {
             min: 10,
             max: 90,
             slider_start: 50,
-            correct_response: number_to_match,
+            correct_response:function() {
+                console.log("number_to_match in correct_response: ", number_to_match);
+                return number_to_match;
+            },
+            allowed_margin: 8,
             require_movement: require_movement_general,
             data: { stim: jsPsych.timelineVariable('stim')},
             on_finish: function (data) {
@@ -353,5 +368,3 @@ if (only_main_question) {
     };
 }
 
-//#endregion
-//timeline.push(mee)

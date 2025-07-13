@@ -196,7 +196,7 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
             console.log("lower_bound:", lower_bound);
             const upper_bound = trial.correct_response + trial.allowed_margin;
             console.log("upper_bound:", upper_bound);
-
+        console.log("Participant's response:", response.response);
         if (response.response < lower_bound || response.response > upper_bound) {
                 // Response is incorrect (outside the margin)
                 errorMessageDiv.innerHTML = "Please match the slider to the Prolific user's answer."; // You might want to update this message to be more generic if the margin is zero
