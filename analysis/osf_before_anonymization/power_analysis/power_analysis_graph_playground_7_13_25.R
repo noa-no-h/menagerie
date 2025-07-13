@@ -59,15 +59,15 @@ fill_missing_tasks <- function(df, full_data) {
 }
 
 ## load data
-load('../pilot1_alltasks.rdata')
+load('pilot1_alltasks.rdata')
 load('../pilot2/pilot2_alltasks.rdata')
 
 combined_data_introspection_experience = all_data_introspection_experience_pilot1 %>%
   mutate(introspect_rating = (introspect_rating - 40) / 40,
          study = 'pilot1') %>%
-  rbind(all_data_introspection_experience_pilot2 %>% mutate(introspect_rating = introspect_rating / 50, study = 'pilot2')) %>%
-  mutate(introspect_rating = scale(introspect_rating),
-         effect_size_range = scale(effect_size_range))
+  rbind(all_data_introspection_experience_pilot2 %>% mutate(introspect_rating = introspect_rating / 50, study = 'pilot2')) #%>%
+  # mutate(introspect_rating = scale(introspect_rating),
+  #        effect_size_range = scale(effect_size_range))
 
 all_summary_introspection_experience = combined_data_introspection_experience %>% 
   group_by(showed_effect) %>% 
