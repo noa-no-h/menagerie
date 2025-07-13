@@ -1,5 +1,8 @@
 //#region Reference Price - BETWEEN (Thaler, 2008)
-var observedChoice = "CHANGE THIS"
+
+subjectData = reference_price_db.find(item => item.subject === actorNumber);
+
+observedChoice = subjectData.choice;
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fanciness of the hotel selling the beer)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fanciness of the hotel selling the beer)?</p>";
@@ -57,22 +60,17 @@ var ref_price_trial = {
         ]
     },
     survey_function: function(survey) {
-            let requiredChoice = null;
-            const subjectData = reference_price_db.find(item => item.subject === "0");
-            if (subjectData) {
-                requiredChoice = subjectData.choice;
-            }
-
+ 
             survey.onValidateQuestion.add(function(s, options) {
                 if (options.name === "referencePrice") {
-                    if (requiredChoice === null) {
-                        console.warn("Validation skipped: requiredChoice for subject '0' was not found.");
+                    if (observedChoice === null) {
+                        console.warn("Validation skipped: observedChoice for subject '0' was not found.");
                          return; // Exit the validator
                     }
 
                     const enteredValue = String(options.value);
 
-                    if (enteredValue !== requiredChoice) {
+                    if (enteredValue !== observedChoice) {
                         options.error = `Please enter exactly what the Prolific user entered.`;
                     }
                 }
@@ -106,7 +104,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
     
 var ref_price_intro_response1 = null;
 var ref_price_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolific user were asked the most they would be willing to pay for the beer in a fancy 5-star hotel.</p>
@@ -154,13 +152,14 @@ var ref_price_introspect2 = {
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
+        console.log("require_movement_general: " + require_movement_general);
         ref_price_intro_response2 = data.response.Q0;
     }
 };
 
 var ref_price_intro_confidence_response = null;
 var ref_price_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

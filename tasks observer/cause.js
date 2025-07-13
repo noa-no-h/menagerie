@@ -44,7 +44,7 @@ if (condition[0] == "Factor-Included") {
 
 var cause = null
 var cause_question = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function(){
         image = null;
         if (cause_condition == cause_one) {
@@ -84,7 +84,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var cause_intro_response1 = null;
 var cause_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In the scenario the Prolific user saw, these were the boxes that Joe chose from: <p><img src = "img/oneball.png" style="width:700px;"><img></p>
@@ -141,7 +141,7 @@ var cause_introspect2 = {
 
 var cause_intro_confidence_response = null;
 var cause_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

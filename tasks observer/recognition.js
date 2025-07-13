@@ -262,7 +262,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolific user was presented with a series of trivia questions.
@@ -317,14 +317,14 @@ var recognition_introspect2 = {
 
 var recognition_intro_confidence_response = null;
 var recognition_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,
     min: confidence_q_min,
     max: confidence_q_max,
     slider_start: 50,
-    require_movement: require_movement_general,
+    require_movement: false,
     on_finish: function (data) {
         recognition_intro_confidence_response = data.response;
         var s1_data = {

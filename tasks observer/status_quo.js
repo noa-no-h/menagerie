@@ -405,7 +405,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var status_quo_intro_response1 = null;
 var status_quo_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p>In this exercise, the Prolific user was asked what allocation of funds they would recommend to the National Highway Safety Commission.</p>
@@ -462,7 +462,7 @@ var status_quo_introspect2 = {
 
 var status_quo_intro_confidence_response = null;
 var status_quo_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

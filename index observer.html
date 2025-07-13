@@ -6,7 +6,7 @@
         <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
-        <script src = 'plugins/plugin-html-slider-response/dist/index.js' type="module">   </script>
+        <script src="plugins/plugin-html-slider-response.js"></script>
         <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey@1.0.1"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
@@ -35,12 +35,13 @@
     </head>
     <script>
 
-
+        var actorNumber = '0';
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
         var version = "pilot3b";
         var completion_code = 'CCPLBLYX';
-
+        var subjectData = null;
+        var observedChoice = null;
         // find the assignmentId & debugging status from the URL
         var urlParams = parseURLParams(window.location.href);
         var subject_id_url = '';
@@ -141,8 +142,11 @@
     </script>
 
     <script src="tasks observer/representativeness.js"></script>
-    <!-- <script src="tasks observer/reference_price.js"></script>
-    <script src="tasks observer/anchor.js"></script>
+    <script src="tasks observer/reference_price.js"></script>
+    <script src="tasks observer/halo.js"></script>
+    <script src="tasks observer/illusion_of_truth_pt2.js"></script>
+
+    <!-- <script src="tasks observer/anchor.js"></script>
     <script src="tasks observer/affect.js"></script>
     <script src="tasks observer/avail.js"></script>
     <script src="tasks observer/cause.js"></script>
@@ -151,9 +155,7 @@
     <script src="tasks observer/belief.js"></script>
     <script src="tasks observer/omission.js"></script>
     <script src="tasks observer/mere_exposure.js"></script>
-    <script src="tasks observer/halo.js"></script>
     <script src="tasks observer/primacy_order.js"></script>
-    <script src="tasks observer/illusion_of_truth_pt2.js"></script>
     <script src="tasks observer/illusion_of_truth_pt1.js"></script>
     <script src="tasks observer/sunk_cost2.js"></script>
     <script src="tasks observer/status_quo.js"></script>
@@ -601,7 +603,7 @@ var next_task = {
         //December 2024 pilot
         //var task_list = [hindsight2, simulation, affect, sunk_cost2, status_quo, primacy_order]
 
-        var task_list = [affect, anchor, avail, cause, contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]
+        var task_list = [representativeness]
 
         console.log("task_list: ", task_list);
 
@@ -1473,7 +1475,7 @@ var next_task = {
 
 
         /* initiate experiment */
-        jsPsych.run([representativeness]);
+        jsPsych.run([illusion_of_truth_pt2]);
         //jsPsych.run([contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]);
 
     </script>

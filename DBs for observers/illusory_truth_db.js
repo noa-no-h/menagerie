@@ -1,66 +1,66 @@
 illusory_truth_db = [
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 68,
     "stimulus": "Dart boards are commonly made of sisal"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 84,
     "stimulus": "Bike riding is the first event in a triathlon"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 62,
     "stimulus": "Taboga Island is in Panama"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 50,
     "stimulus": "In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 65,
     "stimulus": "The corn was first domesticated by native peoples in Argentina"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 70,
     "stimulus": "Canada is the second largest country in the world in area"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 82,
     "stimulus": "Giraffes have terrible eyesight"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 24,
     "stimulus": "Neptune is part of the Kuiper belt"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 72,
     "stimulus": "Xylem is the water-transporting tissue in plants"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 76,
     "stimulus": "Volleyball was originally called mintonette"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 12,
     "stimulus": "The longbow was invented after the crossbow"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 71,
     "stimulus": "Domesticated goats are descended from the pasang"
   },
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "stimulus": ""
   },
   {

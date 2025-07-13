@@ -262,7 +262,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var belief_intro_response1 = null;
 var belief_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `Some of the conclusions you saw in this game were <b>believable</b> based on your prior knowledge of how the world works (e.g. "some highly trained dogs are not police dogs"), while others were <b>unbelievable</b> based on your prior knowledge of how the world works (e.g. "some millionaires are not rich people").
@@ -316,7 +316,7 @@ var belief_introspect2 = {
 
 var belief_intro_confidence_response = null;
 var belief_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

@@ -253,7 +253,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var hindsight_intro_response1 = null;
 var hindsight_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `<p> After reading about the historical event, we had told the Prolific user what actually happened: a British victory.</p>
@@ -306,7 +306,7 @@ var hindsight_introspect2 = {
 
 var hindsight_intro_confidence_response = null;
 var hindsight_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,

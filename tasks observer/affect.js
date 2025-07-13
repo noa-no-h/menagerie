@@ -116,7 +116,7 @@ var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
 var affect_intro_response1 = null;
 var affect_introspect1 = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: function () {
         if (condition[0] == "Factor-Included") {
             return `
@@ -177,7 +177,7 @@ var affect_introspect2 = {
 
 var affect_intro_confidence_response = null;
 var affect_intro_confidence = {
-    type: 'html-slider-response',
+    type: jsPsychHtmlSliderResponse,
     stimulus: confidence_q,
     labels: confidence_q_labels,
     slider_width: confidence_q_slider_width,
