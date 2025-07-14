@@ -3,7 +3,7 @@ if (!require('pacman')) {
   require('pacman')
 }
 
-pkg.names = c('ggplot2', 'tidyverse', 'this.path', 'brms', 'bayestestR', 'rstan', 'posterior', 'parallel', 'doParallel')
+pkg.names = c('ggplot2', 'tidyverse', 'this.path', 'brms', 'bayestestR', 'rstan', 'posterior', 'parallel', 'doParallel','brms')
 p_load(char = pkg.names)
 
 setwd(here())
@@ -78,59 +78,107 @@ all_summary_introspection_experience = combined_data_introspection_experience %>
 
 
 
+
+
 # Combined plot 1
 plot1= ggplot(all_summary_introspection_experience,
-              aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
-  geom_bar(stat = "identity") +
+       aes(x = showed_effect, y = mean_introspect_rating)) +
+  geom_point(size = 5, shape = 21, fill = "red", color = "red") + 
   geom_errorbar(aes(ymin = mean_introspect_rating - se_introspect_rating, ymax = mean_introspect_rating + se_introspect_rating), width = 0.2) +
-  labs(title = "", x = "Influenced by heuristic?", y = "Influence rating") +
-  scale_fill_manual(values = effect_no) +
+  labs(title = "", x = "Behavior consistent with bias?", y = "Self-reported bias") +
   theme_custom() +
   scale_x_discrete(labels = c('Yes', 'No')) +
-  guides(fill = "none") +
   scale_y_continuous(limits = c(-1, 1)) +
-  geom_jitter(color = 'darkgray', alpha = 0.1,
+  geom_hline(yintercept = 0, color = "darkred", linetype = "solid", linewidth = 0.7) +
+  geom_jitter(color = 'black', alpha = 0.07,
               mapping = aes(y = introspect_rating),
-              data = combined_data_introspection_experience %>% 
+              data = combined_data_introspection_experience %>%
                 filter(!is.na(showed_effect)),
               width = .1, height = 0) +
   theme(
-    panel.background = element_rect(fill = "transparent"),
-    plot.background = element_rect(fill = "transparent", color = NA)
+    panel.background = element_rect(fill = "transparent", color = NA),
+     plot.background = element_rect(fill = "transparent", color = NA),
+    panel.border = element_blank(),
+    axis.text = element_text(color = "darkred"),
+    axis.title = element_text(color = "darkred"), 
+    plot.title = element_text(color = "darkred"),
+    panel.grid.major.y = element_line(color = "darkred", linetype = "solid", linewidth = 0.2), 
+    panel.grid.minor.y = element_line(color = "darkred", linetype = "solid", linewidth = 0.2)  
+    
   )
 
 ggsave(
   "plot1.pdf",
   plot = plot1,
   device = cairo_pdf,
-  width = 8,  
+  width = 6,  
   height = 6, 
   units = "in",
   dpi = 300     
 )
 
+brm_plot1_model <- brm(
+  introspect_rating ~ showed_effect, 
+  data = combined_data_introspection_experience %>% filter(!is.na(showed_effect)),
+  family = gaussian(),
+  chains = 4,
+  iter = 2000,
+  warmup = 1000,
+  seed = 456 
+)
+
+summary(brm_plot1_model)
+
+
+
 # Combined plot 2
+
+
 plot2=ggplot(combined_data_introspection_experience,
              aes(x = effect_size_range, y = introspect_rating)) +
   geom_point(alpha=0.5) +
-  geom_smooth(method='lm') +
+  geom_smooth(method='lm', color = "red") +
   theme_custom() +
-  labs(x = 'Influence magnitude', 
-       y = 'Influence rating') +
+  labs(x = 'Observed bias magnitude', 
+       y = 'Self-reported bias') +
   theme(
-    panel.background = element_rect(fill = "transparent"),
-    plot.background = element_rect(fill = "transparent", color = NA)
+    panel.background = element_rect(fill = "transparent", color = NA),
+    panel.border = element_blank(),
+    
+    plot.background = element_rect(fill = "transparent", color = NA),
+    axis.text = element_text(color = "darkred"),
+    axis.title = element_text(color = "darkred"), 
+    plot.title = element_text(color = "darkred"),
+    panel.grid.major.y = element_line(color = "darkred", linetype = "solid", linewidth = 0.1), 
+    panel.grid.minor.y = element_line(color = "darkred", linetype = "solid", linewidth = 0.2)  ,
+    panel.grid.major.x = element_line(color = "darkred", linetype = "solid", linewidth = 0.1), 
+    panel.grid.minor.x = element_line(color = "darkred", linetype = "solid", linewidth = 0.2)  
+    
+    
   )
 
 ggsave(
   "plot2.pdf",
   plot = plot2,
   device = cairo_pdf,
-  width = 8, 
+  width = 6, 
   height = 6, 
   units = "in",
   dpi = 300    
 )
+
+
+brm_model <- brm(
+  introspect_rating ~ effect_size_range,
+  data = combined_data_introspection_experience,
+  family = gaussian(),
+  chains = 4, 
+  iter = 2000, 
+  warmup = 1000,
+  seed = 123  
+)
+
+summary(brm_model)
 
 # Combined plot 3
 all_bysubject_introspection_experience = combined_data_introspection_experience %>%
@@ -147,19 +195,36 @@ plot3 = ggplot(all_bysubject_introspection_experience, aes(x = subject_cor)) +
   geom_vline(xintercept = mean(all_bysubject_introspection_experience$subject_cor, na.rm = T) + se(all_bysubject_introspection_experience$subject_cor), color = 'red', linetype = 'dashed') +
   scale_y_continuous(labels = c(), expand = expansion(mult = c(0, 0.05))) +
   theme(
-    panel.background = element_rect(fill = "transparent"),
-    plot.background = element_rect(fill = "transparent", color = NA)
+    panel.background = element_rect(fill = "transparent", color = NA),
+    plot.background = element_rect(fill = "transparent", color = NA),
+    axis.text = element_text(color = "darkred"),
+    axis.title = element_text(color = "darkred"), 
+    panel.grid.major.y = element_line(color = "darkred", linetype = "solid", linewidth = 0.1), 
+    panel.grid.minor.y = element_line(color = "darkred", linetype = "solid", linewidth = 0.1)  ,
+    plot.title = element_text(color = "darkred")
   )
 
 ggsave(
   "plot3.pdf",
   plot = plot3,
   device = cairo_pdf,
-  width = 8, 
+  width = 6, 
   height = 6, 
   units = "in",
   dpi = 300    
 )
+
+brm_mean_subject_cor <- brm(
+  subject_cor ~ 1,
+  data = all_bysubject_introspection_experience,
+  family = gaussian(),
+  chains = 4,
+  iter = 2000,
+  warmup = 1000,
+  seed = 789
+)
+
+summary(brm_mean_subject_cor)
 
 # ## run combined analyses
 # 
