@@ -423,3 +423,30 @@ hdi(sunk_cost_analysis)
 # Save image --------------------------------------------------------------
 
 save.image('pilot3_output.rdata')
+
+# save for observer ----
+library(jsonlite)
+
+task_data_list <- list(
+  list(affect_data, "halo", list("subject", "choice")),
+  list(hindsight_data, "illusory_truth", list("subject", "choice")),
+  list(order_data, "omission", list("subject", "choice")),
+  list(status_quo_data, "recognition", list("subject", "choice")),
+  list(sunk_cost_data, "reference_price", list("subject", "choice")),
+)
+
+
+for (task_data_info in task_data_list) {
+  task_data = task_data_info[[1]]
+  task_name = task_data_info[[2]]
+  to_select = unlist(task_data_info[[3]])
+  
+  filtered_task_data = task_data %>%
+    filter(factor == "experience") %>%
+    select(all_of(to_select))
+  
+  db_json <- toJSON(filtered_task_data, pretty = TRUE)
+  json_towrite = paste0(task_name, " = ", db_json, ";")
+  write(json_towrite, paste0(task_name, "_db.js"))
+  
+}

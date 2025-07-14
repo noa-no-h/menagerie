@@ -1,6 +1,6 @@
 omission_db = [
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": 2
   },
   {

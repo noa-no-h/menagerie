@@ -1018,15 +1018,18 @@ df.demo.gender = df.demo %>%
             subject_cor.se = se(subject_cor))
 
 # save for observer ----
+library(jsonlite)
 
 task_data_list <- list(
   list(halo_data, "halo", list("subject", "choice", "stimulus")),
   list(illusory_data, "illusory_truth", list("subject", "choice", "stimulus")),
   list(omission_data, "omission", list("subject", "choice")),
-  list(recognition_data, "recognition", list("subject", "choice")),
+  list(recognition_data, "recognition", list("subject", "choice","stimulus")),
   list(reference_data, "reference_price", list("subject", "choice")),
   list(representativeness_data, "representativeness", list("subject", "choice"))
 )
+
+#task_data_list= list(list(recognition_data, "recognition", list("subject", "choice","stimulus")))
 
 for (task_data_info in task_data_list) {
   task_data = task_data_info[[1]]

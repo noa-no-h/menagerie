@@ -127,33 +127,50 @@ function checkRecognizableDisease(disease) {
         return 'did not choose recognizable';
     }
 }
+let recognition_stimulus_array = [];
+for (const entry of recognition_db) {
+  if (entry.subject === actorNumber && entry.choice != "0") {
+    recognition_stimulus_array.push({
+      stimulus: entry.stimulus, 
+      choice: entry.choice 
+    });
+  }
+}
+recognition_stimulus_array_length = recognition_stimulus_array.length;
+
 
 
 var recognition_list_index = 0;
+var cities_with_commas = null;
+
 var city_trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus: function(){
-        console.log("recognition_list_index:", recognition_list_index);
-        console.log("city_list: " + city_list);
-        console.log("stimulus:", city_list[recognition_list_index]);
-        return("Please guess which city has the larger population.");
+
+        observedChoice = recognition_stimulus_array[recognition_list_index]["choice"]
+        return "The Prolific user was told to guess which city has the larger population.<br><br>The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b>"
 
     },
     choices: function(){
-        console.log("recognition_list_index:", recognition_list_index);
-        console.log("stimulus:", city_list[recognition_list_index]);
-        return([city_list[recognition_list_index][0], city_list[recognition_list_index][1]]);
+        console.log("recognition_stimulus_array:", recognition_stimulus_array);
+        console.log("recognition_stimulus_array[recognition_list_index]:", recognition_stimulus_array[recognition_list_index]);
+        cities_with_commas = recognition_stimulus_array[recognition_list_index]["stimulus"]
+        let list_of_cities = cities_with_commas.split(',');
+        console.log("cities_with_commas:", cities_with_commas);
+
+list_of_cities = list_of_cities.map(city => {
+    if (city.includes("Lexingtonâ€“Fayette")) {
+        return city.replace("Lexingtonâ€“Fayette", "Lexington-Fayette");
+    }
+    return city;
+});
+
+        return(list_of_cities);
     },
     on_finish: function (data) {
-        //console.log("data.response: " + data.response);
         var response = city_list[recognition_list_index][data.response]
-        //console.log("response: " + response);
         var stimulus_category = [getCategory(city_list[recognition_list_index][0]),getCategory(city_list[recognition_list_index][1])];
-        //console.log("city_list[recognition_list_index]: " + city_list[recognition_list_index]);
-        //console.log("typeof city_list[recognition_list_index]: " + typeof city_list[recognition_list_index]);
-        //console.log("recognition_list_index[0]: " + recognition_list_index[0]);
-        //console.log("stimulus_category: " + stimulus_category);
-        var recognizable = checkRecognizableCity(response)
+       var recognizable = checkRecognizableCity(response)
         console.log("recognizable: " + recognizable);
 
         var s1_data = {
@@ -162,7 +179,7 @@ var city_trial = {
             factor: data.condition,
             task_name: "recognition: city",
             condition: stimulus_category.toString(),
-            stimulus: city_list[recognition_list_index].toString(),
+            stimulus: cities_with_commas,
             choice: response,
             auxiliary_info1: recognizable,
             openq_response: null,
@@ -178,10 +195,8 @@ var city_trial = {
   var loop_city = {
     timeline: [city_trial],
     loop_function: function(data){
-        console.log("recognition_list_index", recognition_list_index,"city_list.length - 1", city_list.length - 1)
-        if (recognition_list_index != city_list.length - 1) {
+        if (recognition_list_index != recognition_stimulus_array_length - 1) {
             recognition_list_index = recognition_list_index + 1;
-            console.log(recognition_list_index, city_list[recognition_list_index]);
             return true; //loop
         } else {
             return false; // don't loop
