@@ -1,8 +1,14 @@
 //#region 5. sunk_cost2 Effect - BETWEEN
 
-var observedChoice = "CHANGE THIS"
-
-
+subjectData = sunk_cost_db.find(item => item.subject === actorNumber);
+observedChoice = subjectData.choice;
+let response_to_match_sunk_cost = null;
+if (observedChoice == "Continue Investing") {
+    response_to_match_sunk_cost = "Yes";
+}
+else {
+    response_to_match_sunk_cost = "No";
+}
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that they had already spent 9 million dollars)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that you had already spent 9 million dollars)?</p>";
 
 var sunk_cost2_instructions = {
@@ -16,7 +22,7 @@ var sunk_cost2_instructions = {
 
 var stimulus = function(){if (condition[0] == "Factor-Included") {
     return `<p><b>The Prolific user was asked to consider the following scenario:</b></p>
-<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed (and 9 million dollars have already been spent), another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>We asked the Prolific user: should you spend the last million dollars of your research fund to finish the radar-blank plane? The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs)</p>`
+<p>As the president of an airline company, you have invested 10 million dollars of the company’s money into a research project. The purpose was to build a plane that would not be detected by conventional radar, in other words, a radar-blank plane. When the project is 90% completed (and 9 million dollars have already been spent), another firm begins marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company is building. <br><br>We asked the Prolific user: should you spend the last million dollars of your research fund to finish the radar-blank plane? <br><br>The Prolific user selected ` + response_to_match_sunk_cost + `.<br><br>To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs)</p>`
 } else {
     return `<p><b>Please consider the following scenario:</b></p>
 <p>As president of an airline company, you have received a suggestion from one of your employees. The suggestion is to use the last 1 million dollars of your research fund to develop a plane that would not be detected by conventional radar, in other words, a radar-blank plane. However, another firm has just begun marketing a plane that cannot be detected by radar. Also, it is apparent that their plane is much faster and far more economical than the plane your company could build. <br><br>The question is: should you spend the last million dollars of your research fund to build the radar-blank plane?</p>`
@@ -30,7 +36,9 @@ var sunk_cost2_question = {
         { prompt: stimulus,
         required: true, 
         name: "response",
-        options: ["Yes", "No"] }],
+        options: ["Yes", "No"],
+        correct_response: response_to_match_sunk_cost},
+        ],
     on_finish: function (data) {
         choice = data.response["response"]
         console.log(choice)

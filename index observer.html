@@ -7,11 +7,11 @@
         <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
         <script src="plugins/plugin-html-slider-response.js"></script>
         <script src="plugins/plugin-html-button-response.js"></script>
+        <script src="plugins/plugin-survey-multi-choice.js"></script>
         <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey@1.0.1"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@1.1.3"></script>
-        <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-external-html@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.3"></script>
@@ -28,6 +28,17 @@
         <script src='DBs for observers/recognition_db.js'></script>
         <script src='DBs for observers/reference_price_db.js'></script>
         <script src='DBs for observers/representativeness_db.js'></script>
+        <script src='DBs for observers/sunk_cost_db.js'></script>
+        <script src='DBs for observers/affect_db.js'></script>
+        <script src='DBs for observers/hindsight_db.js'></script>
+        <script src='DBs for observers/primacy_db.js'></script>
+        <script src='DBs for observers/status_quo_db.js'></script>
+        <script src='DBs for observers/anchor_db.js'></script>
+        <script src='DBs for observers/availability_db.js'></script>
+        <script src='DBs for observers/belief_db.js'></script>
+        <script src='DBs for observers/cause_db.js'></script>
+        <script src='DBs for observers/decoy_db.js'></script>
+        <script src='DBs for observers/mere_exposure_db.js'></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@1.0.1/css/survey.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -147,21 +158,20 @@
     <script src="tasks observer/illusion_of_truth_pt2.js"></script>
     <script src="tasks observer/omission.js"></script>
     <script src="tasks observer/recognition.js"></script>
-
-    <!-- <script src="tasks observer/anchor.js"></script>
     <script src="tasks observer/affect.js"></script>
-    <script src="tasks observer/avail.js"></script>
-    <script src="tasks observer/cause.js"></script>
-    <script src="tasks observer/contact.js"></script>
-    <script src="tasks observer/decoy.js"></script>
-    <script src="tasks observer/belief.js"></script>
-    <script src="tasks observer/mere_exposure.js"></script>
+    <script src="tasks observer/hindsight2.js"></script> 
     <script src="tasks observer/primacy_order.js"></script>
     <script src="tasks observer/illusion_of_truth_pt1.js"></script>
     <script src="tasks observer/sunk_cost2.js"></script>
-    <script src="tasks observer/status_quo.js"></script>
-    <script src="tasks observer/hindsight2.js"></script> -->
-
+    <script src="tasks observer/status_quo.js"></script> 
+    <script src="tasks observer/anchor.js"></script>
+    <!-- 
+    <script src="tasks observer/avail.js"></script>
+    <script src="tasks observer/cause.js"></script>
+    <script src="tasks observer/decoy.js"></script>
+    <script src="tasks observer/belief.js"></script>
+    <script src="tasks observer/mere_exposure.js"></script>
+ -->
 
 
 <body>
@@ -1475,7 +1485,7 @@ var next_task = {
 
 
         /* initiate experiment */
-        jsPsych.run([recognition]);
+        jsPsych.run([anchor]);
         //jsPsych.run([contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]);
 
     </script>

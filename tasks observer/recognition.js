@@ -15,14 +15,14 @@ var recognition_instructions = {
         if (trivia_question_already) {
             return [
                 `<p>In this exercise, the Prolific user was asked to answer another series of trivia questions.</p>
-            <br><p>They were asked not to search the answers online while you are completing the study; if they were unsure of an answer, they were asked to just make their best guess.
+            <br><p>They were asked not to search the answers online while they were completing the study; if they were unsure of an answer, they were asked to just make their best guess.
             <p><i>Click the Next button below when you are ready to see the first question.</i></p>`
             ];
         } else {
             trivia_question_already = true;
             return [
-                `<p>In this exercise, you will be asked to answer a series of trivia questions.</p>
-            <br><p>Please do not search the answers online while you are completing the study; if you are unsure of an answer, please just make your best guess.
+                `<p>In this exercise, the Prolific user was asked to answer a series of trivia questions.</p>
+            <br><p>They were told not to search the answers online while they were completing the study; if they were unsure of an answer, they were told to just make their best guess.
             <p><i>Click the Next button below when you are ready to see the first question.</i></p>`
             ];
         }
@@ -142,45 +142,71 @@ recognition_stimulus_array_length = recognition_stimulus_array.length;
 
 var recognition_list_index = 0;
 var cities_with_commas = null;
+var list_of_cities = null;
+var townOrTown = null; 
 
 var city_trial = {
     type: jsPsychHtmlButtonResponse,
     stimulus: function(){
-
-        observedChoice = recognition_stimulus_array[recognition_list_index]["choice"]
-        return "The Prolific user was told to guess which city has the larger population.<br><br>The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b>"
-
+        let observedChoice = recognition_stimulus_array[recognition_list_index]["choice"];
+        let this_city_list_raw = recognition_stimulus_array[recognition_list_index]["stimulus"];
+        let this_city_list = this_city_list_raw.includes("Lexingtonâ€“Fayette") ?
+                             this_city_list_raw.replace("Lexingtonâ€“Fayette", "Lexington-Fayette") :
+                             this_city_list_raw;
+        let firstTown = this_city_list.split(',')[0];
+        let secondTown = this_city_list.split(',')[1];
+        let townOrTown = firstTown + " or " + secondTown;
+        return "The Prolific user was told to guess which city has the larger population: " + townOrTown + ".<br><br>The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please select the option that they selected (regardless of your own beliefs).</b>";
     },
     choices: function(){
-        console.log("recognition_stimulus_array:", recognition_stimulus_array);
-        console.log("recognition_stimulus_array[recognition_list_index]:", recognition_stimulus_array[recognition_list_index]);
-        cities_with_commas = recognition_stimulus_array[recognition_list_index]["stimulus"]
+        let cities_with_commas = recognition_stimulus_array[recognition_list_index]["stimulus"];
         let list_of_cities = cities_with_commas.split(',');
-        console.log("cities_with_commas:", cities_with_commas);
-
-list_of_cities = list_of_cities.map(city => {
-    if (city.includes("Lexingtonâ€“Fayette")) {
-        return city.replace("Lexingtonâ€“Fayette", "Lexington-Fayette");
-    }
-    return city;
-});
-
-        return(list_of_cities);
+        list_of_cities = list_of_cities.map(city => {
+            if (city.includes("Lexingtonâ€“Fayette")) {
+                return city.replace("Lexingtonâ€“Fayette", "Lexington-Fayette");
+            }
+            return city;
+        });
+        return list_of_cities;
+    },
+    correct_response: function(){
+        let current_stimulus_data = recognition_stimulus_array[recognition_list_index];
+        let observedChoice = current_stimulus_data["choice"];
+        let cities_with_commas = current_stimulus_data["stimulus"];
+        let list_of_cities = cities_with_commas.split(',');
+        list_of_cities = list_of_cities.map(city => {
+            if (city.includes("Lexingtonâ€“Fayette")) {
+                return city.replace("Lexingtonâ€“Fayette", "Lexington-Fayette");
+            }
+            return city;
+        });
+        if (list_of_cities[0] === observedChoice){
+            return 0;
+        } else {
+            return 1;
+        }
     },
     on_finish: function (data) {
-        var response = city_list[recognition_list_index][data.response]
-        var stimulus_category = [getCategory(city_list[recognition_list_index][0]),getCategory(city_list[recognition_list_index][1])];
-       var recognizable = checkRecognizableCity(response)
-        console.log("recognizable: " + recognizable);
-
-        var s1_data = {
+        let current_stimulus_data = recognition_stimulus_array[recognition_list_index];
+        let raw_cities_stimulus = current_stimulus_data["stimulus"];
+        let list_of_cities_for_finish = raw_cities_stimulus.split(',');
+        list_of_cities_for_finish = list_of_cities_for_finish.map(city => {
+            if (city.includes("Lexingtonâ€“Fayette")) {
+                return city.replace("Lexingtonâ€“Fayette", "Lexington-Fayette");
+            }
+            return city;
+        });
+        let participant_choice_text = list_of_cities_for_finish[data.response];
+        let stimulus_category = [getCategory(list_of_cities_for_finish[0]), getCategory(list_of_cities_for_finish[1])];
+        let recognizable = checkRecognizableCity(participant_choice_text);
+        let s1_data = {
             subject: data.subject,
             version: data.version,
             factor: data.condition,
             task_name: "recognition: city",
             condition: stimulus_category.toString(),
-            stimulus: cities_with_commas,
-            choice: response,
+            stimulus: raw_cities_stimulus,
+            choice: participant_choice_text,
             auxiliary_info1: recognizable,
             openq_response: null,
             introspect_rating: null,
@@ -190,7 +216,7 @@ list_of_cities = list_of_cities.map(city => {
         };
         save_data(s1_data, 'introspection');
     }
-  };
+};
 
   var loop_city = {
     timeline: [city_trial],

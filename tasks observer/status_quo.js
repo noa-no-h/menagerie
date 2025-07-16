@@ -1,6 +1,7 @@
 
 
-var observedChoice = "CHANGE THIS"
+subjectData = status_quo_db.find(item => item.subject === actorNumber);
+observedChoice = subjectData.auxiliary_info1.replace(" status quo: 50/50", '');
 
 
 var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>";
@@ -62,7 +63,7 @@ var status_quo_trial = {
             questions: [
                 {
                     prompt: condition[0] === 'Factor-Included'
-                        ? "Now, we asked for the Prolific user's opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion. We asked them to answer to the best of their understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br> <b> We asked the Prolific user: Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose? </b> <br><br> The Prolific user selected " + observedChoice + ". <b> To demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).</br>"
+                        ? "Now, we asked for the Prolific user's opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion. We asked them to answer to the best of their understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)<br><br><b>Currently, the commission allocates approximately 50% of its funds to auto safety and 50% of its funds to highway safety.</span></b><br><br> <b> We asked the Prolific user: Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose? </b> <br><br> The Prolific user selected " + observedChoice + ".<br><br><b> To demonstrate that you understand the Prolific user's choice, please select the option that they selected</b> (regardless of your own beliefs).</br>"
                         : "Now, we would like to ask for your opinion regarding The National Highway Safety Commission's decision. There is no right or wrong opinion, answer to the best of your understanding and view. <br><br>Reminder of the scenario:<span style='color:grey;'><br> The National Highway Safety Commission is deciding how to allocate its budget between two safety research programs:<br> 1) Improving automobile safety (bumpers, body, gas tank configuration, seat-belts)<br>2) Improving the safety of interstate highways (guard rails, grading, highway interchanges, and implementing selective reduced speed limits)</span><br><br>Since there is a ceiling on its total spending, it must choose between the options provided below. If you had to make this choice, which of the following will you choose?",
                     name: "StatusQuoAnswer",
                     options: function () {
@@ -72,6 +73,7 @@ var status_quo_trial = {
                             return ["Allocate 70% to auto safety and 30% to highway safety", "Allocate 30% to auto safety and 70% to highway safety", "Allocate 60% to auto safety and 40% to highway safety", "Allocate 50% to auto safety and 50% to highway safety"]
                         }
                     },
+                    correct_response: observedChoice,
                     required: true
                 }],
 

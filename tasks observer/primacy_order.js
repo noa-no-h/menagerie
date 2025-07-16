@@ -1,6 +1,6 @@
 //#region 9. Mere Exposure (Stang (1974)
-var observedChoice = "CHANGE THIS"
-
+subjectData = primacy_db.find(item => item.subject === actorNumber);
+observedChoice = subjectData.choice;
 
 var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the order of the facts)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the order of the facts)?</p>";
 console.log("condition[0]: ", condition[0])
@@ -17,7 +17,15 @@ var car2 = car_names_shuffled[1]
 var car3 = car_names_shuffled[2]
 var car4 = car_names_shuffled[3]
 
-console.log(car1, car2, car3, car4)
+const carOptionsMap = {
+    "car1": car1,
+    "car2": car2,
+    "car3": car3
+};
+
+const selectedCarDisplayName = carOptionsMap[observedChoice];
+
+
 
 //preparing stimuli
 var car1_positive_attributes = [
@@ -137,11 +145,13 @@ var primacy_order_question = {
     type: jsPsychSurveyMultiChoice,
     questions: [
         {
-            prompt: "The Prolific user was asked which car they thought is best. They selected " + observedChoice + ". Below, to demonstrate that you understand the Prolific user's choice, please select the option that they selected (regardless of your own beliefs).",
+            prompt: "The Prolific user was asked which car they thought is best. <br><br>They selected " + selectedCarDisplayName + ". <br><br>To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).",
             name: 'choice',
             options: _.shuffle([car1, car2, car3]),
             required: true,
-            horizontal: false
+            horizontal: false,
+            correct_response: selectedCarDisplayName
+
         },
     ],
     on_finish: function (data) {
@@ -239,6 +249,18 @@ var primacy_order_introspect1 = {
     }
 };
 
+var familiarity = null;
+var primacy_order_familiar = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: familiarity_prompt,
+    choices: ["Yes", "No"],
+    on_finish: function (data) {
+        familiarity = data.response == 0 ? "Yes" : "No"
+
+
+    }
+}
+
 var primacy_order_intro_response2 = null;
 var primacy_order_introspect2 = {
     type: jsPsychSurveyText,
@@ -283,21 +305,14 @@ var primacy_order_intro_confidence = {
     }
 };
 
-var familiarity = null;
-var primacy_order_familiar = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: familiarity_prompt,
-    choices: ["Yes", "No"],
-    on_finish: function (data) {
-        familiarity = data.response == 0 ? "Yes" : "No"
 
 
-    }
-}
+var primacy_order = {
+        timeline: [primacy_order_instructions1, primacy_order_question,primacy_order_familiar, primacy_order_openQ, primacy_order_introspect1, primacy_order_intro_confidence]
+};
 
 
-
-if (only_main_question) {
+/* if (only_main_question) {
     var primacy_order = {
         timeline: [primacy_order_instructions1, primacy_order_exposure, primacy_order_question]
     };
@@ -305,7 +320,7 @@ if (only_main_question) {
     var primacy_order = {
         timeline: [primacy_order_instructions1, primacy_order_exposure, primacy_order_question, primacy_order_familiar, primacy_order_openQ, primacy_order_introspect1, primacy_order_intro_confidence]
     };
-}
+} */
 
 
 //#endregion

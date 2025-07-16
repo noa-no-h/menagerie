@@ -1091,7 +1091,7 @@ for (task_data_info in task_data_list) {
     select(all_of(to_select))
   
   db_json <- toJSON(filtered_task_data, pretty = TRUE)
-  json_towrite = paste0(task_name, " = ", db_json, ";")
+  json_towrite = paste0(task_name, "_db = ", db_json, ";")
   write(json_towrite, paste0(task_name, "_db.js"))
   
 }

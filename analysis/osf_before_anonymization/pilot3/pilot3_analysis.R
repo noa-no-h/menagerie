@@ -118,7 +118,8 @@ length(unique(data$subject[data$version == 'pilot3b']))
 
 affect_data = data %>%
   filter(task_name == "affect heuristic")%>%
-  mutate(choice = as.numeric(choice)) 
+  mutate(choice = as.numeric(choice))%>%
+  mutate(auxiliary_info1 = as.numeric(auxiliary_info1))
 
 summary_affect_data <- affect_data %>%
   group_by(condition) %>%
@@ -330,7 +331,9 @@ status_quo_data = data %>%
                          "status quo", 
                          choice))%>%
   mutate(choice_binary = as.numeric(choice == "status quo"))%>%
-  group_by(factor) %>%
+  group_by(factor)
+
+status_quo_data_summary =status_quo_data %>%
   summarize(
     n = n(),
     p = mean(choice_binary),
@@ -342,7 +345,7 @@ status_quo_data = data %>%
     percentageUpper = upper * 100
   )
 
-ggplot(status_quo_data, aes(x = factor, y = percentage, fill = factor)) +
+ggplot(status_quo_data_summary, aes(x = factor, y = percentage, fill = factor)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
                 position = position_dodge(width = 0.7),
@@ -365,7 +368,7 @@ ggplot(status_quo_data, aes(x = factor, y = percentage, fill = factor)) +
   theme_custom() 
 
 status_quo_analysis = brm(choice_binary ~ condition,
-                        data = status_quo_data,
+                        data = status_quo_data_summary,
                         family = 'bernoulli',
                         save_pars = save_pars(group = F),
                         prior = default_priors)
@@ -378,7 +381,9 @@ hdi(status_quo_analysis)
 sunk_cost_data = data %>%
   filter(task_name == "sunk_cost2 effect") %>% 
   mutate(switched = choice == "Don't Continue Investing") %>%
-  group_by(factor) %>%
+  group_by(factor) 
+
+sunk_cost_data_summary = sunk_cost_data%>%
   summarize(
     n = n(),
     p = mean(switched),
@@ -390,7 +395,7 @@ sunk_cost_data = data %>%
     percentageUpper = upper * 100
   )
 
-ggplot(sunk_cost_data, aes(x = factor, y = percentage, fill = factor)) +
+ggplot(sunk_cost_data_summary, aes(x = factor, y = percentage, fill = factor)) +
   geom_bar(stat = "identity", position = "dodge", width = 0.7) +
   geom_errorbar(aes(ymin = percentageLower, ymax = percentageUpper),
                 position = position_dodge(width = 0.7),
@@ -413,7 +418,7 @@ ggplot(sunk_cost_data, aes(x = factor, y = percentage, fill = factor)) +
   theme_custom() 
 
 sunk_cost_analysis = brm(switched ~ condition,
-                        data = sunk_cost_data,
+                        data = sunk_cost_data_summary,
                         family = 'bernoulli',
                         save_pars = save_pars(group = F),
                         prior = default_priors)
@@ -428,11 +433,11 @@ save.image('pilot3_output.rdata')
 library(jsonlite)
 
 task_data_list <- list(
-  list(affect_data, "halo", list("subject", "choice")),
-  list(hindsight_data, "illusory_truth", list("subject", "choice")),
-  list(order_data, "omission", list("subject", "choice")),
-  list(status_quo_data, "recognition", list("subject", "choice")),
-  list(sunk_cost_data, "reference_price", list("subject", "choice")),
+  list(affect_data, "affect", list("subject", "choice", "auxiliary_info1")),
+  list(hindsight_data, "hindsight", list("subject", "choice", "auxiliary_info1")),
+  list(primacy_data, "primacy", list("subject", "choice")),
+  list(status_quo_data, "status_quo", list("subject", "choice","auxiliary_info1" )),
+  list(sunk_cost_data, "sunk_cost", list("subject", "choice"))
 )
 
 
@@ -446,7 +451,7 @@ for (task_data_info in task_data_list) {
     select(all_of(to_select))
   
   db_json <- toJSON(filtered_task_data, pretty = TRUE)
-  json_towrite = paste0(task_name, " = ", db_json, ";")
+  json_towrite = paste0(task_name, "_db = ", db_json, ";")
   write(json_towrite, paste0(task_name, "_db.js"))
   
 }

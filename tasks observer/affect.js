@@ -1,7 +1,7 @@
 //#region 5. Affect Effect - BETWEEN
-
-var observedBeneficial = "CHANGE THIS!"
-var observedRisky = "CHANGE THIS!"
+subjectData = affect_db.find(item => item.subject === actorNumber);
+var observedBeneficial = subjectData.choice;
+var observedRisky = subjectData.auxiliary_info1;
 
 var confidence_q = condition[0] == 'Factor-Included' ? 
     "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>" : 
@@ -40,6 +40,7 @@ var affect_question = {
             name: "benefit",
             ticks: ["Not at all beneficial", "Moderately beneficial", "Very beneficial"],
             required: true,
+            correct_response: observedBeneficial,
             min: 0,
             slider_start: 0.5,
             max: 1,
@@ -51,6 +52,7 @@ var affect_question = {
             name: "risk",
             ticks: ["Not at all risky", "Moderately risky", "Very risky"],
             required: true,
+            correct_response: observedRisky,
             min: 0,
             slider_start: 0.5,
             max: 1,

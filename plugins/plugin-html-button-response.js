@@ -155,6 +155,7 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
           stimulus: trial.stimulus,
           response: response.button
         };
+        display_element.innerHTML = '';
         this.jsPsych.finishTrial(trial_data);
       };
       function after_response(choice) {
@@ -166,9 +167,16 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
         for (const button of buttonGroupElement.children) {
           button.setAttribute("disabled", "disabled");
         }
+        console.log("response.button", response.button)
+
         if (trial.correct_response !== null && response.button != trial.correct_response) {
+            console.log("incorrect response")
+            for (const button of buttonGroupElement.children) {
+          button.removeAttribute("disabled"); 
+        }
             errorMessageDiv.innerHTML = "Please click the button that matches the Prolific user's answer.";
           } else if (trial.correct_response !== null && response.button == trial.correct_response) {
+            console.log("correct response")
             errorMessageDiv.innerHTML = "";
             end_trial();
           } else if (trial.correct_response == null && trial.response_ends_trial) {

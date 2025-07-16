@@ -146,6 +146,7 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
         html += trial.prompt;
       }
       html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" ' + (trial.require_movement ? "disabled" : "") + ">" + trial.button_label + "</button>";
+      
       display_element.innerHTML = html;
 
       const nextButtonInitialState = display_element.querySelector("#jspsych-html-slider-response-next");

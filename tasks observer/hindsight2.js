@@ -1,5 +1,9 @@
 //#region 5. hindsight Effect - BETWEEN
-var observedChoice = "CHANGE THIS"
+subjectData = hindsight_db.find(item => item.subject === actorNumber);
+console.log("subjectData", subjectData);
+const [observedBritish, observedGurka, ObservedStalemateNoPeace, ObservedStalematePeace] = subjectData.auxiliary_info1.split(',');
+
+
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by their knowledge of the actual outcomes of the event)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by your knowledge of the actual outcomes of the event)?</p>";
@@ -116,7 +120,7 @@ var hindsight_question = {
                             if (condition[0] === "Factor-Included") {
                                 return `
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p> <p> <u>The result was a British victory.</u></p>
-                                    <p>In the light of the information appearing in the passage, we asked the Prolific user to estimate the probability of occurrence of each of the four possible outcomes listed below. We told them that there are no right or wrong answers, and they should answer based on their intuition. (The probabilities should sum to 100%). <b> We asked them to answer as if they did not know the outcome, estimating the case at that time before outcomes were known.</b></p><br> The Prolific user selected ` + observedChoice + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`;
+                                    <p>In the light of the information appearing in the passage, we asked the Prolific user to estimate the probability of occurrence of each of the four possible outcomes listed below. We told them that there are no right or wrong answers, and they should answer based on their intuition. (The probabilities should sum to 100%). <b> We asked them to answer as if they did not know the outcome, estimating the case at that time before outcomes were known.</b></p><br> The Prolific user responded that the probability of a British victory was ` + observedBritish + `.<br>The Prolific user responded that the probability of a Gurka victory was ` + observedGurka + `.<br>The Prolific user responded that the probability of a stalemate (no peace) was ` + ObservedStalemateNoPeace + `.<br>The Prolific user responded that the probability of a stalemate (peace) was ` + ObservedStalematePeace + `.<br><br> To demonstrate that you understand the Prolific user's choice, <b>please type the responses that they gave (regardless of your own beliefs).</b>`;
                             } else {
                                 return `
                                     <p>For some years after the arrival of Hastings as governor-general of India, the consolidation of British power involved serious war. The first of these wars took place on the northern frontier of Bengal where the British were faced by the plundering raids of the Gurkas of Nepal. Attempts had been made to stop the raids by an exchange of lands, but the Gurkas would not give up their claims to country under British control, and Hastings decided to deal with them once and for all. The campaign began in November, 1814. It was not glorious. The Gurkas were only some 12,000 strong; but they were brave fighters, fighting in territory well-suited to their raiding tactics. The older British commanders were used to war in the plains where the enemy ran away from a resolute attack. In the mountains of Nepal it was not easy even to find the enemy. The troops and transport animals suffered from the extremes of heat and cold, and the officers learned caution only after sharp revers. Major-General Sir D. Octerlony was the one commander to escape from these minor defeats.</p>
@@ -129,7 +133,8 @@ var hindsight_question = {
                         name: "BritishVictory",
                         title: "Probability of British victory:",
                         inputType: "number",
-                        isRequired: true
+                        isRequired: true,
+
                     },
                     {
                         type: "text",
@@ -156,23 +161,50 @@ var hindsight_question = {
             }
         ]
     },
+    survey_function: function (survey) {
+        survey.onValidateQuestion.add(function (s, options) {
+            if (options.name === "BritishVictory") {
+                if (observedBritish === null) {
+                    return;
+                }
+                const enteredValue = String(options.value);
+                if (enteredValue !== observedBritish) {
+                    options.error = `Please enter exactly what the Prolific user entered for British victory.`;
+                }
+            } else if (options.name === "GurkaVictory") {
+                if (observedGurka === null) {
+                    return;
+                }
+                const enteredValue = String(options.value);
+                if (enteredValue !== observedGurka) {
+                    options.error = `Please enter exactly what the Prolific user entered for Gurka victory.`;
+                }
+            } else if (options.name === "StalemateNoPeace") {
+                if (ObservedStalemateNoPeace === null) {
+                    return;
+                }
+                const enteredValue = String(options.value);
+                if (enteredValue !== ObservedStalemateNoPeace) {
+                    options.error = `Please enter exactly what the Prolific user entered for stalemate (no peace).`;
+                }
+            } else if (options.name === "StalematePeace") {
+                if (ObservedStalematePeace === null) {
+                    return;
+                }
+                const enteredValue = String(options.value);
+                if (enteredValue !== ObservedStalematePeace) {
+                    options.error = `Please enter exactly what the Prolific user entered for stalemate (peace).`;
+                }
+            }
+        });
+    },
     on_finish: function (data) {
-        // Parse the responses
         probBritish = parseInt(data.response.BritishVictory, 10);
         probGurka = parseInt(data.response.GurkaVictory, 10);
         probStalemateNoPeace = parseInt(data.response.StalemateNoPeace, 10);
         probStalematePeace = parseInt(data.response.StalematePeace, 10);
 
-        /*prob_sum = probBritish + probGurka + probStalemateNoPeace + probStalematePeace;
-        if (Math.abs(prob_sum - 100) < 5 | Math.abs(prob_sum - 1) < .05) {
-            sum_to_hundred = true;
-        } else {
-            sum_to_hundred = false;
-            alert("The values do not sum to 100.")
-        }*/
-
         if (only_main_question) {
-            //console.log("only_main_question");
             s1_data = {
                 subject: data.subject,
                 version: data.version,
@@ -188,12 +220,10 @@ var hindsight_question = {
                 familiarity: null,
                 rt: data.rt
             };
-            //console.log(s1_data);
             save_data(s1_data, 'introspection');
-
         }
-    } 
-}; 
+    }
+};
 
 /*var hindsight_question_loop = {
     timeline: [hindsight_question],

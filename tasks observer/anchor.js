@@ -1,9 +1,10 @@
 ///#region 1. Anchoring Trivia (Mussweiler & Strack, 1999) - BETWEEN
+subjectData = anchor_db.find(item => item.subject === actorNumber);
+var observedAntarcticAnchor = subjectData.auxiliary_info1;
+var observedAntarcticOpen = subjectData.choice;
 
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the initial example value)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have influenced by the initial example value)?</p>';
 
-var observedAntarcticAnchor = "CHANGE THIS!"
-var observedAntarcticOpen = "CHANGE THIS!"
 
 var anchor_instructions = {
     type: jsPsychInstructions,

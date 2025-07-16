@@ -75,6 +75,9 @@ all_summary_introspection_experience = combined_data_introspection_experience %>
   summarize(mean_introspect_rating = mean(introspect_rating),
             se_introspect_rating = se(introspect_rating))
 
+
+
+
 # Combined plot 1
 plot1= ggplot(all_summary_introspection_experience,
        aes(x = showed_effect, y = mean_introspect_rating, fill = showed_effect)) +
