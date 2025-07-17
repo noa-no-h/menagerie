@@ -1,6 +1,7 @@
 //#region 3. Causal Inference (Morris et al., 2019) - BETWEEN
+subjectData = cause_db.find(item => item.subject === actorNumber);
+var observedChoice = subjectData.choice;
 
-var observedCausality = "CHANGE THIS";
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that there was only one green ball in the left box)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that there was only one green ball in the left box)?</p>';
 
 var cause_instructions = {
@@ -53,13 +54,15 @@ var cause_question = {
             image = "img/nineballs.png"
         }
         return `<b>The Prolific user was asked to tell us how much they agree or disagree with the statement below.</b> They were told there were no right or wrong answers and that we were simply interested in their opinion.
-<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p> <br> The Prolific user selected ` + observedCausality + `.<br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`
+<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p> <br> The Prolific user selected ` + observedChoice/10 + `.<br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`
     },
     labels: [`<strong>1<br>totally disagree</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>totally agree</strong>`],
     slider_width: 750,
     min: 10,
     max: 90,
     slider_start: 50,
+    correct_response: observedChoice,
+    allowed_margin: 7,
     require_movement: require_movement_general,
     on_finish: function (data) {
         cause = data.response

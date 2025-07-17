@@ -1,5 +1,23 @@
  //#region 9. Mere Exposure (Stang (1974)
+function getChoice(stimulus) {
+    console.log("stimulus", stimulus)
+    stimulus = extractTextFromString(stimulus)
+    chosenArray = mere_exposure_db.find(item =>
+    item.subject === String(actorNumber) && 
+    item.stimulus === stimulus); 
+    console.log("chosenArray", chosenArray)
+    choice = chosenArray.choice
+    return choice;
+}
 
+function extractTextFromString(htmlString) {
+  const startIndex = htmlString.indexOf('>') + 1; // Find the first '>' and add 1 to start after it
+  const endIndex = htmlString.lastIndexOf('<'); // Find the last '<'
+  if (startIndex > 0 && endIndex > startIndex) {
+    return htmlString.substring(startIndex, endIndex);
+  }
+  return null; 
+}
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the number of times they saw each word)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the number of times you saw each word)?</p>";
 
@@ -128,12 +146,19 @@ var mere_exposure_questions = {
             stimulus: jsPsych.timelineVariable('stimulus'),
             stimulus_height: 350,
             labels: [`<strong>1<br>not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>very much</strong>`],
-            prompt: `On a scale from 1 (not at all) to 9 (very much), rate how much you <b>like</b> this word.<br><br>`,
+            prompt: function(){
+                var observedSelection = (getChoice(jsPsych.timelineVariable('stimulus')))/10
+                var prompt = `The Prolific user was asked to rate how much they <b>like</b> this word on a scale from 1 (not at all) to 9 (very much). <br><br>They selected `+observedSelection+`<br><br>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to the option that they selected</b> (regardless of your own beliefs).<br><br> `
+                return prompt
+
+            } ,
             slider_width: 750,
             min: 10,
             max: 90,
             slider_start: 50,
             require_movement: require_movement_general,
+            correct_response: function () { return (getChoice(jsPsych.timelineVariable('stimulus'))) },
+            allowed_margin: 7,
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('stimulus') },
             on_finish: function (data) {
                 var s1_data = {
@@ -299,7 +324,7 @@ var mere_exposure_familiar = {
 // }
 
 mere_exposure = {
-    timeline: [mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
+    timeline: [mere_exposure_questions, mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
 }
 
 //#endregion

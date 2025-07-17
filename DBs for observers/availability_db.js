@@ -1,7 +1,7 @@
 availability_db = [
   {
     "condition": "Famous",
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": "List 2"
   },
   {

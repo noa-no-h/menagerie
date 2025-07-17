@@ -170,7 +170,7 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
         console.log("response.button", response.button)
 
         if (trial.correct_response !== null && response.button != trial.correct_response) {
-            console.log("incorrect response")
+            console.log("incorrect response", response.button, trial.correct_response)
             for (const button of buttonGroupElement.children) {
           button.removeAttribute("disabled"); 
         }

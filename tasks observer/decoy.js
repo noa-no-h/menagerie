@@ -1,6 +1,8 @@
 //#region 6. Decoy Effect (Kaptein et al., 2016) - BETWEEN
 
-var observedChoice = "CHANGE THIS"
+subjectData = decoy_db.find(item => item.subject === actorNumber);
+var observedChoice = subjectData.choice;
+observedChoice = observedChoice.replace(" (Target)", "").replace(" (Competitor)", "").replace(" (decoy)", "")
 
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the presence of Brand W)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the presence of Brand W)?</p>';
 
@@ -25,6 +27,8 @@ var decoy_present = {
                 '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70',
             ],
             required: required_general,
+            correct_response: observedChoice == "Brand W" ? '<b>Brand W:</b> Price per can = $1.20; Quality rating = 30' : observedChoice == "Brand N" ? 
+            '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50' : '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70'
         }
     ],
     on_finish: function (data) {

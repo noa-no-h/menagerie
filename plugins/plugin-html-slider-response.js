@@ -181,6 +181,7 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
           slider_start: trial.slider_start,
           response: response.response
         };
+        display_element.innerHTML = ''; 
         this.jsPsych.finishTrial(trialdata);
       };
 

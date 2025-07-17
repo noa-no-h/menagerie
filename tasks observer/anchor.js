@@ -37,7 +37,7 @@ const anchor_low = {
                 name: "page1",
                 elements: [{
                     "type": "html",
-                    "name": "question2",
+                    "name": "question1",
                     "html": function () {
                         return "We asked the Prolific user, \"Is the mean winter temperature in the Antarctic higher or lower than -45 degrees Fahrenheit?\"<br><br>The Prolific user selected \"" + observedAntarcticAnchor + "\".<br><br>To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>"
                     }
@@ -71,6 +71,38 @@ const anchor_low = {
             }
         ]
     },
+    survey_function: function(survey) {
+ 
+            survey.onValidateQuestion.add(function(s, options) {
+                if (options.name === "AntarcticAnchor") {
+                    if (observedChoice === null) {
+                        console.warn("Validation skipped: observedChoice for subject '0' was not found.");
+                         return; 
+                    }
+
+
+                    if (options.value !== observedAntarcticAnchor) {
+                        console.log("your response: " + options.value.AntarcticAnchor);
+                        console.log("observed response: " + observedAntarcticAnchor);
+                        options.error = `Please enter exactly what the Prolific user entered.`;
+                    }
+                }
+                if (options.name === "AntarcticOpen") {
+                    if (observedChoice === null) {
+
+                        console.warn("Validation skipped: observedChoice for subject '0' was not found.");
+                         return; 
+                    }
+
+
+                    if (options.value !== observedAntarcticOpen) {
+                        console.log("your response: " + options.value.AntarcticOpen);
+                        console.log("observed response: " + observedAntarcticOpen);
+                        options.error = `Please enter exactly what the Prolific user entered.`;
+                    }
+                }
+            });
+        },
     on_start: function () {
         console.log("here!");
     },

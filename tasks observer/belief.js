@@ -1,5 +1,14 @@
 //#region 8. Belief Bias (Evans et al. 1983) - WITHIN
-var observedPractice = "CHANGE THIS";
+function getChoice(stimulus) {
+    console.log("actorNumber", actorNumber)
+    console.log("stimulus", stimulus)
+    chosenArray = belief_db.find(item =>
+    item.subject === String(actorNumber) && 
+    item.stimulus === stimulus); 
+    console.log("chosenArray", chosenArray)
+    choice = chosenArray.choice
+    return choice;
+}
 
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the believability of each conclusion)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the believability of each conclusion)?</p>';
 
@@ -39,8 +48,16 @@ var belief_practice1 = {
 <p><i>All dogs are animals.</p>
 <p>All cats are animals.</i></p>
 <p>Based on these statements, the Prolific user was asked whether they thought the alien would be able to come to the conclusion below:</p>
-<p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + observedPractice + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`,
+<p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + getChoice("Practice 1") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
     choices: ["Yes", "No"],
+    correct_response: function() {
+                string_choice = getChoice("Practice 1");
+                if (string_choice == "Yes") {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            },
     on_finish: function (data) {
         s1_data = {
             subject: data.subject,
@@ -51,7 +68,8 @@ var belief_practice1 = {
             stimulus: "Practice 1",
             auxiliary_info1: data.response == 1 ? "Correct" : "Incorrect",
             rt: data.rt,
-        }
+        },
+        
         save_data(s1_data, 'introspection');
     }
 };
@@ -78,8 +96,17 @@ var belief_practice2 = {
 <p><i>No trees are buildings.</p>
 <p>All tall things are trees.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
-<p><b><i>Therefore, no tall things are buildings.</i></b></p><br>`,
+<p><b><i>Therefore, no tall things are buildings.</i></b></p><br>The Prolific user selected ` + getChoice("Practice 2") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
     choices: ["Yes", "No"],
+    correct_response: function() {
+                let current_stimulus_name = jsPsych.timelineVariable('name');
+                string_choice = getChoice("Practice 2");
+                if (string_choice == "Yes") {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            },
     on_finish: function (data) {
         s1_data = {
             subject: data.subject,
@@ -211,15 +238,28 @@ var belief_trials = {
         {//trials
             type: jsPsychHtmlButtonResponse,
             stimulus: function(){
+                let timeline_stimulus = jsPsych.timelineVariable('stimulus');
+                console.log("timeline_stimulus", timeline_stimulus)
+                let current_stimulus_name = jsPsych.timelineVariable('name');
+                console.log("current_stimulus_name", current_stimulus_name)
+                observed_response = getChoice(current_stimulus_name)
                 
-                timeline_stimulus = jsPsych.timelineVariable('stimulus')
-                observed_response = observed_responses[jsPsychtimelineVariable('name')]
 
                 observer_instructions = `<p>The Prolific user selected ` + observed_response + `.</p>
-            <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`
+            <p>To demonstrate that you understand the Prolific user's choice, <b>please enter the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`
 
                 stimulus_with_observer_instructions = timeline_stimulus + observer_instructions;
+                return stimulus_with_observer_instructions;
             
+            },
+            correct_response: function() {
+                let current_stimulus_name = jsPsych.timelineVariable('name');
+                string_choice = getChoice(current_stimulus_name);
+                if (string_choice == "Yes") {
+                    return 0;
+                } else {
+                    return 1;
+                }
             },
             choices: ["Yes", "No"],
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('validity'), con: jsPsych.timelineVariable('believability'), },
@@ -368,6 +408,6 @@ if (only_main_question) {
         timeline: [belief_instructions1, belief_practice1, belief_practice1_feedback, belief_practice2, belief_practice2_feedback, belief_instructions2, belief_trials, belief_familiar, belief_openQ, belief_introspect1, belief_intro_confidence]
     };
 }
-
+ 
 //#endregion
 //timeline.push(belief)

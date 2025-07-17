@@ -1,44 +1,44 @@
 mere_exposure_db = [
   {
-    "subject": "A10FNV58WR3D0G"
+    "subject": "0"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 50,
     "stimulus": "tatil"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 50,
     "stimulus": "mimar"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 90,
     "stimulus": "kitap"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 80,
     "stimulus": "hafta"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 50,
     "stimulus": "sokak"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 80,
     "stimulus": "kulak"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 80,
     "stimulus": "dudak"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": 80,
     "stimulus": "bacak"
   },

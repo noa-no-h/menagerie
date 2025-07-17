@@ -1,34 +1,34 @@
 belief_db = [
   {
-    "subject": "A10FNV58WR3D0G"
+    "subject": "0"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": "Yes",
     "stimulus": "Therefore, some highly trained dogs are not police dogs."
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": "No",
     "stimulus": "Therefore, some vitamin tablets are not nutritional."
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": "No",
     "stimulus": "Therefore, some millionaires are not rich people."
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": "Yes",
     "stimulus": "Therefore, some addictive things are not cigarettes."
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": "Yes",
     "stimulus": "Practice 2"
   },
   {
-    "subject": "A10FNV58WR3D0G",
+    "subject": "0",
     "choice": "No",
     "stimulus": "Practice 1"
   },
