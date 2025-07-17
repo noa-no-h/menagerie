@@ -335,7 +335,7 @@ var recognition_intro_confidence = {
             condition: condition[0],
             stimulus: null,
             choice: choice,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: recognition_openQ_response,
             introspect_rating: recognition_intro_response1,
             introspect_open: recognition_intro_confidence_response,

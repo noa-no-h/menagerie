@@ -160,7 +160,7 @@ var decoy_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
             stimulus: null,
             choice: juice,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: decoy_openQ_response,
             introspect_rating: decoy_intro_response1,
             introspect_open: decoy_intro_confidence_response,

@@ -47,6 +47,7 @@
     <script>
 
         var actorNumber = '0';
+        var isFlipped = null;
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
         var version = "pilot3b";
@@ -1484,7 +1485,7 @@ var next_task = {
 
 
         /* initiate experiment */
-        jsPsych.run([mere_exposure]);
+        jsPsych.run(experiment_timeline);
         //jsPsych.run([contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]);
 
     </script>

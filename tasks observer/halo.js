@@ -253,7 +253,7 @@ var halo_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",
             stimulus: null,
             choice: choice,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: halo_openQ_response,
             introspect_rating: halo_intro_response1,
             introspect_open: halo_intro_confidence_response,

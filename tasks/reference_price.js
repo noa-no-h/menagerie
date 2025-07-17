@@ -3,7 +3,7 @@
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the fanciness of the hotel selling the beer)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fanciness of the hotel selling the beer)?</p>";
 
-var ref_price_hotel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. What price do you tell him? (Please answer in dollars with only a number)`;
+var ref_price_hotel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. <br><br>What price do you tell him? (Please answer in dollars with only a number)`;
 
 var ref_price_motel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a run-down 1-star motel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the store owner. What price do you tell him? (Please answer in dollars with only a number)`;
 
@@ -32,15 +32,21 @@ var ref_price_trial = {
                 name: "page1",
                 elements: [
                     {
+                    "type": "html",
+                    "name": "question2",
+                    "html": function() {
+                            return condition[0] == 'Factor-Included' ? ref_price_hotel_stimulus : ref_price_motel_stimulus;
+                        }
+
+                },
+                    {
                         type: "text",
                         name: "referencePrice",
                         maskType: "numeric",
                         maskSettings: {
                             "precision": 1
                           },
-                        title: function() {
-                            return condition[0] == 'Factor-Included' ? ref_price_hotel_stimulus : ref_price_motel_stimulus;
-                        },
+                        title: " ",  
                         isRequired: true,
                         placeHolder: "Enter your dollar amount here",
                         size: 25
@@ -149,7 +155,7 @@ var ref_price_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "hotel" : "motel",
             stimulus: null,
             choice: choice,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: ref_price_openQ_response,
             introspect_rating: ref_price_intro_response1,
             introspect_open: ref_price_intro_confidence_response,

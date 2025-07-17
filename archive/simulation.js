@@ -141,7 +141,7 @@ var simulation_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "barely missed" : "missed",
             choice: upset,
             stimulus: null,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: simulation_openQ_response,
             introspect_rating: simulation_intro_response1,
             introspect_open: simulation_intro_confidence_response,

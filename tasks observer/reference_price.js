@@ -1,7 +1,6 @@
 //#region Reference Price - BETWEEN (Thaler, 2008)
 
 subjectData = reference_price_db.find(item => item.subject === actorNumber);
-
 observedChoice = subjectData.choice;
 
 
@@ -177,7 +176,7 @@ var ref_price_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "hotel" : "motel",
             stimulus: null,
             choice: choice,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: ref_price_openQ_response,
             introspect_rating: ref_price_intro_response1,
             introspect_open: ref_price_intro_confidence_response,

@@ -136,7 +136,7 @@ var omission_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "commission" : "omission",
             stimulus: null,
             choice: choice,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: omission_openQ_response,
             introspect_rating: omission_intro_response1,
             introspect_open: omission_intro_confidence_response,

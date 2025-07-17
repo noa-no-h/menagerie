@@ -187,7 +187,7 @@ var affect_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
             choice: benefit,
             stimulus: null,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: affect_openQ_response,
             introspect_rating: affect_intro_response1,
             introspect_open: affect_intro_confidence_response,

@@ -159,7 +159,7 @@ var cause_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "One" : "Nine",
             stimulus: null,
             choice: cause,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: cause_openQ_response,
             introspect_rating: cause_intro_response1,
             introspect_open: cause_intro_confidence_response,

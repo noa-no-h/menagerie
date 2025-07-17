@@ -334,7 +334,7 @@ var illusion_of_truth_intro_confidence = {
             condition: condition[0],
             stimulus: null,
             choice: null,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: illusion_of_truth_openQ_response,
             introspect_rating: illusion_of_truth_intro_response1,
             introspect_open: illusion_of_truth_intro_confidence_response,

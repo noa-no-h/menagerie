@@ -181,7 +181,7 @@ on_finish: function (data) {
         condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
         stimulus: rep_stimulus,
         choice: choice,
-        auxiliary_info1: null,
+        auxiliary_info1:  label_order_randomized,
         openq_response: rep_openQ_response,
         introspect_rating: rep_intro_response1,
         introspect_open: rep_intro_confidence_response,

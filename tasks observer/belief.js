@@ -374,7 +374,7 @@ var belief_intro_confidence = {
             condition: data.condition,
             stimulus: null,
             choice: null,
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: belief_openQ_response,
             introspect_rating: belief_intro_response1,
             introspect_open: belief_intro_confidence_response,

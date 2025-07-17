@@ -264,7 +264,7 @@ var avail_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "Famous" : "Unfamous",
             stimulus: null,
             choice: more_men == 0 ? "List 1" : "List 2",
-            auxiliary_info1: null,
+            auxiliary_info1:  label_order_randomized,
             openq_response: avail_openQ_response,
             introspect_rating: avail_intro_response1,
             introspect_open: avail_intro_confidence_response,
