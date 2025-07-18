@@ -353,6 +353,7 @@ var hindsight_intro_confidence = {
             task_name: "hindsight effect",
             condition: condition[0] == "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
             choice: probBritish,
+            flipped_scale: label_order_randomized,
             auxiliary_info1: probBritish + "," + probGurka + "," + probStalemateNoPeace + "," + probStalematePeace,
             stimulus: null,
             openq_response: hindsight_openQ_response,

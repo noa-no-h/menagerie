@@ -144,6 +144,7 @@ var sunk_cost2_intro_confidence = {
             condition: condition[0] == "Factor-Included" ? "Sunk Cost" : "No Sunk Cost",
             choice: choice == "Yes" ? "Continue Investing" : "Don't Continue Investing",
             stimulus: null,
+            flipped_scale: label_order_randomized,
             openq_response: sunk_cost2_openQ_response,
             introspect_rating: sunk_cost2_intro_response1,
             introspect_open: sunk_cost2_intro_confidence_response,

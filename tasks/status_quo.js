@@ -477,6 +477,7 @@ var status_quo_intro_confidence = {
             condition: condition[0],
             stimulus: stimulus,
             choice: choice,
+            flipped_scale: label_order_randomized,
             auxiliary_info1: which_option + " status quo: 50/50",
             openq_response: status_quo_openQ_response,
             introspect_rating: status_quo_intro_response1,

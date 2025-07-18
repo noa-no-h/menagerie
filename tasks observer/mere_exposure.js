@@ -287,6 +287,7 @@ var knows_turkish_question = {
             condition: condition[0],
             stimulus: null,
             choice: null,
+            flipped_scale: label_order_randomized,
             auxiliary_info1: knows_turkish,
             openq_response: mere_exposure_openQ_response,
             introspect_rating: mere_exposure_intro_response1,

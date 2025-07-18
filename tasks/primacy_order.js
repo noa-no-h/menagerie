@@ -271,6 +271,7 @@ var primacy_order_intro_confidence = {
             condition: condition[0],
             stimulus: null,
             choice: choice,
+            flipped_scale: label_order_randomized,
             auxiliary_info1: car_names_shuffled_string,
             openq_response: primacy_order_openQ_response,
             introspect_rating: primacy_order_intro_response1,

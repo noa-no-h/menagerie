@@ -196,6 +196,7 @@ var affect_intro_confidence = {
             task_name: "affect heuristic",
             condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
             choice: benefit,
+            flipped_scale: label_order_randomized,
             stimulus: null,
             auxiliary_info1: label_order_randomized,
             openq_response: affect_openQ_response,

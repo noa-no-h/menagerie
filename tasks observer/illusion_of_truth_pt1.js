@@ -190,7 +190,7 @@ will not be able to pause the study, so make sure you have no distractions.</p>
                     condition: condition[0],
                     stimulus: null,
                     choice: null,
-                    auxiliary_info1:  label_order_randomized,
+                    auxiliary_info1:  null,
                     openq_response: illusion_of_truth_openQ_response,
                     introspect_rating: illusion_of_truth_intro_response1,
                     introspect_open: illusion_of_truth_intro_confidence_response,
