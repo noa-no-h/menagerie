@@ -2,6 +2,7 @@
 
 subjectData = omission_db.find(item => item.subject === actorNumber);
 observedChoice = subjectData.choice;
+console.log("observedChoice: ", observedChoice);
 
 var confidence_q = condition[0] == 'Factor-Included' ?'<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by whether James actively poisoned the one villager)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by whether James actively poisoned the one villager)?</p>';
 
@@ -18,7 +19,9 @@ var choice = null;
 var omission_question = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
-        if (condition[0] == "Factor-Included") {
+            subjectData = omission_db.find(item => item.subject === actorNumber);
+            observedChoice = subjectData.choice;        
+            if (condition[0] == "Factor-Included") {
             return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. <hr>
             <p>The Prolific user was asked to rate James's action on the given scale: 1 (Forbidden) to 7 (Obligatory).
 <p>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs).</p>

@@ -6,7 +6,14 @@ observedChoice = subjectData.choice;
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fanciness of the hotel selling the beer)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fanciness of the hotel selling the beer)?</p>";
 
-var ref_price_hotel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. The Prolific user was asked what price they would tell him. <br><br>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, <b>please enter the option that they selected (regardless of your own beliefs).</b> (Please answer in dollars with only a number)`;
+var ref_price_hotel_stimulus = function(){
+    subjectData = reference_price_db.find(item => item.subject === actorNumber);
+    observedChoice = subjectData.choice;
+    console.log("observedChoice: ", observedChoice);
+    return `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. The Prolific user was asked what price they would tell him. <br><br>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, <b>please enter the option that they selected (regardless of your own beliefs).</b> (Please answer in dollars with only a number)`;
+
+
+}
 
 var ref_price_motel_stimulus = `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a run-down 1-star motel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the store owner. What price do you tell him? (Please answer in dollars with only a number)`;
 
@@ -38,7 +45,10 @@ var ref_price_trial = {
                     "type": "html",
                     "name": "question2",
                     "html": function() {
-                            return condition[0] == 'Factor-Included' ? ref_price_hotel_stimulus : ref_price_motel_stimulus;
+                        subjectData = reference_price_db.find(item => item.subject === actorNumber);
+    observedChoice = subjectData.choice;
+    console.log("observedChoice: ", observedChoice);
+    return `Scenario: You are lying on the beach on a hot day. All you have to drink is ice water. For the last hour you have been thinking about how much you would enjoy a nice cold bottle of your favorite brand of beer. Your friend gets up to go make a phone call and offers to bring back a beer from the only nearby place where beer is sold: a fancy 5-star hotel. He says that the beer might be expensive and so asks how much you are willing to pay for the beer. He says that he will buy the beer if it costs as much or less than the price you state. But if it costs more than the price you state he will not buy it. You trust your friend, and there is no possibility of bargaining with the bartender. The Prolific user was asked what price they would tell him. <br><br>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, <b>please enter the option that they selected (regardless of your own beliefs).</b> (Please answer in dollars with only a number)`;
                         }
 
                 },

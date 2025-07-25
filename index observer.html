@@ -613,7 +613,7 @@ var next_task = {
         //December 2024 pilot
         //var task_list = [hindsight2, simulation, affect, sunk_cost2, status_quo, primacy_order]
 
-        var task_list = [representativeness]
+        var task_list = [affect, anchor, avail, belief, cause, decoy, halo, hindsight2, mere_exposure, omission, recognition, primacy_order, reference_price, representativeness, sunk_cost2, status_quo]
 
         console.log("task_list: ", task_list);
 
@@ -636,7 +636,7 @@ var next_task = {
         task_list_shuffled.splice(12,0,attnCheck3);
 
         //insert captcha at the 16th position
-        task_list_shuffled.splice(14, 0, recaptcha);
+        //task_list_shuffled.splice(14, 0, recaptcha);
 
         console.log(typeof task_list_shuffled);
 
@@ -1486,8 +1486,8 @@ var next_task = {
 
         /* initiate experiment */
         //jsPsych.run(experiment_timeline);
-        jsPsych.run([affect])
-        //jsPsych.run([contact, decoy, halo, hindsight2, mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]);
+        //jsPsych.run([belief])
+        jsPsych.run([/*affect, anchor, avail,*/ belief, cause, decoy, halo,hindsight2, illusion_of_truth_pt2,mere_exposure, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]);
 
     </script>
 </body>

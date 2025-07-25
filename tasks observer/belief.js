@@ -1,11 +1,9 @@
 //#region 8. Belief Bias (Evans et al. 1983) - WITHIN
-function getChoice(stimulus) {
-    console.log("actorNumber", actorNumber)
-    console.log("stimulus", stimulus)
+function beliefGetChoice(stimulus) {
+ 
     chosenArray = belief_db.find(item =>
     item.subject === String(actorNumber) && 
     item.stimulus === stimulus); 
-    console.log("chosenArray", chosenArray)
     choice = chosenArray.choice
     return choice;
 }
@@ -48,10 +46,10 @@ var belief_practice1 = {
 <p><i>All dogs are animals.</p>
 <p>All cats are animals.</i></p>
 <p>Based on these statements, the Prolific user was asked whether they thought the alien would be able to come to the conclusion below:</p>
-<p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + getChoice("Practice 1") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
+<p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + beliefGetChoice("Practice 1") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
     choices: ["Yes", "No"],
     correct_response: function() {
-                string_choice = getChoice("Practice 1");
+                string_choice = beliefGetChoice("Practice 1");
                 if (string_choice == "Yes") {
                     return 0;
                 } else {
@@ -96,11 +94,11 @@ var belief_practice2 = {
 <p><i>No trees are buildings.</p>
 <p>All tall things are trees.</i></p>
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
-<p><b><i>Therefore, no tall things are buildings.</i></b></p><br>The Prolific user selected ` + getChoice("Practice 2") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
+<p><b><i>Therefore, no tall things are buildings.</i></b></p><br>The Prolific user selected ` + beliefGetChoice("Practice 2") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
     choices: ["Yes", "No"],
     correct_response: function() {
                 let current_stimulus_name = jsPsych.timelineVariable('name');
-                string_choice = getChoice("Practice 2");
+                string_choice = beliefGetChoice("Practice 2");
                 if (string_choice == "Yes") {
                     return 0;
                 } else {
@@ -127,10 +125,10 @@ var belief_practice2_feedback = {
     stimulus: function (data) {
         var logic = jsPsych.data.get().last(1).values()[0].response
         if (logic == 0) {
-            return `<p>Correct! This conclusion is logical, so the alien would be able to make it.</p>
+            return `<p>The Prolific user was given the following feedback: Correct! This conclusion is logical, so the alien would be able to make it.</p>
         <p><i>Please click the button below to continue.</i></p>`
         } else {
-            return `<p>Incorrect. This conclusion is logical, so the alien would be able to make it.</p>
+            return `<p>The Prolific user was given the following feedback: Incorrect. This conclusion is logical, so the alien would be able to make it.</p>
         <p><i>Please click the button below to continue.</i></p>`
         }
     },
@@ -242,7 +240,7 @@ var belief_trials = {
                 console.log("timeline_stimulus", timeline_stimulus)
                 let current_stimulus_name = jsPsych.timelineVariable('name');
                 console.log("current_stimulus_name", current_stimulus_name)
-                observed_response = getChoice(current_stimulus_name)
+                observed_response = beliefGetChoice(current_stimulus_name)
                 
 
                 observer_instructions = `<p>The Prolific user selected ` + observed_response + `.</p>
@@ -254,7 +252,7 @@ var belief_trials = {
             },
             correct_response: function() {
                 let current_stimulus_name = jsPsych.timelineVariable('name');
-                string_choice = getChoice(current_stimulus_name);
+                string_choice = beliefGetChoice(current_stimulus_name);
                 if (string_choice == "Yes") {
                     return 0;
                 } else {
