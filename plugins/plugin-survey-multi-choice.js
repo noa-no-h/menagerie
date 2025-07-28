@@ -197,10 +197,13 @@ var jsPsychSurveyMultiChoice = (function (jspsych) {
           }
 
           // Validation logic: Check if correct_response exists and if the answer matches
+          console.log(`Checking question ${i2}:`, question_obj);
+          console.log(`User's answer: ${val}`);
+          console.log(`Expected answer: ${question_obj.correct_response}`);
           if (question_obj.correct_response !== null && val !== question_obj.correct_response) {
             all_answers_correct = false;
-            // Optionally, highlight the incorrect question or provide specific feedback
             errorMessageDiv.textContent = "Please enter the Prolific user's answers.";
+            mistakeCounter++;
           }
 
           var obje = {};

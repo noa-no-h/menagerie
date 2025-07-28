@@ -202,17 +202,21 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
         if (response.response < lower_bound || response.response > upper_bound) {
                 // Response is incorrect (outside the margin)
                 errorMessageDiv.innerHTML = "Please match the slider to the Prolific user's answer."; // You might want to update this message to be more generic if the margin is zero
+                mistakeCounter++;
                 next_button.disabled = false; // Keep button disabled
             } else {
                 // Response is correct (within the margin)
                 if (trial.response_ends_trial) {
+                  console.log("response: ", response.response);
                     errorMessageDiv.innerHTML = ""; // Clear any previous error
+                    
                     end_trial();
                 }
                 // If response_ends_trial is false, trial continues until trial_duration.
                 // Button remains enabled (if movement enabled it)
             }
         } else if (trial.response_ends_trial) {
+          console.log("No correct response defined");
             // No correct_response defined, so any response is implicitly 'correct'
             // and the trial ends if response_ends_trial is true.
             errorMessageDiv.innerHTML = ""; // Clear any previous error

@@ -1,10 +1,36 @@
 //#region 5. Affect Effect - BETWEEN
 subjectData = affect_db.find(item => item.subject === actorNumber);
 var observedBeneficial = subjectData.choice;
+var languageObservedBeneficial = function () {
+    if (observedBeneficial == 0) {
+        return "Not at all Beneficial";
+    } else if (observedBeneficial == 1) {
+        return "Slightly Beneficial";
+    } else if (observedBeneficial == 2) {
+        return "Moderately Beneficial";
+    } else if (observedBeneficial == 3) {
+        return "Very Beneficial";
+    } else if (observedBeneficial == 4) {
+        return "Extremely Beneficial";
+    }
+}
 var observedRisky = subjectData.auxiliary_info1;
+var languageObservedRisky = function () {
+    if (observedRisky == 0) {
+        return "Not at all Risky";
+    } else if (observedRisky == 1) {
+        return "Slightly Risky";
+    } else if (observedRisky == 2) {
+        return "Moderately Risky";
+    } else if (observedRisky == 3) {
+        return "Very Risky";
+    } else if (observedRisky == 4) {
+        return "Extremely Risky";
+    }
+}
 
-var confidence_q = condition[0] == 'Factor-Included' ? 
-    "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>" : 
+var confidence_q = condition[0] == 'Factor-Included' ?
+    "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>" :
     "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user would have been influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>";
 
 var affect_instructions = {
@@ -29,60 +55,53 @@ var risk = null;
 var benefit = null;
 
 var affect_question = {
-    type: jsPsychSurveySlider,
+    type: jsPsychSurveyLikert,
     questions: [
         {
-            prompt: `<p>We asked the Prolific user: in general, how <b>beneficial</b> do they consider the use of natural gas to be to U.S. society as a whole?</p>
+            prompt: function () {
+                return `<p>We asked the Prolific user: in general, how <b>beneficial</b> do they consider the use of natural gas to be to U.S. society as a whole?</p>
 
-<p>The Prolific user selected ` + observedBeneficial + `.</p>
+                <p>The Prolific user selected ` + languageObservedBeneficial() + `.</p>
 
-<p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`,
+                <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`},
             name: "benefit",
-            ticks: ["Not at all beneficial", "Moderately beneficial", "Very beneficial"],
+            labels: ["Not at all beneficial", "Slightly beneficial", "Moderately beneficial", "Very beneficial", "Extremely beneficial"],
             required: true,
-            correct_response: observedBeneficial,
-            min: 0,
-            slider_start: 0.5,
-            max: 1,
-            step: 0.01
+            correct_response: observedBeneficial
         },
         {
-            prompt: `<p>We asked the Prolific user in general, how <b>risky</b> they consider the use of natural gas to be to U.S. society as a whole?</p> <p> The Prolific user selected ` + observedRisky + `.</p>
-            <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`,
+            prompt: function(){
+                return `<p>We asked the Prolific user in general, how <b>risky</b> they consider the use of natural gas to be to U.S. society as a whole?</p> <p> The Prolific user selected ` + languageObservedRisky() + `.</p> <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`},
             name: "risk",
-            ticks: ["Not at all risky", "Moderately risky", "Very risky"],
+            labels: ["Not at all risky", "Slightly risky", "Moderately risky", "Very risky", "Extremely risky"],
             required: true,
-            correct_response: observedRisky,
-            min: 0,
-            slider_start: 0.5,
-            max: 1,
-            step: 0.01
+            correct_response: observedRisky
         }
     ],
     on_finish: function (data) {
-        var responseObject = JSON.parse(data.response);
-        benefit = responseObject["benefit"];
-        risk = responseObject["risk"];
+        benefit = data.response["benefit"];
+        risk = data.response["risk"];
+
         if (only_main_question) {
-        s1_data = {
-            subject: data.subject,
-            version: data.version,
-            factor: data.condition,
-            task_name: "affect heuristic",
-            condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
-            choice: benefit,
-            stimulus: null,
-            auxiliary_info1: risk,
-            openq_response: null,
-            introspect_rating: null,
-            introspect_open: null,
-            familiarity: null,
-            rt: data.rt
+            s1_data = {
+                subject: data.subject,
+                version: data.version,
+                factor: data.condition,
+                task_name: "affect heuristic",
+                condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
+                choice: benefit,
+                stimulus: null,
+                auxiliary_info1: risk,
+                openq_response: null,
+                introspect_rating: null,
+                introspect_open: null,
+                familiarity: null,
+                rt: data.rt
+            }
+            save_data(s1_data, 'introspection')
         }
-        save_data(s1_data, 'introspection')
-    }
     },
-    randomize_question_order: true
+    randomize_question_order: false
 };
 
 var risk_passage = `
@@ -99,7 +118,7 @@ var natural_gas_risk = {
     choices: ["Continue to questions"],
 };
 
-  
+
 var affect_openQ_response = null;
 var affect_openQ = {
     type: jsPsychSurveyText,
@@ -112,7 +131,7 @@ var affect_openQ = {
     }
 };
 
-var introspection_q_labels_affect1 = [`<strong>It made them <u>MORE</u> likely to judge natural gas as beneficial</strong>`,"", `<strong>It did not affect their response</strong>`,"",`<strong>It made them <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
+var introspection_q_labels_affect1 = [`<strong>It made them <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", `<strong>It did not affect their response</strong>`, "", `<strong>It made them <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
 var introspection_q_labels_affect2 = [`<strong>It would have made them <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected their response</strong>", "", `<strong>It would have made them <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 
@@ -136,7 +155,7 @@ var affect_introspect1 = {
             `;
         }
     },
-    labels: function() {
+    labels: function () {
 
         if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
             return introspection_q_labels_affect1;
@@ -157,12 +176,12 @@ var affect_introspect1 = {
     on_finish: function (data) {
         if (label_order_randomized == 'original') {
             affect_intro_response1 = data.response
-    }
-        else {
-                affect_intro_response1 = 100 - data.response;
-            }
-
         }
+        else {
+            affect_intro_response1 = 100 - data.response;
+        }
+
+    }
 };
 
 var affect_intro_response2 = null;
@@ -215,9 +234,9 @@ var affect_familiar = {
     stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
-        familiarity=data.response == 0 ? "Yes" : "No"
+        familiarity = data.response == 0 ? "Yes" : "No"
 
-        
+
     }
 }
 

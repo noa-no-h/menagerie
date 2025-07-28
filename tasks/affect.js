@@ -26,33 +26,25 @@ var risk = null;
 var benefit = null;
 
 var affect_question = {
-    type: jsPsychSurveySlider,
+    type: jsPsychSurveyLikert,
     questions: [
         {
             prompt: `<p>In general, how <b>beneficial</b> do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
             name: "benefit",
-            ticks: ["Not at all beneficial", "Moderately beneficial", "Very beneficial"],
-            required: true,
-            min: 0,
-            slider_start: 0.5,
-            max: 1,
-            step: 0.01
+            labels: ["Not at all beneficial", "Slightly beneficial", "Moderately beneficial", "Very beneficial", "Extremely beneficial"],
+            required: true
         },
         {
             prompt: `<p>In general, how <b>risky</b> do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
             name: "risk",
-            ticks: ["Not at all risky", "Moderately risky", "Very risky"],
-            required: true,
-            min: 0,
-            slider_start: 0.5,
-            max: 1,
-            step: 0.01
+            labels: ["Not at all risky", "Slightly risky", "Moderately risky", "Very risky", "Extremely risky"],
+            required: true
         }
     ],
     on_finish: function (data) {
-        var responseObject = JSON.parse(data.response);
-        benefit = responseObject["benefit"];
-        risk = responseObject["risk"];
+        benefit = data.response["benefit"];
+        risk = data.response["risk"];
+       
         if (only_main_question) {
         s1_data = {
             subject: data.subject,

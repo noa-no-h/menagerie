@@ -175,6 +175,7 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
           button.removeAttribute("disabled"); 
         }
             errorMessageDiv.innerHTML = "Please click the button that matches the Prolific user's answer.";
+            mistakeCounter++;
           } else if (trial.correct_response !== null && response.button == trial.correct_response) {
             console.log("correct response")
             errorMessageDiv.innerHTML = "";
