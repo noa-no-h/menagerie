@@ -169,7 +169,7 @@ var illusion_of_truth_instructions1 = {
 <br> <p><strong> Is this statement true or false? </strong>
 <br><p>They were asked to answer this question on a scale from definitely false to definitely true.</p>
         <br><p>They were told it was important that you respond as quickly as possible, but not so quickly that you start making errors.
-        <br><p>They were asked not to search the answers online while they were completing the study; if they are unsure of an answer, they were asked to just make their best guess.
+        <br><p>They were asked not to search the answers online while they were completing the study; if they were unsure of an answer, they were asked to just make their best guess.
         <p><i>Press the next button to begin.</i></p>`,
     ],
     show_clickable_nav: true

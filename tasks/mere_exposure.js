@@ -203,6 +203,7 @@ var mere_exposure_introspect1 = {
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
+    step: 10,
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {

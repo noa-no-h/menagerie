@@ -59,7 +59,7 @@ var omission_openQ = {
     }
 };
 
-var introspection_q_labels_omission1 = [`<strong>It made they <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>LESS</u> likely to judge the action as permissible</strong>`];
+var introspection_q_labels_omission1 = [`<strong>It made them <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>LESS</u> likely to judge the action as permissible</strong>`];
 var introspection_q_labels_omission2 = [`<strong>It would have made me <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge the action as permissible</strong>`];
 var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
 

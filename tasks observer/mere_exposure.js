@@ -156,6 +156,7 @@ var mere_exposure_questions = {
             min: 10,
             max: 90,
             slider_start: 50,
+            step: 10,
             require_movement: require_movement_general,
             correct_response: function () { return (getChoice(jsPsych.timelineVariable('stimulus'))) },
             allowed_margin: 7,

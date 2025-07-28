@@ -8,7 +8,7 @@ function beliefGetChoice(stimulus) {
     return choice;
 }
 
-var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the believability of each conclusion)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the believability of each conclusion)?</p>';
+var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the believability of each conclusion)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the believability of each conclusion)?</p>';
 
 var belief_instructions1 = {
     type: jsPsychInstructions,
@@ -285,8 +285,8 @@ var belief_openQ_response = null;
 var belief_openQ = {
     type: jsPsychSurveyText,
     questions: [{
-        prompt: `<p>In this exercise, you played a short game where you were given a series of conclusions and asked to determine whether a "logical alien" would make those conclusions based on certain statements.</p>
-<p>Describe your thought process while deciding whether the alien would be able or unable to make the given conclusions. How did you come to each decision about whether or not the alien would make that conclusion?</p>`,
+        prompt: `<p>In this exercise, the Prolific user played a short game where they were given a series of conclusions and asked to determine whether a "logical alien" would make those conclusions based on certain statements.</p>
+<p>Describe what you think their thought process was while deciding whether the alien would be able or unable to make the given conclusions. How do you think they came to each decision about whether or not the alien would make that conclusion?</p>`,
         required: required_general, rows: 5, columns: 80
     }],
     on_finish: function (data) {
