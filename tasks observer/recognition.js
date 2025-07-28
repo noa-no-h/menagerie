@@ -222,6 +222,7 @@ var city_trial = {
     timeline: [city_trial],
     loop_function: function(data){
         if (recognition_list_index != recognition_stimulus_array_length - 1) {
+        if (recognition_list_index != recognition_stimulus_array_length - 1) {
             recognition_list_index = recognition_list_index + 1;
             return true; //loop
         } else {
@@ -229,61 +230,9 @@ var city_trial = {
         }
     }
 }
-
-var disease_recognition_list_index = 0;
-var disease_trial = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: function(){
-        //console.log("disease_recognition_list_index:", disease_recognition_list_index);
-        //console.log("stimulus:", disease_list[disease_recognition_list_index]);
-        return("Please guess which disease has the highest annual incidence rate in a typical year in the US.");
-
-    },
-    choices: function(){
-        //console.log("disease_recognition_list_index:", disease_recognition_list_index);
-        //console.log("stimulus:", disease_list[disease_recognition_list_index]);
-        return([disease_list[disease_recognition_list_index][0], disease_list[disease_recognition_list_index][1]]);
-    },
-    on_finish: function (data) {
-        console.log("data.response: " + data.response);
-        var response = disease_list[disease_recognition_list_index][data.response]
-        console.log("response: " + response);
-        var stimulus_category = [getCategory(disease_list[disease_recognition_list_index[0]]),getCategory(disease_list[disease_recognition_list_index[1]])];
-        var recognizable = checkRecognizableDisease(response)
-        console.log("recognizable: " + recognizable);
-
-        var s1_data = {
-            subject: data.subject,
-            version: data.version,
-            factor: data.condition,
-            task_name: "recognition: disease",
-            condition: stimulus_category,
-            stimulus: stimulus,
-            choice: data.response,
-            auxiliary_info1: recognizable,
-            openq_response: null,
-            introspect_rating: null,
-            introspect_open: null,
-            familiarity: null,
-            rt: data.rt
-        };
-        save_data(s1_data, 'introspection');
-    }
   };
 
-  var loop_disease = {
-    timeline: [disease_trial],
-    loop_function: function(data){
-        console.log("disease_recognition_list_index", disease_recognition_list_index)
-        if (disease_recognition_list_index != disease_list.length - 1) {
-            disease_recognition_list_index = disease_recognition_list_index + 1;
-            console.log(disease_recognition_list_index, disease_list[disease_recognition_list_index]);
-            return true; //loop
-        } else {
-            return false; // don't loop
-        }
-    }
-}
+
 
 var recognition_openQ_response = null;
 var recognition_openQ = {

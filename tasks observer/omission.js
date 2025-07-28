@@ -40,6 +40,7 @@ var omission_question = {
     max: 7,
     slider_start: 4,
     correct_response: observedChoice,
+    correct_response: observedChoice,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",    
     on_finish: function (data) {
