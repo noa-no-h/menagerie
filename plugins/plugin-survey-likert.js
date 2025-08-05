@@ -172,6 +172,8 @@ var jsPsychSurveyLikert = (function (jspsych) {
       // If any question was incorrect, show an error and stop.
       if (!all_correct) {
         display_element.querySelector("#jspsych-button-multi-error-message").innerHTML = "Please ensure your answers match the Prolific user's choices for all items before continuing.";
+        mistakeCounter++;
+
         return; // Prevents the trial from finishing
       }
 

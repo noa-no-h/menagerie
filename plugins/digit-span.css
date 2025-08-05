@@ -1,0 +1,72 @@
+.jspsych-digit-span-recall{
+    display: inline-block;
+		width:64px;
+		height:64px;
+		border:3px solid #000000;
+    font-size: 35px;
+    font-weight: 400;
+    font-family: 'Open Sans', 'Arial', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 74px;
+	}
+
+  .jspsych-digit-span-recall:hover{
+      background-color: rgba(220,0,0,0.3);
+      display: inline-block;
+  		width:64px;
+  		height:64px;
+  		border:3px solid #000000;
+      font-weight: 400;
+      font-family: 'Open Sans', 'Arial', sans-serif;
+      cursor: pointer;
+      text-align: center;
+      vertical-align: middle;
+      line-height: 74px;
+  	}
+
+    .jspsych-btn-numpad {
+  width: 85px;
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  cursor: pointer;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.jspsych-btn-numpad:hover {
+  background-color: #ddd;
+  border-color: #aaa;
+}
+
+.jspsych-btn-numpad:disabled {
+  background-color: #eee;
+  color: #aaa;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.recall-space {
+  width:400px;
+  height:64px;
+  border:0px solid #000000;
+  font-size: 35px;
+  font-weight: 400;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 64px;
+}

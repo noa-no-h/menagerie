@@ -19,7 +19,9 @@
         <script src="https://unpkg.com/surveyjs-widgets@1.8.75/surveyjs-widgets.min.js"></script>
         <script src="https://unpkg.com/@jspsych-contrib/plugin-survey-slider@1.0.0"></script>
         <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script src="https://www.google.com/recaptcha/api.js"></script> </script>
+        <link rel="stylesheet" href="plugins/digit-span.css">
+        <script src="plugins/jspsych-digit-span-recall.js"></script>
         <script src="utilities.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
@@ -28,6 +30,8 @@
 
     </head>
     <script>
+
+
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
         var version = "pilot3b";
@@ -237,6 +241,8 @@
         };
 
         //attention checks
+
+        
 
         var attnCheck1 = {
             type: jsPsychSurveyText,
@@ -1343,6 +1349,17 @@ var next_task = {
 
         console.log(welcome)
 
+        var digit_span_node = {
+            type: DigitSpanRecallPlugin,
+            preamble: `<p>In this task, you will be shown a series of numbers. Your job is to remember the numbers and then type them in the box below in the same order that they were presented.</p>
+            <p>For example, if you see the numbers 1, 2, 3, you would type "123" into the box.</p>
+            <p>Click the button below to begin.</p>`,
+            min_length: 3,
+            max_length: 7,
+            required: true,
+            button_label: "Start Digit Span Task"
+        };
+
         var intro;
         if (!debug) {
             console.log("here!")
@@ -1354,10 +1371,16 @@ var next_task = {
 
         console.log("debug: " + debug)
 
-
+const trial = {
+  type: jsPsychDigitSpanRecall,
+  trial_duration: 10000,
+  correct_order: [1, 5, 2, 8],
+  size_cells: 80
+};
         /* initiate experiment */
         //jsPsych.run(experiment_timeline);
-        jsPsych.run([halo]);
+        jsPsych.run([trial]);
+
 
     </script>
 </body>
