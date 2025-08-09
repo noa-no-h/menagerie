@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="plugins/digit-span.css">
         <script src="plugins/jspsych-digit-span-recall.js"></script>
         <script src="utilities.js"></script>
+        
         <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@1.0.1/css/survey.css">
@@ -155,6 +156,7 @@
     <script src="tasks/status_quo.js"></script>
     <script src="tasks/recognition.js"></script>
     <script src="tasks/hindsight2.js"></script>
+    <script src="tasks/questionnaires.js"></script>
 
 
 
@@ -1364,7 +1366,7 @@ var next_task = {
 
         /* initiate experiment */
         //jsPsych.run(experiment_timeline);
-        jsPsych.run([anchor]);
+        jsPsych.run(questionnaires_timeline);
 
 
     </script>

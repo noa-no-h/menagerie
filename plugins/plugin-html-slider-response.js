@@ -155,11 +155,11 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
 html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" ' + 
   ((trial.require_movement || trial.enable_button_after > 0) ? 'disabled' : '') + 
   '>' + trial.button_label + '</button>';
-        
+
       display_element.innerHTML = html;
 
       const nextButtonInitialState = display_element.querySelector("#jspsych-html-slider-response-next");
-      console.log(`Button is initially disabled: ${nextButtonInitialState.disabled}`);
+      //console.log(`Button is initially disabled: ${nextButtonInitialState.disabled}`);
      
 
       var response = {

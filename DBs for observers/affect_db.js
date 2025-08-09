@@ -3,7 +3,7 @@ affect_db = [
     "subject": "0",
     "choice": 1,
     "auxiliary_info1": 1,
-    "rt": 1000
+    "rt": 3000
   },
   {
     "subject": "5589565cfdf99b6bd06016dc",

@@ -54,68 +54,66 @@ var affect_instructions = {
 var risk = null;
 var benefit = null;
 
-var benefit_question = {
-    type: jsPsychHtmlSliderResponse,
-    stimulus: function () {
-        return `<p>We asked the Prolific user: in general, how <b>beneficial</b> do they consider the use of natural gas to be to U.S. society as a whole?</p>
-        <p>The Prolific user selected ` + languageObservedBeneficial() + `.</p>
-        <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`
-    },
-    // The labels from your Likert scale are used here
-    labels: ["Not at all beneficial", "Slightly beneficial", "Moderately beneficial", "Very beneficial", "Extremely beneficial"],
-    // We map the 5-point scale to slider values 0-4
-    min: 0,
-    max: 4,
-    step: 1,
-    slider_start: 2, // Start in the middle
-    require_movement: true,
-    correct_response: observedBeneficial,
-    on_finish: function (data) {
-        // Store the response in the variable we defined earlier
-        benefit_response = data.response;
-    }
-};
+var affect_question = {
+    type: jsPsychSurveySlider,
+    questions: [
+        {
+            prompt: function () {
+                return `<p>We asked the Prolific user: in general, how <b>beneficial</b> do they consider the use of natural gas to be to U.S. society as a whole?</p>
 
-var risk_question = {
-    type: jsPsychHtmlSliderResponse,
-    stimulus: function () {
-        return `<p>We asked the Prolific user in general, how <b>risky</b> they consider the use of natural gas to be to U.S. society as a whole?</p>
-        <p> The Prolific user selected ` + languageObservedRisky() + `.</p>
-        <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`
-    },
-    labels: ["Not at all risky", "Slightly risky", "Moderately risky", "Very risky", "Extremely risky"],
-    min: 0,
-    max: 4,
-    step: 1,
-    slider_start: 2,
-    require_movement: true,
-    correct_response: observedRisky,
-    on_finish: function (data) {
-        // Get the response from the current trial
-        risk_response = data.response;
+                <p>The Prolific user selected ` + languageObservedBeneficial() + `.</p>
 
-        // Now that we have both the benefit and risk responses,
-        // we can run the original data saving logic.
-        if (only_main_question) {
-            s1_data = {
-                subject: data.subject,
-                version: data.version,
-                factor: data.condition,
-                task_name: "affect heuristic",
-                condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
-                choice: benefit_response, // Use the value from the first trial
-                stimulus: null,
-                auxiliary_info1: risk_response, // Use the value from this trial
-                openq_response: null,
-                introspect_rating: null,
-                introspect_open: null,
-                familiarity: null,
-                rt: data.rt
-            }
-            save_data(s1_data, 'introspection');
+                <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`},
+        
+            name: "benefit",
+            ticks: ["Not at all beneficial", "Moderately beneficial", "Very beneficial"],
+            required: true,
+            min: 0,
+            correct_response: observedBeneficial,
+            slider_start: 0.5,
+            max: 1,
+            step: 0.01
+        },
+        {
+            prompt: function(){
+                return `<p>We asked the Prolific user in general, how <b>risky</b> they consider the use of natural gas to be to U.S. society as a whole?</p> <p> The Prolific user selected ` + languageObservedRisky() + `.</p> <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`},
+            name: "risk",
+            ticks: ["Not at all risky", "Moderately risky", "Very risky"],
+            required: true,
+            correct_response: observedRisky,
+            min: 0,
+            slider_start: 0.5,
+            max: 1,
+            step: 0.01
         }
+    ],
+    enable_button_after: subjectData.rt,
+    on_finish: function (data) {
+        var responseObject = JSON.parse(data.response);
+        benefit = responseObject["benefit"];
+        risk = responseObject["risk"];
+        if (only_main_question) {
+        s1_data = {
+            subject: data.subject,
+            version: data.version,
+            factor: data.condition,
+            task_name: "affect heuristic",
+            condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
+            choice: benefit,
+            stimulus: null,
+            auxiliary_info1: risk,
+            openq_response: null,
+            introspect_rating: null,
+            introspect_open: null,
+            familiarity: null,
+            rt: data.rt
+        }
+        save_data(s1_data, 'introspection')
     }
+    },
+    randomize_question_order: true
 };
+
 
 
 var risk_passage = `
