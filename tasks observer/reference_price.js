@@ -2,6 +2,7 @@
 
 subjectData = reference_price_db.find(item => item.subject === actorNumber);
 observedChoice = subjectData.choice;
+observedTime = subjectData.rt;
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fanciness of the hotel selling the beer)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fanciness of the hotel selling the beer)?</p>";
@@ -85,6 +86,32 @@ var ref_price_trial = {
                 }
             });
         },
+        on_load: function() {
+        console.log("Looking for Continue button...");
+        
+        // Use MutationObserver to wait for button to exist
+        const observer = new MutationObserver((mutations, obs) => {
+            const continueButton = document.querySelector('input.sd-btn.jspsych-nav-complete');
+            if (continueButton) {
+                console.log("Found Continue button! Hiding it...");
+                continueButton.style.display = 'none';
+                
+                setTimeout(() => {
+                    continueButton.style.display = 'block';
+                    console.log("Continue button now visible");
+                }, observerTime); 
+                
+                // Stop observing once found
+                obs.disconnect();
+            }
+        });
+
+        // Start observing the document body
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    },
         on_finish: function (data) {
             console.log(data.response);
             choice = data.response.referencePrice;

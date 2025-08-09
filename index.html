@@ -31,6 +31,7 @@
     </head>
     <script>
 
+        var rt = null;
 
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
@@ -134,6 +135,8 @@
         }
         //#endregion
     </script>
+    <scipt src="plugins/jspsych-digit-span-recall.js"></script>
+    <script src="tasks/digit_span_code.js"></script>
     <script src="tasks/representativeness.js"></script>
     <script src="tasks/reference_price.js"></script>
     <script src="tasks/anchor.js"></script>
@@ -1349,37 +1352,19 @@ var next_task = {
 
         console.log(welcome)
 
-        /*var digit_span_node = {
-            type: jsPsychDigitSpanRecall,
-            preamble: `<p>In this task, you will be shown a series of numbers. Your job is to remember the numbers and then type them in the box below in the same order that they were presented.</p>
-            <p>For example, if you see the numbers 1, 2, 3, you would type "123" into the box.</p>
-            <p>Click the button below to begin.</p>`,
-            min_length: 3,
-            max_length: 7,
-            required: true,
-            button_label: "Start Digit Span Task"
-        };*/
-
         var intro;
         if (!debug) {
             console.log("here!")
-            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat()
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, digit_span_timeline, ending].flat()
             ;
         } else {
-            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat();
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, digit_span_timeline, ending].flat();
         }
 
-        console.log("debug: " + debug)
 
-const trial = {
-  type: jsPsychDigitSpanRecall,
-  trial_duration: 10000,
-  correct_order: [1, 5, 2, 8],
-  size_cells: 80
-};
         /* initiate experiment */
         //jsPsych.run(experiment_timeline);
-        jsPsych.run([trial]);
+        jsPsych.run([anchor]);
 
 
     </script>

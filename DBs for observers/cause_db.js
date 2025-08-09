@@ -1,7 +1,8 @@
 cause_db = [
   {
     "subject": "0",
-    "choice": 10
+    "choice": 10,
+    "rt": 3000
   },
   {
     "subject": "A10QB6LE8VC9H8",

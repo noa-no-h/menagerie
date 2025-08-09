@@ -9,6 +9,9 @@ if (observedChoice == "Continue Investing") {
 else {
     response_to_match_sunk_cost = "No";
 }
+observedTime = subjectData.rt;
+
+
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that they had already spent 9 million dollars)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that you had already spent 9 million dollars)?</p>";
 
 var sunk_cost2_instructions = {
@@ -39,6 +42,8 @@ var sunk_cost2_question = {
         options: ["Yes", "No"],
         correct_response: response_to_match_sunk_cost},
         ],
+    enable_button_after: observedTime,
+
     on_finish: function (data) {
         choice = data.response["response"]
         console.log(choice)

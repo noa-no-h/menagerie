@@ -1,7 +1,8 @@
 reference_price_db = [
   {
     "subject": "0",
-    "choice": "15"
+    "choice": "15",
+    "rt": 3000
   },
   {
     "subject": "068835216798b65fdf3e46dc51bf9574",

@@ -2,6 +2,7 @@
 subjectData = hindsight_db.find(item => item.subject === actorNumber);
 console.log("subjectData", subjectData);
 const [observedBritish, observedGurka, ObservedStalemateNoPeace, ObservedStalematePeace] = subjectData.auxiliary_info1.split(',');
+observerTime = subjectData.rt;
 
 
 
@@ -196,6 +197,32 @@ var hindsight_question = {
                     options.error = `Please enter exactly what the Prolific user entered for stalemate (peace).`;
                 }
             }
+        });
+    },
+    on_load: function() {
+        console.log("Looking for Continue button...");
+        
+        // Use MutationObserver to wait for button to exist
+        const observer = new MutationObserver((mutations, obs) => {
+            const continueButton = document.querySelector('input.sd-btn.jspsych-nav-complete');
+            if (continueButton) {
+                console.log("Found Continue button! Hiding it...");
+                continueButton.style.display = 'none';
+                
+                setTimeout(() => {
+                    continueButton.style.display = 'block';
+                    console.log("Continue button now visible");
+                }, observerTime); 
+                
+                // Stop observing once found
+                obs.disconnect();
+            }
+        });
+
+        // Start observing the document body
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
         });
     },
     on_finish: function (data) {

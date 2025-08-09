@@ -1,6 +1,7 @@
 //#region 3. Causal Inference (Morris et al., 2019) - BETWEEN
 subjectData = cause_db.find(item => item.subject === actorNumber);
 var observedChoice = subjectData.choice;
+observerTime = subjectData.rt;
 
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fact that there was only one green ball in the left box)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fact that there was only one green ball in the left box)?</p>';
 
@@ -61,6 +62,7 @@ var cause_question = {
     min: 10,
     max: 90,
     slider_start: 50,
+    enable_button_after: function(){return observerTime;},
     correct_response: observedChoice,
     allowed_margin: 7,
     require_movement: require_movement_general,

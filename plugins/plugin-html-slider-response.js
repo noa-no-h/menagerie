@@ -81,7 +81,14 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
       allowed_margin: {
         type: jspsych.ParameterType.INT,
         default: 0
-    }},
+    },
+
+    enable_button_after: {
+        type: jspsych.ParameterType.INT,
+        default: 0
+      }
+    },
+
     data: {
       /** The time in milliseconds for the participant to make a response. The time is measured from when the stimulus first appears on the screen until the participant's response. */
       rt: {
@@ -145,8 +152,10 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
       if (trial.prompt !== null) {
         html += trial.prompt;
       }
-      html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" ' + (trial.require_movement ? "disabled" : "") + ">" + trial.button_label + "</button>";
-      
+html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" ' + 
+  ((trial.require_movement || trial.enable_button_after > 0) ? 'disabled' : '') + 
+  '>' + trial.button_label + '</button>';
+        
       display_element.innerHTML = html;
 
       const nextButtonInitialState = display_element.querySelector("#jspsych-html-slider-response-next");
@@ -158,20 +167,39 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
         response: null
       };
 
-      // Get references to elements
+        let timer_elapsed = false;
+      let movement_occurred = false;
+
       const next_button = display_element.querySelector("#jspsych-html-slider-response-next");
       const slider = display_element.querySelector("#jspsych-html-slider-response-response");
-      const errorMessageDiv = display_element.querySelector("#jspsych-slider-error-message"); // New: get error message div
+      const errorMessageDiv = display_element.querySelector("#jspsych-slider-error-message");
 
-      if (trial.require_movement) {
-        console.log(`Button is initially disabled: ${nextButtonInitialState.disabled}`);
-        const enable_button = () => {
+      const check_and_enable_button = () => {
+        const timer_condition_met = trial.enable_button_after <= 0 || timer_elapsed;
+        const movement_condition_met = !trial.require_movement || movement_occurred;
+        if (timer_condition_met && movement_condition_met) {
           next_button.disabled = false;
-          errorMessageDiv.innerHTML = ""; // Clear error message when slider is moved
+        }
+      };
+
+      // Set timer if enable_button_after is used
+      if (trial.enable_button_after > 0) {
+        this.jsPsych.pluginAPI.setTimeout(() => {
+          timer_elapsed = true;
+          check_and_enable_button();
+        }, trial.enable_button_after);
+      }
+
+      // Add event listener for slider movement if required
+      if (trial.require_movement) {
+        const on_slider_interaction = () => {
+          movement_occurred = true;
+          errorMessageDiv.innerHTML = "";
+          check_and_enable_button();
         };
-        slider.addEventListener("mousedown", enable_button);
-        slider.addEventListener("touchstart", enable_button);
-        slider.addEventListener("change", enable_button);
+        slider.addEventListener("mousedown", on_slider_interaction);
+        slider.addEventListener("touchstart", on_slider_interaction);
+        slider.addEventListener("change", on_slider_interaction);
       }
 
       const end_trial = () => {

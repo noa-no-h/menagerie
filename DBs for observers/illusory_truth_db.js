@@ -2,62 +2,74 @@ illusory_truth_db = [
   {
     "subject": "0",
     "choice": 68,
-    "stimulus": "Dart boards are commonly made of sisal"
+    "stimulus": "Dart boards are commonly made of sisal",
+    "rt": 2345
   },
   {
     "subject": "0",
     "choice": 84,
-    "stimulus": "Bike riding is the first event in a triathlon"
+    "stimulus": "Bike riding is the first event in a triathlon",
+    "rt": 3456
   },
   {
     "subject": "0",
     "choice": 62,
-    "stimulus": "Taboga Island is in Panama"
+    "stimulus": "Taboga Island is in Panama",
+    "rt": 4567
   },
   {
     "subject": "0",
     "choice": 50,
-    "stimulus": "In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color"
+    "stimulus": "In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",
+    "rt": 2000
   },
   {
     "subject": "0",
     "choice": 65,
-    "stimulus": "The corn was first domesticated by native peoples in Argentina"
+    "stimulus": "The corn was first domesticated by native peoples in Argentina",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": 70,
-    "stimulus": "Canada is the second largest country in the world in area"
+    "stimulus": "Canada is the second largest country in the world in area",
+    "rt": 4000
   },
   {
     "subject": "0",
     "choice": 82,
-    "stimulus": "Giraffes have terrible eyesight"
+    "stimulus": "Giraffes have terrible eyesight",
+    "rt": 5000
   },
   {
     "subject": "0",
     "choice": 24,
-    "stimulus": "Neptune is part of the Kuiper belt"
+    "stimulus": "Neptune is part of the Kuiper belt",
+    "rt": 6000
   },
   {
     "subject": "0",
     "choice": 72,
-    "stimulus": "Xylem is the water-transporting tissue in plants"
+    "stimulus": "Xylem is the water-transporting tissue in plants",
+    "rt": 7000
   },
   {
     "subject": "0",
     "choice": 76,
-    "stimulus": "Volleyball was originally called mintonette"
+    "stimulus": "Volleyball was originally called mintonette",
+    "rt": 8000
   },
   {
     "subject": "0",
     "choice": 12,
-    "stimulus": "The longbow was invented after the crossbow"
+    "stimulus": "The longbow was invented after the crossbow",
+    "rt": 9000
   },
   {
     "subject": "0",
     "choice": 71,
-    "stimulus": "Domesticated goats are descended from the pasang"
+    "stimulus": "Domesticated goats are descended from the pasang",
+    "rt": 10000
   },
   {
     "subject": "0",

@@ -8,6 +8,15 @@ function beliefGetChoice(stimulus) {
     return choice;
 }
 
+function beliefGetRt(stimulus) {
+    chosenArray = belief_db.find(item =>
+    item.subject === String(actorNumber) && 
+    item.stimulus === stimulus); 
+    rt = chosenArray.rt
+    return rt;
+
+}
+
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the believability of each conclusion)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the believability of each conclusion)?</p>';
 
 var belief_instructions1 = {
@@ -48,6 +57,7 @@ var belief_practice1 = {
 <p>Based on these statements, the Prolific user was asked whether they thought the alien would be able to come to the conclusion below:</p>
 <p><i><b>Therefore, all dogs are cats.</b></i></p>The Prolific user selected ` + beliefGetChoice("Practice 1") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
     choices: ["Yes", "No"],
+    enable_button_after: beliefGetRt("Practice 1"),
     correct_response: function() {
                 string_choice = beliefGetChoice("Practice 1");
                 if (string_choice == "Yes") {
@@ -96,6 +106,7 @@ var belief_practice2 = {
 <p>Based on these statements, do you think the alien would be able to come to the conclusion below?</p>
 <p><b><i>Therefore, no tall things are buildings.</i></b></p><br>The Prolific user selected ` + beliefGetChoice("Practice 2") + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).`,
     choices: ["Yes", "No"],
+    enable_button_after: beliefGetRt("Practice 2"),
     correct_response: function() {
                 let current_stimulus_name = jsPsych.timelineVariable('name');
                 string_choice = beliefGetChoice("Practice 2");
@@ -259,6 +270,8 @@ var belief_trials = {
                     return 1;
                 }
             },
+            enable_button_after: function(){return beliefGetRt(jsPsych.timelineVariable('name'))},
+
             choices: ["Yes", "No"],
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('validity'), con: jsPsych.timelineVariable('believability'), },
             on_finish: function (data) {

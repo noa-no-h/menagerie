@@ -2,6 +2,7 @@
 subjectData = anchor_db.find(item => item.subject === actorNumber);
 var observedAntarcticAnchor = subjectData.auxiliary_info1;
 var observedAntarcticOpen = subjectData.choice;
+observerTime = subjectData.rt;
 
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the initial example value)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have influenced by the initial example value)?</p>';
 
@@ -105,6 +106,33 @@ const anchor_low = {
         },
     on_start: function () {
         console.log("here!");
+        
+    },
+    on_load: function() {
+        console.log("Looking for Continue button...");
+        
+        // Use MutationObserver to wait for button to exist
+        const observer = new MutationObserver((mutations, obs) => {
+            const continueButton = document.querySelector('input.sd-btn.jspsych-nav-complete');
+            if (continueButton) {
+                console.log("Found Continue button! Hiding it...");
+                continueButton.style.display = 'none';
+                
+                setTimeout(() => {
+                    continueButton.style.display = 'block';
+                    console.log("Continue button now visible");
+                }, observerTime); 
+                
+                // Stop observing once found
+                obs.disconnect();
+            }
+        });
+
+        // Start observing the document body
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     },
     on_finish: function (data) {
         // Convert boolean responses to human-readable form

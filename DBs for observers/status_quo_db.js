@@ -3,7 +3,8 @@ status_quo_db = [
     "factor": "experience",
     "subject": "0",
     "choice": "status quo",
-    "auxiliary_info1": "Maintain present budget amounts for the programs status quo: 50/50"
+    "auxiliary_info1": "Maintain present budget amounts for the programs status quo: 50/50",
+    "rt": 3500
   },
   {
     "factor": "experience",

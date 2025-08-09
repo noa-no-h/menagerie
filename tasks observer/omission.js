@@ -3,6 +3,7 @@
 subjectData = omission_db.find(item => item.subject === actorNumber);
 observedChoice = subjectData.choice;
 console.log("observedChoice: ", observedChoice);
+observedTime = subjectData.rt;
 
 var confidence_q = condition[0] == 'Factor-Included' ?'<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by whether James actively poisoned the one villager)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by whether James actively poisoned the one villager)?</p>';
 
@@ -40,7 +41,7 @@ var omission_question = {
     max: 7,
     slider_start: 4,
     correct_response: observedChoice,
-    correct_response: observedChoice,
+    enable_button_after: observedTime,
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",    
     on_finish: function (data) {

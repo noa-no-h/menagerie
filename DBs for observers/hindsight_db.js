@@ -2,7 +2,8 @@ hindsight_db = [
   {
     "subject": "0",
     "choice": 100,
-    "auxiliary_info1": "100,0,0,0"
+    "auxiliary_info1": "100,0,0,0",
+    "rt": 3000
   },
   {
     "subject": "5589565cfdf99b6bd06016dc",

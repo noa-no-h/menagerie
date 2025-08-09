@@ -1,7 +1,8 @@
 representativeness_db = [
   {
     "subject": "0",
-    "choice": 90
+    "choice": 90,
+    "rt": 4000
   },
   {
     "subject": "068835216798b65fdf3e46dc51bf9574",

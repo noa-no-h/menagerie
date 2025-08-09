@@ -433,11 +433,11 @@ save.image('pilot3_output.rdata')
 library(jsonlite)
 
 task_data_list <- list(
-  list(affect_data, "affect", list("subject", "choice", "auxiliary_info1")),
-  list(hindsight_data, "hindsight", list("subject", "choice", "auxiliary_info1")),
-  list(primacy_data, "primacy", list("subject", "choice")),
-  list(status_quo_data, "status_quo", list("subject", "choice","auxiliary_info1" )),
-  list(sunk_cost_data, "sunk_cost", list("subject", "choice"))
+  list(affect_data, "affect", list("subject", "choice", "auxiliary_info1", "rt")),
+  list(hindsight_data, "hindsight", list("subject", "choice", "auxiliary_info1", "rt")),
+  list(primacy_data, "primacy", list("subject", "choice", "rt")),
+  list(status_quo_data, "status_quo", list("subject", "choice","auxiliary_info1", "rt" )),
+  list(sunk_cost_data, "sunk_cost", list("subject", "choice", "rt"))
 )
 
 

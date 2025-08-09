@@ -1,8 +1,9 @@
 recognition_db = [
   {
-    "subject": "0322bc327ca428685ec2005fda3e7325",
+    "subject": "0",
     "choice": "0",
-    "stimulus": "img/U4 WF-002.jpg"
+    "stimulus": "img/U4 WF-002.jpg",
+    "rt": 2500
   },
   {
     "subject": "0322bc327ca428685ec2005fda3e7325",
@@ -22,22 +23,26 @@ recognition_db = [
   {
     "subject": "0",
     "choice": "San Diego",
-    "stimulus": "San Diego,Fresno"
+    "stimulus": "San Diego,Fresno",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "Minneapolis",
-    "stimulus": "Minneapolis,Fort Worth"
+    "stimulus": "Minneapolis,Fort Worth",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "Houston",
-    "stimulus": "Houston,Lexingtonâ€“Fayette"
+    "stimulus": "Houston,Lexingtonâ€“Fayette",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "Nashville",
-    "stimulus": "Nashville,Spokane"
+    "stimulus": "Nashville,Spokane",
+    "rt": 3000
   },
   {
     "subject": "07216b10d521340f0e8e2e2524d9cda2",

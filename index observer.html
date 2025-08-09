@@ -46,6 +46,7 @@
     </head>
     <script>
 
+        var observerTime = null;
         var mistakeCounter = 0;
         var actorNumber = '0';
         var isFlipped = null;
@@ -455,7 +456,8 @@ console.log(target_num)  */
             pages: [
                 `<p>Thank you for beginning the study! In a prior study, we asked other real Prolific users to make a series of short judgment/decision-making tasks.</p>
                 <p>In this study, we've paired you with one of those prior Prolific users. We're going to show you each judgment/decision-making task that the user completed, along with the actual judgment or decision they made. Then, we'll ask you a series of questions about the Prolific user's judgment/decision-making process. Please do your best to answer the questions as accurately as possible.</p>
-                <p>The study will take around ${time_needed} minutes to complete.</p>
+                <p>To give you a better sense of what the Prolific user experienced, for each task, we will ask you to spend the same amount of time on that page that the Prolific user spent. The "Continue" button will appear when you are allowed to advance. So if the Prolific user spent 10 seconds on the page, then the "Continue button" will appear after 10 seconds.</p>
+                <p>In total, the study will take around ${time_needed} minutes to complete.</p>
                 <p>Please click the button below to continue!</p>
             `],
             show_clickable_nav: true
@@ -1489,7 +1491,7 @@ var next_task = {
         /* initiate experiment */
         //jsPsych.run(experiment_timeline);
         //jsPsych.run([belief])
-        jsPsych.run([/*affect, anchor, avail,affect, avail, belief, cause, decoy, halo,hindsight2, illusion_of_truth_pt2,*/recognition,ending, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2]);
+        jsPsych.run([sunk_cost2/*affect, anchor, avail,affect, avail, belief, cause, decoy, halo,hindsight2, illusion_of_truth_pt2,recognition,ending, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2*/]);
 
     </script>
 </body>

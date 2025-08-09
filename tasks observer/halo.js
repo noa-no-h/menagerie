@@ -1,7 +1,7 @@
 //#region Halo
 
 
-var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by how physically attractive each stranger looked)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how physically attractive each stranger looked)?</p>";
+var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by how physically attractive each stranger looked)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how physically attractive each stranger looked)?</p>";
 
 
 var preload = {
@@ -24,12 +24,12 @@ var choice = null;
 
 
 var attractive_list = ['img/A1 WF-233.jpg', 'img/A2 BF-240.jpg', 'img/A3 LF-249.jpg',
-                    'img/A4 BF-233.jpg'];
+    'img/A4 BF-233.jpg'];
 
 var unattractive_list = ['img/U1 AM-224.jpg', 'img/U2 LM-240.jpg', 'img/U3 BF-200.jpg', 'img/U4 WF-002.jpg'];
 
 var neutral_list = ['img/M1 LF-240.jpg', 'img/M2 WM-230.jpg', 'img/M3 BM-034.jpg', 'img/M4 LF-252.jpg',
-                    'img/M5 WM-221.jpg', 'img/M6 WM-214.jpg', 'img/M7 WM-254.jpg', 'img/M8 BM-232.jpg'
+    'img/M5 WM-221.jpg', 'img/M6 WM-214.jpg', 'img/M7 WM-254.jpg', 'img/M8 BM-232.jpg'
 ];
 
 var attractiveness = {
@@ -37,15 +37,15 @@ var attractiveness = {
     'img/A3 LF-249.jpg': 5.24137931, 'img/A4 BF-233.jpg': 5.12,
     'img/U1 AM-224.jpg': 1.52, 'img/U2 LM-240.jpg': 1.541666667,
     'img/U3 BF-200.jpg': 1.551724138, 'img/U4 WF-002.jpg': 1.612903226,
-    'img/M1 LF-240.jpg': 3.142857143, 'img/M2 WM-230.jpg':3.142857143,
-    'img/M3 BM-034.jpg':3.144444444, 'img/M4 LF-252.jpg': 3.148148148,
-    'img/M5 WM-221.jpg': 3.153846154, 'img/M6 WM-214.jpg': 3.12, 
+    'img/M1 LF-240.jpg': 3.142857143, 'img/M2 WM-230.jpg': 3.142857143,
+    'img/M3 BM-034.jpg': 3.144444444, 'img/M4 LF-252.jpg': 3.148148148,
+    'img/M5 WM-221.jpg': 3.153846154, 'img/M6 WM-214.jpg': 3.12,
     'img/M7 WM-254.jpg': 3.153846154, 'img/M8 BM-232.jpg': 3.16
 }
 
 var stimuli_list = [];
 var ordered_stimuli_list = [];
-if (condition[0] == 'Factor-Included'){
+if (condition[0] == 'Factor-Included') {
     ordered_stimuli_list = attractive_list.concat(unattractive_list);
 } else {
     ordered_stimuli_list = neutral_list;
@@ -57,52 +57,68 @@ list_index = 0;
 
 choice = {}
 for (i = 0; i < num_stimuli; i++) {
-    choice[stimuli_list[i]]=null;
+    choice[stimuli_list[i]] = null;
 }
 
 
 var stimulus = null;
 var halo_trial = {
     type: jsPsychHtmlSliderResponse,
-    stimulus: function(){
+    stimulus: function () {
         console.log("stimuli_list[list_index]: " + stimuli_list[list_index]);
         console.log("actorNumber: " + actorNumber);
         console.log("halo_db: " + halo_db);
 
         const foundEntry = halo_db.find(item =>
-    item.subject === String(actorNumber) && // Ensure actorNumber is compared as a string
-    item.stimulus === stimuli_list[list_index]
-);
+            item.subject === String(actorNumber) && // Ensure actorNumber is compared as a string
+            item.stimulus === stimuli_list[list_index]
+        );
 
-if (foundEntry) {
-    observedChoice = foundEntry.choice;
-} else {
-    observedChoice = null; 
-    console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${stimuli_list[list_index]}. 'observedChoice' set to null.`);
-}
+        if (foundEntry) {
+            observedChoice = foundEntry.choice;
+        } else {
+            observedChoice = null;
+            console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${stimuli_list[list_index]}. 'observedChoice' set to null.`);
+        }
 
         console.log("actorNumber type and value:", typeof actorNumber, actorNumber);
-console.log("stimuli_list[list_index] type and value:", typeof stimuli_list[list_index], stimuli_list[list_index]);
+        console.log("stimuli_list[list_index] type and value:", typeof stimuli_list[list_index], stimuli_list[list_index]);
 
-const tempSubjectMatch = halo_db.find(item => item.subject === actorNumber);
-console.log("Subject match test:", tempSubjectMatch); // Is anything found just by subject?
+        const tempSubjectMatch = halo_db.find(item => item.subject === actorNumber);
+        console.log("Subject match test:", tempSubjectMatch); // Is anything found just by subject?
 
-const tempStimulusMatch = halo_db.find(item => item.stimulus === stimuli_list[list_index].toString());
-console.log("Stimulus match test:", tempStimulusMatch); // Is anything found just by stimulus?
+        const tempStimulusMatch = halo_db.find(item => item.stimulus === stimuli_list[list_index].toString());
+        console.log("Stimulus match test:", tempStimulusMatch); // Is anything found just by stimulus?
 
 
         stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.<br><br>The Prolific user selected ' + observedChoice + '.<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b></p>';
-        
+
         return stimulus;
     },
-    
+
     scale_width: 200,
     labels: ["1", "2", "3", "4", "5"],
     min: 1,
     max: 5,
     step: 1,
     slider_start: 3,
-    correct_response: function() {
+    enable_button_after: function () {
+
+        const foundEntry = halo_db.find(item =>
+            item.subject === String(actorNumber) && // Ensure actorNumber is compared as a string
+            item.stimulus === stimuli_list[list_index]
+        );
+
+        if (foundEntry) {
+            observedRt = foundEntry.rt;
+        } else {
+            observedRt = null;
+            console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${stimuli_list[list_index]}. 'observedChoice' set to null.`);
+        }
+
+        return observedRt;
+    },
+    correct_response: function () {
         return observedChoice;
 
     },
@@ -114,15 +130,15 @@ console.log("Stimulus match test:", tempStimulusMatch); // Is anything found jus
         console.log("stimulus: " + stimulus);
         function findListContainingString(str) {
             if (attractive_list.includes(str)) {
-              return "attractive"; 
+                return "attractive";
             } else if (unattractive_list.includes(str)) {
-              return "unattractive"; 
+                return "unattractive";
             } else if (neutral_list.includes(str)) {
-              return "neutral"; 
+                return "neutral";
             } else {
-              return null; 
+                return null;
             }
-          }
+        }
         var s1_data = {
             subject: data.subject,
             version: data.version,
@@ -140,12 +156,12 @@ console.log("Stimulus match test:", tempStimulusMatch); // Is anything found jus
         };
         save_data(s1_data, 'introspection');
     }
-  };
+};
 
-  var loop_halo = {
+var loop_halo = {
     timeline: [halo_trial],
-    loop_function: function(data){
-        console.log("list_index", list_index,"stimuli_list.length - 1", stimuli_list.length - 1)
+    loop_function: function (data) {
+        console.log("list_index", list_index, "stimuli_list.length - 1", stimuli_list.length - 1)
         if (list_index != stimuli_list.length - 1) {
             list_index = list_index + 1;
             console.log(list_index, stimuli_list[list_index]);
@@ -191,7 +207,7 @@ var halo_introspect1 = {
             <p>If this were the case, do you think <b>how physically attractive each stranger looked</b> would have affected your impression of their persuasiveness? If so, how?</p>`;
         }
     },
-labels: function() {
+    labels: function () {
 
         if (condition[0] == 'Factor-Included' && label_order_randomized == 'original') {
             return introspection_q_labels_halo1;
@@ -202,7 +218,7 @@ labels: function() {
         } else {
             return introspection_q_labels_halo2.slice().reverse();
         }
-    },    slider_width: introspection_q_slider_width,
+    }, slider_width: introspection_q_slider_width,
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
@@ -212,11 +228,11 @@ labels: function() {
 
         if (label_order_randomized == 'original') {
             halo_intro_response1 = data.response
-    }
+        }
         else {
             halo_intro_response1 = 100 - data.response;
-            }
         }
+    }
 };
 
 var halo_intro_response2 = null;
@@ -228,9 +244,9 @@ var halo_introspect2 = {
     }],
     on_finish: function (data) {
 
-       halo_intro_response2 = data.response
+        halo_intro_response2 = data.response
 
-        }
+    }
 };
 
 var halo_intro_confidence_response = null;
@@ -254,7 +270,7 @@ var halo_intro_confidence = {
             stimulus: null,
             choice: choice,
             flipped_scale: label_order_randomized,
-            auxiliary_info1:  null,
+            auxiliary_info1: null,
             openq_response: halo_openQ_response,
             introspect_rating: halo_intro_response1,
             introspect_open: halo_intro_confidence_response,
@@ -271,9 +287,9 @@ var halo_familiar = {
     stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
-        familiarity= data.response == 0 ? "Yes" : "No";
+        familiarity = data.response == 0 ? "Yes" : "No";
 
-        
+
     }
 };
 

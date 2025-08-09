@@ -31,6 +31,7 @@ var decoy_present = {
             '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50' : '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70'
         }
     ],
+    enable_button_after: observerTime,
     on_finish: function (data) {
         if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
             juice = 'Brand N (Target)'

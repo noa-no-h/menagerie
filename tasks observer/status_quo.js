@@ -2,7 +2,7 @@
 
 subjectData = status_quo_db.find(item => item.subject === actorNumber);
 observedChoice = subjectData.auxiliary_info1.replace(" status quo: 50/50", '');
-
+observedTime = subjectData.rt;
 
 var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by being told that the <u>current allocation</u> of funds was 50% auto safety / 50% highway safety)?</p>";
 
@@ -76,6 +76,8 @@ var status_quo_trial = {
                     correct_response: observedChoice,
                     required: true
                 }],
+            enable_button_after: observedTime,
+
 
             on_finish: function (data) {
                 console.log(data.response["StatusQuoAnswer"]);

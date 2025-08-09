@@ -10,6 +10,15 @@ function getChoice(stimulus) {
     return choice;
 }
 
+function getRT(stimulus) {
+    stimulus = extractTextFromString(stimulus)
+    chosenArray = mere_exposure_db.find(item =>
+    item.subject === String(actorNumber) && 
+    item.stimulus === stimulus); 
+    rt = chosenArray.rt
+    return rt;
+}
+
 function extractTextFromString(htmlString) {
   const startIndex = htmlString.indexOf('>') + 1; // Find the first '>' and add 1 to start after it
   const endIndex = htmlString.lastIndexOf('<'); // Find the last '<'
@@ -159,6 +168,10 @@ var mere_exposure_questions = {
             step: 10,
             require_movement: require_movement_general,
             correct_response: function () { return (getChoice(jsPsych.timelineVariable('stimulus'))) },
+            enable_button_after: function () {
+                var observedTime = getRT(jsPsych.timelineVariable('stimulus'));
+                return observedTime;
+            },
             allowed_margin: 7,
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('stimulus') },
             on_finish: function (data) {

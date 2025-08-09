@@ -2,7 +2,8 @@ sunk_cost_db = [
   {
     "factor": "experience",
     "subject": "0",
-    "choice": "Continue Investing"
+    "choice": "Continue Investing",
+    "rt": 4000
   },
   {
     "factor": "experience",

@@ -74,6 +74,10 @@ var jsPsychSurveyMultiChoice = (function (jspsych) {
         type: jspsych.ParameterType.STRING,
         default: "Continue"
       },
+      
+          enable_button_after: {
+        type: jspsych.ParameterType.INT,
+        default: 0},
       /**
        * This determines whether or not all of the input elements on the page should allow autocomplete. Setting
        * this to true will enable autocomplete or auto-fill for the form.
@@ -171,10 +175,19 @@ var jsPsychSurveyMultiChoice = (function (jspsych) {
       // Add the error message div
       html += '<div id="jspsych-button-multi-error-message" style="color: red; margin-top: 10px;"></div>';
 
-      html += `<input type="submit" id="${plugin_id_name}-next" class="${plugin_id_name} jspsych-btn"${trial.button_label ? ' value="' + trial.button_label + '"' : ""} />`;
+html += `<input type="submit" id="${plugin_id_name}-next" class="${plugin_id_name} jspsych-btn"${trial.button_label ? ' value="' + trial.button_label + '"' : ""}${trial.enable_button_after > 0 ? " disabled" : ""}/>`;
       html += "</form>";
 
       display_element.innerHTML = html;
+
+ // ---- New logic to enable button after a delay ----
+      if (trial.enable_button_after > 0) {
+        const submit_button = display_element.querySelector(`#${plugin_id_name}-next`);
+        this.jsPsych.pluginAPI.setTimeout(() => {
+          submit_button.disabled = false;
+        }, trial.enable_button_after);
+      }
+
       const trial_form = display_element.querySelector(`#${trial_form_id}`);
       const errorMessageDiv = display_element.querySelector('#jspsych-button-multi-error-message');
 

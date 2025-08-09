@@ -124,7 +124,8 @@ for (const entry of illusory_truth_db) {
     formatted_stimulus_array.push({
       stimulus: `<p style="font-size:30px">${entry.stimulus}</p>`, 
       name: entry.stimulus, 
-      choice: entry.choice 
+      choice: entry.choice,
+      observerTime: entry.rt
     });
   }
 }
@@ -198,9 +199,9 @@ if (foundEntry) {
         
                 number_to_match = jsPsych.timelineVariable('choice');
                 observedChoice = scaleLikertScalesXToY(number_to_match, 0, 100, 1, 9);
-
                 timelineStimulus = jsPsych.timelineVariable('stimulus');
                 return timelineStimulus + "<br><br>The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b>"
+
             },
             stimulus_height: 350,
             labels: [`<strong>1<br>Definitely False</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>Definitely True</strong>`],
@@ -209,13 +210,19 @@ if (foundEntry) {
             min: 10,
             max: 90,
             slider_start: 50,
+            enable_button_after: function() {
+                observedTime = jsPsych.timelineVariable('observerTime');
+                console.log("observedTime in enable_after: ", observedTime);
+                return observedTime;
+            },
             correct_response:function() {
                 console.log("number_to_match in correct_response: ", number_to_match);
                 return number_to_match;
             },
+            
             allowed_margin: 8,
             require_movement: require_movement_general,
-            data: { stim: jsPsych.timelineVariable('stim')},
+            data: { stim: jsPsych.timelineVariable('stimulus')},
             on_finish: function (data) {
                 function isFalsePositive(response, trivia_type) {
                     if (response < 50 && (trivia_type === "false_new" || trivia_type === "false_old")) {

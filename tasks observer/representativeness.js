@@ -3,6 +3,7 @@
 
 subjectData = representativeness_db.find(item => item.subject === actorNumber);
 observedChoice = subjectData.choice;
+observedTime = subjectData.rt;
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the information they were told about Jack)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the information you were told about Jack)?</p>";
 
@@ -56,7 +57,8 @@ timeline: [{
     max: 100,
     start: 50,
     step: 10,
-    require_movement: true,
+    enable_button_after: observedTime,
+    require_movement: false,
     prompt: "<br><br><br>",
     correct_response: observedChoice,
     on_finish: function(data) {
@@ -137,7 +139,7 @@ slider_width: introspection_q_slider_width,
 min: introspection_q_min,
 max: introspection_q_max,
 slider_start: 50,
-require_movement: introspection_q_require,
+require_movement: false,
 prompt: "<br><br><br>",
 on_finish: function (data) {
 

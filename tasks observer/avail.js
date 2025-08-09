@@ -2,6 +2,7 @@
 subjectData = availability_db.find(item => item.subject === actorNumber);
 var observedList = subjectData.choice;
 var confidence_q = condition[0] == 'Factor-Included' ? '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the fame of the people in each list)?</p>' : '<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the fame of the people in each list)?</p>';
+observerTime = subjectData.rt;
 
 var avail_included_stimuli = [
     {
@@ -164,6 +165,7 @@ var avail_question = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `<p> After the Prolific user had seen both lists, they answered the following question:</p><p><b>Which list contained more men?</b></p><br>The Prolific user selected ` + observedList + `. <br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected</b> (regardless of your own beliefs).<br><br>`,
     choices: ["List 1", "List 2"],
+    enable_button_after: observerTime,
     correct_response: observedList == "List 1" ? 0 : 1,
     on_finish: function (data) {
         more_men = data.response;

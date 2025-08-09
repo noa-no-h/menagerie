@@ -2,7 +2,8 @@ anchor_db = [
   {
     "subject": "0",
     "choice": -45,
-    "auxiliary_info1": "Lower"
+    "auxiliary_info1": "Lower",
+    "rt": 3000
   },
   {
     "subject": "A13CXQGLSH6QY8",

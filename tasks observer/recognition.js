@@ -132,7 +132,8 @@ for (const entry of recognition_db) {
   if (entry.subject === actorNumber && entry.choice != "0") {
     recognition_stimulus_array.push({
       stimulus: entry.stimulus, 
-      choice: entry.choice 
+      choice: entry.choice,
+    rt: entry.rt
     });
   }
 }
@@ -185,6 +186,10 @@ var city_trial = {
         } else {
             return 1;
         }
+    },
+    enable_button_after: function(){
+        observedTime= recognition_stimulus_array[recognition_list_index]["rt"];
+        return observedTime;
     },
     on_finish: function (data) {
         let current_stimulus_data = recognition_stimulus_array[recognition_list_index];

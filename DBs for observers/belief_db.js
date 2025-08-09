@@ -5,32 +5,38 @@ belief_db = [
   {
     "subject": "0",
     "choice": "Yes",
-    "stimulus": "Therefore, some highly trained dogs are not police dogs."
+    "stimulus": "Therefore, some highly trained dogs are not police dogs.",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "No",
-    "stimulus": "Therefore, some vitamin tablets are not nutritional."
+    "stimulus": "Therefore, some vitamin tablets are not nutritional.",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "No",
-    "stimulus": "Therefore, some millionaires are not rich people."
+    "stimulus": "Therefore, some millionaires are not rich people.",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "Yes",
-    "stimulus": "Therefore, some addictive things are not cigarettes."
+    "stimulus": "Therefore, some addictive things are not cigarettes.",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "Yes",
-    "stimulus": "Practice 2"
+    "stimulus": "Practice 2",
+    "rt": 3000
   },
   {
     "subject": "0",
     "choice": "No",
-    "stimulus": "Practice 1"
+    "stimulus": "Practice 1",
+    "rt": 3000
   },
   {
     "subject": "A10QB6LE8VC9H8"

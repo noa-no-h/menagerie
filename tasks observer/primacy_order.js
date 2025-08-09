@@ -1,6 +1,7 @@
 //#region 9. Mere Exposure (Stang (1974)
 subjectData = primacy_db.find(item => item.subject === actorNumber);
 observedChoice = subjectData.choice;
+observedTime = subjectData.rt;
 
 var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the order of the facts)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the order of the facts)?</p>";
 console.log("condition[0]: ", condition[0])
@@ -154,6 +155,8 @@ var primacy_order_question = {
 
         },
     ],
+    enable_button_after: observedTime,
+
     on_finish: function (data) {
 
         if (data.response.choice == car1) {
