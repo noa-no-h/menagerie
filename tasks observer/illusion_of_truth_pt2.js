@@ -198,9 +198,9 @@ if (foundEntry) {
                 } */
         
                 number_to_match = jsPsych.timelineVariable('choice');
-                observedChoice = scaleLikertScalesXToY(number_to_match, 0, 100, 1, 9);
                 timelineStimulus = jsPsych.timelineVariable('stimulus');
-                return timelineStimulus + "<br><br>The Prolific user selected " + observedChoice + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b>"
+                console.log("number_to_match in stimulus: ", number_to_match);
+                return timelineStimulus + create_static_slider_html(jsPsych.timelineVariable('choice'), 10, 90, 1, [`<strong>1<br>Definitely False</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>Definitely True</strong>`]) + ".<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b>"
 
             },
             stimulus_height: 350,
@@ -216,8 +216,8 @@ if (foundEntry) {
                 return observedTime;
             },
             correct_response:function() {
-                console.log("number_to_match in correct_response: ", number_to_match);
-                return number_to_match;
+                console.log("number_to_match in correct_response: ", jsPsych.timelineVariable('choice'));
+                return jsPsych.timelineVariable('choice');
             },
             
             allowed_margin: 8,

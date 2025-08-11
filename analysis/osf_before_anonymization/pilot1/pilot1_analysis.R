@@ -931,12 +931,12 @@ df.anchor = df.anchor %>%
   
 
 task_data_list <- list(
-  list(df.anchor, "anchor", list("subject", "choice", "auxiliary_info1")),
-  list(df.avail, "availability", list("subject", "choice")),
-  list(df.belief, "belief", list("subject", "choice", "stimulus")),
-  list(df.cause, "cause", list("subject", "choice")),
-  list(df.decoy, "decoy", list("subject", "choice")),
-  list(df.mee, "mere_exposure", list("subject", "choice", "stimulus"))
+  list(df.anchor, "anchor", list("subject", "choice", "auxiliary_info1", "rt")),
+  list(df.avail, "availability", list("subject", "choice", "rt")),
+  list(df.belief, "belief", list("subject", "choice", "stimulus", "rt")),
+  list(df.cause, "cause", list("subject", "choice", "rt")),
+  list(df.decoy, "decoy", list("subject", "choice", "rt")),
+  list(df.mee, "mere_exposure", list("subject", "choice", "stimulus", "rt"))
 )
 
 

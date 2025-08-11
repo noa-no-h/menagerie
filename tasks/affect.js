@@ -32,7 +32,8 @@ var affect_question = {
             prompt: `<p>In general, how <b>beneficial</b> do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
             name: "benefit",
             labels: ["Not at all beneficial", "Slightly beneficial", "Moderately beneficial", "Very beneficial", "Extremely beneficial"],
-            required: true
+            required: true,
+            
         },
         {
             prompt: `<p>In general, how <b>risky</b> do you consider the use of natural gas to be to U.S. society as a whole?</p>`,
@@ -44,7 +45,8 @@ var affect_question = {
     on_finish: function (data) {
         benefit = data.response["benefit"];
         risk = data.response["risk"];
-       
+        rt = data.rt;
+
         if (only_main_question) {
         s1_data = {
             subject: data.subject,

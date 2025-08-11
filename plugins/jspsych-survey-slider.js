@@ -1,6 +1,9 @@
 var jsPsychSurveySlider = (function (jspsych) {
     "use strict"
 
+
+
+
     const info = {
         name: "survey-slider",
         description: "",
@@ -70,6 +73,18 @@ var jsPsychSurveySlider = (function (jspsych) {
                         default: 1,
                         description: "Sets the step of the slider",
                     },
+                    correct_response: {
+                        type: jspsych.ParameterType.FLOAT, // Use FLOAT to allow for decimal values
+                        pretty_name: "Correct Response",
+                        default: null,
+                        description: "The correct value for the slider. If provided, validation will occur."
+                    },
+                     allowed_margin: {
+                        type: jspsych.ParameterType.FLOAT,
+                        pretty_name: "Allowed Margin",
+                        default: 0,
+                        description: "The margin of error allowed for a correct response."
+                    }
                 },
             },
             randomize_question_order: {
@@ -234,6 +249,9 @@ var jsPsychSurveySlider = (function (jspsych) {
             }
             html += "<br/>"
 
+            html += '<div id="jspsych-survey-slider-error-message" style="color: red; margin-top: 10px; height: 1.2em;"></div>';
+
+
             // add submit button
             html +=
                 '<input type="submit" id="jspsych-survey-slider-next" class="jspsych-survey-slider jspsych-btn" value="' +
@@ -300,60 +318,68 @@ var jsPsychSurveySlider = (function (jspsych) {
                 });
             }
 
-            // ---- END OF NEW LOGIC ----
+            display_element.querySelector("#jspsych-survey-slider-form").addEventListener("submit", (e) => {
+                e.preventDefault();
 
+                // Get all interactive sliders
+                const matches = display_element.querySelectorAll('input[type="range"]:not([disabled])');
+                const question_data = {};
+                let all_correct = true;
 
-            display_element
-                .querySelector("#jspsych-survey-slider-form")
-                .addEventListener("submit", (e) => {
-                    e.preventDefault()
-                    // measure response time
-                    var endTime = performance.now()
-                    var response_time = endTime - startTime
+                // Loop through sliders to get responses and perform validation
+                for (let i = 0; i < matches.length; i++) {
+                    const slider = matches[i];
+                    const original_question_index = question_order[i];
+                    const question = trial.questions[original_question_index];
+                    
+                    const response = slider.valueAsNumber;
+                    const name = question.name || `Q${original_question_index}`;
+                    question_data[name] = response;
 
-                    // create object to hold responses
-                    var question_data = {}
+                    // Check against correct_response if it exists
+                    if (question.correct_response !== null) {
+                        // Get the allowed margin for this question (defaults to 0)
+                        const margin = question.allowed_margin;
 
-                    // hold responses
-                    var matches = display_element.querySelectorAll(
-                        'input[type="range"]'
-                    )
+                        // Calculate the lower and upper bounds of the correct range
+                        const lower_bound = question.correct_response - margin;
+                        const upper_bound = question.correct_response + margin;
 
-                    // store responses
-                    for (var index = 0; index < matches.length; index++) {
-                        var id = matches[index].name
-                        var response = matches[index].valueAsNumber
-                        var obje = {}
-                        if (
-                            matches[index].attributes["data-name"].value !== ""
-                        ) {
-                            var name =
-                                matches[index].attributes["data-name"].value
-                        } else {
-                            var name = id
+                        // Check if the response is outside the allowed range
+                        if (response < lower_bound || response > upper_bound) {
+                            all_correct = false;
                         }
-                        obje[name] = response
-                        Object.assign(question_data, obje)
                     }
+                }
+
+                const errorMessageDiv = display_element.querySelector('#jspsych-survey-slider-error-message');
+
+                if (all_correct) {
+                    // measure response time
+                    var endTime = performance.now();
+                    var response_time = endTime - startTime;
 
                     // save data
                     var trial_data = {
                         rt: response_time,
                         response: JSON.stringify(question_data),
                         question_order: JSON.stringify(question_order),
-                    }
+                    };
 
-                    display_element.innerHTML = ""
-
+                    display_element.innerHTML = "";
                     // next trial
-                    this.jsPsych.finishTrial(trial_data)
-                })
+                    this.jsPsych.finishTrial(trial_data);
+                } else {
+                    // if any response is incorrect, show the error message and do not end the trial
+                    errorMessageDiv.textContent = "Please match the Prolific user's answers.";
+                }
+            });
 
-            var startTime = performance.now()
+            var startTime = performance.now();
         }
     }
 
-    SurveySliderPlugin.info = info
+    SurveySliderPlugin.info = info;
 
-    return SurveySliderPlugin
-})(jsPsychModule)
+    return SurveySliderPlugin;
+})(jsPsychModule);

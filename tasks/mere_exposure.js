@@ -3,8 +3,6 @@
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the number of times you saw each word)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the number of times you saw each word)?</p>";
 
-
-
 //preparing stimuli
 var stimulus_id_array = [
     `<p style = "font-size:30px">kitap</p>`,
@@ -301,7 +299,7 @@ var mere_exposure_familiar = {
 // }
 
 mere_exposure = {
-    timeline: [mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
+    timeline: [mere_exposure_questions, mere_exposure_introspect1, mere_exposure_intro_confidence, knows_turkish_question]
 }
 
 //#endregion

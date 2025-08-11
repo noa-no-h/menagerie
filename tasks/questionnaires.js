@@ -70,6 +70,25 @@ function process_scores(data_list, max_value = 4) {
     console.log("Processed Scores:", local_processed_scores);
     return local_processed_scores;
 
+    
+}
+
+function calculateScaledScore(responses, minLikert = 1, maxLikert = 5) {
+    const values = Object.values(responses);
+    if (values.length === 0) {
+        console.warn("Cannot calculate score: The responses object is empty.");
+        return 0;
+    }
+    const numQuestions = values.length;
+    const minPossibleSum = minLikert * numQuestions;
+    const maxPossibleSum = maxLikert * numQuestions;
+    const totalRange = maxPossibleSum - minPossibleSum;
+    if (totalRange === 0) {
+        return 0;
+    }
+    const currentSum = values.reduce((sum, value) => sum + value, 0);
+    const normalizedScore = (currentSum - minPossibleSum) / totalRange;
+    return normalizedScore;
 }
 
 engagement_in_self_reflection_data = {};
@@ -85,7 +104,8 @@ var engagement_in_self_reflection = {
     }),
     randomize_question_order: true,
     on_finish: function (data) {
-        engagement_in_self_reflection_data = process_scores(data.response);
+        raw_engagement_in_self_reflection_data = process_scores(data.response);
+        engagement_in_self_reflection_data = calculateScaledScore(raw_engagement_in_self_reflection_data);
     }
 };
 
@@ -103,7 +123,8 @@ var need_for_self_reflection = {
     }),
     randomize_question_order: true,
     on_finish: function (data) {
-        need_for_self_reflection_data = process_scores(data.response);
+        raw_need_for_self_reflection_data = process_scores(data.response);
+        need_for_self_reflection_data = calculateScaledScore(raw_need_for_self_reflection_data);
     }
 };
 
@@ -120,7 +141,8 @@ var insight_questionnaire = {
     }),
     randomize_question_order: true,
     on_finish: function (data) {
-        insight_questionnaire_data = process_scores(data.response);
+        raw_insight_questionnaire_data = process_scores(data.response);
+        insight_questionnaire_data = calculateScaledScore(raw_insight_questionnaire_data);
     }
 };
 
@@ -137,7 +159,8 @@ var decision_scale = {
     }),
     randomize_question_order: true,
     on_finish: function (data) {
-        decision_scale_data = process_scores(data.response);
+        raw_decision_scale_data = process_scores(data.response);
+        decision_scale_data = calculateScaledScore(raw_decision_scale_data);
     }
 };
 
@@ -154,7 +177,8 @@ var need_for_cognition = {
     }),
     randomize_question_order: true,
     on_finish: function (data) {
-        need_for_cognition_data = process_scores(data.response);
+        raw_need_for_cognition_data = process_scores(data.response);
+        need_for_cognition_data = calculateScaledScore(raw_need_for_cognition_data);
     }
 };
 
@@ -171,12 +195,57 @@ var cognitive_affective_mindfulness_scale = {
     }),
     randomize_question_order: true,
     on_finish: function(data) {
-        const parsed_responses = data.response;
+        raw_cognitive_affective_mindfulness_scale_data = process_scores(data.response, 3);
+        cognitive_affective_mindfulness_scale_data = calculateScaledScore(raw_cognitive_affective_mindfulness_scale_data,1,4);
+    }
+};
 
-        cognitive_affective_mindfulness_scale_data = process_scores(parsed_responses, 3);
+cognitive_reflection_test_data = {};
+var cognitive_reflection_test = {
+    type: jsPsychSurveyText,
+    preamble: '<p>Please answer the following questions.</p>',
+    questions: [
+        {
+            prompt: "If you’re running a race and you pass the person in second place, what place are you in?",
+            name: 'race',
+            required: true
+        },
+        {
+            prompt: "A farmer had 15 sheep and all but 8 died. How many are left?",
+            name: 'sheep',
+            required: true
+        },
+        {
+            prompt: "Emily’s father has three daughters. The first two are named April and May. What is the third daughter’s name?",
+            name: 'daughter',
+            required: true
+        },
+        {
+            prompt: "How many cubic feet of dirt are there in a hole that is 3’ deep x 3’ wide x 3’ long?",
+            name: 'dirt',
+            required: true
+        }
+    ],
+    on_finish: function(data) {
+        cognitive_reflection_test_data = data.response;
+    }
+};
+
+var save_data_timeline_node = {
+    type: jsPsychCallFunction,
+    func: function(data) {
+        questionnaire_responses = {
+            cognitive_affective_mindfulness_scale: cognitive_affective_mindfulness_scale_data,
+            engagement_in_self_reflection: engagement_in_self_reflection_data,
+            need_for_self_reflection: need_for_self_reflection_data,
+            insight_questionnaire: insight_questionnaire_data,
+            decision_scale: decision_scale_data,
+            need_for_cognition: need_for_cognition_data,
+            cognitive_reflection_test: cognitive_reflection_test_data
+        };
+        console.log("Questionnaire Responses:", questionnaire_responses);
     }
 };
 
 
-
-questionnaires_timeline = [cognitive_affective_mindfulness_scale, engagement_in_self_reflection, need_for_self_reflection, insight_questionnaire, decision_scale, need_for_cognition, ];
+questionnaires_timeline = [cognitive_affective_mindfulness_scale, engagement_in_self_reflection, need_for_self_reflection, insight_questionnaire, decision_scale, need_for_cognition, cognitive_reflection_test,save_data_timeline_node];

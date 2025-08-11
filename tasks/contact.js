@@ -36,6 +36,7 @@ var contact_question = {
     choices: ["Morally Permissible", "Morally Impermissible"],
     on_finish: function (data) {
         push = data.response
+        rt = data.rt;
     }
 }
 
@@ -134,7 +135,7 @@ var contact_intro_confidence = {
             introspect_rating: contact_intro_response1,
             introspect_open: contact_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         }
         save_data(s1_data, 'introspection')
     }

@@ -1,4 +1,23 @@
 //#region Halo
+function save_data(data, table_name) { //new save data function
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'saveData.php');
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onload = function() {
+    if(xhr.status == 200){
+      console.log(xhr.response);
+    }
+  };
+
+    // Create an object that holds the data and the table name
+    var payload = {
+      table: table_name, // The table name
+      data: [data]         // The data to be saved
+    };
+  
+    // Send this object as a JSON string
+    xhr.send(JSON.stringify(payload));
+}
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by how physically attractive each stranger looked)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how physically attractive each stranger looked)?</p>";
@@ -60,6 +79,8 @@ for (i = 0; i < num_stimuli; i++) {
     choice[stimuli_list[i]]=null;
 }
 
+
+
 var stimulus = null;
 var halo_trial = {
     type: jsPsychHtmlSliderResponse,
@@ -68,16 +89,19 @@ var halo_trial = {
         
         return stimulus;
     },
-    
+    allowed_margin: 0.5,
     scale_width: 200,
     labels: ["1", "2", "3", "4", "5"],
     min: 1,
     max: 5,
-    step: 1,
+    step: 0.01,
     slider_start: 3,
     on_finish: function (data) {
+
+        
         //console.log(data.response);
         //choice[stimuli_list[list_index]] = data.response.Q0;
+        rt = data.rt;
         console.log("data.response: " + data.response);
         stimulus = stimuli_list[list_index];
         console.log("stimulus: " + stimulus);
@@ -105,8 +129,13 @@ var halo_trial = {
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt: data.rt
+            rt: rt
         };
+
+  
+        console.error('type of savedata');
+        console.log(typeof save_data);
+        console.log("save_data", save_data)
         save_data(s1_data, 'introspection');
     }
   };
@@ -228,7 +257,7 @@ var halo_intro_confidence = {
             introspect_rating: halo_intro_response1,
             introspect_open: halo_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         };
         save_data(s1_data, 'introspection');
     }

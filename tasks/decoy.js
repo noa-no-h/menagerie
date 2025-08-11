@@ -27,6 +27,7 @@ var decoy_present = {
         }
     ],
     on_finish: function (data) {
+        rt = data.rt;
         if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
             juice = 'Brand N (Target)'
         } else if (data.response.Q0 == '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70') {
@@ -166,7 +167,7 @@ var decoy_intro_confidence = {
             introspect_rating: decoy_intro_response1,
             introspect_open: decoy_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         }
         save_data(s1_data, 'introspection');
     }

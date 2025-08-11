@@ -165,6 +165,7 @@ var avail_question = {
     choices: ["List 1", "List 2"],
     on_finish: function (data) {
         more_men = data.response;
+        rt = data.rt;
     }
 };
 
@@ -177,6 +178,7 @@ var avail_openQ = {
     }],
     on_finish: function (data) {
         avail_openQ_response = data.response.Q0;
+
     }
 };
 
@@ -268,7 +270,7 @@ var avail_intro_confidence = {
             introspect_rating: avail_intro_response1,
             introspect_open: avail_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         }
         save_data(s1_data, 'introspection');
     }

@@ -152,20 +152,22 @@ var mere_exposure_questions = {
     timeline: [
         {
             type: jsPsychHtmlSliderResponse,
-            stimulus: jsPsych.timelineVariable('stimulus'),
+            stimulus: function(){
+                var observedSelection = (getChoice(jsPsych.timelineVariable('stimulus')))
+                console.log("observedSelection", observedSelection)
+                var stimulus = `The Prolific user was asked to rate how much they <b>like</b> this word on a scale from 1 (not at all) to 9 (very much). <br><br> `+create_static_slider_html(observedSelection, 10, 90, 1, [`1<br>not at all`, "2", "3", "4", "5", "6", "7", "8", `9<br>very much`])+`<br><br>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to the option that they selected</b> (regardless of your own beliefs).<br><br>` + jsPsych.timelineVariable('stimulus')
+
+
+
+                return stimulus},
             stimulus_height: 350,
             labels: [`<strong>1<br>not at all</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>very much</strong>`],
-            prompt: function(){
-                var observedSelection = (getChoice(jsPsych.timelineVariable('stimulus')))/10
-                var prompt = `The Prolific user was asked to rate how much they <b>like</b> this word on a scale from 1 (not at all) to 9 (very much). <br><br>They selected `+observedSelection+`<br><br>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to the option that they selected</b> (regardless of your own beliefs).<br><br> `
-                return prompt
-
-            } ,
             slider_width: 750,
             min: 10,
             max: 90,
             slider_start: 50,
-            step: 10,
+            step: 1,
+            allowed_margin: 5,
             require_movement: require_movement_general,
             correct_response: function () { return (getChoice(jsPsych.timelineVariable('stimulus'))) },
             enable_button_after: function () {

@@ -144,6 +144,7 @@ var primacy_order_question = {
         },
     ],
     on_finish: function (data) {
+        rt = data.rt;
 
         if (data.response.choice == car1) {
             choice = "car1";
@@ -277,7 +278,7 @@ var primacy_order_intro_confidence = {
             introspect_rating: primacy_order_intro_response1,
             introspect_open: primacy_order_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         }
         save_data(s1_data, 'introspection')
     }

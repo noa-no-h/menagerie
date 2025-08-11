@@ -4,6 +4,8 @@
         <title>Research study on decision-making</title>
         <script src="https://unpkg.com/jspsych@7.3.4"></script>
         <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.3"></script>
+
         <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
         <script src="plugins/jspsych-survey-slider.js"></script>
         <script src="plugins/plugin-html-slider-response.js"></script>
@@ -45,6 +47,66 @@
 
     </head>
     <script>
+
+        var questionnaire_responses = {}
+
+
+function create_static_slider_html(value, min, max, step, ticks) {
+    if (value === null || typeof value === 'undefined') {
+        return '<p>The Prolific user\'s response was not recorded.</p>';
+    }
+
+    // This value is from jspsych.css and is used for the offset calculation
+    const half_thumb_width = 7.5; 
+
+    let html = `
+        <div class="prolific-user-response" style="width: 100%; margin: 20px 0;">
+            <p>The Prolific user selected:</p>
+            <input 
+                type="range" 
+                class="jspsych-slider" 
+                value="${value}" 
+                min="${min}" 
+                max="${max}" 
+                step="${step}" 
+                disabled 
+            />
+            <div style="position: relative; width: 100%;">`;
+    
+    // Loop through the ticks to position each one individually using the official plugin's logic
+    ticks.forEach((label, index) => {
+        // Calculate the width of the "zone" for each label
+        const label_width_perc = 100 / (ticks.length - 1);
+        
+        // Calculate the center of that zone as a percentage
+        const percent_of_range = index * (100 / (ticks.length - 1));
+        
+        // Calculate how far the label is from the center of the slider
+        const percent_dist_from_center = (percent_of_range - 50) / 50 * 100;
+        
+        // Calculate the pixel offset needed to compensate for the slider thumb's width
+        const offset = (percent_dist_from_center * half_thumb_width) / 100;
+        
+        // Add the styled div for each label, using a calc() function for precise positioning
+        html += `
+            <div style="
+                border: 1px solid transparent; 
+                display: inline-block; 
+                position: absolute; 
+                left: calc(${percent_of_range}% - (${label_width_perc}% / 2) - ${offset}px); 
+                text-align: center; 
+                width: ${label_width_perc}%;
+            ">
+                <span style="text-align: center; font-size: 80%;">${label}</span>
+            </div>`;
+    });
+
+    html += `
+            </div>
+        </div>`;
+        
+    return html;
+}
 
         var observerTime = null;
         var mistakeCounter = 0;
@@ -1491,7 +1553,7 @@ var next_task = {
         /* initiate experiment */
         //jsPsych.run(experiment_timeline);
         //jsPsych.run([belief])
-        jsPsych.run([affect/*affect, anchor, avail,affect, avail, belief, cause, decoy, halo,hindsight2, illusion_of_truth_pt2,recognition,ending, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2*/]);
+        jsPsych.run([illusion_of_truth_pt2/*affect, anchor, avail,affect, avail, belief, cause, decoy, halo,hindsight2, illusion_of_truth_pt2,recognition,ending, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2*/]);
 
     </script>
 </body>

@@ -1,7 +1,9 @@
 //#region 5. Affect Effect - BETWEEN
 subjectData = affect_db.find(item => item.subject === actorNumber);
 var observedBeneficial = subjectData.choice;
-var languageObservedBeneficial = function () {
+var observedRisky = subjectData.auxiliary_info1;
+
+/*var languageObservedBeneficial = function () {
     if (observedBeneficial == 0) {
         return "Not at all Beneficial";
     } else if (observedBeneficial == 1) {
@@ -14,7 +16,6 @@ var languageObservedBeneficial = function () {
         return "Extremely Beneficial";
     }
 }
-var observedRisky = subjectData.auxiliary_info1;
 var languageObservedRisky = function () {
     if (observedRisky == 0) {
         return "Not at all Risky";
@@ -27,7 +28,7 @@ var languageObservedRisky = function () {
     } else if (observedRisky == 4) {
         return "Extremely Risky";
     }
-}
+}*/
 
 var confidence_q = condition[0] == 'Factor-Included' ?
     "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way the Prolific user was influenced by the <b>presence of that passage</b> about the risks of natural gas?)</p>" :
@@ -54,16 +55,23 @@ var affect_instructions = {
 var risk = null;
 var benefit = null;
 
+
+
 var affect_question = {
     type: jsPsychSurveySlider,
     questions: [
         {
             prompt: function () {
-                return `<p>We asked the Prolific user: in general, how <b>beneficial</b> do they consider the use of natural gas to be to U.S. society as a whole?</p>
+                const benefit_ticks = ["Not at all beneficial", "Moderately beneficial", "Very beneficial"];
+                
+                return `
+                    <p>We asked the Prolific user: in general, how <b>beneficial</b> do they consider the use of natural gas to be to U.S. society as a whole?</p>
 
-                <p>The Prolific user selected ` + languageObservedBeneficial() + `.</p>
+                    ${create_static_slider_html(observedBeneficial, 0, 1, 0.01, benefit_ticks)}
 
-                <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`},
+                    <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider below to match their choice</b> (regardless of your own beliefs):</p>
+                `;
+            },
         
             name: "benefit",
             ticks: ["Not at all beneficial", "Moderately beneficial", "Very beneficial"],
@@ -71,15 +79,20 @@ var affect_question = {
             min: 0,
             correct_response: observedBeneficial,
             slider_start: 0.5,
+            allowed_margin: 0.05,
+
             max: 1,
             step: 0.01
         },
         {
             prompt: function(){
-                return `<p>We asked the Prolific user in general, how <b>risky</b> they consider the use of natural gas to be to U.S. society as a whole?</p> <p> The Prolific user selected ` + languageObservedRisky() + `.</p> <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`},
+
+                const risk_ticks = ["Not at all risky", "Moderately risky", "Very risky"];
+                return `<p>We asked the Prolific user in general, how <b>risky</b> they consider the use of natural gas to be to U.S. society as a whole?</p>  ${create_static_slider_html(observedRisky, 0, 1, 0.01, risk_ticks)} <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to match the Prolific user's choice</b> (regardless of your own beliefs):</b></p>`},
             name: "risk",
             ticks: ["Not at all risky", "Moderately risky", "Very risky"],
             required: true,
+            allowed_margin: 0.05,
             correct_response: observedRisky,
             min: 0,
             slider_start: 0.5,

@@ -30,6 +30,7 @@ var sunk_cost2_question = {
         name: "response",
         options: ["Yes", "No"] }],
     on_finish: function (data) {
+        rt = data.rt;
         choice = data.response["response"]
         console.log(choice)
         if (only_main_question) {
@@ -149,7 +150,7 @@ var sunk_cost2_intro_confidence = {
             introspect_rating: sunk_cost2_intro_response1,
             introspect_open: sunk_cost2_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         }
         save_data(s1_data, 'introspection')
     }

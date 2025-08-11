@@ -2,7 +2,7 @@ affect_db = [
   {
     "subject": "0",
     "choice": 1,
-    "auxiliary_info1": 1,
+    "auxiliary_info1": 0.4,
     "rt": 3000
   },
   {

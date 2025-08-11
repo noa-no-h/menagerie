@@ -1072,12 +1072,12 @@ save.image('pilot2_output.rdata')
 library(jsonlite)
 
 task_data_list <- list(
-  list(halo_data, "halo", list("subject", "choice", "stimulus")),
-  list(illusory_data, "illusory_truth", list("subject", "choice", "stimulus")),
-  list(omission_data, "omission", list("subject", "choice")),
-  list(recognition_data, "recognition", list("subject", "choice","stimulus")),
-  list(reference_data, "reference_price", list("subject", "choice")),
-  list(representativeness_data, "representativeness", list("subject", "choice"))
+  list(halo_data, "halo", list("subject", "choice", "stimulus", "rt")),
+  list(illusory_data, "illusory_truth", list("subject", "choice", "stimulus", "rt")),
+  list(omission_data, "omission", list("subject", "choice", "rt")),
+  list(recognition_data, "recognition", list("subject", "choice","stimulus", "rt")),
+  list(reference_data, "reference_price", list("subject", "choice", "rt")),
+  list(representativeness_data, "representativeness", list("subject", "choice", "rt"))
 )
 
 

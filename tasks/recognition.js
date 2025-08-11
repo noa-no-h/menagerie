@@ -210,7 +210,7 @@ var disease_trial = {
         var stimulus_category = [getCategory(disease_list[disease_recognition_list_index[0]]),getCategory(disease_list[disease_recognition_list_index[1]])];
         var recognizable = checkRecognizableDisease(response)
         console.log("recognizable: " + recognizable);
-
+        rt = data.rt;
         var s1_data = {
             subject: data.subject,
             version: data.version,

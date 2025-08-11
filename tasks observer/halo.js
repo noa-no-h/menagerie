@@ -65,15 +65,13 @@ var stimulus = null;
 var halo_trial = {
     type: jsPsychHtmlSliderResponse,
     stimulus: function () {
-        console.log("stimuli_list[list_index]: " + stimuli_list[list_index]);
-        console.log("actorNumber: " + actorNumber);
-        console.log("halo_db: " + halo_db);
-
+        // This part finds the previous user's data from your database
         const foundEntry = halo_db.find(item =>
-            item.subject === String(actorNumber) && // Ensure actorNumber is compared as a string
+            item.subject === String(actorNumber) &&
             item.stimulus === stimuli_list[list_index]
         );
 
+        let observedChoice;
         if (foundEntry) {
             observedChoice = foundEntry.choice;
         } else {
@@ -81,26 +79,28 @@ var halo_trial = {
             console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${stimuli_list[list_index]}. 'observedChoice' set to null.`);
         }
 
-        console.log("actorNumber type and value:", typeof actorNumber, actorNumber);
-        console.log("stimuli_list[list_index] type and value:", typeof stimuli_list[list_index], stimuli_list[list_index]);
+        // The labels for this specific scale
+        const scale_labels = ["1", "2", "3", "4", "5"];
 
-        const tempSubjectMatch = halo_db.find(item => item.subject === actorNumber);
-        console.log("Subject match test:", tempSubjectMatch); // Is anything found just by subject?
+        // The stimulus is now built using the helper function
+        const stimulus_html = `
+            <img src="${stimuli_list[list_index]}" alt="Stimulus Image" style="width:45%;height:auto;">
+            <br><br>
+            <p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.</p>
+            
+            ${create_static_slider_html(observedChoice, 1, 5, 1, scale_labels)}
 
-        const tempStimulusMatch = halo_db.find(item => item.stimulus === stimuli_list[list_index].toString());
-        console.log("Stimulus match test:", tempStimulusMatch); // Is anything found just by stimulus?
+            <p>To demonstrate that you understand the Prolific user's choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b></p>
+        `;
 
-
-        stimulus = '<img src="' + stimuli_list[list_index] + '" alt="Stimulus Image" style="width:45%;height:auto;"><br><br><p>Please rate your impression of how persuasive the individual pictured above is on a scale from 1 to 5.<br><br>The Prolific user selected ' + observedChoice + '.<br><br>To demonstrate that you understand the Prolific user\'s choice, <b>please move the slider to the option that they selected (regardless of your own beliefs).</b></p>';
-
-        return stimulus;
+        return stimulus_html;
     },
 
     scale_width: 200,
     labels: ["1", "2", "3", "4", "5"],
     min: 1,
     max: 5,
-    step: 1,
+    step: 0.1,
     slider_start: 3,
     enable_button_after: function () {
 
@@ -108,6 +108,8 @@ var halo_trial = {
             item.subject === String(actorNumber) && // Ensure actorNumber is compared as a string
             item.stimulus === stimuli_list[list_index]
         );
+
+        console.log("foundEntry:", foundEntry);
 
         if (foundEntry) {
             observedRt = foundEntry.rt;
@@ -119,9 +121,22 @@ var halo_trial = {
         return observedRt;
     },
     correct_response: function () {
+        const foundEntry = halo_db.find(item =>
+            item.subject === String(actorNumber) &&
+            item.stimulus === stimuli_list[list_index]
+        );
+
+        let observedChoice;
+        if (foundEntry) {
+            observedChoice = foundEntry.choice;
+        } else {
+            observedChoice = null;
+            console.warn(`Warning: No matching entry found in halo_db for subject ${actorNumber} and stimulus ${stimuli_list[list_index]}. 'observedChoice' set to null.`);
+        }
         return observedChoice;
 
     },
+    allowed_margin: 0.5,
     on_finish: function (data) {
         //console.log(data.response);
         //choice[stimuli_list[list_index]] = data.response.Q0;
@@ -222,6 +237,7 @@ var halo_introspect1 = {
     min: introspection_q_min,
     max: introspection_q_max,
     slider_start: 50,
+
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {

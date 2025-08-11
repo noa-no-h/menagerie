@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Research study on decision-making</title>
+        <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="utilities.js"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey@1.0.1"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-external-html@1.1.3"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.3"></script>
+        <script src="https://unpkg.com/inputmask@5.0.3/dist/inputmask.js"></script>
+        <script src="https://unpkg.com/surveyjs-widgets@1.8.75/surveyjs-widgets.min.js"></script>
+        <script src="https://unpkg.com/@jspsych-contrib/plugin-survey-slider@1.0.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js"></script> </script>
+        <link rel="stylesheet" href="plugins/digit-span.css">
+        <script src="plugins/jspsych-digit-span-recall.js"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
+        <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@1.0.1/css/survey.css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    </head>
+    <script>
+
+        
+
+        /* create timeline */
+        var jsPsych = initJsPsych({
+            show_progress_bar: false,
+            on_interaction_data_update: function (data) {
+                if (id != '') {
+                    var browser_event = {
+                        subject: id,
+                        version: version,
+                        browser_event: data.event,
+                        trial: data.trial,
+                        time: data.time
+                    }
+                    save_data(browser_event, 'browser_events');
+                }
+            }
+        });
+        var timeline = [];
+        var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
+        //var condition = ["Factor-Included"];
+
+        console.log(condition);
+
+        jsPsych.data.addProperties({
+            subject: id,
+            version: version,
+            condition: condition[0]
+        });
+
+        //#endregion
+
+        var introspection_q_slider_width = 750;
+        var introspection_q_min = 0;
+        var introspection_q_max = 100;
+        var introspection_q_require = false;
+
+        var confidence_q_labels = [`Not at all confident`, "", "", "Moderately confident", "", "", `Very confident`];
+        var confidence_q_slider_width = 750;
+        var confidence_q_min = 0;
+        var confidence_q_max = 100;
+
+        var familiarity_prompt = `<p>Before doing this study, had you seen or heard of a task similar to this last one?</p>`;
+
+        var require_movement_general = false;
+        var required_general = debug ? false : true;
+
+        var trivia_question_already = false;
+        var only_main_question = false;
+        var time_needed = "3";
+
+        //#endregion
+
+        //#region preload
+        var preload = {
+            type: jsPsychPreload,
+            images: images
+        }
+        //#endregion
+    </script>
+
+    <script src="tasks/halo.js"></script>
+
+
+
+<body>
+    <script>
+
+
+
+        jsPsych.run([halo]);
+
+
+    </script>
+</body>
+
+</html>

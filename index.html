@@ -3,11 +3,13 @@
     <head>
         <title>Research study on decision-making</title>
         <script src="https://unpkg.com/jspsych@7.3.4"></script>
+        <script src="utilities.js"></script>
         <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
         <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey@1.0.1"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-survey-multi-select@1.1.3"></script>
@@ -22,7 +24,6 @@
         <script src="https://www.google.com/recaptcha/api.js"></script> </script>
         <link rel="stylesheet" href="plugins/digit-span.css">
         <script src="plugins/jspsych-digit-span-recall.js"></script>
-        <script src="utilities.js"></script>
         
         <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
@@ -33,6 +34,7 @@
     <script>
 
         var rt = null;
+        var questionnaire_responses = {}
 
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
@@ -1292,12 +1294,21 @@ var next_task = {
                     icar_correct: null,
                     icar_num_correct: null,
                     feedback: feedback,
-                    total_time: Date.now() - start_time
+                    total_time: Date.now() - start_time,
+                    cognitive_affective_mindfulness: cognitive_affective_mindfulness_scale_data,
+                    engagement_in_self_reflection: engagement_in_self_reflection_data,
+                    need_for_self_reflection: need_for_self_reflection_data,
+                    insight: insight_questionnaire_data,
+                    decision_scale: decision_scale_data,
+                    need_for_cognition: need_for_cognition_data,
+                    cognitive_reflection_test: cognitive_reflection_test_data,
+                    
                 }
                 save_data(s1_data, 'introspect_demo');
             }
         }
 
+ 
         //debrief
         /*var debrief = {
             type: jsPsychHtmlButtonResponse,

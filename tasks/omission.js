@@ -37,6 +37,7 @@ var omission_question = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",    
     on_finish: function (data) {
+        rt = data.rt;
         choice = data.response
     }
 }
@@ -139,7 +140,7 @@ var omission_intro_confidence = {
             introspect_rating: omission_intro_response1,
             introspect_open: omission_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         }
         save_data(s1_data, 'introspection')
     }

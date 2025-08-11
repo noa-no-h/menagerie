@@ -75,7 +75,7 @@ const test_stimuli = {
 };
 
 const recall = {
-  type: 'digit-span-recall', // Note: You'll need to implement this plugin for jsPsych 7.3
+  type: 'digit-span-recall', 
   correct_order: function() {
     return selection;
   },

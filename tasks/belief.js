@@ -213,7 +213,9 @@ var belief_trials = {
             stimulus: jsPsych.timelineVariable('stimulus'),
             choices: ["Yes", "No"],
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('validity'), con: jsPsych.timelineVariable('believability'), },
+
             on_finish: function (data) {
+                rt = data.rt;
                 s1_data = {
                     subject: data.subject,
                     version: data.version,
@@ -223,7 +225,7 @@ var belief_trials = {
                     condition: data.con,
                     stimulus: data.stim,
                     auxiliary_info1: data.aux,
-                    rt: data.rt,
+                    rt: rt,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -330,7 +332,7 @@ var belief_intro_confidence = {
             introspect_rating: belief_intro_response1,
             introspect_open: belief_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt: rt
         }
         save_data(s1_data, 'introspection');
     }
