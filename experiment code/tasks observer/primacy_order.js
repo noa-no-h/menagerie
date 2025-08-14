@@ -181,7 +181,7 @@ var primacy_order_question = {
                 introspect_rating: null,
                 introspect_open: null,
                 familiarity: null,
-                rt: data.rt
+                rt_main_question: data.rt
             }
             console.log("data to save: " + JSON.stringify(s1_data));
             save_data(s1_data, 'introspection')
@@ -303,7 +303,7 @@ var primacy_order_intro_confidence = {
             introspect_rating: primacy_order_intro_response1,
             introspect_open: primacy_order_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         }
         save_data(s1_data, 'introspection')
     }

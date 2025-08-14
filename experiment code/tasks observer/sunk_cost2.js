@@ -60,7 +60,7 @@ var sunk_cost2_question = {
                     introspect_rating: null,
                     introspect_open: null,
                     familiarity: null,
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection')
             
@@ -164,7 +164,7 @@ var sunk_cost2_intro_confidence = {
             introspect_rating: sunk_cost2_intro_response1,
             introspect_open: sunk_cost2_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         }
         save_data(s1_data, 'introspection')
     }

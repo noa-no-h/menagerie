@@ -166,7 +166,7 @@
                     task_name: "attention check 2",
                     choice: data.response.Q0,
                     auxiliary_info1: data.response.Q0.replace(/\s+/g, '').toLowerCase() == "themoonismadeofgreencheese" ? "Success" : "Failure",
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -194,7 +194,7 @@
                     task_name: "attention check 3",
                     choice: movie,
                     auxiliary_info1: movie == "3,5,1,4,2" ? "Correct" : "Incorrect",
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -277,7 +277,7 @@
                 choice: data.response.AntarcticOpen,
                 auxiliary_info1: data.response.AntarcticAnchor,
                 stimulus: "Antarctic Temperature",
-                rt: data.rt,
+                rt_main_question: data.rt,
             }
             save_data(s1_data, 'introspection');
             s2_data = {
@@ -289,7 +289,7 @@
                 choice: data.response.WhaleOpen,
                 auxiliary_info1: data.response.WhaleAnchor,
                 stimulus: "Whale Length",
-                rt: data.rt,
+                rt_main_question: data.rt,
             }
             save_data(s2_data, 'introspection');
         }
@@ -340,7 +340,7 @@
                 factor: data.condition,
                 auxiliary_info1: data.response.AntarcticAnchor,
                 stimulus: "Antarctic Temperature",
-                rt: data.rt,
+                rt_main_question: data.rt,
             }
             save_data(s1_data, 'introspection');
             s2_data = {
@@ -352,7 +352,7 @@
                 factor: data.condition,
                 auxiliary_info1: data.response.WhaleAnchor,
                 stimulus: "Whale Length",
-                rt: data.rt,
+                rt_main_question: data.rt,
             }
             save_data(s2_data, 'introspection');
         }
@@ -389,7 +389,7 @@
                 factor: data.condition,
                 auxiliary_info1: data.response.AntarcticAnchor,
                 stimulus: "Antarctic Temperature",
-                rt: data.rt,
+                rt_main_question: data.rt,
             }
             save_data(s1_data, 'introspection');
             s2_data = {
@@ -401,7 +401,7 @@
                 factor: data.condition,
                 auxiliary_info1: data.response.WhaleAnchor,
                 stimulus: "Whale Length",
-                rt: data.rt,
+                rt_main_question: data.rt,
             }
             save_data(s2_data, 'introspection');
         }
@@ -486,7 +486,7 @@
                 introspect_rating: anchor_intro_response1,
                 introspect_open: anchor_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -724,7 +724,7 @@
                 introspect_rating: avail_intro_response1,
                 introspect_open: avail_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection');
         }
@@ -857,7 +857,7 @@
                 introspect_rating: cause_intro_response1,
                 introspect_open: cause_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -969,7 +969,7 @@
                 introspect_rating: contact_intro_response1,
                 introspect_open: contact_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -1084,7 +1084,7 @@
                 introspect_rating: double_intro_response1,
                 introspect_open: double_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -1227,7 +1227,7 @@
                 introspect_rating: decoy_intro_response1,
                 introspect_open: decoy_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -1414,7 +1414,7 @@
                 choice: data.response == "0" ? "Original" : "New",
                 stimulus: data.stim,
                 auxiliary_info1: data.aux,
-                rt: data.rt,
+                rt_main_question: data.rt,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -1489,7 +1489,7 @@
                 introspect_rating: assoc_intro_response1,
                 introspect_open: assoc_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -1549,7 +1549,7 @@
                 choice: data.response == 0 ? "Yes" : "No",
                 stimulus: "Practice 1",
                 auxiliary_info1: data.response == 1 ? "Correct" : "Incorrect",
-                rt: data.rt,
+                rt_main_question: data.rt,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -1588,7 +1588,7 @@
                 choice: data.response == 0 ? "Yes" : "No",
                 stimulus: "Practice 2",
                 auxiliary_info1: data.response == 0 ? "Correct" : "Incorrect",
-                rt: data.rt,
+                rt_main_question: data.rt,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -1706,7 +1706,7 @@
                 condition: data.con,
                 stimulus: data.stim,
                 auxiliary_info1: data.aux,
-                rt: data.rt,
+                rt_main_question: data.rt,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -1775,7 +1775,7 @@
                 introspect_rating: belief_intro_response1,
                 introspect_open: belief_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -1985,7 +1985,7 @@
                 introspect_rating: mee_intro_response1,
                 introspect_open: mee_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -2126,7 +2126,7 @@
                         stimulus: data.stim,
                         choice: data.response,
                         auxiliary_info1: data.response == data.correct_response ? "Correct" : "Incorrect",
-                        rt: data.rt
+                        rt_main_question: data.rt
                     }
                     save_data(s1_data, 'introspection');
                 }
@@ -2194,7 +2194,7 @@
                 introspect_rating: number_intro_response1,
                 introspect_open: number_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -2369,7 +2369,7 @@
                     stimulus: data.stim,
                     choice: data.response,
                     auxiliary_info1: simon_aux,
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -2442,7 +2442,7 @@
                 introspect_rating: simon_intro_response1,
                 introspect_open: simon_intro_response2,
                 familiarity: data.response == 0 ? "Yes" : "No",
-                rt: data.rt
+                rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection')
         }
@@ -3152,7 +3152,7 @@
             version: data.version,
             task_name: "feedback",
             openq_response: data.response.Q0,
-            rt: data.rt
+            rt_main_question: data.rt
             }
             save_data(s1_data, 'introspection');
         }

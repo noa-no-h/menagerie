@@ -309,7 +309,7 @@ var knows_turkish_question = {
             introspect_rating: mere_exposure_intro_response1,
             introspect_open: mere_exposure_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         }
         console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection')

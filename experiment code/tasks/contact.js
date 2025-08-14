@@ -36,7 +36,7 @@ var contact_question = {
     choices: ["Morally Permissible", "Morally Impermissible"],
     on_finish: function (data) {
         push = data.response
-        rt = data.rt;
+        rt_main_question = data.rt;
     }
 }
 
@@ -87,6 +87,7 @@ var contact_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br><br>",
     on_finish: function (data) {
+        rt_introspection_question = data.rt;
 
         if (label_order_randomized == 'original') {
             contact_intro_response1 = data.response
@@ -135,7 +136,8 @@ var contact_intro_confidence = {
             introspect_rating: contact_intro_response1,
             introspect_open: contact_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection')
     }

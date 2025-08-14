@@ -30,7 +30,7 @@ var sunk_cost2_question = {
         name: "response",
         options: ["Yes", "No"] }],
     on_finish: function (data) {
-        rt = data.rt;
+        rt_main_question = data.rt;
         choice = data.response["response"]
         console.log(choice)
         if (only_main_question) {
@@ -46,7 +46,7 @@ var sunk_cost2_question = {
                     introspect_rating: null,
                     introspect_open: null,
                     familiarity: null,
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection')
             
@@ -104,6 +104,8 @@ labels: function() {
     prompt: "<br><br><br>",
     on_finish: function (data) {
 
+        rt_introspection_question = data.rt;
+
         if (label_order_randomized == 'original') {
             sunk_cost2_intro_response1 = data.response
     }
@@ -150,7 +152,8 @@ var sunk_cost2_intro_confidence = {
             introspect_rating: sunk_cost2_intro_response1,
             introspect_open: sunk_cost2_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection')
     }

@@ -2,21 +2,17 @@
 
 
 var confidence_q = condition[0] == 'Factor-Included' ? "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by the order of the facts)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by the order of the facts)?</p>";
-console.log("condition[0]: ", condition[0])
-console.log("condition :", condition)
+
 
 var car_names = ["Hatsdun", "Nabusi", "Kaiwa", "Dasuka"]
 var car_names_shuffled = _.shuffle(car_names)
-console.log("car_names_shuffled: ", car_names_shuffled)
 var car_names_shuffled_string = car_names_shuffled.join(",")
-console.log("car_names_shuffled_string: ", car_names_shuffled_string)
 
 var car1 = car_names_shuffled[0]
 var car2 = car_names_shuffled[1]
 var car3 = car_names_shuffled[2]
 var car4 = car_names_shuffled[3]
 
-console.log(car1, car2, car3, car4)
 
 //preparing stimuli
 var car1_positive_attributes = [
@@ -95,7 +91,6 @@ for (var i = 0; i < 11; i++) {
     good_1_first.push(shuffled_car1_negative_car2_positive[i]);
 }
 
-console.log(good_1_first)
 
 stimulus_array = condition[0] == "Factor-Included" ? good_1_first : random
 
@@ -144,7 +139,7 @@ var primacy_order_question = {
         },
     ],
     on_finish: function (data) {
-        rt = data.rt;
+        rt_main_question = data.rt;
 
         if (data.response.choice == car1) {
             choice = "car1";
@@ -168,9 +163,9 @@ var primacy_order_question = {
                 introspect_rating: null,
                 introspect_open: null,
                 familiarity: null,
-                rt: data.rt
+                rt_main_question: rt_main_question
             }
-            console.log("data to save: " + JSON.stringify(s1_data));
+            //console.log("data to save: " + JSON.stringify(s1_data));
             save_data(s1_data, 'introspection')
         }
     }
@@ -229,6 +224,8 @@ var primacy_order_introspect1 = {
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
 
+        rt_introspection_question = data.rt;
+
         if (label_order_randomized == 'original') {
             primacy_order_intro_response1 = data.response
             
@@ -278,7 +275,8 @@ var primacy_order_intro_confidence = {
             introspect_rating: primacy_order_intro_response1,
             introspect_open: primacy_order_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection')
     }

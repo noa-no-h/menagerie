@@ -361,7 +361,7 @@ var jsPsychSurveySlider = (function (jspsych) {
 
                     // save data
                     var trial_data = {
-                        rt: response_time,
+                        rt_main_question: response_time,
                         response: JSON.stringify(question_data),
                         question_order: JSON.stringify(question_order),
                     };

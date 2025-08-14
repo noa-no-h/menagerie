@@ -37,7 +37,7 @@ var omission_question = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",    
     on_finish: function (data) {
-        rt = data.rt;
+        rt_main_question = data.rt;
         choice = data.response
     }
 }
@@ -91,6 +91,8 @@ var omission_introspect1 = {
     prompt: "<br><br><br>",
     on_finish: function (data) {
 
+        rt_introspection_question = data.rt;
+
         if (label_order_randomized == 'original') {
             omission_intro_response1 = data.response
 
@@ -140,7 +142,8 @@ var omission_intro_confidence = {
             introspect_rating: omission_intro_response1,
             introspect_open: omission_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection')
     }

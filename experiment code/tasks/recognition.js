@@ -145,6 +145,7 @@ var city_trial = {
         return([city_list[recognition_list_index][0], city_list[recognition_list_index][1]]);
     },
     on_finish: function (data) {
+        rt_main_question = data.rt;
         //console.log("data.response: " + data.response);
         var response = city_list[recognition_list_index][data.response]
         //console.log("response: " + response);
@@ -169,7 +170,7 @@ var city_trial = {
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt: data.rt
+            rt_main_question: rt_main_question
         };
         save_data(s1_data, 'introspection');
     }
@@ -204,13 +205,13 @@ var disease_trial = {
         return([disease_list[disease_recognition_list_index][0], disease_list[disease_recognition_list_index][1]]);
     },
     on_finish: function (data) {
-        console.log("data.response: " + data.response);
+        rt_main_question = data.rt;
+        //console.log("data.response: " + data.response);
         var response = disease_list[disease_recognition_list_index][data.response]
-        console.log("response: " + response);
+        //console.log("response: " + response);
         var stimulus_category = [getCategory(disease_list[disease_recognition_list_index[0]]),getCategory(disease_list[disease_recognition_list_index[1]])];
         var recognizable = checkRecognizableDisease(response)
-        console.log("recognizable: " + recognizable);
-        rt = data.rt;
+       //console.log("recognizable: " + recognizable);
         var s1_data = {
             subject: data.subject,
             version: data.version,
@@ -224,7 +225,7 @@ var disease_trial = {
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt: data.rt
+            rt_main_question: rt_main_question
         };
         save_data(s1_data, 'introspection');
     }
@@ -294,6 +295,8 @@ labels: function() {
     prompt: "<br><br><br>",
     on_finish: function (data) {
 
+        rt_introspection_question = data.rt;
+
         if (label_order_randomized == 'original') {
             recognition_intro_response1 = data.response
     }
@@ -341,7 +344,8 @@ var recognition_intro_confidence = {
             introspect_rating: recognition_intro_response1,
             introspect_open: recognition_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         };
         save_data(s1_data, 'introspection');
     }

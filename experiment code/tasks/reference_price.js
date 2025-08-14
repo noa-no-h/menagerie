@@ -58,7 +58,7 @@ var ref_price_trial = {
         on_finish: function (data) {
             console.log(data.response);
             choice = data.response.referencePrice;
-            rt = data.rt;
+            rt_main_question = data.rt;
         }
     }],
     randomize_order: false
@@ -115,6 +115,7 @@ labels: function() {
     prompt: "<br><br><br>",
     on_finish: function (data) {
 
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             ref_price_intro_response1 = data.response
     }
@@ -162,7 +163,8 @@ var ref_price_intro_confidence = {
             introspect_rating: ref_price_intro_response1,
             introspect_open: ref_price_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         };
         console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection');

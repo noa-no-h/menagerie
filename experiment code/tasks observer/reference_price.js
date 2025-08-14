@@ -219,7 +219,7 @@ var ref_price_intro_confidence = {
             introspect_rating: ref_price_intro_response1,
             introspect_open: ref_price_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         };
         console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection');

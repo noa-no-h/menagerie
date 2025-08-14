@@ -72,7 +72,7 @@ var jsPsychSurveyLikert = (function (jspsych) {
         type: jspsych.ParameterType.OBJECT
       },
       /** The response time in milliseconds for the participant to make a response. The time is measured from when the questions first appear on the screen until the participant's response(s) are submitted. */
-      rt: {
+      rt_main_question: {
         type: jspsych.ParameterType.INT
       },
       /** An array with the order of questions. For example `[2,0,1]` would indicate that the first question was `trial.questions[2]` (the third item in the `questions` parameter), the second question was `trial.questions[0]`, and the final question was `trial.questions[1]`. This will be encoded as a JSON string when data is saved using the `.json()` or `.csv()` functions. */
@@ -203,7 +203,7 @@ var jsPsychSurveyLikert = (function (jspsych) {
 
       // Finish the trial
       this.jsPsych.finishTrial({
-        rt: response_time,
+        rt_main_question: response_time,
         response: question_data,
         question_order
       });

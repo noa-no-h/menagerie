@@ -56,7 +56,7 @@ timeline: [{
     require_movement: true,
     prompt: "<br><br><br>",
     on_finish: function(data) {
-        rt = data.rt;
+        rt_main_question = data.rt;
         console.log(data.response);
         choice = data.response;
     }
@@ -138,6 +138,8 @@ require_movement: introspection_q_require,
 prompt: "<br><br><br>",
 on_finish: function (data) {
 
+    rt_introspection_question = data.rt;
+
         if (label_order_randomized == 'original') {
             rep_intro_response1 = data.response
     }
@@ -185,7 +187,8 @@ on_finish: function (data) {
         introspect_rating: rep_intro_response1,
         introspect_open: rep_intro_confidence_response,
         familiarity: familiarity,
-        rt: rt
+         rt_main_question: rt_main_question,
+         rt_introspection_question: rt_introspection_question
     };
     console.log(s1_data);
     save_data(s1_data, 'introspection');

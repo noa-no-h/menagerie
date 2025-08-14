@@ -49,6 +49,8 @@
     <script>
 
         var questionnaire_responses = {}
+        let max_highest_span_score = 0;
+
 
 
 function create_static_slider_html(value, min, max, step, ticks) {
@@ -477,7 +479,7 @@ console.log(target_num)  */
                     task_name: "attention check 2",
                     choice: data.response.Q0,
                     auxiliary_info1: data.response.Q0.replace(/\s+/g, '').toLowerCase() == "themoonismadeofgreencheese" ? "Success" : "Failure",
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -505,7 +507,7 @@ console.log(target_num)  */
                         task_name: "attention check 3",
                         choice: movie,
                         auxiliary_info1: movie == "3,5,1,4,2" ? "Correct" : "Incorrect",
-                        rt: data.rt
+                        rt_main_question: data.rt
                     }
                 save_data(s1_data, 'introspection');
             }
@@ -1435,7 +1437,7 @@ var next_task = {
         //#region ENDING
         var demographics = {
             type: jsPsychSurveyMultiChoice,
-            preamble: `<b>Finally, we will ask you a a series of demographic questions.</b>`,
+            preamble: `<b>Finally, we will ask you a series of demographic questions.</b>`,
             questions: [
                 {
                     prompt: "Gender: Do you describe yourself as a man, a woman, or in some other way?",
@@ -1478,7 +1480,15 @@ var next_task = {
                     icar_num_correct: null,
                     feedback: feedback,
                     total_time: Date.now() - start_time,
-                    mistakeCounter: mistakeCounter
+                    cognitive_affective_mindfulness: cognitive_affective_mindfulness_scale_data,
+                    engagement_in_self_reflection: engagement_in_self_reflection_data,
+                    need_for_self_reflection: need_for_self_reflection_data,
+                    insight: insight_questionnaire_data,
+                    decision_scale: decision_scale_data,
+                    need_for_cognition: need_for_cognition_data,
+                    cognitive_reflection_test: cognitive_reflection_test_data,
+                    digit_span: max_highest_span_score
+                    
                 }
                 save_data(s1_data, 'introspect_demo');
             }
@@ -1530,9 +1540,8 @@ var next_task = {
             show_clickable_nav: true
         }
 
-        var ending = {
-            timeline: [/*icar,*/ feedbackQuestion, demographics, end]
-        };
+        var ending = [/*icar,*/ digit_span_timeline, questionnaires_timeline, feedbackQuestion, demographics, end].flat();
+
 
         //#endregion
 

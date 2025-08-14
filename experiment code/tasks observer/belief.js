@@ -75,7 +75,7 @@ var belief_practice1 = {
             choice: data.response == 0 ? "Yes" : "No",
             stimulus: "Practice 1",
             auxiliary_info1: data.response == 1 ? "Correct" : "Incorrect",
-            rt: data.rt,
+            rt_main_question: data.rt,
         },
         
         save_data(s1_data, 'introspection');
@@ -125,7 +125,7 @@ var belief_practice2 = {
             choice: data.response == 0 ? "Yes" : "No",
             stimulus: "Practice 2",
             auxiliary_info1: data.response == 0 ? "Correct" : "Incorrect",
-            rt: data.rt,
+            rt_main_question: data.rt,
         }
         save_data(s1_data, 'introspection');
     }
@@ -284,7 +284,7 @@ var belief_trials = {
                     condition: data.con,
                     stimulus: data.stim,
                     auxiliary_info1: data.aux,
-                    rt: data.rt,
+                    rt_main_question: data.rt,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -391,7 +391,7 @@ var belief_intro_confidence = {
             introspect_rating: belief_intro_response1,
             introspect_open: belief_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         }
         save_data(s1_data, 'introspection');
     }

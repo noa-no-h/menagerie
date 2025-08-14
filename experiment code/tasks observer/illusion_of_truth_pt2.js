@@ -347,7 +347,7 @@ var illusion_of_truth_intro_confidence = {
             introspect_rating: illusion_of_truth_intro_response1,
             introspect_open: illusion_of_truth_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         }
         save_data(s1_data, 'introspection')
     }

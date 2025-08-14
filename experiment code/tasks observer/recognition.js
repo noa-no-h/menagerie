@@ -133,7 +133,7 @@ for (const entry of recognition_db) {
     recognition_stimulus_array.push({
       stimulus: entry.stimulus, 
       choice: entry.choice,
-    rt: entry.rt
+    rt_main_question: entry.rt
     });
   }
 }
@@ -217,7 +217,7 @@ var city_trial = {
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt: data.rt
+            rt_main_question: data.rt
         };
         save_data(s1_data, 'introspection');
     }
@@ -336,7 +336,7 @@ var recognition_intro_confidence = {
             introspect_rating: recognition_intro_response1,
             introspect_open: recognition_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         };
         save_data(s1_data, 'introspection');
     }

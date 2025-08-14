@@ -66,16 +66,11 @@ const test_stimuli = {
     return `<div style="font-size:70px;">${selection[selection_id]}</div>`;
   },
   choices: "NO_KEYS",
-  trial_duration: stimuli_duration,
-  on_finish: function() {
-    if (selection_id + 1 >= selection.length) {
-      jsPsych.finishCurrentTimeline();
-    }
-  }
+  trial_duration: stimuli_duration
 };
 
 const recall = {
-  type: 'digit-span-recall', 
+  type: jsPsychDigitSpanRecall, 
   correct_order: function() {
     return selection;
   },
@@ -84,11 +79,15 @@ const recall = {
     const ds_data = jsPsych.data.get().last(1).values()[0];
     const cur_set_size = minSetSize;
 
+
     const acc = ds_data.accuracy;
     if (acc == 1) {
+      
       if (highest_span_score < minSetSize) {
         highest_span_score = minSetSize;
       }
+
+      
       minSetSize += 1;
       nError = 0;
     } else if (nError < 1) { // checks for number of consecutive errors
@@ -98,7 +97,12 @@ const recall = {
         consec_error_score = minSetSize;
       }
       minSetSize = Math.max(3, minSetSize - 1);
+      
     }
+
+    if (highest_span_score > max_highest_span_score) {
+        max_highest_span_score = highest_span_score;
+      }
     
     if (minSetSize <= 8) { // bottom code prevents immediate repetition of digits
       selection = jsPsych.randomization.sampleWithoutReplacement(possibleNumbers, minSetSize);
@@ -113,24 +117,27 @@ const recall = {
     }
     selection_id = -1;
 
+
+
     // record data
     const ds_data_tostore = {
       subject: ds_data.subject,
       version: ds_data.version,
       assignmentId: subject_id_url,
-      condition: feedback_condition,
-      timepoint: timepoint,
+      condition: condition,
+      timepoint: null,
       trial_type: in_practice ? 'practice' : 'real',
-      stimuli: JSON.stringify(ds_data.stimuli),
-      recall: JSON.stringify(ds_data.recall),
+      stimuli: ds_data.stimuli,
       accuracy: ds_data.accuracy,
-      rt: ds_data.rt,
+      recall: ds_data.recall,
+      rt_main_question: ds_data.rt,
       cur_set_size: cur_set_size,
       cur_failed_size: consec_error_score,
       cur_succeeded_size: highest_span_score,
-      num_consec_error: nError
+      num_consec_error: nError,
+      max_highest_span_score: max_highest_span_score
     };
-
+    console.log(ds_data_tostore);
     save_data(ds_data_tostore, 'digit_span');
   }
 };
@@ -151,19 +158,28 @@ const ds_feedback = {
   trial_duration: 1000
 };
 
-const test_stack = {
+const presentation_loop = {
   timeline: [test_stimuli],
-  repetitions: nPracticeTrials + nTrials
+  loop_function: function() {
+    // Return TRUE to loop again, FALSE to stop
+    if (selection_id < selection.length - 1) {
+      return true; // Continue showing digits
+    } else {
+      return false; // Stop and move to the recall phase
+    }
+  }
 };
 
+
 const demo_procedure = {
-  timeline: [test_stack, recall, ds_feedback],
+  timeline: [presentation_loop, recall, ds_feedback],
   repetitions: nPracticeTrials
 };
 
 const test_procedure = {
-  timeline: [test_stack, recall, ds_feedback],
+  timeline: [presentation_loop, recall, ds_feedback],
   repetitions: nTrials
 };
 
 const digit_span_timeline = [ds_instructions, demo_procedure, ds_instructions_node, test_procedure];
+

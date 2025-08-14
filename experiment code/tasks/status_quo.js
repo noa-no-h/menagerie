@@ -72,7 +72,7 @@ var status_quo_trial = {
                 }],
 
             on_finish: function (data) {
-                rt = data.rt;
+                rt_main_question = data.rt;
                 console.log(data.response["StatusQuoAnswer"]);
                 which_option = data.response["StatusQuoAnswer"];
                 if (condition[0] == 'Factor-Included') {
@@ -105,7 +105,7 @@ var status_quo_trial = {
                         introspect_rating: null,
                         introspect_open: null,
                         familiarity: null,
-                        rt: data.rt
+                        rt_main_question: data.rt
                     };
                     console.log(s1_data);
                     save_data(s1_data, 'introspection');
@@ -314,7 +314,7 @@ function processComprehensionResponses(data, condition) {
         introspect_rating: null,
         introspect_open: null,
         familiarity: null,
-        rt: data.rt
+        rt_main_question: data.rt
     };
 
     console.log(s1_data);
@@ -434,6 +434,7 @@ labels: function() {
     prompt: "<br><br><br>",
     on_finish: function (data) {
 
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             status_quo_intro_response1 = data.response
     }
@@ -484,7 +485,8 @@ var status_quo_intro_confidence = {
             introspect_rating: status_quo_intro_response1,
             introspect_open: status_quo_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         };
         console.log(s1_data);
         save_data(s1_data, 'introspection');

@@ -227,11 +227,12 @@ var cognitive_reflection_test = {
         }
     ],
     on_finish: function(data) {
-        cognitive_reflection_test_data = data.response;
+        cognitive_reflection_test_data = JSON.stringify(data.response);
+        console.log("cognitive_reflection_test_data:", cognitive_reflection_test_data);
     }
 };
 
-var save_data_timeline_node = {
+var check_data_timeline_node = {
     type: jsPsychCallFunction,
     func: function(data) {
         questionnaire_responses = {
@@ -248,4 +249,4 @@ var save_data_timeline_node = {
 };
 
 
-questionnaires_timeline = [cognitive_affective_mindfulness_scale, engagement_in_self_reflection, need_for_self_reflection, insight_questionnaire, decision_scale, need_for_cognition, cognitive_reflection_test,save_data_timeline_node];
+questionnaires_timeline = [cognitive_affective_mindfulness_scale, engagement_in_self_reflection, need_for_self_reflection, insight_questionnaire, decision_scale, need_for_cognition, cognitive_reflection_test];

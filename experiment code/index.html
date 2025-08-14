@@ -25,7 +25,6 @@
         <script src="https://www.google.com/recaptcha/api.js"></script> </script>
         <link rel="stylesheet" href="plugins/digit-span.css">
         <script src="plugins/jspsych-digit-span-recall.js"></script>
-        
         <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
         <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://unpkg.com/@jspsych/plugin-survey@1.0.1/css/survey.css">
@@ -34,8 +33,11 @@
     </head>
     <script>
 
-        var rt = null;
+        var rt_main_question = null;
+        var rt_introspection_question = null;
         var questionnaire_responses = {}
+        let max_highest_span_score = 0;
+
 
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
@@ -56,7 +58,7 @@
             }
         }
         var id = subject_id_url;
-        console.log("debug: " + debug);
+        //console.log("debug: " + debug);
 
         //captcha
         var recaptcha = {
@@ -87,7 +89,7 @@
         var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
         //var condition = ["Factor-Included"];
 
-        console.log(condition);
+        //console.log(condition);
 
         jsPsych.data.addProperties({
             subject: id,
@@ -139,7 +141,6 @@
         }
         //#endregion
     </script>
-    <scipt src="plugins/jspsych-digit-span-recall.js"></script>
     <script src="tasks/digit_span_code.js"></script>
     <script src="tasks/representativeness.js"></script>
     <script src="tasks/reference_price.js"></script>
@@ -289,7 +290,7 @@
                     task_name: "attention check 2",
                     choice: data.response.Q0,
                     auxiliary_info1: data.response.Q0.replace(/\s+/g, '').toLowerCase() == "themoonismadeofgreencheese" ? "Success" : "Failure",
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -317,7 +318,7 @@
                         task_name: "attention check 3",
                         choice: movie,
                         auxiliary_info1: movie == "3,5,1,4,2" ? "Correct" : "Incorrect",
-                        rt: data.rt
+                        rt_main_question: data.rt
                     }
                 save_data(s1_data, 'introspection');
             }
@@ -495,10 +496,9 @@ var next_task = {
 
         task_list.flat();
 
-        for (const task of task_list) {
-    console.log(task);}
+       
 
-        console.log("task_list: ", task_list);
+        //console.log("task_list: ", task_list);
 
         var task_list_shuffled_no_in_between = _.shuffle(task_list);
         task_list_shuffled_no_in_between.unshift(illusion_of_truth_pt1);
@@ -521,7 +521,7 @@ var next_task = {
         //insert captcha at the 16th position
         //task_list_shuffled.splice(14, 0, recaptcha);
 
-        console.log(typeof task_list_shuffled);
+        //console.log(typeof task_list_shuffled);
 
         var tasks = {
             timeline: task_list_shuffled.concat(demographics_timeline)
@@ -529,7 +529,7 @@ var next_task = {
         };
 
 
-        console.log("task_list_shuffled: ", task_list_shuffled);
+        //console.log("task_list_shuffled: ", task_list_shuffled);
 
 
         //#endregion
@@ -1253,7 +1253,7 @@ var next_task = {
         //#region ENDING
         var demographics = {
             type: jsPsychSurveyMultiChoice,
-            preamble: `<b>Finally, we will ask you a a series of demographic questions.</b>`,
+            preamble: `<b>Finally, we will ask you a series of demographic questions.</b>`,
             questions: [
                 {
                     prompt: "Gender: Do you describe yourself as a man, a woman, or in some other way?",
@@ -1303,6 +1303,7 @@ var next_task = {
                     decision_scale: decision_scale_data,
                     need_for_cognition: need_for_cognition_data,
                     cognitive_reflection_test: cognitive_reflection_test_data,
+                    digit_span: max_highest_span_score
                     
                 }
                 save_data(s1_data, 'introspect_demo');
@@ -1356,29 +1357,27 @@ var next_task = {
             show_clickable_nav: true
         }
 
-        var ending = {
-            timeline: [/*icar,*/ feedbackQuestion, demographics, end]
-        };
+        var ending = [digit_span_timeline, questionnaires_timeline, feedbackQuestion, demographics, end].flat();
 
         //#endregion
 
         /*add elements to timeline*/
 
-        console.log(welcome)
+        //console.log(welcome)
 
         var intro;
         if (!debug) {
-            console.log("here!")
-            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, digit_span_timeline, ending].flat()
+            //console.log("here!")
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat()
             ;
         } else {
-            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, digit_span_timeline, ending].flat();
+            var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat();
         }
 
 
         /* initiate experiment */
-        //jsPsych.run(experiment_timeline);
-        jsPsych.run([affect]);
+       // jsPsych.run(experiment_timeline);
+        jsPsych.run(ending);
 
 
     </script>

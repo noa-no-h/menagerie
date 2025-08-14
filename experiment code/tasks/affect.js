@@ -64,7 +64,9 @@ const responses = JSON.parse(data.response);
     benefit = responses.benefit;
     risk = responses.risk;
 
-        rt = data.rt;
+        rt_main_question = data.rt;
+        //("RT:", data.rt);
+        //console.log("RT main question:", rt_main_question);
 
         if (only_main_question) {
         s1_data = {
@@ -81,7 +83,7 @@ const responses = JSON.parse(data.response);
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt: data.rt
+            rt_main_question: rt_main_question
         }
         save_data(s1_data, 'introspection')
     }
@@ -159,6 +161,8 @@ var affect_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
+        rt_introspection_question = data.rt;
+
         if (label_order_randomized == 'original') {
             affect_intro_response1 = data.response
     }
@@ -192,6 +196,7 @@ var affect_intro_confidence = {
     slider_start: 50,
     require_movement: require_movement_general,
     on_finish: function (data) {
+        //console.log("here now")
         affect_intro_confidence_response = data.response;
         s1_data = {
             subject: data.subject,
@@ -207,10 +212,12 @@ var affect_intro_confidence = {
             introspect_rating: affect_intro_response1,
             introspect_open: affect_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
+                //console.log("s1_data", s1_data);
+
         save_data(s1_data, 'introspection')
-        console.log("rt", rt)
     }
 };
 

@@ -134,6 +134,7 @@ var mere_exposure_questions = {
             require_movement: require_movement_general,
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('stimulus') },
             on_finish: function (data) {
+
                 var s1_data = {
                     subject: data.subject,
                     version: data.version,
@@ -142,6 +143,7 @@ var mere_exposure_questions = {
                     choice: data.response,
                     stimulus: data.stim,
                     condition: countInArray(stimulus_array, data.aux),
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -205,6 +207,7 @@ var mere_exposure_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
+        rt_introspection_question = data.rt;
 
         if (label_order_randomized == 'original') {
             mere_exposure_intro_response1 = data.response
@@ -267,7 +270,8 @@ var knows_turkish_question = {
             introspect_rating: mere_exposure_intro_response1,
             introspect_open: mere_exposure_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt,
+            rt_introspection_question: rt_introspection_question
         }
         console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection')

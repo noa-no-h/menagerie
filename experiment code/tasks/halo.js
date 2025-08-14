@@ -1,23 +1,6 @@
 //#region Halo
-function save_data(data, table_name) { //new save data function
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'saveData.php');
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onload = function() {
-    if(xhr.status == 200){
-      console.log(xhr.response);
-    }
-  };
 
-    // Create an object that holds the data and the table name
-    var payload = {
-      table: table_name, // The table name
-      data: [data]         // The data to be saved
-    };
-  
-    // Send this object as a JSON string
-    xhr.send(JSON.stringify(payload));
-}
+
 
 
 var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you were influenced by how physically attractive each stranger looked)?</p>" : "<p>How confident are you that you gave the correct answer to the previous question (i.e., that you correctly reported the way you would have been influenced by how physically attractive each stranger looked)?</p>";
@@ -101,7 +84,7 @@ var halo_trial = {
         
         //console.log(data.response);
         //choice[stimuli_list[list_index]] = data.response.Q0;
-        rt = data.rt;
+        rt_main_question = data.rt;
         console.log("data.response: " + data.response);
         stimulus = stimuli_list[list_index];
         console.log("stimulus: " + stimulus);
@@ -129,7 +112,7 @@ var halo_trial = {
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt: rt
+             rt_main_question: rt_main_question
         };
 
   
@@ -207,6 +190,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
+        rt_introspection_question = data.rt;
 
         if (label_order_randomized == 'original') {
             halo_intro_response1 = data.response
@@ -257,7 +241,8 @@ var halo_intro_confidence = {
             introspect_rating: halo_intro_response1,
             introspect_open: halo_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         };
         save_data(s1_data, 'introspection');
     }

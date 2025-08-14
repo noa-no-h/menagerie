@@ -65,7 +65,6 @@
         });
         var timeline = [];
         var condition = jsPsych.randomization.sampleWithoutReplacement(["Factor-Included", "Factor-Excluded"], 1);
-        console.log(condition);
 
         jsPsych.data.addProperties({
             subject: id,
@@ -242,7 +241,7 @@
                     task_name: "attention check 2",
                     choice: data.response.Q0,
                     auxiliary_info1: data.response.Q0.replace(/\s+/g, '').toLowerCase() == "themoonismadeofgreencheese" ? "Success" : "Failure",
-                    rt: data.rt
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -269,7 +268,7 @@
                         task_name: "attention check 3",
                         choice: movie,
                         auxiliary_info1: movie == "3,5,1,4,2" ? "Correct" : "Incorrect",
-                        rt: data.rt
+                        rt_main_question: data.rt
                     }
                 save_data(s1_data, 'introspection');
             }

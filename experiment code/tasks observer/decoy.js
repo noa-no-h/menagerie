@@ -172,7 +172,7 @@ var decoy_intro_confidence = {
             introspect_rating: decoy_intro_response1,
             introspect_open: decoy_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt
         }
         save_data(s1_data, 'introspection');
     }

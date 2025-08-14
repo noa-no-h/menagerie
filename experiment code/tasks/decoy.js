@@ -27,7 +27,8 @@ var decoy_present = {
         }
     ],
     on_finish: function (data) {
-        rt = data.rt;
+        rt_main_question = data.rt;
+
         if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
             juice = 'Brand N (Target)'
         } else if (data.response.Q0 == '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70') {
@@ -51,6 +52,7 @@ var decoy_absent = {
         }
     ],
     on_finish: function (data) {
+        rt_main_question = data.rt;
         if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
             juice = 'Brand N (Target)'
         } else {
@@ -120,6 +122,8 @@ labels: function() {
     prompt: "<br><br><br>",
     on_finish: function (data) {
 
+        rt_introspection_question = data.rt;
+
         if (label_order_randomized == 'original') {
             decoy_intro_response1 = data.response
     }
@@ -167,7 +171,8 @@ var decoy_intro_confidence = {
             introspect_rating: decoy_intro_response1,
             introspect_open: decoy_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection');
     }

@@ -60,7 +60,7 @@ const anchor_low = {
         // Convert boolean responses to human-readable form
         const antarcticAnchorResponse = data.response.AntarcticAnchor;
         const whaleAnchorResponse = data.response.WhaleAnchor;
-        rt = data.rt;
+        rt_main_question = data.rt;
         var s1_data = {
             subject: data.subject,
             version: data.version,
@@ -70,7 +70,7 @@ const anchor_low = {
             choice: data.response.AntarcticOpen,
             auxiliary_info1: antarcticAnchorResponse,
             stimulus: "Antarctic Temperature",
-            rt: data.rt,
+            rt_main_question: data.rt,
         };
         save_data(s1_data, 'introspection');
 
@@ -135,7 +135,7 @@ const anchor_high = {
         // Convert boolean responses to human-readable form
         const antarcticAnchorResponse = data.response.AntarcticAnchor ? "Lower" : "Higher";
         const whaleAnchorResponse = data.response.WhaleAnchor ? "Longer" : "Shorter";
-        rt = data.rt;
+        rt_main_question = data.rt;
         var s1_data = {
             subject: data.subject,
             version: data.version,
@@ -145,7 +145,7 @@ const anchor_high = {
             choice: data.response.AntarcticOpen,
             auxiliary_info1: antarcticAnchorResponse,
             stimulus: "Antarctic Temperature",
-            rt: rt,
+             rt_main_question: rt_main_question,
         };
         save_data(s1_data, 'introspection');
 
@@ -158,7 +158,7 @@ const anchor_high = {
             choice: data.response.WhaleOpen,
             auxiliary_info1: whaleAnchorResponse,
             stimulus: "Whale Length",
-            rt: data.rt,
+            rt_main_question: data.rt,
         };*/
         //save_data(s2_data, 'introspection');
     }
@@ -190,6 +190,7 @@ const anchor_none = {
         ]
     },
     on_finish: function(data) {
+        rt_main_question = data.rt;
         var s1_data = {
             subject: data.subject,
             version: data.version,
@@ -199,7 +200,7 @@ const anchor_none = {
             factor: data.condition,
             auxiliary_info1: data.response.AntarcticAnchor,
             stimulus: "Antarctic Temperature",
-            rt: data.rt,
+            rt_main_question: data.rt,
         };
         save_data(s1_data, 'introspection');
 
@@ -212,7 +213,7 @@ const anchor_none = {
             factor: data.condition,
             auxiliary_info1: data.response.WhaleAnchor,
             stimulus: "Whale Length",
-            rt: data.rt,
+            rt_main_question: data.rt,
         };
         save_data(s2_data, 'introspection');
     }
@@ -287,6 +288,7 @@ var anchor_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
+        rt_introspection_question = data.rt;
 
         if (label_order_randomized == 'original') {
             anchor_intro_response1 = data.response
@@ -335,7 +337,8 @@ var anchor_intro_confidence = {
             introspect_rating: anchor_intro_response1,
             introspect_open: anchor_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection');
         console.log(s1_data);

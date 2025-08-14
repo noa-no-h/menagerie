@@ -81,8 +81,8 @@ var transformedTrueOld = transformList(true_old, 'true_old');
 // Combine the transformed lists
 var included_twelve_statements = _.shuffle(transformedFalseNew.slice(0,3).concat(transformedFalseOld.slice(0,3), transformedTrueNew.slice(0,3), transformedTrueOld.slice(0,3)));
 var excluded_twelve_statements = _.shuffle(transformedFalseNew.slice(0,6).concat(transformedTrueNew.slice(0,6)));
-console.log("included: ", included_twelve_statements);
-console.log("excluded: ", excluded_twelve_statements);
+//console.log("included: ", included_twelve_statements);
+//console.log("excluded: ", excluded_twelve_statements);
 
 // Shuffle the combined list to get the final twelve statements
 var stimulus_form_twelve_statements = null;
@@ -94,7 +94,7 @@ if (condition[0] == "Factor-Included") {
 
 //stimulus_form_twelve_statements = 
 
-console.log(stimulus_form_twelve_statements);
+//console.log(stimulus_form_twelve_statements);
 
 function countInArray(array, what) {
     var count = 0;
@@ -152,6 +152,7 @@ var illusion_of_truth_questions = {
             require_movement: require_movement_general,
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('type') },
             on_finish: function (data) {
+                
                 function isFalsePositive(response, trivia_type) {
                     if (response < 50 && (trivia_type === "false_new" || trivia_type === "false_old")) {
                         return 'false positive';
@@ -169,6 +170,7 @@ var illusion_of_truth_questions = {
                     stimulus: data.stim,
                     auxiliary_info1: isFalsePositive(data.response, data.aux),
                     condition: data.aux,
+                    rt_main_question: data.rt
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -227,7 +229,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             illusion_of_truth_intro_response1 = data.response
     }
@@ -275,7 +277,8 @@ var illusion_of_truth_intro_confidence = {
             introspect_rating: illusion_of_truth_intro_response1,
             introspect_open: illusion_of_truth_intro_confidence_response,
             familiarity: familiarity,
-            rt: data.rt
+            rt_main_question: data.rt,
+            rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection')
     }

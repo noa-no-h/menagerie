@@ -79,7 +79,7 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
     },
     data: {
       /** The response time in milliseconds for the participant to make a response. The time is measured from when the stimulus first appears on the screen until the participant's response. */
-      rt: {
+      rt_main_question: {
         type: jspsych.ParameterType.INT
       },
       /** Indicates which button the participant pressed. The first button in the `choices` array is 0, the second is 1, and so on. */
@@ -146,12 +146,12 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
       }
       var start_time = performance.now();
       var response = {
-        rt: null,
+        rt_main_question: null,
         button: null
       };
       const end_trial = () => {
         var trial_data = {
-          rt: response.rt,
+          rt_main_question: response.rt,
           stimulus: trial.stimulus,
           response: response.button
         };
@@ -219,7 +219,7 @@ var jsPsychHtmlButtonResponse = (function (jspsych) {
     create_simulation_data(trial, simulation_options) {
       const default_data = {
         stimulus: trial.stimulus,
-        rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true) + trial.enable_button_after,
+        rt_main_question: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true) + trial.enable_button_after,
         response: this.jsPsych.randomization.randomInt(0, trial.choices.length - 1)
       };
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);

@@ -1,0 +1,28 @@
+{
+    "id": "122DE3E0",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1747240551708.0,
+    "source_on_save": false,
+    "relative_order": 12,
+    "properties": {
+        "id": "0126ab4bf3d843d8880566c74419e2b2",
+        "name": "hindsight_analysis",
+        "title": "hindsight_analysis",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Sourcegibzkmw72lic"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 0,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1747240551708,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -165,7 +165,7 @@ var avail_question = {
     choices: ["List 1", "List 2"],
     on_finish: function (data) {
         more_men = data.response;
-        rt = data.rt;
+        rt_main_question = data.rt;
     }
 };
 
@@ -221,6 +221,7 @@ var avail_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
+        rt_introspection_question = data.rt;
 
         if (label_order_randomized == 'original') {
             avail_intro_response1 = data.response
@@ -270,7 +271,8 @@ var avail_intro_confidence = {
             introspect_rating: avail_intro_response1,
             introspect_open: avail_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection');
     }

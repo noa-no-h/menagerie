@@ -50,7 +50,7 @@ var belief_practice1 = {
             choice: data.response == 0 ? "Yes" : "No",
             stimulus: "Practice 1",
             auxiliary_info1: data.response == 1 ? "Correct" : "Incorrect",
-            rt: data.rt,
+            rt_main_question: data.rt,
         }
         save_data(s1_data, 'introspection');
     }
@@ -89,7 +89,7 @@ var belief_practice2 = {
             choice: data.response == 0 ? "Yes" : "No",
             stimulus: "Practice 2",
             auxiliary_info1: data.response == 0 ? "Correct" : "Incorrect",
-            rt: data.rt,
+            rt_main_question: data.rt,
         }
         save_data(s1_data, 'introspection');
     }
@@ -215,7 +215,7 @@ var belief_trials = {
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('validity'), con: jsPsych.timelineVariable('believability'), },
 
             on_finish: function (data) {
-                rt = data.rt;
+                rt_main_question = data.rt;
                 s1_data = {
                     subject: data.subject,
                     version: data.version,
@@ -225,7 +225,7 @@ var belief_trials = {
                     condition: data.con,
                     stimulus: data.stim,
                     auxiliary_info1: data.aux,
-                    rt: rt,
+                     rt_main_question: rt_main_question,
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -283,7 +283,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             belief_intro_response1 = data.response
     }
@@ -332,7 +332,8 @@ var belief_intro_confidence = {
             introspect_rating: belief_intro_response1,
             introspect_open: belief_intro_confidence_response,
             familiarity: familiarity,
-            rt: rt
+             rt_main_question: rt_main_question,
+             rt_introspection_question: rt_introspection_question
         }
         save_data(s1_data, 'introspection');
     }

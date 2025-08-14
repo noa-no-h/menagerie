@@ -86,7 +86,6 @@ for (var i = 0; i < shuffled_car1_negative_car2_positive.length; i++) {
     bad_1_first.push(shuffled_car1_negative_car2_positive[i]);
 }
 
-console.log(bad_1_first)
 
 stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
 
@@ -158,7 +157,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt: data.rt
+            rt_main_question: data.rt
         }
         save_data(s1_data, 'introspection')
     }
@@ -246,7 +245,7 @@ stimulus_array = condition[0] == "Factor-Included" ? bad_1_first : random
              introspect_rating: primacy_order_intro_response1,
              introspect_open: primacy_order_intro_confidence_response,
              familiarity: familiarity,
-             rt: data.rt
+             rt_main_question: data.rt
          }
          save_data(s1_data, 'introspection')
      }
