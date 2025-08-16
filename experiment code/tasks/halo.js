@@ -102,6 +102,7 @@ var halo_trial = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "halo",
             condition: findListContainingString(stimulus),
@@ -115,10 +116,7 @@ var halo_trial = {
              rt_main_question: rt_main_question
         };
 
-  
-        console.error('type of savedata');
-        console.log(typeof save_data);
-        console.log("save_data", save_data)
+
         save_data(s1_data, 'introspection');
     }
   };
@@ -153,8 +151,9 @@ var halo_openQ = {
 
 var introspection_q_labels_halo1 = ['<strong>It made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made me think they were <u>MORE</u> persuasive</strong>'];
 var introspection_q_labels_halo2 = ['<strong>It would have made me think they were <u>LESS</u> persuasive</strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think they were <u>MORE</u> persuasive</strong>'];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var halo_intro_response1 = null;
 var halo_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -230,6 +229,7 @@ var halo_intro_confidence = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "halo",
             condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",

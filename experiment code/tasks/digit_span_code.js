@@ -28,10 +28,10 @@ let in_practice = true; // keeps track of whether the participant is in practice
 const ds_instructions = {
   type: jsPsychInstructions,
   pages: [
-    "Great job. You've completed the main block of tasks. Now you will complete one last unrelated task and answer a few short questionnairs. This task should take about 5 minutes.",
+    "Great job. You've completed the main block of tasks. Now you will complete one last unrelated task and answer a few short questionnaires. This task should take about 5 minutes.",
     "In this task, we will ask you to <b>memorize sequences of numbers</b>. The numbers will be presented on the screen one after the other. Your goal will be to memorize each sequence of numbers in the exact order they're shown.",
     `After we show you the sequence of numbers, we will show you an onscreen number-pad. It will look like this:<br><br>
-    <img src="images/number-pad.png">
+    <img src="img/number-pad.png">
     <br><br><b>Your goal is to enter the numbers you saw into the onscreen number-pad in their correct order.</b> For example, if the sequence is '7 4 5 1', you would enter '7 4 5 1' in this exact order, and then press 'Continue'.
     <br><br>If you make a mistake, you can use the provided 'Backspace' button to clear the last number you entered.`,
     "You will now be given some practice trials to help you understand the task. Press 'Next' to start the practice trials."

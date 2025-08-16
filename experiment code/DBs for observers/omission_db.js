@@ -2,7 +2,7 @@ omission_db = [
   {
     "subject": "0",
     "choice": 2,
-    "rt": 3000
+    "rt": 0
   },
   {
     "subject": "068835216798b65fdf3e46dc51bf9574",

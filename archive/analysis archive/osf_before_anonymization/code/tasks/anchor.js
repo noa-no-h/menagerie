@@ -302,6 +302,7 @@ var anchor_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "anchoring",
             condition: anchor_condition,

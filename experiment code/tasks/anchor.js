@@ -252,8 +252,9 @@ var anchor_openQ = {
 
 var introspection_q_labels_anchor1 = [`<strong>It pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from -45 degrees)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It pushed my answer <u>CLOSER</u> to the example value (e.g., closer to -45 degrees)</strong>`];
 var introspection_q_labels_anchor2 = [`<strong>It would have pushed my answer <u>FURTHER</u> away from the example value (e.g., further away from -45 degrees)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have pushed my answer <u>CLOSER</u> to the example value (e.g., closer to -45 degrees)</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var anchor_intro_response1 = null;
 var anchor_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -327,6 +328,7 @@ var anchor_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "anchoring",
             condition: anchor_condition,
@@ -340,8 +342,9 @@ var anchor_intro_confidence = {
             rt_main_question: rt_main_question,
             rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
-        console.log(s1_data);
+        
     }
 };
 

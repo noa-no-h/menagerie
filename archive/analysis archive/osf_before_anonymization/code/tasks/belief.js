@@ -301,6 +301,7 @@ var belief_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "belief",
             condition: data.condition,

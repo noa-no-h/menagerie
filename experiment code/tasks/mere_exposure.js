@@ -172,8 +172,9 @@ var mere_exposure_openQ = {
 
 var introspection_q_labels_mee1 = [`<strong>When I saw a word a lot of times, that made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word did not affect my response</strong>", "", `<strong>When I saw a word a lot of times, that made me like the word <u>MORE</u></strong>`];
 var introspection_q_labels_mee2 = [`<strong>If I had seen a word a lot of times, that would have made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word would not have affected my response</strong>", "", `<strong>If I had seen a word a lot of times, that would have made me like the word <u>MORE</u></strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var mere_exposure_intro_response1 = null;
 var mere_exposure_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -259,6 +260,7 @@ var knows_turkish_question = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "mere exposure",
             condition: condition[0],

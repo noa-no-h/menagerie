@@ -113,6 +113,7 @@ var ref_price_trial = {
         });
     },
         on_finish: function (data) {
+            rt_main_question = data.rt;
             console.log(data.response);
             choice = data.response.referencePrice;
         }
@@ -134,8 +135,9 @@ var ref_price_openQ = {
 
 var introspection_q_labels_ref_price1 = ['<strong>It made the price they were willing to pay <u>LOWER</u></strong>', "", '<strong>It did not affect their response</strong>', "", '<strong>It made the price they were willing to pay <u>HIGHER</u></strong>'];
 var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay <u>LOWER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay <u>HIGHER</u></strong>'];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 
     
 var ref_price_intro_response1 = null;
@@ -170,7 +172,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+rt_introspection_question= data.rt;
         if (label_order_randomized == 'original') {
             ref_price_intro_response1 = data.response
     }
@@ -208,6 +210,7 @@ var ref_price_intro_confidence = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "reference price",
             condition: condition[0] == "Factor-Included" ? "hotel" : "motel",
@@ -219,7 +222,8 @@ var ref_price_intro_confidence = {
             introspect_rating: ref_price_intro_response1,
             introspect_open: ref_price_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         };
         console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection');

@@ -204,9 +204,11 @@ var city_trial = {
         let participant_choice_text = list_of_cities_for_finish[data.response];
         let stimulus_category = [getCategory(list_of_cities_for_finish[0]), getCategory(list_of_cities_for_finish[1])];
         let recognizable = checkRecognizableCity(participant_choice_text);
+        rt_main_question = data.rt;
         let s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition: city",
             condition: stimulus_category.toString(),
@@ -217,7 +219,7 @@ var city_trial = {
             introspect_rating: null,
             introspect_open: null,
             familiarity: null,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question
         };
         save_data(s1_data, 'introspection');
     }
@@ -253,8 +255,9 @@ var recognition_openQ = {
 
 var introspection_q_labels_recognition1 = ['<strong>It made them think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It did not affect their response</strong>', "", '<strong>It made them think the city had a <u>LARGER </u> population.'];
 var introspection_q_labels_recognition2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -288,7 +291,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+rt_introspection_question: data.rt
         if (label_order_randomized == 'original') {
             recognition_intro_response1 = data.response
     }
@@ -325,6 +328,7 @@ var recognition_intro_confidence = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition",
             condition: condition[0],
@@ -336,7 +340,8 @@ var recognition_intro_confidence = {
             introspect_rating: recognition_intro_response1,
             introspect_open: recognition_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         };
         save_data(s1_data, 'introspection');
     }

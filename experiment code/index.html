@@ -7,7 +7,6 @@
         <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.2.0"></script>
-        
         <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@1.1.3"></script>
         <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.4"></script>
         <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.3"></script>
@@ -43,6 +42,8 @@
         //then they will load with all the startup variables in them
         var version = "pilot3b";
         var completion_code = 'CCPLBLYX';
+        var observer_or_actor = 'actor';
+
 
         // find the assignmentId & debugging status from the URL
         var urlParams = parseURLParams(window.location.href);
@@ -287,6 +288,7 @@
                 s1_data = {
                     subject: data.subject,
                     version: data.version,
+                    observer_or_actor: observer_or_actor,
                     task_name: "attention check 2",
                     choice: data.response.Q0,
                     auxiliary_info1: data.response.Q0.replace(/\s+/g, '').toLowerCase() == "themoonismadeofgreencheese" ? "Success" : "Failure",
@@ -315,6 +317,7 @@
                     s1_data = {
                         subject: data.subject,
                         version: data.version,
+                        observer_or_actor: observer_or_actor,
                         task_name: "attention check 3",
                         choice: movie,
                         auxiliary_info1: movie == "3,5,1,4,2" ? "Correct" : "Incorrect",
@@ -1376,8 +1379,8 @@ var next_task = {
 
 
         /* initiate experiment */
-       // jsPsych.run(experiment_timeline);
-        jsPsych.run(ending);
+        jsPsych.run(experiment_timeline);
+        //jsPsych.run(ending);
 
 
     </script>

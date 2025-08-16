@@ -197,8 +197,8 @@ will not be able to pause the study, so make sure you have no distractions.</p>
                     familiarity: familiarity,
                     rt_main_question: data.rt
                 }
-                save_data(s1_data, 'introspection')
-            }
+
+                save_data(s1_data, 'introspection')            }
         };
 
         var familiarity = null;

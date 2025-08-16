@@ -64,10 +64,11 @@ var confidence_q = condition[0] == 'Factor-Included' ?"<p>How confident are you 
         var illusion_of_truth_instructions1 = {
             type: jsPsychInstructions,
             pages: [
-                `<p>For approximately the next three minutes, you will see a series of trivia statements. 
+                `<p>The Prolific user was told: For approximately the next three minutes, you will see a series of trivia statements. 
                 <br><p>The trivia statements will be presented automatically - there is no need to press any buttons.
-Please read the trivia statements carefully as they are presented, but do not do anything else. You
+The Prolific user was asked to read the trivia statements carefully as they are presented, but to not do anything else. You
 will not be able to pause the study, so make sure you have no distractions.</p>
+<p> Please also read these trivia statements carefully, to experience what the Prolific user did.</p>
         <p><i>Press the next button to begin.</i></p>`,
             ],
             show_clickable_nav: true
@@ -197,8 +198,8 @@ will not be able to pause the study, so make sure you have no distractions.</p>
                     familiarity: familiarity,
                     rt_main_question: data.rt
                 }
-                save_data(s1_data, 'introspection')
-            }
+
+                save_data(s1_data, 'introspection')            }
         };
 
         var familiarity = null;

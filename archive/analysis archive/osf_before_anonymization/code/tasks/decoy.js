@@ -138,6 +138,7 @@ var decoy_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "decoy effect",
             condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",

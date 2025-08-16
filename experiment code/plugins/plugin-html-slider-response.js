@@ -91,7 +91,7 @@ var jsPsychHtmlSliderResponse = (function (jspsych) {
 
     data: {
       /** The time in milliseconds for the participant to make a response. The time is measured from when the stimulus first appears on the screen until the participant's response. */
-      rt_main_question: {
+      rt: {
         type: jspsych.ParameterType.INT
       },
       /** The numeric value of the slider. */
@@ -163,7 +163,7 @@ html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" ' +
      
 
       var response = {
-        rt_main_question: null,
+        rt: null,
         response: null
       };
 
@@ -204,7 +204,7 @@ html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" ' +
 
       const end_trial = () => {
         var trialdata = {
-          rt_main_question: response.rt,
+          rt: response.rt,
           stimulus: trial.stimulus,
           slider_start: trial.slider_start,
           response: response.response
@@ -278,7 +278,7 @@ html += '<button id="jspsych-html-slider-response-next" class="jspsych-btn" ' +
         stimulus: trial.stimulus,
         slider_start: trial.slider_start,
         response: this.jsPsych.randomization.randomInt(trial.min, trial.max),
-        rt_main_question: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)
+        rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true)
       };
       const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
       this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);

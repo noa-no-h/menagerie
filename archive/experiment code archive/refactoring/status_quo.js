@@ -172,7 +172,7 @@ var _statusQuo_ = (function (jspsych) {
                         familiarity: data.response == 0 ? "Yes" : "No",
                         rt_main_question: data.rt
                     };
-                    console.log(s1_data);
+                    
                     save_data(s1_data, 'introspection');
                 }
             };

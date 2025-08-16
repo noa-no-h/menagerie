@@ -81,8 +81,9 @@ var cause_openQ = {
 
 var introspection_q_labels_cause1 = [`<strong>It made me <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
 var introspection_q_labels_cause2 = [`<strong>It would have made me <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var cause_intro_response1 = null;
 var cause_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -156,6 +157,7 @@ var cause_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "causal inference",
             condition: condition[0] == "Factor-Included" ? "One" : "Nine",
@@ -170,6 +172,7 @@ var cause_intro_confidence = {
              rt_main_question: rt_main_question,
              rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

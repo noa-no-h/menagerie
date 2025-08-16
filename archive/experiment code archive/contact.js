@@ -55,8 +55,9 @@ var contact_openQ = {
 
 var introspection_q_labels_contact1 = [`<strong>It made them <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`];
 var introspection_q_labels_contact2 = [`<strong>It would have made me <u>MORE</u> likely to judge Frank's action as morally permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge Frank's action as morally permissible</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var contact_intro_response1 = null;
 var contact_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -125,6 +126,7 @@ var contact_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "contact principle",
             condition: condition[0] == "Factor-Included" ? "Contact" : "No Contact",

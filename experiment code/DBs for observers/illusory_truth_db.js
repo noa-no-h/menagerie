@@ -3,73 +3,73 @@ illusory_truth_db = [
     "subject": "0",
     "choice": 68,
     "stimulus": "Dart boards are commonly made of sisal",
-    "rt": 2345
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 84,
     "stimulus": "Bike riding is the first event in a triathlon",
-    "rt": 3456
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 62,
     "stimulus": "Taboga Island is in Panama",
-    "rt": 4567
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 50,
     "stimulus": "In chemistry, a mass spectrometer is used to separate substances into its constituent parts according to color",
-    "rt": 2000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 65,
     "stimulus": "The corn was first domesticated by native peoples in Argentina",
-    "rt": 3000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 70,
     "stimulus": "Canada is the second largest country in the world in area",
-    "rt": 4000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 82,
     "stimulus": "Giraffes have terrible eyesight",
-    "rt": 5000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 24,
     "stimulus": "Neptune is part of the Kuiper belt",
-    "rt": 6000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 72,
     "stimulus": "Xylem is the water-transporting tissue in plants",
-    "rt": 7000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 76,
     "stimulus": "Volleyball was originally called mintonette",
-    "rt": 8000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 12,
     "stimulus": "The longbow was invented after the crossbow",
-    "rt": 9000
+    "rt": 0
   },
   {
     "subject": "0",
     "choice": 71,
     "stimulus": "Domesticated goats are descended from the pasang",
-    "rt": 10000
+    "rt": 0
   },
   {
     "subject": "0",

@@ -91,6 +91,7 @@ var halo_trial = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "halo",
             condition: findListContainingString(stimulus),
@@ -192,6 +193,7 @@ var halo_intro_confidence = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "halo",
             condition: condition[0] == "Factor-Included" ? "attractive/unattractive" : "average attractiveness",

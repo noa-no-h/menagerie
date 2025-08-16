@@ -72,6 +72,7 @@ const responses = JSON.parse(data.response);
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "affect heuristic",
             condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
@@ -120,7 +121,9 @@ var affect_openQ = {
 
 var introspection_q_labels_affect1 = [`<strong>It made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`,"", `<strong>It did not affect my response</strong>`,"",`<strong>It made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
 var introspection_q_labels_affect2 = [`<strong>It would have made me <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 
 var affect_intro_response1 = null;
 var affect_introspect1 = {
@@ -201,6 +204,7 @@ var affect_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "affect heuristic",
             condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",

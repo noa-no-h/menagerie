@@ -61,8 +61,8 @@ var sunk_cost2_question = {
                     familiarity: null,
                     rt_main_question: data.rt_main_question
                 }
-                save_data(s1_data, 'introspection')
-            
+
+                save_data(s1_data, 'introspection')            
         }
     }
 }
@@ -81,8 +81,9 @@ var sunk_cost2_openQ = {
 
 var introspection_q_labels_sunk_cost21 = [`<strong>It made them <u>LESS</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>MORE</u> likely to spend the last million dollars to finish the plane`];
 var introspection_q_labels_sunk_cost22 = [`<strong>It would have made me <u>LESS</u> likely to spend the last million dollars to finish the plane`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to spend the last million dollars to finish the plane`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var sunk_cost2_intro_response1 = null;
 var sunk_cost2_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -153,6 +154,7 @@ var sunk_cost2_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "sunk_cost2 effect",
             condition: condition[0] == "Factor-Included" ? "Sunk Cost" : "No Sunk Cost",

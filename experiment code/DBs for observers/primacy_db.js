@@ -2,7 +2,7 @@ primacy_db = [
   {
     "subject": "0",
     "choice": "car2",
-    "rt": 3000
+    "rt": 0
   },
   {
     "subject": "559c3ad8fdf99b32b55f2d32",

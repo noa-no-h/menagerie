@@ -250,8 +250,9 @@ var belief_openQ = {
 
 var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect my response</strong>", "", `<strong>When the conclusion was believable, that made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
 var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made me <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected my response</strong>", "", `<strong>If the conclusion had been believable, that would have made me <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var belief_intro_response1 = null;
 var belief_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -321,6 +322,7 @@ var belief_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "belief",
             condition: data.condition,
@@ -335,6 +337,7 @@ var belief_intro_confidence = {
              rt_main_question: rt_main_question,
              rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

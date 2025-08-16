@@ -87,7 +87,7 @@ var comprehension_questions = {
             introspect_open: null,
             familiarity: null        };
 
-        console.log(s1_data);
+        
         save_data(s1_data, 'introspection');
     }
 };
@@ -185,7 +185,7 @@ var hindsight_question = {
                 introspect_open: null,
                 familiarity: null,
                 rt_main_question: rt_main_question            };
-            //console.log(s1_data);
+            //
             save_data(s1_data, 'introspection');
 
         }
@@ -246,8 +246,9 @@ var hindsight_openQ = {
 
 var introspection_q_labels_hindsight1 = [`<strong>It made me judge the outcome of British victory as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
 var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the outcome of British victory  as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It would have made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var hindsight_intro_response1 = null;
 var hindsight_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -317,6 +318,7 @@ var hindsight_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "hindsight effect",
             condition: condition[0] == "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",

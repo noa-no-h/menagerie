@@ -3,7 +3,7 @@ sunk_cost_db = [
     "factor": "experience",
     "subject": "0",
     "choice": "Continue Investing",
-    "rt": 4000
+    "rt": 0
   },
   {
     "factor": "experience",

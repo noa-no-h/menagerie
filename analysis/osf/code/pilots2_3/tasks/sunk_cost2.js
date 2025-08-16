@@ -46,8 +46,8 @@ var sunk_cost2_question = {
                     familiarity: null,
                     rt_main_question: data.rt
                 }
-                save_data(s1_data, 'introspection')
-            
+
+                save_data(s1_data, 'introspection')            
         }
     }
 }
@@ -120,6 +120,7 @@ var sunk_cost2_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "sunk_cost2 effect",
             condition: condition[0] == "Factor-Included" ? "Sunk Cost" : "No Sunk Cost",

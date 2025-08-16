@@ -33,6 +33,7 @@ var decoy_present = {
     ],
     enable_button_after: observerTime,
     on_finish: function (data) {
+        rt_main_question = data.rt;
         if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
             juice = 'Brand N (Target)'
         } else if (data.response.Q0 == '<b>Brand J:</b> Price per can = $2.00; Quality rating = 70') {
@@ -56,6 +57,7 @@ var decoy_absent = {
         }
     ],
     on_finish: function (data) {
+        rt_main_question = data.rt;
         if (data.response.Q0 == '<b>Brand N:</b> Price per can = $1.20; Quality rating = 50') {
             juice = 'Brand N (Target)'
         } else {
@@ -85,8 +87,9 @@ var decoy_openQ = {
 
 var introspection_q_labels_decoy1 = [`<strong>It made them <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
 var introspection_q_labels_decoy2 = [`<strong>It would have made me <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var decoy_intro_response1 = null;
 var decoy_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -124,7 +127,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             decoy_intro_response1 = data.response
     }
@@ -161,6 +164,7 @@ var decoy_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "decoy effect",
             condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
@@ -172,8 +176,10 @@ var decoy_intro_confidence = {
             introspect_rating: decoy_intro_response1,
             introspect_open: decoy_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

@@ -450,7 +450,7 @@ var loop_country_memory = {
                 familiarity: familiarity,
                 rt_main_question: data.rt
             };
-            console.log(s1_data);
+            
             save_data(s1_data, 'introspection');
         }
     };

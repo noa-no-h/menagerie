@@ -64,6 +64,7 @@ timeline: [{
     on_finish: function(data) {
         console.log(data.response);
         choice = data.response;
+        rt_main_question = data.rt;
     }
 }],
 randomize_order: false
@@ -99,8 +100,9 @@ var introspection_q_labels_rep2 = [
     "",
     `<strong>It would have made me say he was <u>MORE</u> likely to be an engineer.</strong>`
 ];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var rep_intro_response1 = null;
 var rep_introspect1 = {
 type: jsPsychHtmlSliderResponse,
@@ -142,6 +144,7 @@ slider_start: 50,
 require_movement: false,
 prompt: "<br><br><br>",
 on_finish: function (data) {
+    rt_introspection_question = data.rt;
 
         if (label_order_randomized == 'original') {
             rep_intro_response1 = data.response
@@ -189,9 +192,10 @@ on_finish: function (data) {
         introspect_rating: rep_intro_response1,
         introspect_open: rep_intro_confidence_response,
         familiarity: familiarity,
-        rt_main_question: data.rt
+        rt_main_question: rt_main_question,
+        rt_introspection_question: rt_introspection_question
     };
-    console.log(s1_data);
+    
     save_data(s1_data, 'introspection');
 }
 };

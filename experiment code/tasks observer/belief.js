@@ -275,6 +275,7 @@ var belief_trials = {
             choices: ["Yes", "No"],
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('validity'), con: jsPsych.timelineVariable('believability'), },
             on_finish: function (data) {
+                rt_main_question = data.rt;
                 s1_data = {
                     subject: data.subject,
                     version: data.version,
@@ -309,8 +310,9 @@ var belief_openQ = {
 
 var introspection_q_labels_belief1 = [`<strong>When the conclusion was believable, that made them <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable did not affect their response</strong>", "", `<strong>When the conclusion was believable, that made them <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
 var introspection_q_labels_belief2 = [`<strong>If the conclusion had been believable, that would have made them <u>LESS</u> likely to think the alien would come to that conclusion</strong>`, "", "<strong>Whether the conclusion was believable would not have affected their response</strong>", "", `<strong>If the conclusion had been believable, that would have made them <u>MORE</u> likely to think the alien would come to that conclusion</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var belief_intro_response1 = null;
 var belief_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -342,7 +344,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             belief_intro_response1 = data.response
     }
@@ -380,6 +382,7 @@ var belief_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "belief",
             condition: data.condition,
@@ -391,8 +394,10 @@ var belief_intro_confidence = {
             introspect_rating: belief_intro_response1,
             introspect_open: belief_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

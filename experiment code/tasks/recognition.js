@@ -160,6 +160,7 @@ var city_trial = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition: city",
             condition: stimulus_category.toString(),
@@ -215,6 +216,7 @@ var disease_trial = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition: disease",
             condition: stimulus_category,
@@ -259,8 +261,9 @@ var recognition_openQ = {
 
 var introspection_q_labels_recognition1 = ['<strong>It made me think the city had a <u>SMALLER </u> population. </strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made me think the city had a <u>LARGER </u> population.'];
 var introspection_q_labels_recognition2 = ['<strong>It would have made me think the city had a <u>SMALLER </u> population.', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made me think the city had a <u>LARGER </u> population.'];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var recognition_intro_response1 = null;
 var recognition_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -333,6 +336,7 @@ var recognition_intro_confidence = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition",
             condition: condition[0],

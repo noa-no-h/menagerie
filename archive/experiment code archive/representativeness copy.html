@@ -206,6 +206,7 @@ var rep_familiar = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             condition: condition[0] == "Factor-Included" ? "Factor-Included" : "Factor-Excluded",
             task_name: "rep",
@@ -216,7 +217,7 @@ var rep_familiar = {
             familiarity: data.response == 0 ? "Yes" : "No",
             rt_main_question: data.rt
         };
-        console.log(s1_data);
+        
         save_data(s1_data, 'introspection');
     }
 };

@@ -38,6 +38,7 @@ var imaginability_question = {
         test_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "imaginability",
             condition: condition[0] == "Factor-Included" ? "Easy to Imagine" : "Difficult to Imagine",
@@ -121,6 +122,7 @@ var imaginability_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "imaginability",
             condition: condition[0] == "Factor-Included" ? "Easy to Imagine" : "Difficult to Imagine",

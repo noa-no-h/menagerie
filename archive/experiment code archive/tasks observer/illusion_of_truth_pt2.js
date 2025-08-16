@@ -169,7 +169,7 @@ var illusion_of_truth_instructions1 = {
         <br><p>They were asked to assess whether each claim is true or false. When they saw each statement appear on the screen, they were asked to read it carefully and answer the following question:
 <br> <p><strong> Is this statement true or false? </strong>
 <br><p>They were asked to answer this question on a scale from definitely false to definitely true.</p>
-        <br><p>They were told it was important that you respond as quickly as possible, but not so quickly that you start making errors.
+        <br><p>They were told it was important to respond as quickly as possible, but not so quickly that they start making errors.
         <br><p>They were asked not to search the answers online while they were completing the study; if they were unsure of an answer, they were asked to just make their best guess.
         <p><i>Press the next button to begin.</i></p>`,
     ],
@@ -262,8 +262,9 @@ var illusion_of_truth_openQ = {
 
 var introspection_q_labels_illusion_of_truth1 = [`<strong>When they had seen a trivia statement earlier in this study, that made them judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether they had seen a statement earlier in this study did not affect their response</strong>", "", `<strong>When they had seen a trivia statement earlier in this study, that made them judge the statement as <u>MORE</u> likely to be true</strong>`];
 var introspection_q_labels_illusion_of_truth2 = [`<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>LESS</u> likely to be true </strong>`, "", "<strong>Whether I had seen a statement earlier in this study would not have affected my response</strong>", "", `<strong>If I had seen a trivia statement earlier in this study, that would have made me judge the statement as <u>MORE</u> likely to be true</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var illusion_of_truth_intro_response1 = null;
 var illusion_of_truth_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -333,6 +334,7 @@ var illusion_of_truth_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "illusion of truth pt2",
             condition: condition[0],

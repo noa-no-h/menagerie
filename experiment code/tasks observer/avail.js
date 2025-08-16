@@ -168,6 +168,7 @@ var avail_question = {
     enable_button_after: observerTime,
     correct_response: observedList == "List 1" ? 0 : 1,
     on_finish: function (data) {
+        rt_main_question = data.rt;
         more_men = data.response;
     }
 };
@@ -188,8 +189,9 @@ var avail_openQ = {
 var introspection_q_labels_avail1 = [`<strong>It made them more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them more likely to think that the <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
 
 var introspection_q_labels_avail2 = [`<strong>It would have made me more likely to think that the <u>SECOND</u> list (where all the women were famous) contained more men</strong>`,"","<strong>It would not have affected my response</strong>", "",`<strong>It would have made me more likely to think that <u>FIRST</u> list (where all the men were famous) contained more men</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var avail_intro_response1 = null;
 var avail_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -223,7 +225,7 @@ var avail_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             avail_intro_response1 = data.response
     }
@@ -261,6 +263,7 @@ var avail_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "availability",
             condition: condition[0] == "Factor-Included" ? "Famous" : "Unfamous",
@@ -272,8 +275,10 @@ var avail_intro_confidence = {
             introspect_rating: avail_intro_response1,
             introspect_open: avail_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

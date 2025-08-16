@@ -56,8 +56,9 @@ var omission_openQ = {
 
 var introspection_q_labels_omission1 = [`<strong>It made me <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>LESS</u> likely to judge the action as permissible</strong>`];
 var introspection_q_labels_omission2 = [`<strong>It would have made me <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge the action as permissible</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var omission_intro_response1 = null;
 var omission_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -131,6 +132,7 @@ var omission_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "omission principle",
             condition: condition[0] == "Factor-Included" ? "commission" : "omission",
@@ -145,6 +147,7 @@ var omission_intro_confidence = {
              rt_main_question: rt_main_question,
              rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection')
     }
 };

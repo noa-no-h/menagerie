@@ -102,6 +102,7 @@ var affect_question = {
     ],
     enable_button_after: subjectData.rt,
     on_finish: function (data) {
+        rt_main_question = data.rt;
         var responseObject = JSON.parse(data.response);
         benefit = responseObject["benefit"];
         risk = responseObject["risk"];
@@ -109,6 +110,7 @@ var affect_question = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "affect heuristic",
             condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
@@ -158,8 +160,9 @@ var affect_openQ = {
 
 var introspection_q_labels_affect1 = [`<strong>It made them <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", `<strong>It did not affect their response</strong>`, "", `<strong>It made them <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
 var introspection_q_labels_affect2 = [`<strong>It would have made them <u>MORE</u> likely to judge natural gas as beneficial</strong>`, "", "<strong>It would not have affected their response</strong>", "", `<strong>It would have made them <u>LESS</u> likely to judge natural gas as beneficial</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var affect_intro_response1 = null;
 var affect_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -199,6 +202,7 @@ var affect_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             affect_intro_response1 = data.response
         }
@@ -237,6 +241,7 @@ var affect_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "affect heuristic",
             condition: condition[0] == "Factor-Included" ? "With passage" : "without passage",
@@ -248,8 +253,10 @@ var affect_intro_confidence = {
             introspect_rating: affect_intro_response1,
             introspect_open: affect_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection')
     }
 };

@@ -55,7 +55,7 @@ var cause_question = {
             image = "img/nineballs.png"
         }
         return `<b>The Prolific user was asked to tell us how much they agree or disagree with the statement below.</b> They were told there were no right or wrong answers and that we were simply interested in their opinion.
-<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p> <br> The Prolific user selected ` + observedChoice/10 + `.<br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`
+<p>Joe's choice from the left box (where he chose a <font color = "GREEN"><b>green ball</b></font>) caused him to win the dollar.</p><p><img src = "${image}" style="width:700px;"><img></p> <br> ` + create_static_slider_html(observedChoice, 10, 90, 1, [`<strong>1<br>totally disagree</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>totally agree</strong>`])+ `.<br><br> To demonstrate that you understand the Prolific user's choice, <b>please select the option that they selected (regardless of your own beliefs).</b>`
     },
     labels: [`<strong>1<br>totally disagree</strong>`, "2", "3", "4", "5", "6", "7", "8", `<strong>9<br>totally agree</strong>`],
     slider_width: 750,
@@ -85,8 +85,9 @@ var cause_openQ = {
 
 var introspection_q_labels_cause1 = [`<strong>It made them <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
 var introspection_q_labels_cause2 = [`<strong>It would have made me <u>LESS</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to think that Joe's choice of a green ball from the left box caused him to win</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var cause_intro_response1 = null;
 var cause_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -121,7 +122,7 @@ var cause_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             cause_intro_response1 = data.response
     }
@@ -156,9 +157,11 @@ var cause_intro_confidence = {
     require_movement: require_movement_general,
     on_finish: function (data) {
         cause_intro_confidence_response = data.response;
+        rt_main_question = data.rt;
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "causal inference",
             condition: condition[0] == "Factor-Included" ? "One" : "Nine",
@@ -170,8 +173,10 @@ var cause_intro_confidence = {
             introspect_rating: cause_intro_response1,
             introspect_open: cause_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

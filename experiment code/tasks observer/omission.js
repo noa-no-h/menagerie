@@ -1,5 +1,7 @@
 //#region 4. omission Principle - BETWEEN
 
+console.log("OMISSION DEBUG: Initial RT values - rt_main_question:", rt_main_question, "rt_introspection_question:", rt_introspection_question);
+
 subjectData = omission_db.find(item => item.subject === actorNumber);
 observedChoice = subjectData.choice;
 console.log("observedChoice: ", observedChoice);
@@ -25,7 +27,7 @@ var omission_question = {
             if (condition[0] == "Factor-Included") {
             return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, realizes that he can prevent the sacrifice of the five villagers if he secretly poisons the one villager. If James poisons the one, the one will be dead by sunrise, and the five will not be sacrificed. If James does not poison the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides to poison the one. <hr>
             <p>The Prolific user was asked to rate James's action on the given scale: 1 (Forbidden) to 7 (Obligatory).
-<p>The Prolific user selected ` + observedChoice + `.<br><br>To demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs).</p>
+<p>` +create_static_slider_html(observedChoice, 1, 7, 1, ['1<br>(Forbidden)', '2', '3', '4<br>(Permissible)','5', '6', '7<br>(Obligatory)'])+ `.<br><br>To demonstrate that you understand the Prolific user's choice, please move the slider to the option that they selected (regardless of your own beliefs).</p>
 `
         } else {
             return `<p>James is hiking through a foreign land when he comes across a remote village. James learns that one of the villagers fell into a cursed pond but, contrary to local superstition, did not die. If the one villager does not die by sunrise, five other innocent and unwilling villagers will be sacrificed to the gods to thank them for sparing the one. James, who has some medical training, notices that the one has accidentally consumed a poisonous substance. James can administer the antidote to the one villager. If James withholds the antidote from the one, the one will die by sunrise, and the five will not be sacrificed. If James does provide the antidote to the one, the one will not be dead by sunrise, and the five will be sacrificed as planned. James decides not to provide the antidote to the one.
@@ -45,7 +47,12 @@ var omission_question = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",    
     on_finish: function (data) {
-        choice = data.response
+        choice = data.response;
+        rt_main_question = data.rt;
+        console.log("OMISSION DEBUG: Full data object from main question:", data);
+        console.log("OMISSION DEBUG: Available properties:", Object.keys(data));
+        // Try to get RT from time_elapsed or calculate it
+        console.log("OMISSION DEBUG: Main question completed, rt_main_question set to:", rt_main_question);
     }
 }
 
@@ -63,8 +70,9 @@ var omission_openQ = {
 
 var introspection_q_labels_omission1 = [`<strong>It made them <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them <u>LESS</u> likely to judge the action as permissible</strong>`];
 var introspection_q_labels_omission2 = [`<strong>It would have made me <u>MORE</u> likely to judge the action as permissible</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>LESS</u> likely to judge the action as permissible</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var omission_intro_response1 = null;
 var omission_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -97,16 +105,18 @@ var omission_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+        console.log("OMISSION DEBUG: Full data object from introspection question:", data);
+        console.log("OMISSION DEBUG: Available properties:", Object.keys(data));
+        console.log("OMISSION DEBUG: time_elapsed:", data.time_elapsed);
+        // Try to get RT from time_elapsed or rt_main_question property
+        rt_introspection_question = data.time_elapsed || data.rt_main_question;
+        console.log("OMISSION DEBUG: Introspection question completed, rt_introspection_question set to:", rt_introspection_question);
         if (label_order_randomized == 'original') {
-            omission_intro_response1 = data.response
-
-    }
-        else {
+            omission_intro_response1 = data.response;
+        } else {
             omission_intro_response1 = 100 - data.response;
-            }
-
         }
+    }
 };
 
 var omission_intro_response2 = null;
@@ -133,9 +143,11 @@ var omission_intro_confidence = {
     require_movement: require_movement_general,
     on_finish: function (data) {
         omission_intro_confidence_response = data.response;
+        console.log("OMISSION DEBUG: Before creating s1_data - rt_main_question:", rt_main_question, "rt_introspection_question:", rt_introspection_question);
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "omission principle",
             condition: condition[0] == "Factor-Included" ? "commission" : "omission",
@@ -147,9 +159,11 @@ var omission_intro_confidence = {
             introspect_rating: omission_intro_response1,
             introspect_open: omission_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
-        }
-        save_data(s1_data, 'introspection')
+            rt_main_question: data.rt,
+            rt_introspection_question: rt_introspection_question
+        };
+        console.log("OMISSION DEBUG: Final s1_data:", s1_data);
+        save_data(s1_data, 'introspection');
     }
 };
 
@@ -159,7 +173,7 @@ var omission_familiar = {
     stimulus: familiarity_prompt,
     choices: ["Yes", "No"],
     on_finish: function (data) {
-        familiarity = data.response == 0 ? "Yes" : "No"
+        familiarity = data.response == 0 ? "Yes" : "No";
     }
 }
 

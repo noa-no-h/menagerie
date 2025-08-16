@@ -3,7 +3,7 @@ availability_db = [
     "condition": "Famous",
     "subject": "0",
     "choice": "List 2",
-    "rt": 5000
+    "rt": 0
   },
   {
     "condition": "Famous",

@@ -82,8 +82,9 @@ var decoy_openQ = {
 
 var introspection_q_labels_decoy1 = [`<strong>It made me <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It did not affect my response</strong>", "", `<strong>It made me <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
 var introspection_q_labels_decoy2 = [`<strong>It would have made me <u>LESS</u> likely to choose Brand N (and more likely to choose Brand J)</strong>`, "", "<strong>It would not have affected my response</strong>", "", `<strong>It would have made me <u>MORE</u> likely to choose Brand N (and less likely to choose Brand J)</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var decoy_intro_response1 = null;
 var decoy_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -160,6 +161,7 @@ var decoy_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "decoy effect",
             condition: condition[0] == "Factor-Included" ? "Decoy Present" : "Decoy Absent",
@@ -174,6 +176,7 @@ var decoy_intro_confidence = {
              rt_main_question: rt_main_question,
              rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection');
     }
 };

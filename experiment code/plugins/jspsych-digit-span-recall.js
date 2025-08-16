@@ -33,7 +33,7 @@ var jsPsychDigitSpanRecall = (function (jspsych) {
     },
     data: {
       /** The response time in milliseconds, measured from when the trial began to when the user clicked 'Continue'. */
-      rt_main_question: {
+      rt: {
         type: jspsych.ParameterType.INT
       },
       /** An array containing the sequence of digits recalled by the participant. */
@@ -161,7 +161,7 @@ if (String(recalledGrid[i]) !== String(trial.correct_order[i])) {
 
         // gather the data to store for the trial
         const trial_data = {
-          rt_main_question: Math.round(performance.now() - startTime),
+          rt: Math.round(performance.now() - startTime),
           recall: recalledGrid,
           stimuli: trial.correct_order,
           accuracy: accuracy
@@ -237,7 +237,7 @@ if (String(recalledGrid[i]) !== String(trial.correct_order[i])) {
       const default_data = {
         stimuli: correct_sequence,
         recall: recalled_sequence,
-        rt_main_question: this.jsPsych.randomization.sampleExGaussian(1500 + correct_sequence.length * 250, 400, 1 / 200, true),
+        rt: this.jsPsych.randomization.sampleExGaussian(1500 + correct_sequence.length * 250, 400, 1 / 200, true),
         accuracy: should_be_correct ? 1 : 0
       };
 

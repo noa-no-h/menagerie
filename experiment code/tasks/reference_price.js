@@ -78,8 +78,9 @@ var ref_price_openQ = {
 
 var introspection_q_labels_ref_price1 = ['<strong>It made the price I was willing to pay <u>LOWER</u></strong>', "", '<strong>It did not affect my response</strong>', "", '<strong>It made the price I was willing to pay <u>HIGHER</u></strong>'];
 var introspection_q_labels_ref_price2 = ['<strong>It would have made the price I was willing to pay <u>LOWER</u></strong>', "", '<strong>It would not have affected my response</strong>', "", '<strong>It would have made the price I was willing to pay <u>HIGHER</u></strong>'];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 
     
 var ref_price_intro_response1 = null;
@@ -152,6 +153,7 @@ var ref_price_intro_confidence = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "reference price",
             condition: condition[0] == "Factor-Included" ? "hotel" : "motel",

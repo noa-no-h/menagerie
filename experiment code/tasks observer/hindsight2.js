@@ -95,7 +95,7 @@ var comprehension_questions = {
             rt_main_question: data.rt
         };
 
-        console.log(s1_data);
+        
         save_data(s1_data, 'introspection');
     }
 };
@@ -230,8 +230,9 @@ var hindsight_question = {
         probGurka = parseInt(data.response.GurkaVictory, 10);
         probStalemateNoPeace = parseInt(data.response.StalemateNoPeace, 10);
         probStalematePeace = parseInt(data.response.StalematePeace, 10);
-
+        rt_main_question = data.rt;
         if (only_main_question) {
+
             s1_data = {
                 subject: data.subject,
                 version: data.version,
@@ -306,8 +307,9 @@ var hindsight_openQ = {
 
 var introspection_q_labels_hindsight1 = [`<strong>It made them judge the outcome of British victory as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It made them judge the outcome of British victory as <u>MORE</u> likely </strong>`];
 var introspection_q_labels_hindsight2 = [`<strong>It would have made me judge the outcome of British victory  as <u>LESS</u> likely </strong>`, "", "<strong>It did not affect their response</strong>", "", `<strong>It would have made me judge the outcome of British victory as <u>MORE</u> likely </strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var hindsight_intro_response1 = null;
 var hindsight_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -339,7 +341,7 @@ labels: function() {
     require_movement: introspection_q_require,
     prompt: "<br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             hindsight_intro_response1 = data.response
     }
@@ -376,6 +378,7 @@ var hindsight_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "hindsight effect",
             condition: condition[0] == "Factor-Included" ? "knowledge of outcome" : "no knowledge of outcome",
@@ -387,7 +390,8 @@ var hindsight_intro_confidence = {
             introspect_rating: hindsight_intro_response1,
             introspect_open: hindsight_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
         console.log(s1_data)
         save_data(s1_data, 'introspection')

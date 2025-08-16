@@ -94,8 +94,9 @@ var introspection_q_labels_rep2 = [
     "",
     `<strong>It would have made me say he was <u>MORE</u> likely to be an engineer.</strong>`
 ];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var rep_intro_response1 = null;
 var rep_introspect1 = {
 type: jsPsychHtmlSliderResponse,
@@ -190,7 +191,7 @@ on_finish: function (data) {
          rt_main_question: rt_main_question,
          rt_introspection_question: rt_introspection_question
     };
-    console.log(s1_data);
+    
     save_data(s1_data, 'introspection');
 }
 };

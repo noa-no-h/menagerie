@@ -176,7 +176,9 @@ var mere_exposure_questions = {
             },
             allowed_margin: 7,
             data: { stim: jsPsych.timelineVariable('name'), aux: jsPsych.timelineVariable('stimulus') },
+
             on_finish: function (data) {
+                rt_main_question = data.rt;
                 var s1_data = {
                     subject: data.subject,
                     version: data.version,
@@ -185,6 +187,7 @@ var mere_exposure_questions = {
                     choice: data.response,
                     stimulus: data.stim,
                     condition: countInArray(stimulus_array, data.aux),
+                    rt_main_question: rt_main_question
                 }
                 save_data(s1_data, 'introspection');
             }
@@ -213,8 +216,9 @@ var mere_exposure_openQ = {
 
 var introspection_q_labels_mee1 = [`<strong>When they saw a word a lot of times, that made them like the word <u>LESS</u></strong>`, "", "<strong>The number of times they saw a word did not affect their response</strong>", "", `<strong>When they saw a word a lot of times, that made them like the word <u>MORE</u></strong>`];
 var introspection_q_labels_mee2 = [`<strong>If I had seen a word a lot of times, that would have made me like the word <u>LESS</u></strong>`, "", "<strong>The number of times I saw a word would not have affected my response</strong>", "", `<strong>If I had seen a word a lot of times, that would have made me like the word <u>MORE</u></strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var mere_exposure_intro_response1 = null;
 var mere_exposure_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -247,7 +251,7 @@ var mere_exposure_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             mere_exposure_intro_response1 = data.response
     }
@@ -298,6 +302,7 @@ var knows_turkish_question = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "mere exposure",
             condition: condition[0],
@@ -309,7 +314,8 @@ var knows_turkish_question = {
             introspect_rating: mere_exposure_intro_response1,
             introspect_open: mere_exposure_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
         console.log("s1_data", s1_data);
         save_data(s1_data, 'introspection')

@@ -158,6 +158,7 @@ var primacy_order_question = {
     enable_button_after: observedTime,
 
     on_finish: function (data) {
+        rt_main_question = data.rt;
 
         if (data.response.choice == car1) {
             choice = "car1";
@@ -181,7 +182,7 @@ var primacy_order_question = {
                 introspect_rating: null,
                 introspect_open: null,
                 familiarity: null,
-                rt_main_question: data.rt
+                rt_main_question: rt_main_question
             }
             console.log("data to save: " + JSON.stringify(s1_data));
             save_data(s1_data, 'introspection')
@@ -204,8 +205,9 @@ var primacy_order_openQ = {
 
 var introspection_q_labels_primacy_order1 = [`<strong>This ordering made them like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts did not affect their response</strong>", "", `<strong>This ordering made them like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
 var introspection_q_labels_primacy_order2 = [`<strong>This ordering would have made me like the ${car1} <u>LESS</u> than the ${car2}</strong>`, "", "<strong>The ordering of the facts would not have affected my response</strong>", "", `<strong>This ordering would have made me like the ${car1} <u>MORE</u> than the ${car2}</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var primacy_order_intro_response1 = null;
 var primacy_order_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -241,7 +243,7 @@ var primacy_order_introspect1 = {
     require_movement: introspection_q_require,
     prompt: "<br><br><br><br>",
     on_finish: function (data) {
-
+        rt_introspection_question = data.rt;
         if (label_order_randomized == 'original') {
             primacy_order_intro_response1 = data.response
             
@@ -292,6 +294,7 @@ var primacy_order_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "primacy order",
             condition: condition[0],
@@ -303,8 +306,10 @@ var primacy_order_intro_confidence = {
             introspect_rating: primacy_order_intro_response1,
             introspect_open: primacy_order_intro_confidence_response,
             familiarity: familiarity,
-            rt_main_question: data.rt
+            rt_main_question: rt_main_question,
+            rt_introspection_question: rt_introspection_question
         }
+        console.log("hello!", s1_data);
         save_data(s1_data, 'introspection')
     }
 };

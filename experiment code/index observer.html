@@ -24,6 +24,8 @@
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         <script src="utilities.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
+        <link rel="stylesheet" href="plugins/digit-span.css">
+        <script src="plugins/jspsych-digit-span-recall.js"></script>
         <script src='DBs for observers/halo_db.js'></script>
         <script src='DBs for observers/illusory_truth_db.js'></script>
         <script src='DBs for observers/omission_db.js'></script>
@@ -50,6 +52,8 @@
 
         var questionnaire_responses = {}
         let max_highest_span_score = 0;
+        let rt_main_question = 0;
+        let rt_introspection_question = 0;
 
 
 
@@ -62,48 +66,36 @@ function create_static_slider_html(value, min, max, step, ticks) {
     const half_thumb_width = 7.5; 
 
     let html = `
-        <div class="prolific-user-response" style="width: 100%; margin: 20px 0;">
-            <p>The Prolific user selected:</p>
-            <input 
-                type="range" 
-                class="jspsych-slider" 
-                value="${value}" 
-                min="${min}" 
-                max="${max}" 
-                step="${step}" 
-                disabled 
-            />
-            <div style="position: relative; width: 100%;">`;
+        <div class="prolific-user-response" style="margin: 20px 0;">
+            <div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;">
+                <div class="jspsych-html-slider-response-container" style="position:relative; margin: 0 auto 3em auto; width:500px;">
+                    <p>The Prolific user selected:</p>
+                    <input 
+                        style="width: 100%" 
+                        type="range" 
+                        class="jspsych-slider" 
+                        value="${value}" 
+                        min="${min}" 
+                        max="${max}" 
+                        step="${step}" 
+                        disabled 
+                    />`;
     
     // Loop through the ticks to position each one individually using the official plugin's logic
-    ticks.forEach((label, index) => {
-        // Calculate the width of the "zone" for each label
+    for (let j = 0; j < ticks.length; j++) {
         const label_width_perc = 100 / (ticks.length - 1);
-        
-        // Calculate the center of that zone as a percentage
-        const percent_of_range = index * (100 / (ticks.length - 1));
-        
-        // Calculate how far the label is from the center of the slider
-        const percent_dist_from_center = (percent_of_range - 50) / 50 * 100;
-        
-        // Calculate the pixel offset needed to compensate for the slider thumb's width
+        const percent_of_range = j * (100 / (ticks.length - 1));
+        const percent_dist_from_center = ((percent_of_range - 50) / 50) * 100;
         const offset = (percent_dist_from_center * half_thumb_width) / 100;
         
-        // Add the styled div for each label, using a calc() function for precise positioning
         html += `
-            <div style="
-                border: 1px solid transparent; 
-                display: inline-block; 
-                position: absolute; 
-                left: calc(${percent_of_range}% - (${label_width_perc}% / 2) - ${offset}px); 
-                text-align: center; 
-                width: ${label_width_perc}%;
-            ">
-                <span style="text-align: center; font-size: 80%;">${label}</span>
-            </div>`;
-    });
+                    <div style="border: 1px solid transparent; position: absolute; left:calc(${percent_of_range}% - (${label_width_perc}% / 2) - ${offset}px); text-align: center; width: ${label_width_perc}%;">
+                        <span style="text-align: center; font-size: 100%;">${ticks[j]}</span>
+                    </div>`;
+    }
 
     html += `
+                </div>
             </div>
         </div>`;
         
@@ -116,13 +108,14 @@ function create_static_slider_html(value, min, max, step, ticks) {
         var isFlipped = null;
         //#region setup If we put this before we load the src for each of the tasks 
         //then they will load with all the startup variables in them
-        var version = "pilot3b";
+        var version = "pilot3bObserver";
         var completion_code = 'CCPLBLYX';
         var subjectData = null;
         var observedChoice = null;
         // find the assignmentId & debugging status from the URL
         var urlParams = parseURLParams(window.location.href);
         var subject_id_url = '';
+        var observer_or_actor = 'observer';
         var debug = false;
         if (typeof urlParams != "undefined") {
             if (urlParams.hasOwnProperty('PROLIFIC_PID')) {
@@ -219,6 +212,8 @@ function create_static_slider_html(value, min, max, step, ticks) {
         //#endregion
     </script>
 
+    <script src="tasks/digit_span_code.js"></script>
+    <script src="tasks/questionnaires.js"></script>
     <script src="tasks observer/representativeness.js"></script>
     <script src="tasks observer/reference_price.js"></script>
     <script src="tasks observer/halo.js"></script>
@@ -680,7 +675,7 @@ var next_task = {
         //December 2024 pilot
         //var task_list = [hindsight2, simulation, affect, sunk_cost2, status_quo, primacy_order]
 
-        var task_list = [affect, anchor, avail, belief, cause, decoy, halo, hindsight2, mere_exposure, omission, recognition, primacy_order, reference_price, representativeness, sunk_cost2, status_quo]
+        var task_list = [affect, anchor, avail, belief, cause, decoy, halo, hindsight2, mere_exposure, omission, illusion_of_truth_pt2, recognition, primacy_order, reference_price, representativeness, sunk_cost2, status_quo]
 
         console.log("task_list: ", task_list);
 
@@ -1435,30 +1430,90 @@ var next_task = {
         }
 
         //#region ENDING
+
+
         var demographics = {
-            type: jsPsychSurveyMultiChoice,
-            preamble: `<b>Finally, we will ask you a series of demographic questions.</b>`,
-            questions: [
-                {
-                    prompt: "Gender: Do you describe yourself as a man, a woman, or in some other way?",
-                    name: 'gender',
-                    options: ['Man', 'Woman', 'Some other way', 'Prefer not to say'],
-                    required: required_general
-                },
-                {
-                    prompt: "What's the highest degree or level of education you've completed?",
-                    name: 'education',
-                    options: ["Some high school", "High school", "Some college", "2 year degree", "4 year degree", "Postgraduate/Professional degree/other", "Prefer not to say"],
-                    required: required_general
-                },
-                {
-                    prompt: "What's your annual household income?",
-                    name: 'income',
-                    options: ['Less than $25,000', "$25,000-$50,000", "$50,000-$75,000", "$75,000-$100,000", "More than $100,000", "Prefer not to say"],
-                    required: required_general
-                },
-            ],
-            on_finish: function (data) {
+            type: jsPsychSurvey,
+            survey_json: {
+                showQuestionNumbers: false,
+                pageNextText: 'Continue',
+                pagePrevText: 'Previous',
+                pages: [
+                    {
+                        name: "demographics_page",
+                        title: "Finally, we will ask you a series of demographic questions.",
+                        elements: [
+                            {
+                                type: "text",
+                                name: "age",
+                                title: "How old are you? (Enter a number below. For instance, if you are 40 years old, just enter 40.)",
+                                inputType: "number",
+                                isRequired: false
+                            },
+                            {
+                                type: "checkbox",
+                                name: "race",
+                                title: "Race/ethnicity: Which categories below best describes you? (You can select more than one.)",
+                                choices: [
+                                    { value: "White", text: "White" },
+                                    { value: "Hispanic, Latinx, or Spanish origin", text: "Hispanic, Latinx, or Spanish origin" },
+                                    { value: "Black or African American", text: "Black or African American" },
+                                    { value: "Asian", text: "Asian" },
+                                    { value: "American Indian or Alaska Native", text: "American Indian or Alaska Native" },
+                                    { value: "Middle Eastern or North African", text: "Middle Eastern or North African" },
+                                    { value: "Native Hawaiian or Other Pacific Islander", text: "Native Hawaiian or Other Pacific Islander" },
+                                    { value: "Some other race, ethnicity, or origin", text: "Some other race, ethnicity, or origin" },
+                                    { value: "Prefer not to say", text: "Prefer not to say" }
+                                ],
+                                isRequired: required_general
+                            },
+                            {
+                                type: "radiogroup",
+                                name: "gender",
+                                title: "Gender: Do you describe yourself as a man, a woman, or in some other way?",
+                                choices: [
+                                    { value: "Man", text: "Man" },
+                                    { value: "Woman", text: "Woman" },
+                                    { value: "Some other way", text: "Some other way" },
+                                    { value: "Prefer not to say", text: "Prefer not to say" }
+                                ],
+                                isRequired: required_general
+                            },
+                            {
+                                type: "radiogroup",
+                                name: "education",
+                                title: "What's the highest degree or level of education you've completed?",
+                                choices: [
+                                    { value: "Some high school", text: "Some high school" },
+                                    { value: "High school", text: "High school" },
+                                    { value: "Some college", text: "Some college" },
+                                    { value: "2 year degree", text: "2 year degree" },
+                                    { value: "4 year degree", text: "4 year degree" },
+                                    { value: "Postgraduate/Professional degree/other", text: "Postgraduate/Professional degree/other" },
+                                    { value: "Prefer not to say", text: "Prefer not to say" }
+                                ],
+                                isRequired: required_general
+                            },
+                            {
+                                type: "radiogroup",
+                                name: "income",
+                                title: "What's your annual household income?",
+                                choices: [
+                                    { value: "Less than $25,000", text: "Less than $25,000" },
+                                    { value: "$25,000-$50,000", text: "$25,000-$50,000" },
+                                    { value: "$50,000-$75,000", text: "$50,000-$75,000" },
+                                    { value: "$75,000-$100,000", text: "$75,000-$100,000" },
+                                    { value: "More than $100,000", text: "More than $100,000" },
+                                    { value: "Prefer not to say", text: "Prefer not to say" }
+                                ],
+                                isRequired: required_general
+                            }
+                        ]
+                    }
+                ]
+            },
+            on_finish: function(data) {
+                age = data.response.age;
                 s1_data = {
                     subject: data.subject,
                     version: data.version,
@@ -1466,7 +1521,7 @@ var next_task = {
                     age: age,
                     education: data.response.education,
                     income: data.response.income,
-                    race: race,
+                    race: data.response.race,
                     phq91: null,
                     phq92: null,
                     gad71: null,
@@ -1490,10 +1545,12 @@ var next_task = {
                     digit_span: max_highest_span_score
                     
                 }
+                console.log("demographics data:", s1_data);
                 save_data(s1_data, 'introspect_demo');
             }
         }
 
+      
         //debrief
         /*var debrief = {
             type: jsPsychHtmlButtonResponse,
@@ -1540,29 +1597,30 @@ var next_task = {
             show_clickable_nav: true
         }
 
-        var ending = [/*icar,*/ digit_span_timeline, questionnaires_timeline, feedbackQuestion, demographics, end].flat();
-
+        var ending = [digit_span_timeline, questionnaires_timeline, feedbackQuestion, demographics, end].flat();
 
         //#endregion
 
         /*add elements to timeline*/
 
+        //console.log(welcome)
+
+        debug = true;
+
         var intro;
         if (!debug) {
-            console.log("here!")
+            //console.log("here!")
             var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat()
             ;
         } else {
             var experiment_timeline = [welcome, consent_block, begin, preload, task_list_shuffled, ending].flat();
         }
 
-        console.log("debug: " + debug)
-
 
         /* initiate experiment */
+        jsPsych.run([avail]);
         //jsPsych.run(experiment_timeline);
-        //jsPsych.run([belief])
-        jsPsych.run([illusion_of_truth_pt2/*affect, anchor, avail,affect, avail, belief, cause, decoy, halo,hindsight2, illusion_of_truth_pt2,recognition,ending, omission, primacy_order, recognition, reference_price, representativeness, status_quo, sunk_cost2*/]);
+
 
     </script>
 </body>

@@ -138,6 +138,7 @@ var city_trial = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition: city",
             condition: stimulus_category.toString(),
@@ -184,6 +185,7 @@ var disease_trial = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition: disease",
             condition: stimulus_category,
@@ -280,6 +282,7 @@ var recognition_intro_confidence = {
         var s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "recognition",
             condition: condition[0],

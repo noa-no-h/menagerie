@@ -257,8 +257,9 @@ var assoc_openQ = {
 
 var introspection_q_labels_assoc1 = [`<strong>When the word was related to sleep, that made me <u>LESS</u> likely to judge it as new (and more likely to judge it as original)</strong>`, "", "<strong>Whether the word was related to sleep did not affect my response</strong>", "", `<strong>When the word was related to sleep, that made me <u>MORE</u> likely to judge it as new (and less likely to judge it as original)</strong>`];
 var introspection_q_labels_assoc2 = [`<strong>If the word had been related to sleep, that would have made me <u>LESS</u> likely to judge it as new (and more likely to judge it as original)</strong>`, "", "<strong>Whether the word was related to sleep would not have affected my response</strong>", "", `<strong>If the word had been related to sleep, that would have made me <u>MORE</u> likely to judge it as new (and less likely to judge it as original)</strong>`];
-var label_order_randomized = Math.random() < 0.5 ? 'original' : 'flipped';
-
+var label_order_randomized = function() {
+    return Math.random() < 0.5 ? 'original' : 'flipped';
+};
 var assoc_intro_response1 = null;
 var assoc_introspect1 = {
     type: jsPsychHtmlSliderResponse,
@@ -334,6 +335,7 @@ var assoc_intro_confidence = {
         s1_data = {
             subject: data.subject,
             version: data.version,
+            observer_or_actor: observer_or_actor,
             factor: data.condition,
             task_name: "associative memory",
             condition: null,
